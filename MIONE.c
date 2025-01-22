@@ -6,20 +6,25 @@
 #include <string.h>
 #include "OBJECTS.h"
 #include "MIONE.h"
+
+#include <inttypes.h>
+
 #include "HeadFile/AllHeads.h"
 #include "HeadFile/SVV.h"
 #include "ERR.h"
-
+#include "PROMPT_DEF.h"
 
 
 ValueReturnObj Function(const MioneObj* Objs, const int ObjsSize,const ValueObj* Request, const int RequestSize)
 {
-
-
+     DefinedVarsAndValueObj EndLoacl = (DefinedVarsAndValueObj){
+    .TheDefinedVarUP = 0};
 
     MioneObj Head = (MioneObj) {
         .ObjType = 0
     };
+
+    ValueReturnObj Return ;
 
     HeadReturnObj (*HeadFuc)(struct _PairObject* Pairs, int PairsSize) = 0;
     PairObj *Pairs = malloc(0);
@@ -38,7 +43,7 @@ ValueReturnObj Function(const MioneObj* Objs, const int ObjsSize,const ValueObj*
 
        if ((Mio.ObjType == 3 && strcmp(Mio.Symbol.Name, ";") == 0) ||
             Mio.ObjType == 1 ||
-        (LastMio.ObjType == Mio.ObjType && (Mio.ObjType == 3 ? !Mio.Symbol.CanConnect : 1))
+        (LastMio.ObjType == Mio.ObjType && (Mio.ObjType == 3 ? !Mio.Symbol.CanConnect : 1) && Mio.ObjType != 2)
             )
         {
 
@@ -53,7 +58,11 @@ ValueReturnObj Function(const MioneObj* Objs, const int ObjsSize,const ValueObj*
                 switch (a.ToState)
                 {
                 case 1:
-                    return a.Vs;
+                    Return = a.Vs;
+                    break;
+                case 2:
+                    EndLoacl = a.VAV;
+                    break;
                 }
 
                 if (Mio.ObjType == 3 && strcmp(Mio.Symbol.Name, ";") == 0)continue;
@@ -89,6 +98,9 @@ ValueReturnObj Function(const MioneObj* Objs, const int ObjsSize,const ValueObj*
             Pairs[PairsSize - 1].SourceSize = 0;
             Pairs[PairsSize - 1].Source = malloc(0);
             Pairs[PairsSize - 1].Prompt = Mio; // Type = 2
+
+            printf("prompt added %s \n ",Mio.Prompt.Name);
+
         }
 
         if (Mio.ObjType == 3 || Mio.ObjType == 4 || Mio.ObjType == 5) // SVV
@@ -124,23 +136,33 @@ ValueReturnObj Function(const MioneObj* Objs, const int ObjsSize,const ValueObj*
                 switch (a.ToState)
                 {
                 case 1:
-                    return a.Vs;
+                    Return = a.Vs;
+                    break;
+                case 2:
+                    EndLoacl = a.VAV;
+                    break;
                 }
             }
         }
         LastMio = Mio;
     }
+    if (EndLoacl.TheDefinedVarUP != 0) EndLoacl.TheDefinedVarUP->Val = EndLoacl.Value;
+    return Return;
+
+
 }
 
 ValueReturnObj mione(const MioneObj* Objs, const int ObjsSize)
 {
 
-
-    // system("clear");
+ DefinedVarsAndValueObj EndLoacl = (DefinedVarsAndValueObj){
+    .TheDefinedVarUP = 0};
 
     MioneObj Head = (MioneObj) {
         .ObjType = 0
     };
+
+    ValueReturnObj Return ;
 
     HeadReturnObj (*HeadFuc)(struct _PairObject* Pairs, int PairsSize) = 0;
     PairObj *Pairs = malloc(0);
@@ -157,10 +179,9 @@ ValueReturnObj mione(const MioneObj* Objs, const int ObjsSize)
 
         if (Mio.ObjType == 1) Head = Mio;
 
-
-        if ((Mio.ObjType == 3 && strcmp(Mio.Symbol.Name, ";") == 0) ||
+       if ((Mio.ObjType == 3 && strcmp(Mio.Symbol.Name, ";") == 0) ||
             Mio.ObjType == 1 ||
-        (LastMio.ObjType == Mio.ObjType && (Mio.ObjType == 3 ? !Mio.Symbol.CanConnect : 1))
+        (LastMio.ObjType == Mio.ObjType && (Mio.ObjType == 3 ? !Mio.Symbol.CanConnect : 1) && Mio.ObjType != 2)
             )
         {
 
@@ -175,7 +196,11 @@ ValueReturnObj mione(const MioneObj* Objs, const int ObjsSize)
                 switch (a.ToState)
                 {
                 case 1:
-                    return a.Vs;
+                    Return = a.Vs;
+                    break;
+                case 2:
+                    EndLoacl = a.VAV;
+                    break;
                 }
 
                 if (Mio.ObjType == 3 && strcmp(Mio.Symbol.Name, ";") == 0)continue;
@@ -200,6 +225,7 @@ ValueReturnObj mione(const MioneObj* Objs, const int ObjsSize)
                     HeadFuc = Heads[i].Fuc;
                 }
             }
+
         }
 
         if (Mio.ObjType == 2) // PROMPT
@@ -210,6 +236,9 @@ ValueReturnObj mione(const MioneObj* Objs, const int ObjsSize)
             Pairs[PairsSize - 1].SourceSize = 0;
             Pairs[PairsSize - 1].Source = malloc(0);
             Pairs[PairsSize - 1].Prompt = Mio; // Type = 2
+
+            printf("prompt added %s \n ",Mio.Prompt.Name);
+
         }
 
         if (Mio.ObjType == 3 || Mio.ObjType == 4 || Mio.ObjType == 5) // SVV
@@ -230,8 +259,6 @@ ValueReturnObj mione(const MioneObj* Objs, const int ObjsSize)
             (Pairs[PairsSize - 1].Source) = realloc(Pairs[PairsSize - 1].Source, sizeof(MioneObj) * (Pairs[PairsSize - 1].SourceSize));
             Pairs[PairsSize - 1].Source[Pairs[PairsSize - 1].SourceSize - 1] = Mio;
 
-
-
         }
 
         if (ObjsSize - 1 == index)
@@ -247,10 +274,16 @@ ValueReturnObj mione(const MioneObj* Objs, const int ObjsSize)
                 switch (a.ToState)
                 {
                 case 1:
-                    return a.Vs;
+                    Return = a.Vs;
+                    break;
+                case 2:
+                    EndLoacl = a.VAV;
+                    break;
                 }
             }
         }
         LastMio = Mio;
     }
+    if (EndLoacl.TheDefinedVarUP != 0) EndLoacl.TheDefinedVarUP->Val = EndLoacl.Value;
+    return Return;
 }

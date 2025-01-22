@@ -15,7 +15,8 @@
 
 #include "main.h"
 
-
+DefineVariableObj * Dvo;
+int DvoSize;
 
 int main(const int OptionsSize,char **Options)
 {
@@ -62,7 +63,12 @@ int main(const int OptionsSize,char **Options)
         CaseObj * CASES = FCO(f,&CaseObjSize);
 
         int MioObjSize = 0;
-        MioneObj * MioObj = CMO(CASES,CaseObjSize,&MioObjSize,1,0);
+
+        Dvo = malloc(0);
+        DvoSize = 0;
+
+
+        MioneObj * MioObj = CMO(CASES,CaseObjSize,&MioObjSize,1,0,&Dvo,&DvoSize);
 
         mione(MioObj,MioObjSize);
     }else

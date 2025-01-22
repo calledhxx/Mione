@@ -20,7 +20,10 @@ HeadReturnObj RETURN(struct _PairObject*Pairs,int PairsSize)
 
             //VariableRequestObj Request = REQUEST(Pairs[i].Source, Pairs[i].SourceSize);
 
+            printf("%d\n", Pairs[i].SourceSize);
+
             CountObj Counted = COUNT(Pairs[i].Source, Pairs[i].SourceSize);
+
 
             ToReturn.ToState = 1;
             ToReturn.Vs = (ValueReturnObj){

@@ -384,10 +384,10 @@ CountObj COUNT(MioneObj*Pack,int PackSize)
 
 
 
-                            if (!(Target1.ValueType == 2 || Target1.ValueType == 3)){ ErrCall("Type Error","MG0011111","",
+                            if (!(Target1.ValueType == 2 || Target1.ValueType == 3)){ ErrCall("Type Error1","MG0011111","",
                                 Pack[i-2].Line,
                                 Pack[i-2].Column);}
-                            if (!(Target2.ValueType == 2 || Target2.ValueType == 3)) {ErrCall("Type Error","MG0011111","",
+                            if (!(Target2.ValueType == 2 || Target2.ValueType == 3)) {ErrCall("Type Error2","MG0011111","",
                                 Pack[i].Line,
                                 Pack[i].Column);}
 
@@ -939,6 +939,17 @@ CountObj COUNT(MioneObj*Pack,int PackSize)
                 Pack = NewPack;
 
                 i = ToIndex-1;
+            }else //todo 可簡化
+            {
+                if (Pack[i].ObjType == 4)
+                {
+                    Pack[i] = (MioneObj){
+                        .ObjType = 5,
+                        .Val = Pack[i].VarUP->Val,
+                        .Line = Pack[i].Line,
+                        .Column = Pack[i].Column
+                    };
+                }
             }
         }
 
@@ -976,7 +987,7 @@ CountObj COUNT(MioneObj*Pack,int PackSize)
             VPackSize ++;
             VPack = realloc(VPack, sizeof(MioneObj) * (VPackSize));
             VPack[VPackSize-1] = Pack[i].Val;
-            printf("d %d\n",Pack[i].Val.db);
+            printf("d %d\n",Pack[i].Val.NPNumber);
         }
     }
 

@@ -160,6 +160,12 @@ typedef struct _ValueReturnObject
     int ValueSize;
 } ValueReturnObj;
 
+typedef struct _DefinedVarsAndValueObject
+{
+    ValueObj Value;
+    VariableObj* TheDefinedVarUP;
+}DefinedVarsAndValueObj;
+
 typedef struct _HeadReturnObject
 {
     int ToState;/*
@@ -170,6 +176,7 @@ typedef struct _HeadReturnObject
 
     ValueReturnObj Vs;
     int Useless;
+    DefinedVarsAndValueObj VAV;
 
 } HeadReturnObj;
 
@@ -180,7 +187,12 @@ typedef struct _VariableRequestUPObject
     int VariablesSize;
 } VariableRequestUPObj;
 
+typedef struct _DefineVariableObject
+{
+    VariableObj * * VariableUPs;
+    int VariablesSize;
 
+} DefineVariableObj;
 
 
 #endif //OBJECTS_H

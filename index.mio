@@ -1,1 +1,6 @@
-set x = "a"=='a'
+set x host = 1;
+set y = function
+    set x host = 2;
+    return x;
+end()
+set z = x;

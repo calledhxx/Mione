@@ -12,17 +12,32 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 HeadReturnObj SET(struct _PairObject*Pairs,int PairsSize)
 {
     HeadReturnObj ToReturn;
     ToReturn.ToState = 0;
 
+    printf("sizeof %d\n",PairsSize);
+
     //set x
     //1   2
 
     VariableRequestUPObj Request = {.VariablesSize = 0};
     CountObj Counted = {.ValueSize = 0};
+
+    int set = 0,host = 0;
+
+    for(int i=0;i<PairsSize;i++)
+    {
+         printf("Prompt %s\n",Pairs[i].Prompt.Prompt.Name);
+        for (int j = 0; j < Pairs[i].SourceSize; j++)
+        {
+            printf("V %d\n",Pairs[i].Source[j].Val.NPNumber);
+
+        }
+    }
 
     for (int i = 0; i < PairsSize; i++)
     {
@@ -32,6 +47,7 @@ HeadReturnObj SET(struct _PairObject*Pairs,int PairsSize)
         if (Prompt.ObjType == 1) //Head代替Prompt
         {
             Request = REQUEST(Pairs[i].Source, Pairs[i].SourceSize);
+            if (Request.VariablesSize == 0) ErrCall("no", "M11176", NULL, Prompt.Line, Prompt.Column);
         }
         if (Prompt.ObjType == 2)
         {
@@ -39,15 +55,29 @@ HeadReturnObj SET(struct _PairObject*Pairs,int PairsSize)
             {
             case 1:
 
+
+
                 Counted = COUNT(Pairs[i].Source, Pairs[i].SourceSize);
 
                 if (Counted.ValueSize>Request.VariablesSize) ErrCall("More variables than values","M111",NULL,Prompt.Line,Prompt.Column);
+                set = 1;
 
-                for(int CountedIndex = 0; CountedIndex < Counted.ValueSize; CountedIndex++)
+                break;
+            case 2:
+                if (Pairs[i].SourceSize) ErrCall("`host` CAN NOT BE SET TO ANY SOURCE","M123",NULL,Prompt.Line,Prompt.Column);
+
+
+
+                if (ToReturn.ToState)
                 {
-                    Request.VariableUPs[CountedIndex]->Val = Counted.Value[CountedIndex];
-
+                    ErrCall("aaaaaaaaaaa","dadioajdoad",NULL,Prompt.Line,Prompt.Column);
+                }else
+                {
+                    ToReturn.ToState = 2;
+                    host = 1;
                 }
+
+
             break;
 
             default:
@@ -56,6 +86,59 @@ HeadReturnObj SET(struct _PairObject*Pairs,int PairsSize)
             }
         }
     }
+
+
+    // `host`
+
+    if (host)
+    {
+        extern DefineVariableObj * Dvo;
+        extern int DvoSize;
+
+        ValueObj V = (ValueObj){.ValueType = 0};
+
+        for (int RequestIndex = 0; RequestIndex < Request.VariablesSize; RequestIndex++)
+        {
+            for (int DvoIndex = 0; DvoIndex < DvoSize; DvoIndex++)
+            {
+                for (int VariableIndex = 0; VariableIndex < Dvo->VariablesSize; VariableIndex++)
+                {
+                    if (strcmp(Dvo->VariableUPs[VariableIndex]->Name, Request.VariableUPs[RequestIndex]->Name) == 0)
+                    {
+                        V = Dvo->VariableUPs[VariableIndex]->Val;
+                        (Dvo->VariableUPs[VariableIndex])->Val = (ValueObj){
+                            .ValueType = 0};
+
+                        ToReturn.VAV = (DefinedVarsAndValueObj){
+                            .Value = V,
+                            .TheDefinedVarUP = Dvo->VariableUPs[VariableIndex]
+                        };
+
+                        break;
+                    }
+                }
+                if (V.ValueType) break;
+            }
+            if (V.ValueType) break;
+        }
+
+    }
+
+
+    // `=`
+
+    if (set)
+    {
+        for(int CountedIndex = 0; CountedIndex < Counted.ValueSize; CountedIndex++)
+        {
+            Request.VariableUPs[CountedIndex]->Val = Counted.Value[CountedIndex];
+            printf("num : %d\n", Counted.Value[CountedIndex].NPNumber);
+        }
+    }
+
+
+
+
 
     return ToReturn;
 }

@@ -10,12 +10,13 @@
 #include "SYMBOL_DEF.h"
 #include "PROMPT_DEF.h"
 #include "HeadFile/AllHeads.h"
+#include "ERR.h"
 
 
 
 
 MioneObj *CMO(CaseObj*CASES,int CASESIZE,
-    int * SIZE,int LineADD,int ColumnADD)
+    int * SIZE,int LineADD,int ColumnADD,DefineVariableObj * *DvoUP,int * DvoSizeUP)
 {
 
 
@@ -35,14 +36,24 @@ MioneObj *CMO(CaseObj*CASES,int CASESIZE,
 
     int goEndType = 0; //range or function or lights
 
-    VariableObj* * VarsUP = malloc(0);
-    int VarsSize = 0;
 
     CaseObj* Area = malloc(0);
     int AreaSize = 0;
 
     int Line = 0+LineADD;
     int Column = 0+ColumnADD;
+
+    (*DvoSizeUP )++;
+    *DvoUP = realloc(*DvoUP,(*DvoSizeUP)*sizeof(DefineVariableObj));
+    (*DvoUP)[(*DvoSizeUP)-1] = (DefineVariableObj){
+        .VariablesSize = 0,
+        .VariableUPs = malloc(0),
+    };
+
+    VariableObj * * * VarsUPUP = &(*DvoUP)[(*DvoSizeUP)-1].VariableUPs;
+    int * VarsSizeUP = &(*DvoUP)[(*DvoSizeUP)-1].VariablesSize;
+
+
 
 
     for (int i = 0; i <CASESIZE; i++)
@@ -95,7 +106,6 @@ MioneObj *CMO(CaseObj*CASES,int CASESIZE,
 
              if (strcmp(CASES[i].ObjName,Prompts[Ci].Name) == 0)
              {
-
                  Column++;
                  (MIONESIZE)++;
                  (MIONE) = (MioneObj*)realloc( (MIONE) ,(MIONESIZE)*sizeof(MioneObj));
@@ -172,7 +182,7 @@ MioneObj *CMO(CaseObj*CASES,int CASESIZE,
 
                    int MioObjSize = 0;
 
-                   MioneObj * MioObj = CMO(Area,AreaSize,&MioObjSize,MIONE[MIONESIZE-1].Line,MIONE[MIONESIZE-1].Column);
+                   MioneObj * MioObj = CMO(Area,AreaSize,&MioObjSize,MIONE[MIONESIZE-1].Line,MIONE[MIONESIZE-1].Column,DvoUP,DvoSizeUP);
 
                    AreaObj eArea = (AreaObj){
                        .Area =MioObj,
@@ -200,6 +210,8 @@ MioneObj *CMO(CaseObj*CASES,int CASESIZE,
                    Area = NULL;
                    Area = malloc(0);
                    AreaSize = 0;
+
+                   goEndType = 0;
                }else
                {
                    AreaSize++;
@@ -318,26 +330,37 @@ MioneObj *CMO(CaseObj*CASES,int CASESIZE,
 
             VariableObj* VariableUP = malloc(sizeof (VariableObj));
 
-            for (int j = 0; j < VarsSize; j++)   if (strcmp(VarsUP[j]->Name ,CASES[i].ObjName)==0)
-            {
-                NewVar = 0;
-                VariableUP = VarsUP[j];
-                break;
-            }
+             for (int DvoIndex = 0; DvoIndex < *DvoSizeUP; DvoIndex++)
+             {
+                 for (int j = 0; j < (*DvoUP)[DvoIndex].VariablesSize; j++)
+                 {
+                     if (strcmp((*DvoUP)[DvoIndex].VariableUPs[j]->Name ,CASES[i].ObjName)==0)
+                     {
+                         printf("same\n");
+                         NewVar = 0;
+                         VariableUP = (*DvoUP)[DvoIndex].VariableUPs[j];
+                         break;
+                     }
+                 }
+             }
 
-            if (NewVar)
-            {
-                *VariableUP = (VariableObj){
-                    .Name = CASES[i].ObjName,
-                };
+             if (NewVar)
+             {
+                 *VariableUP = (VariableObj){
+                     .Name = CASES[i].ObjName,
+                 };
 
-                VariableObj * VUP = malloc(sizeof(VariableObj));
-                VUP = VariableUP;
+                 VariableObj * VUP = malloc(sizeof(VariableObj));
+                 VUP = VariableUP;
 
-                VarsSize++;
-                VarsUP = realloc(VarsUP,VarsSize*sizeof(VariableObj*));
-                VarsUP[VarsSize-1] = VUP;
-            }
+                 (*VarsSizeUP)++;
+                 *VarsUPUP = realloc(*VarsUPUP,(*VarsSizeUP)*sizeof(VariableObj*));
+                 (*VarsUPUP)[(*VarsSizeUP)-1] = VUP;
+
+                 printf("we've add a new variable\n");
+             }
+
+
              Column++;
 
             (MIONESIZE)++;
@@ -349,8 +372,15 @@ MioneObj *CMO(CaseObj*CASES,int CASESIZE,
                  .Column = Column
             };
         };
+
+           //printf("%s\n",CASES[i].ObjName);
+
+
        }
     }
+
+    if (goEndType) ErrCall("END???","M111",NULL,Line,Column);
+
 
     (*SIZE) = (MIONESIZE);
     return MIONE;

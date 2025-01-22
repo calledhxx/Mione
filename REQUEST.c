@@ -32,7 +32,6 @@ VariableRequestUPObj REQUEST(MioneObj* PACK,int PACKSize){
         VarReq.VariableUPs[VarReq.VariablesSize-1] = PACK[PACKIndex].VarUP;
 
 
-      printf("added a\n");
 
         break;
       default:
