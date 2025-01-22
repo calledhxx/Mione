@@ -1,6 +1,2 @@
-set x host =5 ;
-set y = function
-    set x host = 2;
-    return x;
-end()
-set z = x;
+set x
+a
