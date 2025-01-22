@@ -1,4 +1,4 @@
-set x host = 1;
+set x host =5 ;
 set y = function
     set x host = 2;
     return x;

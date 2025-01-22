@@ -99,7 +99,6 @@ ValueReturnObj Function(const MioneObj* Objs, const int ObjsSize,const ValueObj*
             Pairs[PairsSize - 1].Source = malloc(0);
             Pairs[PairsSize - 1].Prompt = Mio; // Type = 2
 
-            printf("prompt added %s \n ",Mio.Prompt.Name);
 
         }
 
@@ -237,7 +236,6 @@ ValueReturnObj mione(const MioneObj* Objs, const int ObjsSize)
             Pairs[PairsSize - 1].Source = malloc(0);
             Pairs[PairsSize - 1].Prompt = Mio; // Type = 2
 
-            printf("prompt added %s \n ",Mio.Prompt.Name);
 
         }
 

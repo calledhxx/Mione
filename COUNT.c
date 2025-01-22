@@ -939,7 +939,7 @@ CountObj COUNT(MioneObj*Pack,int PackSize)
                 Pack = NewPack;
 
                 i = ToIndex-1;
-            }else //todo 可簡化
+            }else
             {
                 if (Pack[i].ObjType == 4)
                 {

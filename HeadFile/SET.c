@@ -19,7 +19,6 @@ HeadReturnObj SET(struct _PairObject*Pairs,int PairsSize)
     HeadReturnObj ToReturn;
     ToReturn.ToState = 0;
 
-    printf("sizeof %d\n",PairsSize);
 
     //set x
     //1   2
@@ -29,15 +28,7 @@ HeadReturnObj SET(struct _PairObject*Pairs,int PairsSize)
 
     int set = 0,host = 0;
 
-    for(int i=0;i<PairsSize;i++)
-    {
-         printf("Prompt %s\n",Pairs[i].Prompt.Prompt.Name);
-        for (int j = 0; j < Pairs[i].SourceSize; j++)
-        {
-            printf("V %d\n",Pairs[i].Source[j].Val.NPNumber);
 
-        }
-    }
 
     for (int i = 0; i < PairsSize; i++)
     {
@@ -132,7 +123,6 @@ HeadReturnObj SET(struct _PairObject*Pairs,int PairsSize)
         for(int CountedIndex = 0; CountedIndex < Counted.ValueSize; CountedIndex++)
         {
             Request.VariableUPs[CountedIndex]->Val = Counted.Value[CountedIndex];
-            printf("num : %d\n", Counted.Value[CountedIndex].NPNumber);
         }
     }
 

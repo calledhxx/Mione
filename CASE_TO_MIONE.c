@@ -336,7 +336,6 @@ MioneObj *CMO(CaseObj*CASES,int CASESIZE,
                  {
                      if (strcmp((*DvoUP)[DvoIndex].VariableUPs[j]->Name ,CASES[i].ObjName)==0)
                      {
-                         printf("same\n");
                          NewVar = 0;
                          VariableUP = (*DvoUP)[DvoIndex].VariableUPs[j];
                          break;
@@ -357,7 +356,6 @@ MioneObj *CMO(CaseObj*CASES,int CASESIZE,
                  *VarsUPUP = realloc(*VarsUPUP,(*VarsSizeUP)*sizeof(VariableObj*));
                  (*VarsUPUP)[(*VarsSizeUP)-1] = VUP;
 
-                 printf("we've add a new variable\n");
              }
 
 
