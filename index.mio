@@ -1,0 +1,7 @@
+set x = 2;
+
+set y = function
+    set x host = 1
+end();
+
+set z =x + 3;

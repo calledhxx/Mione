@@ -28,7 +28,7 @@ MioneObj *CMO(CaseObj*CASES,int CASESIZE,
 
 
 
-
+    printf("new\n");
 
 
 
@@ -50,10 +50,8 @@ MioneObj *CMO(CaseObj*CASES,int CASESIZE,
         .VariableUPs = malloc(0),
     };
 
-    VariableObj * * * VarsUPUP = &(*DvoUP)[(*DvoSizeUP)-1].VariableUPs;
-    int * VarsSizeUP = &(*DvoUP)[(*DvoSizeUP)-1].VariablesSize;
-
-
+    &(*DvoUP)[(*DvoSizeUP)-1].VariableUPs;
+    &(*DvoUP)[(*DvoSizeUP)-1].VariablesSize;
 
 
     for (int i = 0; i <CASESIZE; i++)
@@ -183,6 +181,7 @@ MioneObj *CMO(CaseObj*CASES,int CASESIZE,
                    int MioObjSize = 0;
 
                    MioneObj * MioObj = CMO(Area,AreaSize,&MioObjSize,MIONE[MIONESIZE-1].Line,MIONE[MIONESIZE-1].Column,DvoUP,DvoSizeUP);
+
 
                    AreaObj eArea = (AreaObj){
                        .Area =MioObj,
@@ -352,9 +351,12 @@ MioneObj *CMO(CaseObj*CASES,int CASESIZE,
                  VariableObj * VUP = malloc(sizeof(VariableObj));
                  VUP = VariableUP;
 
-                 (*VarsSizeUP)++;
-                /*todo 有錯誤 */ *VarsUPUP = realloc(*VarsUPUP,(*VarsSizeUP)*sizeof(VariableObj**));
-                 (*VarsUPUP)[(*VarsSizeUP)-1] = VUP;
+
+                 ((*DvoUP)[(*DvoSizeUP)-1].VariablesSize)++;
+
+
+              ((*DvoUP)[(*DvoSizeUP)-1].VariableUPs) = realloc(((*DvoUP)[(*DvoSizeUP)-1].VariableUPs),((*DvoUP)[(*DvoSizeUP)-1].VariablesSize)*sizeof(VariableObj**));
+                 ((*DvoUP)[(*DvoSizeUP)-1].VariableUPs)[((*DvoUP)[(*DvoSizeUP)-1].VariablesSize)-1] = VUP;
 
              }
 
