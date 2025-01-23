@@ -2,6 +2,8 @@ set x = 2;
 
 set y = function
     set x host = 1
-end();
+end;
+
+set a = y();
 
 set z =x + 3;

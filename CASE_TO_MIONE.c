@@ -2,6 +2,7 @@
 // Created by calle on 24-12-28.
 //
 
+#include <inttypes.h>
 #include <tgmath.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -43,15 +44,20 @@ MioneObj *CMO(CaseObj*CASES,int CASESIZE,
     int Line = 0+LineADD;
     int Column = 0+ColumnADD;
 
-    (*DvoSizeUP )++;
+    (*DvoSizeUP)++;
     *DvoUP = realloc(*DvoUP,(*DvoSizeUP)*sizeof(DefineVariableObj));
     (*DvoUP)[(*DvoSizeUP)-1] = (DefineVariableObj){
         .VariablesSize = 0,
         .VariableUPs = malloc(0),
     };
 
-    &(*DvoUP)[(*DvoSizeUP)-1].VariableUPs;
-    &(*DvoUP)[(*DvoSizeUP)-1].VariablesSize;
+    VariableObj *** a = &((*DvoUP)[(*DvoSizeUP)-1].VariableUPs);
+    int * aSize = &((*DvoUP)[(*DvoSizeUP)-1].VariablesSize);
+\
+    printf("START DVOSIZE=%d\n",(*DvoSizeUP));
+    printf("start a : %p \n",a);
+    printf("start aSize : %p %d \n",aSize,*aSize);
+
 
 
     for (int i = 0; i <CASESIZE; i++)
@@ -182,6 +188,10 @@ MioneObj *CMO(CaseObj*CASES,int CASESIZE,
 
                    MioneObj * MioObj = CMO(Area,AreaSize,&MioObjSize,MIONE[MIONESIZE-1].Line,MIONE[MIONESIZE-1].Column,DvoUP,DvoSizeUP);
 
+                   printf("START DVOSIZE=%d\n",(*DvoSizeUP));
+
+                   printf("called a : %p \n",a);
+                   printf("called aSize : %p %d \n",aSize,*aSize);
 
                    AreaObj eArea = (AreaObj){
                        .Area =MioObj,
@@ -351,9 +361,13 @@ MioneObj *CMO(CaseObj*CASES,int CASESIZE,
                  VariableObj * VUP = malloc(sizeof(VariableObj));
                  VUP = VariableUP;
 
+                 printf("now size %d index %d \n",(*DvoUP)[(*DvoSizeUP)-1].VariablesSize,(*DvoSizeUP)-1);
+
+
                  ((*DvoUP)[(*DvoSizeUP)-1].VariablesSize)++;
                  ((*DvoUP)[(*DvoSizeUP)-1].VariableUPs) = realloc(((*DvoUP)[(*DvoSizeUP)-1].VariableUPs),((*DvoUP)[(*DvoSizeUP)-1].VariablesSize)*sizeof(VariableObj**));
                  ((*DvoUP)[(*DvoSizeUP)-1].VariableUPs)[((*DvoUP)[(*DvoSizeUP)-1].VariablesSize)-1] = VUP;
+
              }
 
 
@@ -376,6 +390,8 @@ MioneObj *CMO(CaseObj*CASES,int CASESIZE,
     }
 
     if (goEndType) ErrCall("END???","M111",NULL,Line,Column);
+\
+
 
 
     (*SIZE) = (MIONESIZE);
