@@ -17,12 +17,8 @@
 
 ValueReturnObj Function(const MioneObj* Objs, const int ObjsSize,const ValueObj* Request, const int RequestSize)
 {
-     DefinedVarsAndValueObj EndLoacl = (DefinedVarsAndValueObj){
+    DefinedVarsAndValueObj EndLoacl = (DefinedVarsAndValueObj){
     .TheDefinedVarUP = 0};
-
-    MioneObj Head = (MioneObj) {
-        .ObjType = 0
-    };
 
     ValueReturnObj Return ;
 
@@ -39,7 +35,6 @@ ValueReturnObj Function(const MioneObj* Objs, const int ObjsSize,const ValueObj*
 
         MioneObj Mio = Objs[index];
 
-        if (Mio.ObjType == 1) Head = Mio;
 
        if ((Mio.ObjType == 3 && strcmp(Mio.Symbol.Name, ";") == 0) ||
             Mio.ObjType == 1 ||
@@ -66,8 +61,8 @@ ValueReturnObj Function(const MioneObj* Objs, const int ObjsSize,const ValueObj*
                 }
 
                 if (Mio.ObjType == 3 && strcmp(Mio.Symbol.Name, ";") == 0)continue;
-
             }
+
         }
 
         if (Mio.ObjType == 1) // Head
@@ -104,7 +99,7 @@ ValueReturnObj Function(const MioneObj* Objs, const int ObjsSize,const ValueObj*
 
         if (Mio.ObjType == 3 || Mio.ObjType == 4 || Mio.ObjType == 5) // SVV
         {
-            if (Head.ObjType == 0) { // 偽HeadFuc
+            if (HeadFuc == 0) { // 偽HeadFuc
                 PairsSize++;
                 Pairs = realloc(Pairs, sizeof(struct _PairObject) * PairsSize);
                 Pairs[PairsSize - 1].Prompt = Mio; // 自主
@@ -112,11 +107,13 @@ ValueReturnObj Function(const MioneObj* Objs, const int ObjsSize,const ValueObj*
                 Pairs[PairsSize - 1].SourceSize = 0;
                 Pairs[PairsSize - 1].Source = malloc(0);
 
-
+                printf("host here\n");
                 HeadFuc = SVV;
             }
 
             (Pairs[PairsSize - 1].SourceSize)++;
+
+            printf("end\n");
             (Pairs[PairsSize - 1].Source) = realloc(Pairs[PairsSize - 1].Source, sizeof(MioneObj) * (Pairs[PairsSize - 1].SourceSize));
             Pairs[PairsSize - 1].Source[Pairs[PairsSize - 1].SourceSize - 1] = Mio;
 
@@ -147,8 +144,6 @@ ValueReturnObj Function(const MioneObj* Objs, const int ObjsSize,const ValueObj*
     }
     if (EndLoacl.TheDefinedVarUP != 0) EndLoacl.TheDefinedVarUP->Val = EndLoacl.Value;
     return Return;
-
-
 }
 
 ValueReturnObj mione(const MioneObj* Objs, const int ObjsSize)
@@ -156,10 +151,6 @@ ValueReturnObj mione(const MioneObj* Objs, const int ObjsSize)
 
  DefinedVarsAndValueObj EndLoacl = (DefinedVarsAndValueObj){
     .TheDefinedVarUP = 0};
-
-    MioneObj Head = (MioneObj) {
-        .ObjType = 0
-    };
 
     ValueReturnObj Return ;
 
@@ -176,7 +167,6 @@ ValueReturnObj mione(const MioneObj* Objs, const int ObjsSize)
 
         MioneObj Mio = Objs[index];
 
-        if (Mio.ObjType == 1) Head = Mio;
 
        if ((Mio.ObjType == 3 && strcmp(Mio.Symbol.Name, ";") == 0) ||
             Mio.ObjType == 1 ||
@@ -203,8 +193,8 @@ ValueReturnObj mione(const MioneObj* Objs, const int ObjsSize)
                 }
 
                 if (Mio.ObjType == 3 && strcmp(Mio.Symbol.Name, ";") == 0)continue;
-
             }
+
         }
 
         if (Mio.ObjType == 1) // Head
@@ -241,7 +231,7 @@ ValueReturnObj mione(const MioneObj* Objs, const int ObjsSize)
 
         if (Mio.ObjType == 3 || Mio.ObjType == 4 || Mio.ObjType == 5) // SVV
         {
-            if (Head.ObjType == 0) { // 偽HeadFuc
+            if (HeadFuc == 0) { // 偽HeadFuc
                 PairsSize++;
                 Pairs = realloc(Pairs, sizeof(struct _PairObject) * PairsSize);
                 Pairs[PairsSize - 1].Prompt = Mio; // 自主
@@ -254,6 +244,8 @@ ValueReturnObj mione(const MioneObj* Objs, const int ObjsSize)
             }
 
             (Pairs[PairsSize - 1].SourceSize)++;
+
+            printf("end\n");
             (Pairs[PairsSize - 1].Source) = realloc(Pairs[PairsSize - 1].Source, sizeof(MioneObj) * (Pairs[PairsSize - 1].SourceSize));
             Pairs[PairsSize - 1].Source[Pairs[PairsSize - 1].SourceSize - 1] = Mio;
 
