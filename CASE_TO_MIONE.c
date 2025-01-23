@@ -351,13 +351,9 @@ MioneObj *CMO(CaseObj*CASES,int CASESIZE,
                  VariableObj * VUP = malloc(sizeof(VariableObj));
                  VUP = VariableUP;
 
-
                  ((*DvoUP)[(*DvoSizeUP)-1].VariablesSize)++;
-
-
-              ((*DvoUP)[(*DvoSizeUP)-1].VariableUPs) = realloc(((*DvoUP)[(*DvoSizeUP)-1].VariableUPs),((*DvoUP)[(*DvoSizeUP)-1].VariablesSize)*sizeof(VariableObj**));
+                 ((*DvoUP)[(*DvoSizeUP)-1].VariableUPs) = realloc(((*DvoUP)[(*DvoSizeUP)-1].VariableUPs),((*DvoUP)[(*DvoSizeUP)-1].VariablesSize)*sizeof(VariableObj**));
                  ((*DvoUP)[(*DvoSizeUP)-1].VariableUPs)[((*DvoUP)[(*DvoSizeUP)-1].VariablesSize)-1] = VUP;
-
              }
 
 
