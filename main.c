@@ -70,11 +70,6 @@ int main(const int OptionsSize,char **Options)
 
         MioneObj * MioObj = CMO(CASES,CaseObjSize,&MioObjSize,1,0,&Dvo,&DvoSize);
 
-        for (int DvoIndex = 0; DvoIndex < DvoSize; DvoIndex++)
-        {
-            printf("OKOKOK AAA %d INDEX %d\n",Dvo[DvoIndex].VariablesSize,DvoIndex);
-        }
-
         mione(MioObj,MioObjSize);
 
     }else

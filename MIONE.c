@@ -107,13 +107,11 @@ ValueReturnObj Function(const MioneObj* Objs, const int ObjsSize,const ValueObj*
                 Pairs[PairsSize - 1].SourceSize = 0;
                 Pairs[PairsSize - 1].Source = malloc(0);
 
-                printf("host here\n");
                 HeadFuc = SVV;
             }
 
             (Pairs[PairsSize - 1].SourceSize)++;
 
-            printf("end\n");
             (Pairs[PairsSize - 1].Source) = realloc(Pairs[PairsSize - 1].Source, sizeof(MioneObj) * (Pairs[PairsSize - 1].SourceSize));
             Pairs[PairsSize - 1].Source[Pairs[PairsSize - 1].SourceSize - 1] = Mio;
 
@@ -239,13 +237,11 @@ ValueReturnObj mione(const MioneObj* Objs, const int ObjsSize)
                 Pairs[PairsSize - 1].SourceSize = 0;
                 Pairs[PairsSize - 1].Source = malloc(0);
 
-                printf("host here\n");
                 HeadFuc = SVV;
             }
 
             (Pairs[PairsSize - 1].SourceSize)++;
 
-            printf("end\n");
             (Pairs[PairsSize - 1].Source) = realloc(Pairs[PairsSize - 1].Source, sizeof(MioneObj) * (Pairs[PairsSize - 1].SourceSize));
             Pairs[PairsSize - 1].Source[Pairs[PairsSize - 1].SourceSize - 1] = Mio;
 

@@ -29,7 +29,6 @@ MioneObj *CMO(CaseObj*CASES,int CASESIZE,
 
 
 
-    printf("new\n");
 
 
 
@@ -53,12 +52,6 @@ MioneObj *CMO(CaseObj*CASES,int CASESIZE,
 
     VariableObj *** a = &((*DvoUP)[(*DvoSizeUP)-1].VariableUPs);
     int * aSize = &((*DvoUP)[(*DvoSizeUP)-1].VariablesSize);
-\
-    printf("START DVOSIZE=%d\n",(*DvoSizeUP));
-    printf("start a : %p \n",a);
-    printf("start aSize : %p %d \n",aSize,*aSize);
-
-
 
     for (int i = 0; i <CASESIZE; i++)
     {
@@ -187,11 +180,6 @@ MioneObj *CMO(CaseObj*CASES,int CASESIZE,
                    int MioObjSize = 0;
 
                    MioneObj * MioObj = CMO(Area,AreaSize,&MioObjSize,MIONE[MIONESIZE-1].Line,MIONE[MIONESIZE-1].Column,DvoUP,DvoSizeUP);
-
-                   printf("START DVOSIZE=%d\n",(*DvoSizeUP));
-
-                   printf("called a : %p \n",a);
-                   printf("called aSize : %p %d \n",aSize,*aSize);
 
                    AreaObj eArea = (AreaObj){
                        .Area =MioObj,
@@ -361,7 +349,6 @@ MioneObj *CMO(CaseObj*CASES,int CASESIZE,
                  VariableObj * VUP = malloc(sizeof(VariableObj));
                  VUP = VariableUP;
 
-                 printf("now size %d index %d \n",(*DvoUP)[(*DvoSizeUP)-1].VariablesSize,(*DvoSizeUP)-1);
 
 
                  ((*DvoUP)[(*DvoSizeUP)-1].VariablesSize)++;
