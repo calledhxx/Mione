@@ -50,9 +50,6 @@ MioneObj *CMO(CaseObj*CASES,int CASESIZE,
         .VariableUPs = malloc(0),
     };
 
-    VariableObj *** a = &((*DvoUP)[(*DvoSizeUP)-1].VariableUPs);
-    int * aSize = &((*DvoUP)[(*DvoSizeUP)-1].VariablesSize);
-
     for (int i = 0; i <CASESIZE; i++)
     {
 

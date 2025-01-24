@@ -14,6 +14,15 @@
 #include "ERR.h"
 #include "PROMPT_DEF.h"
 
+int NormalSupportHeads[]={
+    1,
+    2
+};
+
+int FunctionSupportHeads[]={
+    1,
+    2
+};
 
 ValueReturnObj Function(const MioneObj* Objs, const int ObjsSize,const ValueObj* Request, const int RequestSize)
 {

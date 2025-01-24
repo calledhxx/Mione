@@ -20,6 +20,7 @@ HeadObj Heads[]  = {
         .CurNumber = 2
     },
 
+
     (HeadObj){
         .CurNumber = -1
     }

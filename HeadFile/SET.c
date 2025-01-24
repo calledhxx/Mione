@@ -28,11 +28,8 @@ HeadReturnObj SET(struct _PairObject*Pairs,int PairsSize)
 
     int set = 0,host = 0;
 
-
-
     for (int i = 0; i < PairsSize; i++)
     {
-
         MioneObj Prompt = Pairs[i].Prompt;
 
         if (Prompt.ObjType == 1) //Head代替Prompt
@@ -45,29 +42,20 @@ HeadReturnObj SET(struct _PairObject*Pairs,int PairsSize)
             switch (Prompt.Prompt.CurNumber)
             {
             case 1:
-
-
-
                 Counted = COUNT(Pairs[i].Source, Pairs[i].SourceSize);
-
                 if (Counted.ValueSize>Request.VariablesSize) ErrCall("More variables than values","M111",NULL,Prompt.Line,Prompt.Column);
+
                 set = 1;
 
                 break;
             case 2:
                 if (Pairs[i].SourceSize) ErrCall("`host` CAN NOT BE SET TO ANY SOURCE","M123",NULL,Prompt.Line,Prompt.Column);
 
+                if (ToReturn.ToState) ErrCall("aaaaaaaaaaa","dadioajdoad",NULL,Prompt.Line,Prompt.Column);
 
+                ToReturn.ToState = 2;
 
-                if (ToReturn.ToState)
-                {
-                    ErrCall("aaaaaaaaaaa","dadioajdoad",NULL,Prompt.Line,Prompt.Column);
-                }else
-                {
-                    ToReturn.ToState = 2;
-                    host = 1;
-                }
-
+                host = 1;
 
             break;
 
@@ -125,10 +113,6 @@ HeadReturnObj SET(struct _PairObject*Pairs,int PairsSize)
             Request.VariableUPs[CountedIndex]->Val = Counted.Value[CountedIndex];
         }
     }
-
-
-
-
 
     return ToReturn;
 }
