@@ -53,8 +53,6 @@ HeadReturnObj SET(struct _PairObject*Pairs,int PairsSize)
 
                 if (ToReturn.ToState) ErrCall("aaaaaaaaaaa","dadioajdoad",NULL,Prompt.Line,Prompt.Column);
 
-                ToReturn.ToState = 2;
-
                 host = 1;
 
             break;
@@ -75,6 +73,8 @@ HeadReturnObj SET(struct _PairObject*Pairs,int PairsSize)
         extern int DvoSize;
 
         ValueObj V = (ValueObj){.ValueType = 0};
+
+        ToReturn.ToState = 2;
 
         for (int RequestIndex = 0; RequestIndex < Request.VariablesSize; RequestIndex++)
         {
