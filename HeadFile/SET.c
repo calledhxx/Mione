@@ -18,6 +18,7 @@ HeadReturnObj SET(struct _PairObject*Pairs,int PairsSize)
 {
     HeadReturnObj ToReturn;
     ToReturn.ToState = 0;
+    ToReturn.VAV = (DefinedVarsAndValueObj){.Value = (ValueObj){.ValueType = 0},.TheDefinedVarUP = NULL};
 
 
     //set x
@@ -77,18 +78,22 @@ HeadReturnObj SET(struct _PairObject*Pairs,int PairsSize)
         {
             for (int DvoIndex = 0; DvoIndex < DvoSize; DvoIndex++)
             {
-                for (int VariableIndex = 0; VariableIndex < Dvo->VariablesSize; VariableIndex++)
+                for (int VariableIndex = 0; VariableIndex < *(Dvo->VariablesSizeUP); VariableIndex++)
                 {
-                    if (strcmp(Dvo->VariableUPs[VariableIndex]->Name, Request.VariableUPs[RequestIndex]->Name) == 0)
+
+                    if (strcmp((*Dvo[DvoIndex].VariableUPsUP[VariableIndex])->Name, Request.VariableUPs[RequestIndex]->Name) == 0)
                     {
-                        V = Dvo->VariableUPs[VariableIndex]->Val;
-                        (Dvo->VariableUPs[VariableIndex])->Val = (ValueObj){
+                        printf("pair\n");
+                        V = (*Dvo[DvoIndex].VariableUPsUP[VariableIndex])->Val;
+                       (*Dvo[DvoIndex].VariableUPsUP[VariableIndex])->Val = (ValueObj){
                             .ValueType = 0};
 
                         ToReturn.VAV = (DefinedVarsAndValueObj){
                             .Value = V,
-                            .TheDefinedVarUP = Dvo->VariableUPs[VariableIndex]
+                            .TheDefinedVarUP = (*Dvo[DvoIndex].VariableUPsUP[VariableIndex])
                         };
+
+
 
                         break;
                     }
@@ -97,7 +102,6 @@ HeadReturnObj SET(struct _PairObject*Pairs,int PairsSize)
             }
             if (V.ValueType) break;
         }
-
     }
 
 

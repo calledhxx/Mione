@@ -189,8 +189,8 @@ typedef struct _VariableRequestUPObject
 
 typedef struct _DefineVariableObject
 {
-    VariableObj * * VariableUPs;
-    int VariablesSize;
+    VariableObj * * * VariableUPsUP;
+    int * VariablesSizeUP;
 
 } DefineVariableObj;
 

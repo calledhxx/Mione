@@ -66,6 +66,8 @@ ValueReturnObj Function(const MioneObj* Objs, const int ObjsSize,const ValueObj*
                     break;
                 case 2:
                     EndLoacl = a.VAV;
+                    printf("%d %s\n",EndLoacl.Value.ValueType,EndLoacl.TheDefinedVarUP->Name);
+
                     break;
                 }
 
@@ -143,6 +145,7 @@ ValueReturnObj Function(const MioneObj* Objs, const int ObjsSize,const ValueObj*
                     break;
                 case 2:
                     EndLoacl = a.VAV;
+
                     break;
                 }
             }

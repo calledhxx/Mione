@@ -840,49 +840,55 @@ CountObj COUNT(MioneObj*Pack,int PackSize)
                     break;
                 case 8:
                     if (Pack[i - 2].ObjType == 4 || Pack[i - 2].ObjType == 5)
-                        {
-                            ValueObj Target1 ;
-                            ValueObj Target2 ;
+                    {
+                        ValueObj Target1 ;
+                        ValueObj Target2 ;
 
-                            if (Pack[i - 2].ObjType == 4) Target1 = Pack[i - 2].VarUP->Val; else Target1 = Pack[i - 2].Val;
-                            if (Pack[i].ObjType == 4) Target2 = Pack[i].VarUP->Val; else Target2 = Pack[i].Val;
+                        if (Pack[i - 2].ObjType == 4) Target1 = Pack[i - 2].VarUP->Val; else Target1 = Pack[i - 2].Val;
+                        if (Pack[i].ObjType == 4) Target2 = Pack[i].VarUP->Val; else Target2 = Pack[i].Val;
 
                         int db = 0;
 
 
-                        switch (Target1.ValueType)
+                        if (Target1.ValueType == Target2.ValueType)
                         {
-                        case 1: //string
-                            if (strcmp(Target2.String,Target1.String)==0) db =1;
-                            break;
-                        case 2:
-                            if ((Target2.ValueType == 2?Target2.NPNumber:Target2.PNumber) - Target1.NPNumber == 0) db =1;
-                            break;
-                        case 3:
-                            if ((Target2.ValueType == 2?Target2.NPNumber:Target2.PNumber)  -  Target1.PNumber == 0) db =1;
-                            break;
-                        case 4:
-                            if ((Target2.ValueType == 4 ? Target2.Area.Area : 0) == Target1.Area.Area) db =1;
-                            break;
+                            switch (Target1.ValueType)
+                            {
+                            case 1: //string
+                                if (strcmp(Target2.String,Target1.String)==0) db =1;
+                                break;
+                            case 2:
+                                if ((Target2.ValueType == 2?Target2.NPNumber:Target2.PNumber) - Target1.NPNumber == 0) db =1;
+                                break;
+                            case 3:
+                                if ((Target2.ValueType == 2?Target2.NPNumber:Target2.PNumber)  -  Target1.PNumber == 0) db =1;
+                                break;
+                            case 4:
+                                if ((Target2.ValueType == 4 ? Target2.Area.Area : 0) == Target1.Area.Area) db =1;
+                                break;
 
-                        case 5:
-                            if ((Target2.ValueType == 5 ? Target2.Area.Area : 0) == Target1.Area.Area) db =1;
-                            break;
+                            case 5:
+                                if ((Target2.ValueType == 5 ? Target2.Area.Area : 0) == Target1.Area.Area) db =1;
+                                break;
 
-                        case 6:
-                            if ((Target2.ValueType == 6 ? Target2.Table.Table : 0) == Target1.Table.Table) db =1;
-                            break;
-                        case 7:
-                            if ((Target2.ValueType == 7 ? Target2.Area.Area : 0) == Target1.Area.Area) db =1;
-                            break;
-                        case 8:
-                            if ((Target2.ValueType == 8 ? Target2.db : 0)  == Target1.db) db =1;
-                            break;
-                        default:
-                            printf("how????\nAny question please contact me by email: calledhxx@gmaill.com .errOn COUNT.c\n");
-                            exit(0xff);
-                            break;
+                            case 6:
+                                if ((Target2.ValueType == 6 ? Target2.Table.Table : 0) == Target1.Table.Table) db =1;
+                                break;
+                            case 7:
+                                if ((Target2.ValueType == 7 ? Target2.Area.Area : 0) == Target1.Area.Area) db =1;
+                                break;
+                            case 8:
+                                if ((Target2.ValueType == 8 ? Target2.db : 0)  == Target1.db) db =1;
+                                break;
+                            default:
+                                printf("%d %d how????\nAny question please contact me by email: calledhxx@gmaill.com .errOn COUNT.c\n",Target1.ValueType,Target2.ValueType);
+                                exit(0xff);
+                                break;
+                            }
                         }
+
+
+
 
                         Out = (MioneObj){
                             .ObjType = 5,
@@ -895,8 +901,7 @@ CountObj COUNT(MioneObj*Pack,int PackSize)
                         };
 
                         PastCost = 2;
-                        }
-                        else
+                    }else
                         {
                             ErrCall(
                                 "You must only connect Two-side-count-SymbolGet.a to VV(Variable or Value).",
@@ -908,6 +913,8 @@ CountObj COUNT(MioneObj*Pack,int PackSize)
                         }
                         CalculateType = 0;
                         break;
+
+
                     default:
                         break;
                 }
@@ -939,17 +946,6 @@ CountObj COUNT(MioneObj*Pack,int PackSize)
                 Pack = NewPack;
 
                 i = ToIndex-1;
-            }else
-            {
-                if (Pack[i].ObjType == 4)
-                {
-                    Pack[i] = (MioneObj){
-                        .ObjType = 5,
-                        .Val = Pack[i].VarUP->Val,
-                        .Line = Pack[i].Line,
-                        .Column = Pack[i].Column
-                    };
-                }
             }
         }
 
@@ -981,14 +977,25 @@ CountObj COUNT(MioneObj*Pack,int PackSize)
 
     for (int i = 0; i < PackSize; i++)
     {
-
         if ( Pack[i].ObjType == 5)
         {
             VPackSize ++;
             VPack = realloc(VPack, sizeof(MioneObj) * (VPackSize));
             VPack[VPackSize-1] = Pack[i].Val;
-            printf("d %d\n",Pack[i].Val.NPNumber);
+        }else if (Pack[i].ObjType == 4)
+        {
+            VPackSize ++;
+            VPack = realloc(VPack, sizeof(MioneObj) * (VPackSize));
+            VPack[VPackSize-1] = Pack[i].VarUP->Val;
         }
+    }
+
+    for (int index = 0; index < VPackSize; index++)
+    {
+        if (VPack[index].ValueType == 2) printf("`NPN`:`%d`\n",VPack[index].NPNumber);
+        else if (VPack[index].ValueType == 1) printf("`STRING`:`%s`\n",VPack[index].String);
+        else if (VPack[index].ValueType == 3) printf("`PN`:`%lf`\n",VPack[index].PNumber);
+        else if (VPack[index].ValueType == 8) printf("`db`:`%d`\n",VPack[index].db);
     }
 
 
