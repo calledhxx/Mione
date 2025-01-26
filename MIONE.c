@@ -16,12 +16,14 @@
 
 int NormalSupportHeads[]={
     1,
-    2
+    2,
+    3,
 };
 
 int FunctionSupportHeads[]={
     1,
-    2
+    2,
+    3
 };
 
 ValueReturnObj Function(const MioneObj* Objs, const int ObjsSize,const ValueObj* Request, const int RequestSize)
@@ -117,6 +119,7 @@ ValueReturnObj Function(const MioneObj* Objs, const int ObjsSize,const ValueObj*
 
                 Pairs[PairsSize - 1].SourceSize = 0;
                 Pairs[PairsSize - 1].Source = malloc(0);
+
 
                 HeadFuc = SVV;
             }
@@ -249,6 +252,8 @@ ValueReturnObj mione(const MioneObj* Objs, const int ObjsSize)
 
                 Pairs[PairsSize - 1].SourceSize = 0;
                 Pairs[PairsSize - 1].Source = malloc(0);
+
+                printf("%d\n",Mio.Val.ValueType);
 
                 HeadFuc = SVV;
             }

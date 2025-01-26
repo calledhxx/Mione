@@ -1,5 +1,8 @@
 set x = function
     set y = 1;
+    return true;
 end();
 
 set z = y+1;
+
+if function return function  return false end end()()

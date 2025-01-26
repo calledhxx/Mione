@@ -30,8 +30,6 @@ MioneObj *CMO(CaseObj*CASES,int CASESIZE,
 
 
 
-
-
     int Lock = -1; //被封鎖到...
 
     int goEndType = 0; //range or function or lights
@@ -65,7 +63,6 @@ MioneObj *CMO(CaseObj*CASES,int CASESIZE,
                Line++;
                Column = 0;
            };
-
 
 
 
@@ -266,7 +263,7 @@ MioneObj *CMO(CaseObj*CASES,int CASESIZE,
                }
            }
 
-           if (strcmp(CASES[i].ObjName,"true") == 0)
+           if (ChildCount == 0) if (strcmp(CASES[i].ObjName,"true") == 0)
            {
                Paired = 5;
                ValueObj Value = (ValueObj){.ValueType = 8, .db = 1};
@@ -281,7 +278,7 @@ MioneObj *CMO(CaseObj*CASES,int CASESIZE,
                    .Column = Column
                };
            }
-           if (strcmp(CASES[i].ObjName,"false") == 0)
+           if (ChildCount == 0) if (strcmp(CASES[i].ObjName,"false") == 0)
            {
                Paired = 5;
                ValueObj Value = (ValueObj){.ValueType = 8, .db = 0};
@@ -329,6 +326,7 @@ MioneObj *CMO(CaseObj*CASES,int CASESIZE,
 
             VariableObj* VariableUP = malloc(sizeof (VariableObj));
 
+
              for (int DvoIndex = 0; DvoIndex < *DvoSizeUP; DvoIndex++)
              {
                  for (int j = 0; j < *((*DvoUP)[DvoIndex].VariablesSizeUP); j++)
@@ -338,6 +336,7 @@ MioneObj *CMO(CaseObj*CASES,int CASESIZE,
                          NewVar = 0;
                          VariableUP = (*(*DvoUP)[DvoIndex].VariableUPsUP)[j];
                          break;
+
                      }
                  }
              }

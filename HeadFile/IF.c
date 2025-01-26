@@ -25,8 +25,10 @@ HeadReturnObj IF(struct _PairObject*Pairs,int PairsSize){
         if (Prompt.ObjType == 1) //Head代替Prompt
         {
             CountObj Counted = COUNT(Pairs[i].Source, Pairs[i].SourceSize);
+            if(Counted.ValueSize != 1) ErrCall("IF Error","M9121321",NULL,Prompt.Line,Prompt.Column);
 
-            if(Counted.ValueSize == 1) ErrCall("IF Error","M9121321",NULL,Prompt.Line,Prompt.Column);
+            int db = (Counted.Value[0].ValueType) ? ((Counted.Value[0].ValueType != 8) ? 1 : Counted.Value[0].db) :0;
+            printf("%d IF\n",db);
         }
         if (Prompt.ObjType == 2)
         {

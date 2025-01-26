@@ -23,10 +23,10 @@ HeadObj Heads[]  = {
     (HeadObj){
         .Fuc = IF,
         .Name = "if",
-        .CurNumber = 2
+        .CurNumber = 3
     },
 
-
+    //記得到MIONE.c新增可執行CurNumber
     (HeadObj){
         .CurNumber = -1
     }
