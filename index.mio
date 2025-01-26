@@ -5,8 +5,10 @@ end();
 
 set z = y+1;
 
-if false then range
-    set a = 0;
+if z then range
+    set a = 5;
 end else range
-    set b = 3
+    set b = 3 //沒執行
 end
+
+set c = a+b
