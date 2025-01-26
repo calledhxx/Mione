@@ -11,4 +11,4 @@ end else range
     set b = 3 //沒執行
 end
 
-set c = a+b
+set c = a+b //error b 為定義
