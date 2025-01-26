@@ -26,10 +26,6 @@ MioneObj *CMO(CaseObj*CASES,int CASESIZE,
 
     int ChildCount = 0; //子項數量
 
-
-
-
-
     int Lock = -1; //被封鎖到...
 
     int goEndType = 0; //range or function or lights
