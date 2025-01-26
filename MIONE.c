@@ -30,6 +30,7 @@ ValueReturnObj Function(const MioneObj* Objs, const int ObjsSize,const ValueObj*
     .TheDefinedVarUP = 0};
 
     ValueReturnObj Return ;
+    Return.ValueSize = 0;
 
     HeadReturnObj (*HeadFuc)(struct _PairObject* Pairs, int PairsSize) = 0;
     PairObj *Pairs = malloc(0);
@@ -66,7 +67,6 @@ ValueReturnObj Function(const MioneObj* Objs, const int ObjsSize,const ValueObj*
                     break;
                 case 2:
                     EndLoacl = a.VAV;
-                    printf("%d %s\n",EndLoacl.Value.ValueType,EndLoacl.TheDefinedVarUP->Name);
 
                     break;
                 }
@@ -163,6 +163,7 @@ ValueReturnObj mione(const MioneObj* Objs, const int ObjsSize)
     .TheDefinedVarUP = 0};
 
     ValueReturnObj Return ;
+    Return.ValueSize = 0;
 
     HeadReturnObj (*HeadFuc)(struct _PairObject* Pairs, int PairsSize) = 0;
     PairObj *Pairs = malloc(0);

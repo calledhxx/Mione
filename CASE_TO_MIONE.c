@@ -351,7 +351,6 @@ MioneObj *CMO(CaseObj*CASES,int CASESIZE,
                  VariableObj * VUP = malloc(sizeof(VariableObj));
                  VUP = VariableUP;
 
-                 printf("vName : %s %d\n",CASES[i].ObjName,(*DvoSizeUP)-1);
 
                  (*((*DvoUP)[(*DvoSizeUP)-1].VariablesSizeUP))++;
                  (*((*DvoUP)[(*DvoSizeUP)-1].VariableUPsUP)) = realloc((*((*DvoUP)[(*DvoSizeUP)-1].VariableUPsUP)),(*((*DvoUP)[(*DvoSizeUP)-1].VariablesSizeUP))*sizeof(VariableObj**));
