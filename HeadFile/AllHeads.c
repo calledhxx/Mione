@@ -7,6 +7,7 @@
 
 #include "SET.h"
 #include "RETURN.h"
+#include "IF.h"
 
 HeadObj Heads[]  = {
     (HeadObj){
@@ -17,6 +18,11 @@ HeadObj Heads[]  = {
     (HeadObj){
         .Fuc = RETURN,
         .Name = "return",
+        .CurNumber = 2
+    },
+    (HeadObj){
+        .Fuc = IF,
+        .Name = "if",
         .CurNumber = 2
     },
 

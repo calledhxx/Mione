@@ -1,15 +1,15 @@
 //
-// Created by calle on 24-12-28.
+// Created by calle on 25-1-26.
 //
 
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 #include "../OBJECTS.h"
-#include "../REQUEST.h"
 #include "../COUNT.h"
 #include "../ERR.h"
-#include <stdio.h>
 
-HeadReturnObj RETURN(struct _PairObject*Pairs,int PairsSize)
-{
+HeadReturnObj IF(struct _PairObject*Pairs,int PairsSize){
     HeadReturnObj ToReturn;
     ToReturn.ToState = 0;
 
