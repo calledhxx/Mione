@@ -160,6 +160,16 @@ typedef struct _ValueReturnObject
     int ValueSize;
 } ValueReturnObj;
 
+typedef struct _MioneReturnObject
+{
+    int ToState;/*
+        0:正常
+        1:回傳
+    */
+    ValueReturnObj Vs;
+
+} MioneReturnObj;
+
 typedef struct _DefinedVarsAndValueObject
 {
     ValueObj Value;
@@ -169,13 +179,12 @@ typedef struct _DefinedVarsAndValueObject
 typedef struct _HeadReturnObject
 {
     int ToState;/*
-        TOSTATE_NORMAL:正常
-        TOSTATE_RETURN:回傳
-        TOSTATE_USELESS:無用回傳
+        0:正常
+        1:回傳
+        2:重設 Variable
     */
 
     ValueReturnObj Vs;
-    int Useless;
     DefinedVarsAndValueObj VAV;
 
 } HeadReturnObj;

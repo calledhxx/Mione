@@ -7,6 +7,7 @@
 #include <string.h>
 #include "../OBJECTS.h"
 #include "../COUNT.h"
+#include "../MIONE.h"
 #include "../ERR.h"
 
 HeadReturnObj IF(struct _PairObject*Pairs,int PairsSize){
@@ -20,7 +21,9 @@ HeadReturnObj IF(struct _PairObject*Pairs,int PairsSize){
     CountObj CountedThenRange = {.ValueSize = 0};
     CountObj CountedElseRange = {.ValueSize = 0};
 
+    int db = 0;
 
+    int then = 0,_else = 0;
 
     for (int i = 0; i < PairsSize; i++)
     {
@@ -31,8 +34,7 @@ HeadReturnObj IF(struct _PairObject*Pairs,int PairsSize){
             CountedDB = COUNT(Pairs[i].Source, Pairs[i].SourceSize);
             if(CountedDB.ValueSize != 1) ErrCall("IF Error","M9121321",NULL,Prompt.Line,Prompt.Column);
 
-            int db = (CountedDB.Value[0].ValueType) ? ((CountedDB.Value[0].ValueType != 8) ? 1 : CountedDB.Value[0].db) :0;
-            printf("%d IF\n",db);
+            db = (CountedDB.Value[0].ValueType) ? ((CountedDB.Value[0].ValueType != 8) ? 1 : CountedDB.Value[0].db) :0;
         }
         if (Prompt.ObjType == 2)
         {
@@ -43,12 +45,15 @@ HeadReturnObj IF(struct _PairObject*Pairs,int PairsSize){
                   if(CountedThenRange.ValueSize != 1) ErrCall("THEN Error","M9121321",NULL,Prompt.Line,Prompt.Column);
                   if(CountedThenRange.Value[0].ValueType != 5) ErrCall("THEN (RANGE) Error","M9121321",NULL,Prompt.Line,Prompt.Column);
 
+                  then= 1;
+
                   break;
             case 4:
                 CountedElseRange = COUNT(Pairs[i].Source, Pairs[i].SourceSize);
                 if(CountedElseRange.ValueSize != 1) ErrCall("ELSE Error","M9121321",NULL,Prompt.Line,Prompt.Column);
                 if(CountedElseRange.Value[0].ValueType != 5) ErrCall("ELSE (RANGE) Error","M9121321",NULL,Prompt.Line,Prompt.Column);
 
+                _else= 1;
 
                 break;
 
@@ -59,6 +64,12 @@ HeadReturnObj IF(struct _PairObject*Pairs,int PairsSize){
         }
     }
 
+    if(then || _else){
+      if(_else == 1 != then) ErrCall("IF-THEN-ELSE Error","M9121321",NULL,Pairs[0].Prompt.Line,Pairs[0].Prompt.Column);
+
+      ValueObj Range = db?CountedThenRange.Value[0]:CountedElseRange.Value[0];
+      //todo
+    }
 
 
 

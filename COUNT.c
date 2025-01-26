@@ -67,12 +67,14 @@ CountObj COUNT(MioneObj*Pack,int PackSize)
 
                                 if (Pack[FirstBracketIndex - 1].VarUP->Val.ValueType == 4)
                                 {
-                                    ValueReturnObj V = Function(
-                                        Pack[FirstBracketIndex - 1].VarUP->Val.Area.Area,
-                                        Pack[FirstBracketIndex - 1].VarUP->Val.Area.Size,
+                                    MioneReturnObj F = Function(
+                                        Pack[FirstBracketIndex - 1].Val.Area.Area,
+                                        Pack[FirstBracketIndex - 1].Val.Area.Size,
                                         ChildCount.Value,
                                         ChildCount.ValueSize
                                         );
+                                    if (F.ToState != 1) ErrCall("Function error ,and i dont know why","M09123",NULL,Pack[FirstBracketIndex - 1].Line,Pack[FirstBracketIndex - 1].Column);
+                                    ValueReturnObj V = F.Vs;
 
                                     MioneObj* NewPack = malloc(0);
                                     int NewPackSize = 0;
@@ -158,13 +160,14 @@ CountObj COUNT(MioneObj*Pack,int PackSize)
 
 
 
-
-                                    ValueReturnObj V = Function(
+                                    MioneReturnObj F = Function(
                                         Pack[FirstBracketIndex - 1].Val.Area.Area,
                                         Pack[FirstBracketIndex - 1].Val.Area.Size,
                                         ChildCount.Value,
                                         ChildCount.ValueSize
                                         );
+                                    if (F.ToState != 1) ErrCall("Function error ,and i dont know why","M09123",NULL,Pack[FirstBracketIndex - 1].Line,Pack[FirstBracketIndex - 1].Column);
+                                    ValueReturnObj V = F.Vs;
 
                                     MioneObj* NewPack = malloc(0);
                                     int NewPackSize = 0;
