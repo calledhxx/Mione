@@ -13,6 +13,14 @@ PromptObj Prompts[] = {
         .CurNumber = 2,
     },
     (PromptObj) {
+        .Name = "then",
+        .CurNumber = 3,
+    },
+    (PromptObj) {
+        .Name = "else",
+        .CurNumber = 4,
+    },
+    (PromptObj) {
         .CurNumber = -1,
     },
 };
