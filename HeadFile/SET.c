@@ -51,12 +51,9 @@ HeadReturnObj SET(struct _PairObject*Pairs,int PairsSize)
             case 2:
                 if (Pairs[i].SourceSize) ErrCall("`host` CAN NOT BE SET TO ANY SOURCE","M123",NULL,Prompt.Line,Prompt.Column);
 
-                if (ToReturn.ToState) ErrCall("aaaaaaaaaaa","dadioajdoad",NULL,Prompt.Line,Prompt.Column);
-
                 host = 1;
 
-            break;
-
+                break;
             default:
                 ErrCall("unsupported prompt type","M111",NULL,Prompt.Line,Prompt.Column);
                 break;

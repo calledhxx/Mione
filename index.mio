@@ -1,10 +1,8 @@
-set x = 101;
+set x = function
+    set x = 50 host;
+    return x + 10;
+end
 
-set y = function
-    set x host = 1
-    return x
-end;
+set y = x()+50;
 
-set a = y();
-
-set z =x + a;
+set x = y;
