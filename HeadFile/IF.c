@@ -25,6 +25,8 @@ HeadReturnObj IF(struct _PairObject*Pairs,int PairsSize){
         if (Prompt.ObjType == 1) //Head代替Prompt
         {
             CountObj Counted = COUNT(Pairs[i].Source, Pairs[i].SourceSize);
+
+            if(Counted.ValueSize == 1) ErrCall("IF Error","M9121321",NULL,Prompt.Line,Prompt.Column);
         }
         if (Prompt.ObjType == 2)
         {
