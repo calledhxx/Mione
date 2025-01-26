@@ -25,13 +25,6 @@ HeadReturnObj IF(struct _PairObject*Pairs,int PairsSize){
         if (Prompt.ObjType == 1) //Head代替Prompt
         {
             CountObj Counted = COUNT(Pairs[i].Source, Pairs[i].SourceSize);
-
-
-            ToReturn.ToState = 1;
-            ToReturn.Vs = (ValueReturnObj){
-                .ValueSize = Counted.ValueSize,
-               .Value = Counted.Value,
-            };
         }
         if (Prompt.ObjType == 2)
         {

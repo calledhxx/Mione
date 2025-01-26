@@ -62,6 +62,7 @@ HeadReturnObj SET(struct _PairObject*Pairs,int PairsSize)
         }
     }
 
+    if (!Request.VariablesSize) ErrCall("no REQUEST?","M111",NULL,Pairs[0].Source[0].Line,Pairs[0].Source[0].Column);
 
     // `host`
 
