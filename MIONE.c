@@ -17,6 +17,12 @@
 int NormalSupportHeads[]={
     1,
     2,
+    3
+};
+
+int RangeSupportHeads[]={
+    1,
+    2,
     3,
 };
 
@@ -158,6 +164,7 @@ MioneReturnObj Range(const MioneObj* Objs, const int ObjsSize)
         LastMio = Mio;
     }
     if (EndLoacl.TheDefinedVarUP != 0) EndLoacl.TheDefinedVarUP->Val = EndLoacl.Value;
+
 
     MioneReturnObj Return = (MioneReturnObj){
         .ToState = MioneReturnStats,

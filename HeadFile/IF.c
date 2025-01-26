@@ -65,13 +65,23 @@ HeadReturnObj IF(struct _PairObject*Pairs,int PairsSize){
     }
 
     if(then || _else){
-      if(_else == 1 != then) ErrCall("IF-THEN-ELSE Error","M9121321",NULL,Pairs[0].Prompt.Line,Pairs[0].Prompt.Column);
+      if(_else ? _else != then : 0) ErrCall("IF-THEN-ELSE Error","M9121321",NULL,Pairs[0].Prompt.Line,Pairs[0].Prompt.Column);
 
-      ValueObj Range = db?CountedThenRange.Value[0]:CountedElseRange.Value[0];
-      //todo
+
+      if(then == db || _else != db){
+
+      	ValueObj RangeArea = db?CountedThenRange.Value[0]:CountedElseRange.Value[0];
+
+         MioneReturnObj R = Range(RangeArea.Area.Area, RangeArea.Area.Size);
+      	 switch(R.ToState){
+        	case 1:
+          		ToReturn.ToState = 1;
+          		ToReturn.Vs = R.Vs;
+          		break;
+      	}
+      }
+
     }
-
-
 
     return ToReturn;
 }

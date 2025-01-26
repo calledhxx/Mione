@@ -5,5 +5,8 @@ end();
 
 set z = y+1;
 
-//太瘋狂了
-if function return function return function return function return function return function return function return function return false end end end end end end end end()()()()()()()()
+if false then range
+    set a = 0;
+end else range
+    set b = 3
+end
