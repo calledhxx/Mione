@@ -60,7 +60,7 @@ MioneObj *CMO(CaseObj*CASES,int CASESIZE,
                Column = 0;
            };
 
-
+           // printf("`%s`\n",CASES[i].ObjName);
 
         //HEAD
          if (ChildCount == 0) for (int Ci = 0;1; Ci++)
@@ -70,17 +70,13 @@ MioneObj *CMO(CaseObj*CASES,int CASESIZE,
              if (strcmp(CASES[i].ObjName,Heads[Ci].Name) == 0)  {
 
 
-                 HeadObj Head = (HeadObj){
-                     .Name = CASES[i].ObjName,
-                 };
-
                  Column++;
 
                  (MIONESIZE)++;
                  (MIONE) = (MioneObj*)realloc( (MIONE) ,(MIONESIZE)*sizeof(MioneObj));
                  (MIONE)[(MIONESIZE)-1] = (MioneObj){
                      .ObjType= 1,
-                     .Head = Head,
+                     .Head = Heads[Ci],
                       .Line = Line,
                       .Column = Column
                  };
@@ -371,7 +367,6 @@ MioneObj *CMO(CaseObj*CASES,int CASESIZE,
 
        }
     }
-
     if (goEndType) ErrCall("END???","M111",NULL,Line,Column);
 
     (*SIZE) = (MIONESIZE);

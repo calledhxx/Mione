@@ -1,14 +1,9 @@
 set x = function
-    set y = 1;
-    return true;
-end();
+    return function
+        return range
+            set e = 5342523;
+        end
+    end
+end()
 
-set z = y+1;
-
-if z then range
-    set a = 5;
-end else range
-    set b = 3 //沒執行
-end
-
-set c = a+b //error b 為定義
+if true then x() else range set z = 100; end

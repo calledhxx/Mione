@@ -15,5 +15,6 @@ add_executable(Mione main.c
         ERR.c
         SYMBOL_DEF.c
         HeadFile/AllHeads.c
+        HeadFile/FOR.c
 
 )

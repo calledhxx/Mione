@@ -29,6 +29,7 @@ CountObj COUNT(MioneObj*Pack,int PackSize)
 
     int CalculateLevel = 0;
 
+
     for(int i = 0; i < PackSize; i++)
     {
 
@@ -68,8 +69,8 @@ CountObj COUNT(MioneObj*Pack,int PackSize)
                                 if (Pack[FirstBracketIndex - 1].VarUP->Val.ValueType == 4)
                                 {
                                     MioneReturnObj F = Function(
-                                        Pack[FirstBracketIndex - 1].Val.Area.Area,
-                                        Pack[FirstBracketIndex - 1].Val.Area.Size,
+                                        Pack[FirstBracketIndex - 1].VarUP->Val.Area.Area,
+                                        Pack[FirstBracketIndex - 1].VarUP->Val.Area.Size,
                                         ChildCount.Value,
                                         ChildCount.ValueSize
                                         );
@@ -156,10 +157,6 @@ CountObj COUNT(MioneObj*Pack,int PackSize)
 
                                 if (Pack[FirstBracketIndex - 1].Val.ValueType == 4)
                                 {
-
-
-
-
                                     MioneReturnObj F = Function(
                                         Pack[FirstBracketIndex - 1].Val.Area.Area,
                                         Pack[FirstBracketIndex - 1].Val.Area.Size,
@@ -999,6 +996,7 @@ CountObj COUNT(MioneObj*Pack,int PackSize)
         else if (VPack[index].ValueType == 1) printf("`STRING`:`%s`\n",VPack[index].String);
         else if (VPack[index].ValueType == 3) printf("`PN`:`%lf`\n",VPack[index].PNumber);
         else if (VPack[index].ValueType == 8) printf("`db`:`%d`\n",VPack[index].db);
+        else if (VPack[index].ValueType == 5) printf("`range omg`\n");
     }
 
 

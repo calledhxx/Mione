@@ -8,6 +8,7 @@
 #include "SET.h"
 #include "RETURN.h"
 #include "IF.h"
+#include "FOR.h"
 
 HeadObj Heads[]  = {
     (HeadObj){
@@ -24,6 +25,11 @@ HeadObj Heads[]  = {
         .Fuc = IF,
         .Name = "if",
         .CurNumber = 3
+    },
+    (HeadObj){
+        .Fuc = FOR,
+        .Name = "for",
+        .CurNumber = 4
     },
 
     //記得到MIONE.c新增可執行CurNumber

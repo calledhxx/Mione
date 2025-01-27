@@ -17,19 +17,22 @@
 int NormalSupportHeads[]={
     1,
     2,
-    3
+    3,
+    4
 };
 
 int RangeSupportHeads[]={
     1,
     2,
     3,
+    4
 };
 
 int FunctionSupportHeads[]={
     1,
     2,
-    3
+    3,
+    4
 };
 
 MioneReturnObj Range(const MioneObj* Objs, const int ObjsSize)
@@ -58,7 +61,8 @@ MioneReturnObj Range(const MioneObj* Objs, const int ObjsSize)
 
        if ((Mio.ObjType == 3 && strcmp(Mio.Symbol.Name, ";") == 0) ||
             Mio.ObjType == 1 ||
-        (LastMio.ObjType == Mio.ObjType && (Mio.ObjType == 3 ? !Mio.Symbol.CanConnect : 1) && Mio.ObjType != 2)
+        (LastMio.ObjType == Mio.ObjType && (Mio.ObjType == 3 ? !Mio.Symbol.CanConnect : 1) && Mio.ObjType != 2) ||
+        (LastMio.ObjType == 4 &&  Mio.ObjType == 5) ||  (LastMio.ObjType == 5 &&  Mio.ObjType == 4)
             )
         {
 
@@ -93,6 +97,14 @@ MioneReturnObj Range(const MioneObj* Objs, const int ObjsSize)
                 if (Heads[i].CurNumber == -1) break;
                 if (strcmp(Mio.Head.Name, Heads[i].Name) == 0)
                 {
+                    int HasFound = 0;
+                    for (int SPHIndex = 0; SPHIndex < sizeof(RangeSupportHeads) / sizeof(int); SPHIndex++) if (RangeSupportHeads[SPHIndex] == Mio.Head.CurNumber)
+                    {
+                        HasFound = 1;
+                        break;
+                    }
+                    if (!HasFound) ErrCall("range support head not found", "MI1",NULL, Mio.Line, Mio.Column);
+
                     PairsSize++;
                     Pairs = realloc(Pairs, sizeof(struct _PairObject) * PairsSize);
                     Pairs[PairsSize - 1].Prompt = Mio; // Type = 1
@@ -200,7 +212,8 @@ MioneReturnObj Function(const MioneObj* Objs, const int ObjsSize,const ValueObj*
 
        if ((Mio.ObjType == 3 && strcmp(Mio.Symbol.Name, ";") == 0) ||
             Mio.ObjType == 1 ||
-        (LastMio.ObjType == Mio.ObjType && (Mio.ObjType == 3 ? !Mio.Symbol.CanConnect : 1) && Mio.ObjType != 2)
+            (LastMio.ObjType == Mio.ObjType && (Mio.ObjType == 3 ? !Mio.Symbol.CanConnect : 1) && Mio.ObjType != 2)||
+            (LastMio.ObjType == 4 &&  Mio.ObjType == 5) ||  (LastMio.ObjType == 5 &&  Mio.ObjType == 4)
             )
         {
 
@@ -235,6 +248,13 @@ MioneReturnObj Function(const MioneObj* Objs, const int ObjsSize,const ValueObj*
                 if (Heads[i].CurNumber == -1) break;
                 if (strcmp(Mio.Head.Name, Heads[i].Name) == 0)
                 {
+                    int HasFound = 0;
+                    for (int SPHIndex = 0; SPHIndex < sizeof(FunctionSupportHeads) / sizeof(int); SPHIndex++) if (FunctionSupportHeads[SPHIndex] == Mio.Head.CurNumber)
+                    {
+                        HasFound = 1;
+                        break;
+                    }
+                    if (!HasFound) ErrCall("function support head not found", "MI1",NULL, Mio.Line, Mio.Column);
                     PairsSize++;
                     Pairs = realloc(Pairs, sizeof(struct _PairObject) * PairsSize);
                     Pairs[PairsSize - 1].Prompt = Mio; // Type = 1
@@ -312,6 +332,7 @@ MioneReturnObj Function(const MioneObj* Objs, const int ObjsSize,const ValueObj*
         .Vs = ReturnVs,
     };
 
+
     return Return;
 }
 
@@ -342,7 +363,8 @@ MioneReturnObj mione(const MioneObj* Objs, const int ObjsSize)
 
        if ((Mio.ObjType == 3 && strcmp(Mio.Symbol.Name, ";") == 0) ||
             Mio.ObjType == 1 ||
-        (LastMio.ObjType == Mio.ObjType && (Mio.ObjType == 3 ? !Mio.Symbol.CanConnect : 1) && Mio.ObjType != 2)
+            (LastMio.ObjType == Mio.ObjType && (Mio.ObjType == 3 ? !Mio.Symbol.CanConnect : 1) && Mio.ObjType != 2)||
+            (LastMio.ObjType == 4 &&  Mio.ObjType == 5) ||  (LastMio.ObjType == 5 &&  Mio.ObjType == 4)
             )
         {
 
@@ -377,6 +399,14 @@ MioneReturnObj mione(const MioneObj* Objs, const int ObjsSize)
                 if (Heads[i].CurNumber == -1) break;
                 if (strcmp(Mio.Head.Name, Heads[i].Name) == 0)
                 {
+                    int HasFound = 0;
+                    for (int SPHIndex = 0; SPHIndex < sizeof(NormalSupportHeads) / sizeof(int); SPHIndex++) if (NormalSupportHeads[SPHIndex] == Mio.Head.CurNumber)
+                    {
+                        HasFound = 1;
+                        break;
+                    }
+                    if (!HasFound) ErrCall("mione support head not found", "MI1",NULL, Mio.Line, Mio.Column);
+
                     PairsSize++;
                     Pairs = realloc(Pairs, sizeof(struct _PairObject) * PairsSize);
                     Pairs[PairsSize - 1].Prompt = Mio; // Type = 1
