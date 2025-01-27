@@ -1,9 +1,22 @@
 set x = function
     return function
         return range
-            set e = 5342523;
+            set e = 127;
+        end
+    end
+end()
+
+for i = 0
+
+if true then x() else range set z = 100; end
+
+set x = function
+    return function
+        return range
+            set e = 500;
         end
     end
 end()
 
 if true then x() else range set z = 100; end
+//for index in b with key do x()

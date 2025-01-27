@@ -82,16 +82,16 @@ HeadReturnObj SET(struct _PairObject*Pairs,int PairsSize)
                 for (int VariableIndex = 0; VariableIndex < *(Dvo->VariablesSizeUP); VariableIndex++)
                 {
 
-                    if (strcmp((*Dvo[DvoIndex].VariableUPsUP[VariableIndex])->Name, Request.VariableUPs[RequestIndex]->Name) == 0)
+                    if (strcmp((*Dvo[DvoIndex].VariableUPsUP)[VariableIndex]->Name, Request.VariableUPs[RequestIndex]->Name) == 0)
                     {
                         printf("pair\n");
-                        V = (*Dvo[DvoIndex].VariableUPsUP[VariableIndex])->Val;
-                       (*Dvo[DvoIndex].VariableUPsUP[VariableIndex])->Val = (ValueObj){
+                        V = (*Dvo[DvoIndex].VariableUPsUP)[VariableIndex]->Val;
+                       (*Dvo[DvoIndex].VariableUPsUP)[VariableIndex]->Val = (ValueObj){
                             .ValueType = 0};
 
                         ToReturn.VAV = (DefinedVarsAndValueObj){
                             .Value = V,
-                            .TheDefinedVarUP = (*Dvo[DvoIndex].VariableUPsUP[VariableIndex])
+                            .TheDefinedVarUP = (*Dvo[DvoIndex].VariableUPsUP)[VariableIndex]
                         };
 
 

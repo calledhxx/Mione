@@ -21,6 +21,14 @@ PromptObj Prompts[] = {
         .CurNumber = 4,
     },
     (PromptObj) {
+        .Name = "do",
+        .CurNumber = 5,
+    },
+    (PromptObj) {
+        .Name = "to",
+        .CurNumber = 6,
+    },
+    (PromptObj) {
         .CurNumber = -1,
     },
 };

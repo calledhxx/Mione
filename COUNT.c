@@ -74,6 +74,7 @@ CountObj COUNT(MioneObj*Pack,int PackSize)
                                         ChildCount.Value,
                                         ChildCount.ValueSize
                                         );
+
                                     if (F.ToState != 1) ErrCall("Function error ,and i dont know why","M09123",NULL,Pack[FirstBracketIndex - 1].Line,Pack[FirstBracketIndex - 1].Column);
                                     ValueReturnObj V = F.Vs;
 

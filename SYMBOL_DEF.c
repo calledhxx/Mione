@@ -92,6 +92,13 @@ SymbolObj Symbols[] =
         .CurNumber = 8,
         .CanConnect = 1
     },
+    (SymbolObj){
+        .Name = "to",
+        .SymbolType = 1,
+        .xIndex = 2,
+        .CurNumber = 9,
+        .CanConnect = 0
+    },
 
     (SymbolObj){ //衛兵值
         .CurNumber = -1

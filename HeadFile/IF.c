@@ -73,6 +73,8 @@ HeadReturnObj IF(struct _PairObject*Pairs,int PairsSize){
       	ValueObj RangeArea = db?CountedThenRange.Value[0]:CountedElseRange.Value[0];
 
          MioneReturnObj R = Range(RangeArea.Area.Area, RangeArea.Area.Size);
+
+
       	 switch(R.ToState){
         	case 1:
           		ToReturn.ToState = 1;
