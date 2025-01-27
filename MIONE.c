@@ -383,7 +383,6 @@ MioneReturnObj mione(const MioneObj* Objs, const int ObjsSize)
                     break;
                 case 2:
                     EndLoacl = a.VAV;
-                    printf("to %d\n",EndLoacl.Value.ValueType);
                     break;
                 }
 
