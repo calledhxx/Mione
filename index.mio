@@ -6,9 +6,10 @@ set x = function
     end
 end()
 
+
 for i = 5;
 
-set z = i+5
+set z = i+5;
 
 if true then x() else range set z = 100; end
 //for index in b with key do x()

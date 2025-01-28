@@ -42,13 +42,17 @@ HeadReturnObj FOR(struct _PairObject*Pairs,int PairsSize)
             case 1: // =
                 set = 1;
                 SetCounted = COUNT(Pairs[i].Source, Pairs[i].SourceSize);
+                if (SetCounted.ValueSize !=1)ErrCall("set count error","M111",NULL,Prompt.Line,Prompt.Column);
+
                 break;
             case 5: //do
                 DoCounted = COUNT(Pairs[i].Source, Pairs[i].SourceSize);
+                if (DoCounted.ValueSize !=1)ErrCall("do count error","M111",NULL,Prompt.Line,Prompt.Column);
               	_do = 1;
                 break;
             case 6: //to
               	ToCounted = COUNT(Pairs[i].Source, Pairs[i].SourceSize);
+                if (ToCounted.ValueSize !=1)ErrCall("to count error","M111",NULL,Prompt.Line,Prompt.Column);
                 to = 1;
                 break;
             default:
@@ -92,9 +96,9 @@ HeadReturnObj FOR(struct _PairObject*Pairs,int PairsSize)
             Request.VariableUPs[CountedIndex]->Val = SetCounted.Value[CountedIndex];
         }
     }
+    if(to){
 
-
-    //todo
+    }
     VariableUP->Val = V;
 
     return ToReturn;
