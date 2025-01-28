@@ -75,7 +75,6 @@ CountObj COUNT(MioneObj*Pack,int PackSize)
                                         ChildCount.ValueSize
                                         );
 
-                                    if (F.ToState != 1) ErrCall("Function error ,and i dont know why","M09123",NULL,Pack[FirstBracketIndex - 1].Line,Pack[FirstBracketIndex - 1].Column);
                                     ValueReturnObj V = F.Vs;
 
                                     MioneObj* NewPack = malloc(0);
@@ -164,7 +163,6 @@ CountObj COUNT(MioneObj*Pack,int PackSize)
                                         ChildCount.Value,
                                         ChildCount.ValueSize
                                         );
-                                    if (F.ToState != 1) ErrCall("Function error ,and i dont know why","M09123",NULL,Pack[FirstBracketIndex - 1].Line,Pack[FirstBracketIndex - 1].Column);
                                     ValueReturnObj V = F.Vs;
 
                                     MioneObj* NewPack = malloc(0);

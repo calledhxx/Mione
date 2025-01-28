@@ -43,8 +43,7 @@ MioneReturnObj Range(const MioneObj* Objs, const int ObjsSize)
     DefinedVarsAndValueObj EndLoacl = (DefinedVarsAndValueObj){
     .TheDefinedVarUP = 0};
 
-    ValueReturnObj ReturnVs ;
-    ReturnVs.ValueSize = 0;
+
 
     HeadReturnObj (*HeadFuc)(struct _PairObject* Pairs, int PairsSize) = 0;
     PairObj *Pairs = malloc(0);
@@ -53,6 +52,9 @@ MioneReturnObj Range(const MioneObj* Objs, const int ObjsSize)
     MioneObj LastMio = (MioneObj) {
         .ObjType = 0
     };
+
+    MioneReturnObj Return;
+    Return.ToState = 0;
 
     int MioneReturnStats = 1;
 
@@ -91,7 +93,9 @@ MioneReturnObj Range(const MioneObj* Objs, const int ObjsSize)
                 if (a.ToState >= 1)
                 {
                     a.ToState = a.ToState-1;
-                    ReturnVs = a.Vs;
+                    Return.Vs = a.Vs;
+
+                    Return.ToState =  Return.ToState +1;
 
                     index=ObjsSize; //break break
                     continue;
@@ -187,7 +191,9 @@ MioneReturnObj Range(const MioneObj* Objs, const int ObjsSize)
                 if (a.ToState >= 1)
                 {
                     a.ToState = a.ToState-1;
-                    ReturnVs = a.Vs;
+                    Return.Vs = a.Vs;
+
+                    Return.ToState =  Return.ToState +1;
 
                     index=ObjsSize; //break break
                     continue;
@@ -198,11 +204,7 @@ MioneReturnObj Range(const MioneObj* Objs, const int ObjsSize)
     }
     if (EndLoacl.TheDefinedVarUP != 0) EndLoacl.TheDefinedVarUP->Val = EndLoacl.Value;
 
-
-    MioneReturnObj Return = (MioneReturnObj){
-        .ToState = MioneReturnStats,
-        .Vs = ReturnVs,
-    };
+    
 
     return Return;
 }
@@ -212,8 +214,7 @@ MioneReturnObj Function(const MioneObj* Objs, const int ObjsSize,const ValueObj*
     DefinedVarsAndValueObj EndLoacl = (DefinedVarsAndValueObj){
     .TheDefinedVarUP = 0};
 
-    ValueReturnObj ReturnVs ;
-    ReturnVs.ValueSize = 0;
+
 
     HeadReturnObj (*HeadFuc)(struct _PairObject* Pairs, int PairsSize) = 0;
     PairObj *Pairs = malloc(0);
@@ -222,6 +223,9 @@ MioneReturnObj Function(const MioneObj* Objs, const int ObjsSize,const ValueObj*
     MioneObj LastMio = (MioneObj) {
         .ObjType = 0
     };
+
+    MioneReturnObj Return;
+    Return.ToState = 0;
 
     int MioneReturnStats = 1;
 
@@ -233,8 +237,8 @@ MioneReturnObj Function(const MioneObj* Objs, const int ObjsSize,const ValueObj*
 
        if ((Mio.ObjType == 3 && strcmp(Mio.Symbol.Name, ";") == 0) ||
             Mio.ObjType == 1 ||
-            (LastMio.ObjType == Mio.ObjType && (Mio.ObjType == 3 ? !Mio.Symbol.CanConnect : 1) && Mio.ObjType != 2)||
-            (LastMio.ObjType == 4 &&  Mio.ObjType == 5) ||  (LastMio.ObjType == 5 &&  Mio.ObjType == 4)
+        (LastMio.ObjType == Mio.ObjType && (Mio.ObjType == 3 ? !Mio.Symbol.CanConnect : 1) && Mio.ObjType != 2) ||
+        (LastMio.ObjType == 4 &&  Mio.ObjType == 5) ||  (LastMio.ObjType == 5 &&  Mio.ObjType == 4)
             )
         {
 
@@ -260,7 +264,7 @@ MioneReturnObj Function(const MioneObj* Objs, const int ObjsSize,const ValueObj*
                 if (a.ToState >= 1)
                 {
                     a.ToState = a.ToState-1;
-                    ReturnVs = a.Vs;
+                    Return.Vs = a.Vs;
 
                     index=ObjsSize; //break break
                     continue;
@@ -279,12 +283,13 @@ MioneReturnObj Function(const MioneObj* Objs, const int ObjsSize,const ValueObj*
                 if (strcmp(Mio.Head.Name, Heads[i].Name) == 0)
                 {
                     int HasFound = 0;
-                    for (int SPHIndex = 0; SPHIndex < sizeof(FunctionSupportHeads) / sizeof(int); SPHIndex++) if (FunctionSupportHeads[SPHIndex] == Mio.Head.CurNumber)
+                    for (int SPHIndex = 0; SPHIndex < sizeof(RangeSupportHeads) / sizeof(int); SPHIndex++) if (RangeSupportHeads[SPHIndex] == Mio.Head.CurNumber)
                     {
                         HasFound = 1;
                         break;
                     }
-                    if (!HasFound) ErrCall("function support head not found", "MI1",NULL, Mio.Line, Mio.Column);
+                    if (!HasFound) ErrCall("range support head not found", "MI1",NULL, Mio.Line, Mio.Column);
+
                     PairsSize++;
                     Pairs = realloc(Pairs, sizeof(struct _PairObject) * PairsSize);
                     Pairs[PairsSize - 1].Prompt = Mio; // Type = 1
@@ -355,7 +360,9 @@ MioneReturnObj Function(const MioneObj* Objs, const int ObjsSize,const ValueObj*
                 if (a.ToState >= 1)
                 {
                     a.ToState = a.ToState-1;
-                    ReturnVs = a.Vs;
+                    Return.Vs = a.Vs;
+
+                    Return.ToState =  Return.ToState +1;
 
                     index=ObjsSize; //break break
                     continue;
@@ -366,11 +373,7 @@ MioneReturnObj Function(const MioneObj* Objs, const int ObjsSize,const ValueObj*
     }
     if (EndLoacl.TheDefinedVarUP != 0) EndLoacl.TheDefinedVarUP->Val = EndLoacl.Value;
 
-    MioneReturnObj Return = (MioneReturnObj){
-        .ToState = MioneReturnStats,
-        .Vs = ReturnVs,
-    };
-
+    
 
     return Return;
 }
@@ -378,11 +381,9 @@ MioneReturnObj Function(const MioneObj* Objs, const int ObjsSize,const ValueObj*
 MioneReturnObj mione(const MioneObj* Objs, const int ObjsSize)
 {
 
- DefinedVarsAndValueObj EndLoacl = (DefinedVarsAndValueObj){
+    DefinedVarsAndValueObj EndLoacl = (DefinedVarsAndValueObj){
     .TheDefinedVarUP = 0};
-
-    ValueReturnObj ReturnVs ;
-    ReturnVs.ValueSize = 0;
+    
 
     HeadReturnObj (*HeadFuc)(struct _PairObject* Pairs, int PairsSize) = 0;
     PairObj *Pairs = malloc(0);
@@ -391,6 +392,9 @@ MioneReturnObj mione(const MioneObj* Objs, const int ObjsSize)
     MioneObj LastMio = (MioneObj) {
         .ObjType = 0
     };
+
+    MioneReturnObj Return;
+    Return.ToState = 0;
 
     int MioneReturnStats = 1;
 
@@ -402,8 +406,8 @@ MioneReturnObj mione(const MioneObj* Objs, const int ObjsSize)
 
        if ((Mio.ObjType == 3 && strcmp(Mio.Symbol.Name, ";") == 0) ||
             Mio.ObjType == 1 ||
-            (LastMio.ObjType == Mio.ObjType && (Mio.ObjType == 3 ? !Mio.Symbol.CanConnect : 1) && Mio.ObjType != 2)||
-            (LastMio.ObjType == 4 &&  Mio.ObjType == 5) ||  (LastMio.ObjType == 5 &&  Mio.ObjType == 4)
+        (LastMio.ObjType == Mio.ObjType && (Mio.ObjType == 3 ? !Mio.Symbol.CanConnect : 1) && Mio.ObjType != 2) ||
+        (LastMio.ObjType == 4 &&  Mio.ObjType == 5) ||  (LastMio.ObjType == 5 &&  Mio.ObjType == 4)
             )
         {
 
@@ -429,7 +433,7 @@ MioneReturnObj mione(const MioneObj* Objs, const int ObjsSize)
                 if (a.ToState >= 1)
                 {
                     a.ToState = a.ToState-1;
-                    ReturnVs = a.Vs;
+                    Return.Vs = a.Vs;
 
                     index=ObjsSize; //break break
                     continue;
@@ -448,12 +452,12 @@ MioneReturnObj mione(const MioneObj* Objs, const int ObjsSize)
                 if (strcmp(Mio.Head.Name, Heads[i].Name) == 0)
                 {
                     int HasFound = 0;
-                    for (int SPHIndex = 0; SPHIndex < sizeof(NormalSupportHeads) / sizeof(int); SPHIndex++) if (NormalSupportHeads[SPHIndex] == Mio.Head.CurNumber)
+                    for (int SPHIndex = 0; SPHIndex < sizeof(RangeSupportHeads) / sizeof(int); SPHIndex++) if (RangeSupportHeads[SPHIndex] == Mio.Head.CurNumber)
                     {
                         HasFound = 1;
                         break;
                     }
-                    if (!HasFound) ErrCall("mione support head not found", "MI1",NULL, Mio.Line, Mio.Column);
+                    if (!HasFound) ErrCall("range support head not found", "MI1",NULL, Mio.Line, Mio.Column);
 
                     PairsSize++;
                     Pairs = realloc(Pairs, sizeof(struct _PairObject) * PairsSize);
@@ -525,7 +529,9 @@ MioneReturnObj mione(const MioneObj* Objs, const int ObjsSize)
                 if (a.ToState >= 1)
                 {
                     a.ToState = a.ToState-1;
-                    ReturnVs = a.Vs;
+                    Return.Vs = a.Vs;
+
+                    Return.ToState =  Return.ToState +1;
 
                     index=ObjsSize; //break break
                     continue;
@@ -536,10 +542,7 @@ MioneReturnObj mione(const MioneObj* Objs, const int ObjsSize)
     }
     if (EndLoacl.TheDefinedVarUP != 0) EndLoacl.TheDefinedVarUP->Val = EndLoacl.Value;
 
-    MioneReturnObj Return = (MioneReturnObj){
-        .ToState = MioneReturnStats,
-        .Vs = ReturnVs,
-    };
+    
 
     return Return;
 }
@@ -549,9 +552,6 @@ MioneReturnObj Table(const MioneObj* Objs, const int ObjsSize,VariableObj * * Va
     DefinedVarsAndValueObj EndLoacl = (DefinedVarsAndValueObj){
     .TheDefinedVarUP = 0};
 
-    ValueReturnObj ReturnVs ;
-    ReturnVs.ValueSize = 0;
-
     HeadReturnObj (*HeadFuc)(struct _PairObject* Pairs, int PairsSize) = 0;
     PairObj *Pairs = malloc(0);
     int PairsSize = 0;
@@ -559,6 +559,9 @@ MioneReturnObj Table(const MioneObj* Objs, const int ObjsSize,VariableObj * * Va
     MioneObj LastMio = (MioneObj) {
         .ObjType = 0
     };
+
+    MioneReturnObj Return;
+    Return.ToState = 0;
 
     int MioneReturnStats = 1;
 
@@ -602,7 +605,9 @@ MioneReturnObj Table(const MioneObj* Objs, const int ObjsSize,VariableObj * * Va
                 if (a.ToState >= 1)
                 {
                     a.ToState = a.ToState-1;
-                    ReturnVs = a.Vs;
+                    Return.Vs = a.Vs;
+
+                    Return.ToState =  Return.ToState +1;
 
                     index=ObjsSize; //break break
                     continue;
@@ -702,7 +707,9 @@ MioneReturnObj Table(const MioneObj* Objs, const int ObjsSize,VariableObj * * Va
                 if (a.ToState >= 1)
                 {
                     a.ToState = a.ToState-1;
-                    ReturnVs = a.Vs;
+                    Return.Vs = a.Vs;
+
+                    Return.ToState =  Return.ToState +1;
 
                     index=ObjsSize; //break break
                     continue;
@@ -713,11 +720,7 @@ MioneReturnObj Table(const MioneObj* Objs, const int ObjsSize,VariableObj * * Va
         LastMio = Mio;
     }
     if (EndLoacl.TheDefinedVarUP != 0) EndLoacl.TheDefinedVarUP->Val = EndLoacl.Value;
-
-    MioneReturnObj Return = (MioneReturnObj){
-        .ToState = MioneReturnStats,
-        .Vs = ReturnVs,
-    };
+    
 
     return Return;
 }

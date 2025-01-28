@@ -74,13 +74,10 @@ HeadReturnObj IF(struct _PairObject*Pairs,int PairsSize){
 
          MioneReturnObj R = Range(RangeArea.Area.Area, RangeArea.Area.Size);
 
-
-      	 switch(R.ToState){
-        	case 1:
-          		ToReturn.ToState = ToReturn.ToState+1;
-          		ToReturn.Vs = R.Vs;
-          		break;
-      	}
+         if(R.ToState >=1 ){
+             ToReturn.ToState = ToReturn.ToState+1;
+             ToReturn.Vs = R.Vs;
+         }
       }
 
     }
