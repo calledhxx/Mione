@@ -90,6 +90,9 @@ MioneReturnObj Range(const MioneObj* Objs, const int ObjsSize)
                 case 1:
                     a.ToState = a.ToState-1;
                     ReturnVs = a.Vs;
+
+                    index=ObjsSize; //break break
+                    continue;
                 }
 
                 if (Mio.ObjType == 3 && strcmp(Mio.Symbol.Name, ";") == 0)continue;
@@ -181,6 +184,9 @@ MioneReturnObj Range(const MioneObj* Objs, const int ObjsSize)
                 case 1:
                     a.ToState = a.ToState-1;
                     ReturnVs = a.Vs;
+
+                    index=ObjsSize; //break break
+                    continue;
                 }
             }
         }
@@ -249,6 +255,9 @@ MioneReturnObj Function(const MioneObj* Objs, const int ObjsSize,const ValueObj*
                 case 1:
                     a.ToState = a.ToState-1;
                     ReturnVs = a.Vs;
+
+                    index=ObjsSize; //break break
+                    continue;
                 }
 
                 if (Mio.ObjType == 3 && strcmp(Mio.Symbol.Name, ";") == 0)continue;
@@ -339,6 +348,9 @@ MioneReturnObj Function(const MioneObj* Objs, const int ObjsSize,const ValueObj*
                 case 1:
                     a.ToState = a.ToState-1;
                     ReturnVs = a.Vs;
+
+                    index=ObjsSize; //break break
+                    continue;
                 }
             }
         }
@@ -408,6 +420,9 @@ MioneReturnObj mione(const MioneObj* Objs, const int ObjsSize)
                 case 1:
                     a.ToState = a.ToState-1;
                     ReturnVs = a.Vs;
+
+                    index=ObjsSize; //break break
+                    continue;
                 }
 
                 if (Mio.ObjType == 3 && strcmp(Mio.Symbol.Name, ";") == 0)continue;
@@ -499,6 +514,9 @@ MioneReturnObj mione(const MioneObj* Objs, const int ObjsSize)
                 case 1:
                     a.ToState = a.ToState-1;
                     ReturnVs = a.Vs;
+
+                    index=ObjsSize; //break break
+                    continue;
                 }
             }
         }
@@ -569,6 +587,9 @@ MioneReturnObj Table(const MioneObj* Objs, const int ObjsSize,VariableObj * * Va
                 case 1:
                     a.ToState = a.ToState-1;
                     ReturnVs = a.Vs;
+
+                    index=ObjsSize; //break break
+                    continue;
                 }
 
                 if (Mio.ObjType == 3 && strcmp(Mio.Symbol.Name, ";") == 0)continue;
@@ -663,6 +684,9 @@ MioneReturnObj Table(const MioneObj* Objs, const int ObjsSize,VariableObj * * Va
                 case 1:
                     a.ToState = a.ToState-1;
                     ReturnVs = a.Vs;
+
+                    index=ObjsSize; //break break
+                    continue;
                 }
             }
         }
