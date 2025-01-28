@@ -1,5 +1,6 @@
-set x = {
-    set y = 1;
-    set z = 2;
-    set f = 2;
-};
+set x = function
+    if 2 == 2 then range return 1 end;
+    set x = 1;
+end;
+
+set z = x();
