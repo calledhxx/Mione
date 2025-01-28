@@ -80,9 +80,8 @@ HeadReturnObj SET(struct _PairObject*Pairs,int PairsSize)
         {
             for (int DvoIndex = 0; DvoIndex < DvoSize; DvoIndex++)
             {
-                for (int VariableIndex = 0; VariableIndex < *(Dvo->VariablesSizeUP); VariableIndex++)
+                for (int VariableIndex = 0; VariableIndex < *(Dvo[DvoIndex].VariablesSizeUP); VariableIndex++)
                 {
-
                     if (strcmp((*Dvo[DvoIndex].VariableUPsUP)[VariableIndex]->Name, Request.VariableUPs[RequestIndex]->Name) == 0)
                     {
                         printf("pair\n");
@@ -117,6 +116,7 @@ HeadReturnObj SET(struct _PairObject*Pairs,int PairsSize)
         }
 
         ToReturn.ToState = ToReturn.ToState+4;
+
         VariableObj * Vars = malloc(0);
         for (int VariableIndex = 0; VariableIndex < Request.VariablesSize; VariableIndex++)
         {

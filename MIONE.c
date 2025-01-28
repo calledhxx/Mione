@@ -77,30 +77,24 @@ MioneReturnObj Range(const MioneObj* Objs, const int ObjsSize)
                 Pairs = NULL;
                 PairsSize = 0;
 
-                switch (a.ToState)
+                if (a.ToState >= 4)
                 {
-                case 4:
-                    if (a.ToState >= 4)
-                    {
-                        a.ToState = a.ToState-4;
-                        //printf("todo MIONE.c MIONE FUC\n");
-                        //exit(200);
-                    }
-                case 2:
-                    if (a.ToState >= 2)
-                    {
-                        a.ToState = a.ToState-2;
-                        EndLoacl = a.VAV;
-                    }
-                case 1:
-                    if (a.ToState >= 1)
-                    {
-                        a.ToState = a.ToState-1;
-                        ReturnVs = a.Vs;
+                    a.ToState = a.ToState-4;
+                    //printf("todo MIONE.c MIONE FUC\n");
+                    //exit(200);
+                }
+                if (a.ToState >= 2)
+                {
+                    a.ToState = a.ToState-2;
+                    EndLoacl = a.VAV;
+                }
+                if (a.ToState >= 1)
+                {
+                    a.ToState = a.ToState-1;
+                    ReturnVs = a.Vs;
 
-                        index=ObjsSize; //break break
-                        continue;
-                    }
+                    index=ObjsSize; //break break
+                    continue;
                 }
 
                 if (Mio.ObjType == 3 && strcmp(Mio.Symbol.Name, ";") == 0)continue;
@@ -179,30 +173,24 @@ MioneReturnObj Range(const MioneObj* Objs, const int ObjsSize)
                 PairsSize = 0;
 
 
-                switch (a.ToState)
+                if (a.ToState >= 4)
                 {
-                case 4:
-                    if (a.ToState >= 4)
-                    {
-                        a.ToState = a.ToState-4;
-                        //printf("todo MIONE.c MIONE FUC\n");
-                        //exit(200);
-                    }
-                case 2:
-                    if (a.ToState >= 2)
-                    {
-                        a.ToState = a.ToState-2;
-                        EndLoacl = a.VAV;
-                    }
-                case 1:
-                    if (a.ToState >= 1)
-                    {
-                        a.ToState = a.ToState-1;
-                        ReturnVs = a.Vs;
+                    a.ToState = a.ToState-4;
+                    //printf("todo MIONE.c MIONE FUC\n");
+                    //exit(200);
+                }
+                if (a.ToState >= 2)
+                {
+                    a.ToState = a.ToState-2;
+                    EndLoacl = a.VAV;
+                }
+                if (a.ToState >= 1)
+                {
+                    a.ToState = a.ToState-1;
+                    ReturnVs = a.Vs;
 
-                        index=ObjsSize; //break break
-                        continue;
-                    }
+                    index=ObjsSize; //break break
+                    continue;
                 }
             }
         }
@@ -258,30 +246,24 @@ MioneReturnObj Function(const MioneObj* Objs, const int ObjsSize,const ValueObj*
                 Pairs = NULL;
                 PairsSize = 0;
 
-                switch (a.ToState)
+                if (a.ToState >= 4)
                 {
-                case 4:
-                    if (a.ToState >= 4)
-                    {
-                        a.ToState = a.ToState-4;
-                        //printf("todo MIONE.c MIONE FUC\n");
-                        //exit(200);
-                    }
-                case 2:
-                    if (a.ToState >= 2)
-                    {
-                        a.ToState = a.ToState-2;
-                        EndLoacl = a.VAV;
-                    }
-                case 1:
-                    if (a.ToState >= 1)
-                    {
-                        a.ToState = a.ToState-1;
-                        ReturnVs = a.Vs;
+                    a.ToState = a.ToState-4;
+                    //printf("todo MIONE.c MIONE FUC\n");
+                    //exit(200);
+                }
+                if (a.ToState >= 2)
+                {
+                    a.ToState = a.ToState-2;
+                    EndLoacl = a.VAV;
+                }
+                if (a.ToState >= 1)
+                {
+                    a.ToState = a.ToState-1;
+                    ReturnVs = a.Vs;
 
-                        index=ObjsSize; //break break
-                        continue;
-                    }
+                    index=ObjsSize; //break break
+                    continue;
                 }
 
                 if (Mio.ObjType == 3 && strcmp(Mio.Symbol.Name, ";") == 0)continue;
@@ -359,30 +341,24 @@ MioneReturnObj Function(const MioneObj* Objs, const int ObjsSize,const ValueObj*
                 PairsSize = 0;
 
 
-                switch (a.ToState)
+                if (a.ToState >= 4)
                 {
-                case 4:
-                    if (a.ToState >= 4)
-                    {
-                        a.ToState = a.ToState-4;
-                        //printf("todo MIONE.c MIONE FUC\n");
-                        //exit(200);
-                    }
-                case 2:
-                    if (a.ToState >= 2)
-                    {
-                        a.ToState = a.ToState-2;
-                        EndLoacl = a.VAV;
-                    }
-                case 1:
-                    if (a.ToState >= 1)
-                    {
-                        a.ToState = a.ToState-1;
-                        ReturnVs = a.Vs;
+                    a.ToState = a.ToState-4;
+                    //printf("todo MIONE.c MIONE FUC\n");
+                    //exit(200);
+                }
+                if (a.ToState >= 2)
+                {
+                    a.ToState = a.ToState-2;
+                    EndLoacl = a.VAV;
+                }
+                if (a.ToState >= 1)
+                {
+                    a.ToState = a.ToState-1;
+                    ReturnVs = a.Vs;
 
-                        index=ObjsSize; //break break
-                        continue;
-                    }
+                    index=ObjsSize; //break break
+                    continue;
                 }
             }
         }
@@ -439,30 +415,24 @@ MioneReturnObj mione(const MioneObj* Objs, const int ObjsSize)
                 Pairs = NULL;
                 PairsSize = 0;
 
-                switch (a.ToState)
+                if (a.ToState >= 4)
                 {
-                case 4:
-                    if (a.ToState >= 4)
-                    {
-                        a.ToState = a.ToState-4;
-                        //printf("todo MIONE.c MIONE FUC\n");
-                        //exit(200);
-                    }
-                case 2:
-                    if (a.ToState >= 2)
-                    {
-                        a.ToState = a.ToState-2;
-                        EndLoacl = a.VAV;
-                    }
-                case 1:
-                    if (a.ToState >= 1)
-                    {
-                        a.ToState = a.ToState-1;
-                        ReturnVs = a.Vs;
+                    a.ToState = a.ToState-4;
+                    //printf("todo MIONE.c MIONE FUC\n");
+                    //exit(200);
+                }
+                if (a.ToState >= 2)
+                {
+                    a.ToState = a.ToState-2;
+                    EndLoacl = a.VAV;
+                }
+                if (a.ToState >= 1)
+                {
+                    a.ToState = a.ToState-1;
+                    ReturnVs = a.Vs;
 
-                        index=ObjsSize; //break break
-                        continue;
-                    }
+                    index=ObjsSize; //break break
+                    continue;
                 }
 
                 if (Mio.ObjType == 3 && strcmp(Mio.Symbol.Name, ";") == 0)continue;
@@ -541,30 +511,24 @@ MioneReturnObj mione(const MioneObj* Objs, const int ObjsSize)
                 PairsSize = 0;
 
 
-                switch (a.ToState)
+                if (a.ToState >= 4)
                 {
-                case 4:
-                    if (a.ToState >= 4)
-                    {
-                        a.ToState = a.ToState-4;
-                        //printf("todo MIONE.c MIONE FUC\n");
-                        //exit(200);
-                    }
-                case 2:
-                    if (a.ToState >= 2)
-                    {
-                        a.ToState = a.ToState-2;
-                        EndLoacl = a.VAV;
-                    }
-                case 1:
-                    if (a.ToState >= 1)
-                    {
-                        a.ToState = a.ToState-1;
-                        ReturnVs = a.Vs;
+                    a.ToState = a.ToState-4;
+                    //printf("todo MIONE.c MIONE FUC\n");
+                    //exit(200);
+                }
+                if (a.ToState >= 2)
+                {
+                    a.ToState = a.ToState-2;
+                    EndLoacl = a.VAV;
+                }
+                if (a.ToState >= 1)
+                {
+                    a.ToState = a.ToState-1;
+                    ReturnVs = a.Vs;
 
-                        index=ObjsSize; //break break
-                        continue;
-                    }
+                    index=ObjsSize; //break break
+                    continue;
                 }
             }
         }
@@ -619,35 +583,29 @@ MioneReturnObj Table(const MioneObj* Objs, const int ObjsSize,VariableObj * * Va
                 Pairs = NULL;
                 PairsSize = 0;
 
-
-                switch (a.ToState)
+                if (a.ToState >= 4)
                 {
-                case 4:
-                    if (a.ToState >= 4)
+                    a.ToState = a.ToState-4;
+                    for (int i = 0; i<a.Vars.VarsSize; i++)
                     {
-                        a.ToState = a.ToState-4;
-                        for (int i = 0; i<a.Vars.VarsSize; i++)
-                        {
-                            (*VariablesUPSizeUP)++;
-                            (*VariablesUP) = realloc((*VariablesUP), (*VariablesUPSizeUP) * sizeof(VariableObj));
-                            (*VariablesUP)[(*VariablesUPSizeUP) - 1] = a.Vars.Vars[i];
-                        }
+                        (*VariablesUPSizeUP)++;
+                        (*VariablesUP) = realloc((*VariablesUP), (*VariablesUPSizeUP) * sizeof(VariableObj));
+                        (*VariablesUP)[(*VariablesUPSizeUP) - 1] = a.Vars.Vars[i];
                     }
-                case 2:
-                    if (a.ToState >= 2)
-                    {
-                        a.ToState = a.ToState-2;
-                        EndLoacl = a.VAV;
-                    }
-                case 1:
-                    if (a.ToState >= 1)
-                    {
-                        a.ToState = a.ToState-1;
-                        ReturnVs = a.Vs;
+                }
+                if (a.ToState >= 2)
+                {
+                    a.ToState = a.ToState-2;
+                    EndLoacl = a.VAV;
+                }
 
-                        index=ObjsSize; //break break
-                        continue;
-                    }
+                if (a.ToState >= 1)
+                {
+                    a.ToState = a.ToState-1;
+                    ReturnVs = a.Vs;
+
+                    index=ObjsSize; //break break
+                    continue;
                 }
 
                 if (Mio.ObjType == 3 && strcmp(Mio.Symbol.Name, ";") == 0)continue;
@@ -726,35 +684,30 @@ MioneReturnObj Table(const MioneObj* Objs, const int ObjsSize,VariableObj * * Va
                 PairsSize = 0;
 
 
-                switch (a.ToState)
+                if (a.ToState >= 4)
                 {
-                case 4:
-                    if (a.ToState >= 4)
+                    a.ToState = a.ToState-4;
+                    for (int i = 0; i<a.Vars.VarsSize; i++)
                     {
-                        a.ToState = a.ToState-4;
-                        for (int i = 0; i<a.Vars.VarsSize; i++)
-                        {
-                            (*VariablesUPSizeUP)++;
-                            (*VariablesUP) = realloc((*VariablesUP), (*VariablesUPSizeUP) * sizeof(VariableObj));
-                            (*VariablesUP)[(*VariablesUPSizeUP) - 1] = a.Vars.Vars[i];
-                        }
-                    }
-                case 2:
-                    if (a.ToState >= 2)
-                    {
-                        a.ToState = a.ToState-2;
-                        EndLoacl = a.VAV;
-                    }
-                case 1:
-                    if (a.ToState >= 1)
-                    {
-                        a.ToState = a.ToState-1;
-                        ReturnVs = a.Vs;
-
-                        index=ObjsSize; //break break
-                        continue;
+                        (*VariablesUPSizeUP)++;
+                        (*VariablesUP) = realloc((*VariablesUP), (*VariablesUPSizeUP) * sizeof(VariableObj));
+                        (*VariablesUP)[(*VariablesUPSizeUP) - 1] = a.Vars.Vars[i];
                     }
                 }
+                if (a.ToState >= 2)
+                {
+                    a.ToState = a.ToState-2;
+                    EndLoacl = a.VAV;
+                }
+                if (a.ToState >= 1)
+                {
+                    a.ToState = a.ToState-1;
+                    ReturnVs = a.Vs;
+
+                    index=ObjsSize; //break break
+                    continue;
+                }
+
             }
         }
         LastMio = Mio;

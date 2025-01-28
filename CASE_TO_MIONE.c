@@ -178,8 +178,7 @@ MioneObj *CMO(CaseObj*CASES,int CASESIZE,
 
                    MioneReturnObj Tb = Table(MioObj,MioObjSize,&TbMemory,&TbMemorySize);
 
-                   printf("N %d\n",TbMemory[1].Val.NPNumber);
-
+                   printf("%d\n",TbMemory[0].Val.ValueType);
 
                    TableObj eTable = (TableObj){
                        .Table = TbMemory,
