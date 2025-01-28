@@ -11,6 +11,7 @@
 #include "SYMBOL_DEF.h"
 #include "PROMPT_DEF.h"
 #include "HeadFile/AllHeads.h"
+#include "MIONE.h"
 #include "ERR.h"
 
 
@@ -25,6 +26,8 @@ MioneObj *CMO(CaseObj*CASES,int CASESIZE,
     int MIONESIZE = 0;
 
     int ChildCount = 0; //子項數量
+
+    int TableCount = 0; //表單子項數量
 
     int Lock = -1; //被封鎖到...
 
@@ -63,7 +66,7 @@ MioneObj *CMO(CaseObj*CASES,int CASESIZE,
            // printf("`%s`\n",CASES[i].ObjName);
 
         //HEAD
-         if (ChildCount == 0) for (int Ci = 0;1; Ci++)
+         if (ChildCount == 0 && TableCount == 0) for (int Ci = 0;1; Ci++)
          {
              if (Heads[Ci].CurNumber == -1) break;
 
@@ -86,7 +89,7 @@ MioneObj *CMO(CaseObj*CASES,int CASESIZE,
              }
          }
         //PROMPT
-         if (ChildCount == 0) for (int Ci = 0;1; Ci++)
+         if (ChildCount == 0 && TableCount == 0) for (int Ci = 0;1; Ci++)
         {
              if (Prompts[Ci].CurNumber == -1) break;
 
@@ -109,7 +112,7 @@ MioneObj *CMO(CaseObj*CASES,int CASESIZE,
 
 
         //SYMBOL
-         if (ChildCount == 0) for (int Ci = 0; 1; Ci++)
+         if (ChildCount == 0 && TableCount == 0) for (int Ci = 0; 1; Ci++)
         {
              if (Symbols[Ci].CurNumber == -1)  break;
 
@@ -130,7 +133,7 @@ MioneObj *CMO(CaseObj*CASES,int CASESIZE,
         }
 
         //Value : String
-         if (ChildCount == 0) if (CASES[i].ObjType == 3|| CASES[i].ObjType == 4)
+         if (ChildCount == 0 && TableCount == 0) if (CASES[i].ObjType == 3|| CASES[i].ObjType == 4)
         {
 
             Paired = 5;
@@ -157,12 +160,71 @@ MioneObj *CMO(CaseObj*CASES,int CASESIZE,
 
         }
 
+           //Value : Table
+
+           if (ChildCount == 0) if (strcmp(CASES[i].ObjName,"}") == 0)
+           {
+               TableCount--;
+               if (!TableCount)
+               {
+                   Paired = 5;
+
+                   int MioObjSize = 0;
+
+                   MioneObj * MioObj = CMO(Area,AreaSize,&MioObjSize,MIONE[MIONESIZE-1].Line,MIONE[MIONESIZE-1].Column,DvoUP,DvoSizeUP);
+
+                   VariableObj * TbMemory = malloc(0);
+                   int  TbMemorySize = 0;
+
+                   MioneReturnObj Tb = Table(MioObj,MioObjSize,&TbMemory,&TbMemorySize);
+
+                   TableObj eTable = (TableObj){
+                       .Table = TbMemory,
+                       .Size = TbMemorySize,
+                   };
+
+                   ValueObj Value = (ValueObj){
+                       .ValueType = 6,
+                       .Table = eTable,
+                   };
+
+                   Column++;
+
+                   (MIONESIZE)++ ;
+                   (MIONE) = (MioneObj*)realloc(MIONE, (MIONESIZE)*sizeof(MioneObj));
+                   (MIONE)[(MIONESIZE)-1] = (MioneObj){
+                       .ObjType = 5,
+                       .Val = Value,
+                       .Line = Line,
+                       .Column = Column
+                   };
+
+                   Area = NULL;
+                   Area = malloc(0);
+                   AreaSize = 0;
+               }
+           }
+           if (ChildCount == 0 && TableCount)
+           {
+               AreaSize++;
+               Area = realloc(Area,AreaSize*sizeof(CaseObj));
+               Area[AreaSize-1] = CASES[i];
+           }
+           if (ChildCount == 0) if (strcmp(CASES[i].ObjName,"{") == 0)
+           {
+               Paired = 5;
+               TableCount++;
+           }
+
+
+
+
            //Value : lights,function or range END 
-           if (strcmp(CASES[i].ObjName,"end") == 0)
+           if (TableCount == 0)if (strcmp(CASES[i].ObjName,"end") == 0)
            {
 
                ChildCount--;
-               if (ChildCount == 0) //僅包覆最高層的子向
+               if (ChildCount == 0 && TableCount == 0) //僅包覆最高層的子向
                {
                    Paired = 5;
 
@@ -216,7 +278,7 @@ MioneObj *CMO(CaseObj*CASES,int CASESIZE,
                }
            }
            //Value : Function
-           if (strcmp(CASES[i].ObjName,"function") == 0)
+           if (TableCount == 0) if (strcmp(CASES[i].ObjName,"function") == 0)
            {
                ChildCount++;
                if (ChildCount == 1)
@@ -231,7 +293,7 @@ MioneObj *CMO(CaseObj*CASES,int CASESIZE,
            //Value : Range
 
 
-           if (strcmp(CASES[i].ObjName,"range") == 0)
+           if (TableCount == 0) if (strcmp(CASES[i].ObjName,"range") == 0)
            {
                ChildCount++;
                if (ChildCount == 1)
@@ -245,7 +307,7 @@ MioneObj *CMO(CaseObj*CASES,int CASESIZE,
            //Value : Lights
 
 
-           if (strcmp(CASES[i].ObjName,"lights") == 0)
+           if (TableCount == 0) if (strcmp(CASES[i].ObjName,"lights") == 0)
            {
                ChildCount++;
                if (ChildCount == 1)
@@ -255,7 +317,7 @@ MioneObj *CMO(CaseObj*CASES,int CASESIZE,
                }
            }
 
-           if (ChildCount == 0) if (strcmp(CASES[i].ObjName,"true") == 0)
+           if (ChildCount == 0 && TableCount == 0) if (strcmp(CASES[i].ObjName,"true") == 0)
            {
                Paired = 5;
                ValueObj Value = (ValueObj){.ValueType = 8, .db = 1};
@@ -270,7 +332,7 @@ MioneObj *CMO(CaseObj*CASES,int CASESIZE,
                    .Column = Column
                };
            }
-           if (ChildCount == 0) if (strcmp(CASES[i].ObjName,"false") == 0)
+           if (ChildCount == 0 && TableCount == 0) if (strcmp(CASES[i].ObjName,"false") == 0)
            {
                Paired = 5;
                ValueObj Value = (ValueObj){.ValueType = 8, .db = 0};
@@ -287,7 +349,7 @@ MioneObj *CMO(CaseObj*CASES,int CASESIZE,
            }
 
         //Value : NPNumber
-            if (ChildCount == 0) if(CASES[i].ObjType == 2)
+            if (ChildCount == 0 && TableCount == 0) if(CASES[i].ObjType == 2)
            {
                Paired = 5;
 
@@ -310,7 +372,7 @@ MioneObj *CMO(CaseObj*CASES,int CASESIZE,
                };
            }
         //Variable
-         if (ChildCount == 0) if (Paired == 0 && (CASES[i].ObjType != 13))
+         if (ChildCount == 0 && TableCount == 0) if (Paired == 0 && (CASES[i].ObjType != 13))
         {
             Paired = 4;
 
@@ -367,7 +429,8 @@ MioneObj *CMO(CaseObj*CASES,int CASESIZE,
 
        }
     }
-    if (goEndType) ErrCall("END???","M111",NULL,Line,Column);
+    if (ChildCount) ErrCall("END???","M111",NULL,Line,Column);
+    if (TableCount) ErrCall("}???","M111",NULL,Line,Column);
 
     (*SIZE) = (MIONESIZE);
     return MIONE;

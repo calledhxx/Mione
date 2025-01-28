@@ -36,7 +36,7 @@ typedef struct _AreaObject
 typedef struct _TableObject
 {
     int Size; //值大小
-    struct _ValueObject * Table; //給予表格(table)。
+    struct _VariableObject * Table; //給予表格(table)。
     //Name 為 Null 時，則以順序來排序
 }TableObj;
 
@@ -176,16 +176,25 @@ typedef struct _DefinedVarsAndValueObject
     VariableObj* TheDefinedVarUP;
 }DefinedVarsAndValueObj;
 
+typedef struct _VariablesObject
+{
+    VariableObj * Vars;
+    int VarsSize;
+} VariablesObj;
+
+
 typedef struct _HeadReturnObject
 {
     int ToState;/*
         0:正常
         1:回傳
         2:重設 Variable
+        3:特色變數制定
     */
 
     ValueReturnObj Vs;
     DefinedVarsAndValueObj VAV;
+    VariablesObj Vars;
 
 } HeadReturnObj;
 

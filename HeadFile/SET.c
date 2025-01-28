@@ -114,6 +114,21 @@ HeadReturnObj SET(struct _PairObject*Pairs,int PairsSize)
         {
             Request.VariableUPs[CountedIndex]->Val = Counted.Value[CountedIndex];
         }
+
+        if (!host)
+        {
+            ToReturn.ToState = 3;
+            VariableObj * Vars = malloc(0);
+            for (int VariableIndex = 0; VariableIndex < Request.VariablesSize; VariableIndex++)
+            {
+                Vars = realloc(Vars, (VariableIndex + 1) * sizeof(VariableObj));
+                Vars[VariableIndex] = *(Request.VariableUPs[VariableIndex]);
+            }
+            ToReturn.Vars = (VariablesObj){
+                .VarsSize = Request.VariablesSize,
+                .Vars = Vars
+            };
+        }
     }
 
     return ToReturn;

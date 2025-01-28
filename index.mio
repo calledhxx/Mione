@@ -6,8 +6,8 @@ set x = function
     end
 end()
 
-
-for i = 5;
+for i = 0 to 7000 do range
+end;
 
 set z = i+5;
 
