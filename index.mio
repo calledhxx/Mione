@@ -2,6 +2,11 @@ set y = 100;
 
 set x = {
     set y = 500;
-}
+    set x = function
+        return 3;
+    end();
 
-set z = y;
+    set h = {
+        set x = "Sdoadjasodjiados";
+    }
+};
