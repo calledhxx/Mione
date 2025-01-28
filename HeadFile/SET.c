@@ -18,6 +18,7 @@ HeadReturnObj SET(struct _PairObject*Pairs,int PairsSize)
 {
     HeadReturnObj ToReturn;
     ToReturn.ToState = 0;
+
     ToReturn.VAV = (DefinedVarsAndValueObj){.Value = (ValueObj){.ValueType = 0},.TheDefinedVarUP = NULL};
 
 
@@ -73,7 +74,7 @@ HeadReturnObj SET(struct _PairObject*Pairs,int PairsSize)
 
         ValueObj V = (ValueObj){.ValueType = 0};
 
-        ToReturn.ToState = 2;
+        ToReturn.ToState = ToReturn.ToState+2;
 
         for (int RequestIndex = 0; RequestIndex < Request.VariablesSize; RequestIndex++)
         {
@@ -115,20 +116,17 @@ HeadReturnObj SET(struct _PairObject*Pairs,int PairsSize)
             Request.VariableUPs[CountedIndex]->Val = Counted.Value[CountedIndex];
         }
 
-        if (!host)
+        ToReturn.ToState = ToReturn.ToState+4;
+        VariableObj * Vars = malloc(0);
+        for (int VariableIndex = 0; VariableIndex < Request.VariablesSize; VariableIndex++)
         {
-            ToReturn.ToState = 3;
-            VariableObj * Vars = malloc(0);
-            for (int VariableIndex = 0; VariableIndex < Request.VariablesSize; VariableIndex++)
-            {
-                Vars = realloc(Vars, (VariableIndex + 1) * sizeof(VariableObj));
-                Vars[VariableIndex] = *(Request.VariableUPs[VariableIndex]);
-            }
-            ToReturn.Vars = (VariablesObj){
-                .VarsSize = Request.VariablesSize,
-                .Vars = Vars
-            };
+            Vars = realloc(Vars, (VariableIndex + 1) * sizeof(VariableObj));
+            Vars[VariableIndex] = *(Request.VariableUPs[VariableIndex]);
         }
+        ToReturn.Vars = (VariablesObj){
+            .VarsSize = Request.VariablesSize,
+            .Vars = Vars
+        };
     }
 
     return ToReturn;

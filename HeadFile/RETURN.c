@@ -31,7 +31,7 @@ HeadReturnObj RETURN(struct _PairObject*Pairs,int PairsSize)
 
 
 
-            ToReturn.ToState = 1;
+            ToReturn.ToState = ToReturn.ToState+1;
             ToReturn.Vs = (ValueReturnObj){
                 .ValueSize = Counted.ValueSize,
                .Value = Counted.Value,

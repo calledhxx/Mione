@@ -189,7 +189,7 @@ typedef struct _HeadReturnObject
         0:正常
         1:回傳
         2:重設 Variable
-        3:特色變數制定
+        4:特色變數制定
     */
 
     ValueReturnObj Vs;

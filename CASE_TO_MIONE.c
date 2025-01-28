@@ -178,6 +178,9 @@ MioneObj *CMO(CaseObj*CASES,int CASESIZE,
 
                    MioneReturnObj Tb = Table(MioObj,MioObjSize,&TbMemory,&TbMemorySize);
 
+                   printf("N %d\n",TbMemory[1].Val.NPNumber);
+
+
                    TableObj eTable = (TableObj){
                        .Table = TbMemory,
                        .Size = TbMemorySize,
@@ -202,6 +205,7 @@ MioneObj *CMO(CaseObj*CASES,int CASESIZE,
                    Area = NULL;
                    Area = malloc(0);
                    AreaSize = 0;
+
                }
            }
            if (ChildCount == 0 && TableCount)
