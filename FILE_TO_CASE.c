@@ -391,10 +391,7 @@ CaseObj* FCO(FILE* F,int*CASESIZE)
                     CASESize++;
                     CASE = realloc(CASE, CASESize);
                     CASE[CASESize - 1] = c;
-                    if (LastCharType == 1)
-                    {
-                        CharType = 1;
-                    }
+                    if (LastCharType == 1) CharType = 1;
                 }
                 break;
             case 3:

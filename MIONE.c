@@ -40,7 +40,7 @@ int TableSupportHeads[]={
 
 MioneReturnObj Range(const MioneObj* Objs, const int ObjsSize)
 {
-    DefinedVarsAndValueObj EndLoacl = (DefinedVarsAndValueObj){
+    DefinedVarAndValueObj EndLoacl = (DefinedVarAndValueObj){
     .TheDefinedVarUP = 0};
 
 
@@ -211,7 +211,7 @@ MioneReturnObj Range(const MioneObj* Objs, const int ObjsSize)
 
 MioneReturnObj Function(const MioneObj* Objs, const int ObjsSize,const ValueObj* Request, const int RequestSize)
 {
-    DefinedVarsAndValueObj EndLoacl = (DefinedVarsAndValueObj){
+    DefinedVarAndValueObj EndLoacl = (DefinedVarAndValueObj){
     .TheDefinedVarUP = 0};
 
 
@@ -381,7 +381,7 @@ MioneReturnObj Function(const MioneObj* Objs, const int ObjsSize,const ValueObj*
 MioneReturnObj mione(const MioneObj* Objs, const int ObjsSize)
 {
 
-    DefinedVarsAndValueObj EndLoacl = (DefinedVarsAndValueObj){
+    DefinedVarAndValueObj EndLoacl = (DefinedVarAndValueObj){
     .TheDefinedVarUP = 0};
     
 
@@ -549,7 +549,7 @@ MioneReturnObj mione(const MioneObj* Objs, const int ObjsSize)
 
 MioneReturnObj Table(const MioneObj* Objs, const int ObjsSize,VariableObj * * VariablesUP, int * VariablesUPSizeUP/*不需要固定變數記憶位置*/)
 {
-    DefinedVarsAndValueObj EndLoacl = (DefinedVarsAndValueObj){
+    DefinedVarAndValueObj EndLoacl = (DefinedVarAndValueObj){
     .TheDefinedVarUP = 0};
 
     HeadReturnObj (*HeadFuc)(struct _PairObject* Pairs, int PairsSize) = 0;

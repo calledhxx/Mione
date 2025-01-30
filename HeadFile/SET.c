@@ -19,7 +19,7 @@ HeadReturnObj SET(struct _PairObject*Pairs,int PairsSize)
     HeadReturnObj ToReturn;
     ToReturn.ToState = 0;
 
-    ToReturn.VAV = (DefinedVarsAndValueObj){.Value = (ValueObj){.ValueType = 0},.TheDefinedVarUP = NULL};
+    ToReturn.VAV = (DefinedVarAndValueObj){.Value = (ValueObj){.ValueType = 0},.TheDefinedVarUP = NULL};
 
 
     //set x
@@ -89,7 +89,7 @@ HeadReturnObj SET(struct _PairObject*Pairs,int PairsSize)
                        (*Dvo[DvoIndex].VariableUPsUP)[VariableIndex]->Val = (ValueObj){
                             .ValueType = 0};
 
-                        ToReturn.VAV = (DefinedVarsAndValueObj){
+                        ToReturn.VAV = (DefinedVarAndValueObj){
                             .Value = V,
                             .TheDefinedVarUP = (*Dvo[DvoIndex].VariableUPsUP)[VariableIndex]
                         };

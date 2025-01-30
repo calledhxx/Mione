@@ -170,11 +170,11 @@ typedef struct _MioneReturnObject
 
 } MioneReturnObj;
 
-typedef struct _DefinedVarsAndValueObject
+typedef struct _DefinedVarAndValueObject
 {
     ValueObj Value;
     VariableObj* TheDefinedVarUP;
-}DefinedVarsAndValueObj;
+}DefinedVarAndValueObj;
 
 typedef struct _VariablesObject
 {
@@ -189,11 +189,11 @@ typedef struct _HeadReturnObject
         0:正常
         1:回傳
         2:重設 Variable
-        4:特色變數制定
+        4:特色變數
     */
 
     ValueReturnObj Vs;
-    DefinedVarsAndValueObj VAV;
+    DefinedVarAndValueObj VAV;
     VariablesObj Vars;
 
 } HeadReturnObj;
