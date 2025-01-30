@@ -294,16 +294,38 @@ CountObj COUNT(MioneObj*Pack,int PackSize)
                                 Pack[i].Column
                             );
                         }
+
+                        if (Pack[i-1].ObjType == 3 || Pack[i+1].ObjType == 3)
+                        {
+                            ErrCall(
+                              "dkaopkdapskdpsa",
+                              "MG3123i13",
+                              "Maybe you can try `1+1` or anything else.",
+                              Pack[i].Line,
+                              Pack[i].Column
+                          );
+                        }
                         if (Pack[i].Symbol.xIndex == CalculateLevel) CalculateType = Pack[i].Symbol.CurNumber;
 
                         break;
                     case 2:
 
-                        if (i == PackSize - 1)
+                        if (i == PackSize - 1 )
                         {
                             ErrCall(
                                 "bbbbb",
                                 "MG007",
+                                "Maybe you can try `typeof 1` or anything else.",
+                                Pack[i].Line,
+                                Pack[i].Column
+                            );
+                        }
+
+                        if (Pack[i+1].ObjType == 3)
+                        {
+                            ErrCall(
+                                "dmakldmadma",
+                                "MG03127",
                                 "Maybe you can try `typeof 1` or anything else.",
                                 Pack[i].Line,
                                 Pack[i].Column
@@ -325,6 +347,17 @@ CountObj COUNT(MioneObj*Pack,int PackSize)
                            );
                         }
 
+                        if ( Pack[i+1].ObjType == 3)
+                        {
+                            ErrCall(
+                               "jdioasjdioas",
+                               "MG0428",
+                               "Maybe you can try `- 1` or anything else.",
+                                Pack[i].Line,
+                                Pack[i].Column
+                           );
+                        }
+
 
                         for (int index = 0; 1 ; index++)
                         {
@@ -335,16 +368,10 @@ CountObj COUNT(MioneObj*Pack,int PackSize)
 
                                 if (i-1>=0 && (Pack[i-1].ObjType == 4 || Pack[i-1].ObjType == 5))
                                 {
-
                                     if (Pack[i].Symbol.yIndex == CalculateLevel) CalculateType = Pack[i].Symbol.CurNumber;
-
-
                                 }else
                                 {
-
                                     if (Pack[i].Symbol.xIndex == CalculateLevel) CalculateType = Pack[i].Symbol.CurNumber;
-
-
                                 }
 
                             }
@@ -373,10 +400,6 @@ CountObj COUNT(MioneObj*Pack,int PackSize)
 
                             ValueObj Target1 ;
                             ValueObj Target2 ;
-
-
-
-
 
                             if (Pack[i - 2].ObjType == 4) Target1 = Pack[i - 2].VarUP->Val; else Target1 = Pack[i - 2].Val;
                             if (Pack[i].ObjType == 4) Target2 = Pack[i].VarUP->Val; else Target2 = Pack[i].Val;
