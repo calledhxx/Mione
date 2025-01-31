@@ -136,6 +136,7 @@ MioneReturnObj Range(const MioneObj* Objs, const int ObjsSize)
 
         if (Mio.ObjType == 2) // PROMPT
         {
+            if (!HeadFuc) ErrCall(" head not foundadskakdpasdkas", "MI1",NULL, Mio.Line, Mio.Column);
             PairsSize++;
             Pairs = realloc(Pairs, sizeof(struct _PairObject) * PairsSize);
 
@@ -305,6 +306,7 @@ MioneReturnObj Function(const MioneObj* Objs, const int ObjsSize,const ValueObj*
 
         if (Mio.ObjType == 2) // PROMPT
         {
+            if (!HeadFuc) ErrCall(" head not foundadskakdpasdkas", "MI1",NULL, Mio.Line, Mio.Column);
             PairsSize++;
             Pairs = realloc(Pairs, sizeof(struct _PairObject) * PairsSize);
 
@@ -474,6 +476,7 @@ MioneReturnObj mione(const MioneObj* Objs, const int ObjsSize)
 
         if (Mio.ObjType == 2) // PROMPT
         {
+            if (!HeadFuc) ErrCall(" head not foundadskakdpasdkas", "MI1",NULL, Mio.Line, Mio.Column);
             PairsSize++;
             Pairs = realloc(Pairs, sizeof(struct _PairObject) * PairsSize);
 
@@ -487,6 +490,8 @@ MioneReturnObj mione(const MioneObj* Objs, const int ObjsSize)
         if (Mio.ObjType == 3 || Mio.ObjType == 4 || Mio.ObjType == 5) // SVV
         {
             if (HeadFuc == 0) { // 偽HeadFuc
+                printf("%s\n",Mio.VarUP->Name);
+
                 PairsSize++;
                 Pairs = realloc(Pairs, sizeof(struct _PairObject) * PairsSize);
                 Pairs[PairsSize - 1].Prompt = Mio; // 自主
@@ -648,6 +653,7 @@ MioneReturnObj Table(const MioneObj* Objs, const int ObjsSize,VariableObj * * Va
 
         if (Mio.ObjType == 2) // PROMPT
         {
+            if (!HeadFuc) ErrCall(" head not foundadskakdpasdkas", "MI1",NULL, Mio.Line, Mio.Column);
             PairsSize++;
             Pairs = realloc(Pairs, sizeof(struct _PairObject) * PairsSize);
 

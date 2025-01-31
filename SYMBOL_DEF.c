@@ -14,7 +14,7 @@ SymbolObj Symbols[] =
 
     (SymbolObj){
         .Name = ",",
-        .SymbolType = 2,
+        .SymbolType = 1,
         .xIndex = 0, // 1,2,3,5,8,13
         .CurNumber = 2,
         .CanConnect = 1

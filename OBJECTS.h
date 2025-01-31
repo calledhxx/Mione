@@ -64,6 +64,7 @@ typedef struct _ValueObject
 typedef struct _VariableObject
 {
     char* Name; //變數名稱
+    int Place; //位置
     ValueObj Val; //值
 } VariableObj;
 

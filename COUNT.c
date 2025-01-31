@@ -380,6 +380,8 @@ CountObj COUNT(MioneObj*Pack,int PackSize)
                         break;
 
 
+
+
                     }
 
                 }
@@ -396,7 +398,6 @@ CountObj COUNT(MioneObj*Pack,int PackSize)
                     case 1: // +
                         if (Pack[i - 2].ObjType == 4 || Pack[i - 2].ObjType == 5)
                         {
-                            
 
                             ValueObj Target1 ;
                             ValueObj Target2 ;
@@ -404,8 +405,7 @@ CountObj COUNT(MioneObj*Pack,int PackSize)
                             if (Pack[i - 2].ObjType == 4) Target1 = Pack[i - 2].VarUP->Val; else Target1 = Pack[i - 2].Val;
                             if (Pack[i].ObjType == 4) Target2 = Pack[i].VarUP->Val; else Target2 = Pack[i].Val;
 
-
-
+printf("Target1 : %d\n",Target1.ValueType);
                             if (!(Target1.ValueType == 2 || Target1.ValueType == 3)){ ErrCall("Type Error1","MG0011111","",
                                 Pack[i-2].Line,
                                 Pack[i-2].Column);}
@@ -485,7 +485,7 @@ CountObj COUNT(MioneObj*Pack,int PackSize)
                         break;
                 case 2: // ,
 
-                    ValueObj Target = Pack[i].Val;
+                    ValueObj Target = Pack[i].ObjType == 4 ? Pack[i].VarUP->Val : Pack[i].Val;
 
                     Out = (MioneObj){
                         .ObjType = 5,
@@ -999,6 +999,7 @@ CountObj COUNT(MioneObj*Pack,int PackSize)
 
     for (int i = 0; i < PackSize; i++)
     {
+
         if ( Pack[i].ObjType == 5)
         {
             VPackSize ++;
@@ -1014,6 +1015,7 @@ CountObj COUNT(MioneObj*Pack,int PackSize)
 
     for (int index = 0; index < VPackSize; index++)
     {
+
         if (VPack[index].ValueType == 2) printf("`NPN`:`%d`\n",VPack[index].NPNumber);
         else if (VPack[index].ValueType == 1) printf("`STRING`:`%s`\n",VPack[index].String);
         else if (VPack[index].ValueType == 3) printf("`PN`:`%lf`\n",VPack[index].PNumber);

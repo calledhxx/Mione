@@ -84,7 +84,6 @@ HeadReturnObj SET(struct _PairObject*Pairs,int PairsSize)
                 {
                     if (strcmp((*Dvo[DvoIndex].VariableUPsUP)[VariableIndex]->Name, Request.VariableUPs[RequestIndex]->Name) == 0)
                     {
-                        printf("pair\n");
                         V = (*Dvo[DvoIndex].VariableUPsUP)[VariableIndex]->Val;
                        (*Dvo[DvoIndex].VariableUPsUP)[VariableIndex]->Val = (ValueObj){
                             .ValueType = 0};
