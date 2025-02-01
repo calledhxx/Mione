@@ -48,26 +48,26 @@ HeadReturnObj FOR(struct _PairObject*Pairs,int PairsSize)
                 set = 1;
                 SetCounted = COUNT(Pairs[i].Source, Pairs[i].SourceSize);
                 if (SetCounted.ValueSize !=1)ErrCall("set count error","M111",NULL,Prompt.Line,Prompt.Column);
-                if (SetCounted.Value[0].ValueType!= 2)ErrCall("set count error (NOT A NPN)","M111",NULL,Prompt.Line,Prompt.Column);
+                if (SetCounted.Value[0].ValueType!= VALUE_NOPOINTNUMBER_TYPE)ErrCall("set count error (NOT A NPN)","M111",NULL,Prompt.Line,Prompt.Column);
 
                 break;
             case 5: //do
                 DoCounted = COUNT(Pairs[i].Source, Pairs[i].SourceSize);
                 if (DoCounted.ValueSize !=1)ErrCall("do count error","M111",NULL,Prompt.Line,Prompt.Column);
-                if (DoCounted.Value[0].ValueType!= 5)ErrCall("do count error (NOT A RANGE)","M111",NULL,Prompt.Line,Prompt.Column);
+                if (DoCounted.Value[0].ValueType!= VALUE_FUNCTION_TYPE)ErrCall("do count error (NOT A RANGE)","M111",NULL,Prompt.Line,Prompt.Column);
               	_do = 1;
                 break;
             case 6: //to
               	ToCounted = COUNT(Pairs[i].Source, Pairs[i].SourceSize);
                 if (ToCounted.ValueSize !=1)ErrCall("to count error","M111",NULL,Prompt.Line,Prompt.Column);
-                if (ToCounted.Value[0].ValueType!= 2)ErrCall("to count error (NOT A NPN)","M111",NULL,Prompt.Line,Prompt.Column);
+                if (ToCounted.Value[0].ValueType!= VALUE_NOPOINTNUMBER_TYPE)ErrCall("to count error (NOT A NPN)","M111",NULL,Prompt.Line,Prompt.Column);
 
                 to = 1;
                 break;
             case 8: //in
                 InCounted = COUNT(Pairs[i].Source, Pairs[i].SourceSize);
                 if (InCounted.ValueSize !=1)ErrCall("in count error","M111",NULL,Prompt.Line,Prompt.Column);
-                if (ToCounted.Value[0].ValueType!= 6)ErrCall("to count error (NOT A TABLE)","M111",NULL,Prompt.Line,Prompt.Column);
+                if (InCounted.Value[0].ValueType!= VALUE_TABLE_TYPE)ErrCall("to count error (NOT A TABLE)","M111",NULL,Prompt.Line,Prompt.Column);
 
                  in = 1;
                 break;

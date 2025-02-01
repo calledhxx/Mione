@@ -15,7 +15,7 @@ VariableRequestUPObj REQUEST(MioneObj* PACK,int PACKSize){
   for (int PACKIndex = 0; PACKIndex < PACKSize;PACKIndex++) {
 
     switch (PACK[PACKIndex].ObjType) {
-      case 3:
+      case SYMBOL:
         switch (PACK[PACKIndex].Symbol.CurNumber){
           case 2:
             break;
@@ -23,7 +23,7 @@ VariableRequestUPObj REQUEST(MioneObj* PACK,int PACKSize){
             ErrCall("M123","Unkown Symbol","",PACK[PACKIndex].Line,PACK[PACKIndex].Column);
         }
         break;
-      case 4:
+      case VARIABLE:
 
        
 

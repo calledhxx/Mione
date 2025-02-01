@@ -2,21 +2,20 @@
 // Created by chenn on 24-8-3.
 //
 
-typedef struct _MioneObject;
-typedef struct _CaseObject;
-typedef struct _ValueObject;
-typedef struct _VariableObject;
-typedef struct _AreaObject;
-typedef struct _TableObject;
+#define HEAD 1
+#define PROMPT 2
+#define SYMBOL 3
+#define VARIABLE  4
+#define VALUE 5
 
-typedef struct _HeadObject;
-typedef struct _PairObject;
-typedef struct _SymbolObject;
-typedef struct _ValueReturnObject;
-typedef struct _HeadReturnObject;
-
-
-
+#define VALUE_STRING_TYPE 1
+#define VALUE_NOPOINTNUMBER_TYPE 2
+#define VALUE_POINTNUMBER_TYPE 3
+#define VALUE_FUNCTION_TYPE 4
+#define VALUE_RANGE_TYPE 5
+#define VALUE_TABLE_TYPE 6
+#define VALUE_LIGHTS_TYPE 7
+#define VALUE_DB_TYPE 8
 
 #ifndef OBJECTS_H
 #define OBJECTS_H

@@ -17,19 +17,7 @@
 
 //
 
-#define HEAD 1
-#define PROMPT 2
-#define SYMBOL 3
-#define VALUE 4
-#define VARIABLE  5
 
-#define VALUE_STRING_TYPE 1
-#define VALUE_NOPOINTNUMBER_TYPE 2
-#define VALUE_POINTNUMBER_TYPE 3
-#define VALUE_FUNCTION_TYPE 4
-#define VALUE_RANGE_TYPE 5
-#define VALUE_LIGHTS_TYPE 6
-#define VALUE_DB_TYPE 7
 
 //
 
@@ -89,6 +77,8 @@ int main(const int OptionsSize,char **Options)
         MioneObj * MioObj = CMO(CASES,CaseObjSize,&MioObjSize,1,0,&Dvo,&DvoSize);
 
         mione(MioObj,MioObjSize);
+
+        printf("\n # Well down. Have a good day.");
 
     }else
     {

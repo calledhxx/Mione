@@ -64,10 +64,10 @@ MioneReturnObj Range(const MioneObj* Objs, const int ObjsSize)
         MioneObj Mio = Objs[index];
 
 
-       if ((Mio.ObjType == 3 && strcmp(Mio.Symbol.Name, ";") == 0) ||
-            Mio.ObjType == 1 ||
-        (LastMio.ObjType == Mio.ObjType && (Mio.ObjType == 3 ? !Mio.Symbol.CanConnect : 1) && Mio.ObjType != 2) ||
-        (LastMio.ObjType == 4 &&  Mio.ObjType == 5) ||  (LastMio.ObjType == 5 &&  Mio.ObjType == 4)
+       if ((Mio.ObjType == SYMBOL && strcmp(Mio.Symbol.Name, ";") == 0) ||
+            Mio.ObjType == HEAD ||
+        (LastMio.ObjType == Mio.ObjType && (Mio.ObjType == SYMBOL ? !Mio.Symbol.CanConnect : 1) && Mio.ObjType != PROMPT) ||
+        (LastMio.ObjType == VARIABLE &&  Mio.ObjType == VALUE) ||  (LastMio.ObjType == VALUE &&  Mio.ObjType == VARIABLE)
             )
         {
 
@@ -101,12 +101,12 @@ MioneReturnObj Range(const MioneObj* Objs, const int ObjsSize)
                     continue;
                 }
 
-                if (Mio.ObjType == 3 && strcmp(Mio.Symbol.Name, ";") == 0)continue;
+                if (Mio.ObjType == SYMBOL && strcmp(Mio.Symbol.Name, ";") == 0)continue;
             }
 
         }
 
-        if (Mio.ObjType == 1) // Head
+        if (Mio.ObjType == HEAD) // Head
         {
             for (int i = 0; 1; i++)
             {
@@ -134,7 +134,7 @@ MioneReturnObj Range(const MioneObj* Objs, const int ObjsSize)
 
         }
 
-        if (Mio.ObjType == 2) // PROMPT
+        if (Mio.ObjType == PROMPT) // PROMPT
         {
             if (!HeadFuc) ErrCall(" head not foundadskakdpasdkas", "MI1",NULL, Mio.Line, Mio.Column);
             PairsSize++;
@@ -147,7 +147,7 @@ MioneReturnObj Range(const MioneObj* Objs, const int ObjsSize)
 
         }
 
-        if (Mio.ObjType == 3 || Mio.ObjType == 4 || Mio.ObjType == 5) // SVV
+        if (Mio.ObjType == SYMBOL || Mio.ObjType == VARIABLE || Mio.ObjType == VALUE) // SVV
         {
             if (HeadFuc == 0) { // 偽HeadFuc
                 PairsSize++;
@@ -236,10 +236,10 @@ MioneReturnObj Function(const MioneObj* Objs, const int ObjsSize,const ValueObj*
         MioneObj Mio = Objs[index];
 
 
-       if ((Mio.ObjType == 3 && strcmp(Mio.Symbol.Name, ";") == 0) ||
-            Mio.ObjType == 1 ||
-        (LastMio.ObjType == Mio.ObjType && (Mio.ObjType == 3 ? !Mio.Symbol.CanConnect : 1) && Mio.ObjType != 2) ||
-        (LastMio.ObjType == 4 &&  Mio.ObjType == 5) ||  (LastMio.ObjType == 5 &&  Mio.ObjType == 4)
+       if ((Mio.ObjType == SYMBOL && strcmp(Mio.Symbol.Name, ";") == 0) ||
+            Mio.ObjType == HEAD ||
+        (LastMio.ObjType == Mio.ObjType && (Mio.ObjType == SYMBOL ? !Mio.Symbol.CanConnect : 1) && Mio.ObjType != PROMPT) ||
+        (LastMio.ObjType == VARIABLE &&  Mio.ObjType == VALUE) ||  (LastMio.ObjType == VALUE &&  Mio.ObjType == VARIABLE)
             )
         {
 
@@ -271,12 +271,12 @@ MioneReturnObj Function(const MioneObj* Objs, const int ObjsSize,const ValueObj*
                     continue;
                 }
 
-                if (Mio.ObjType == 3 && strcmp(Mio.Symbol.Name, ";") == 0)continue;
+                if (Mio.ObjType == SYMBOL && strcmp(Mio.Symbol.Name, ";") == 0)continue;
             }
 
         }
 
-        if (Mio.ObjType == 1) // Head
+        if (Mio.ObjType == HEAD) // Head
         {
             for (int i = 0; 1; i++)
             {
@@ -304,7 +304,7 @@ MioneReturnObj Function(const MioneObj* Objs, const int ObjsSize,const ValueObj*
 
         }
 
-        if (Mio.ObjType == 2) // PROMPT
+        if (Mio.ObjType == PROMPT) // PROMPT
         {
             if (!HeadFuc) ErrCall(" head not foundadskakdpasdkas", "MI1",NULL, Mio.Line, Mio.Column);
             PairsSize++;
@@ -317,7 +317,7 @@ MioneReturnObj Function(const MioneObj* Objs, const int ObjsSize,const ValueObj*
 
         }
 
-        if (Mio.ObjType == 3 || Mio.ObjType == 4 || Mio.ObjType == 5) // SVV
+        if (Mio.ObjType == SYMBOL || Mio.ObjType == VARIABLE || Mio.ObjType == VALUE) // SVV
         {
             if (HeadFuc == 0) { // 偽HeadFuc
                 PairsSize++;
@@ -406,10 +406,10 @@ MioneReturnObj mione(const MioneObj* Objs, const int ObjsSize)
         MioneObj Mio = Objs[index];
 
 
-       if ((Mio.ObjType == 3 && strcmp(Mio.Symbol.Name, ";") == 0) ||
-            Mio.ObjType == 1 ||
-        (LastMio.ObjType == Mio.ObjType && (Mio.ObjType == 3 ? !Mio.Symbol.CanConnect : 1) && Mio.ObjType != 2) ||
-        (LastMio.ObjType == 4 &&  Mio.ObjType == 5) ||  (LastMio.ObjType == 5 &&  Mio.ObjType == 4)
+       if ((Mio.ObjType == SYMBOL && strcmp(Mio.Symbol.Name, ";") == 0) ||
+            Mio.ObjType == HEAD ||
+        (LastMio.ObjType == Mio.ObjType && (Mio.ObjType == SYMBOL ? !Mio.Symbol.CanConnect : 1) && Mio.ObjType != PROMPT) ||
+        (LastMio.ObjType == VARIABLE &&  Mio.ObjType == VALUE) ||  (LastMio.ObjType == VALUE &&  Mio.ObjType == VARIABLE)
             )
         {
 
@@ -441,12 +441,12 @@ MioneReturnObj mione(const MioneObj* Objs, const int ObjsSize)
                     continue;
                 }
 
-                if (Mio.ObjType == 3 && strcmp(Mio.Symbol.Name, ";") == 0)continue;
+                if (Mio.ObjType == SYMBOL && strcmp(Mio.Symbol.Name, ";") == 0)continue;
             }
 
         }
 
-        if (Mio.ObjType == 1) // Head
+        if (Mio.ObjType == HEAD) // Head
         {
             for (int i = 0; 1; i++)
             {
@@ -474,7 +474,7 @@ MioneReturnObj mione(const MioneObj* Objs, const int ObjsSize)
 
         }
 
-        if (Mio.ObjType == 2) // PROMPT
+        if (Mio.ObjType == PROMPT) // PROMPT
         {
             if (!HeadFuc) ErrCall(" head not foundadskakdpasdkas", "MI1",NULL, Mio.Line, Mio.Column);
             PairsSize++;
@@ -487,7 +487,7 @@ MioneReturnObj mione(const MioneObj* Objs, const int ObjsSize)
 
         }
 
-        if (Mio.ObjType == 3 || Mio.ObjType == 4 || Mio.ObjType == 5) // SVV
+        if (Mio.ObjType == SYMBOL || Mio.ObjType == VARIABLE || Mio.ObjType == VALUE) // SVV
         {
             if (HeadFuc == 0) { // 偽HeadFuc
                 PairsSize++;
@@ -573,11 +573,11 @@ MioneReturnObj Table(const MioneObj* Objs, const int ObjsSize,VariableObj * * Va
         MioneObj Mio = Objs[index];
 
 
-       if ((Mio.ObjType == 3 && strcmp(Mio.Symbol.Name, ";") == 0) ||
-            Mio.ObjType == 1 ||
-            (LastMio.ObjType == Mio.ObjType && (Mio.ObjType == 3 ? !Mio.Symbol.CanConnect : 1) && Mio.ObjType != 2)||
-            (LastMio.ObjType == 4 &&  Mio.ObjType == 5) ||  (LastMio.ObjType == 5 &&  Mio.ObjType == 4)
-            )
+        if ((Mio.ObjType == SYMBOL && strcmp(Mio.Symbol.Name, ";") == 0) ||
+             Mio.ObjType == HEAD ||
+         (LastMio.ObjType == Mio.ObjType && (Mio.ObjType == SYMBOL ? !Mio.Symbol.CanConnect : 1) && Mio.ObjType != PROMPT) ||
+         (LastMio.ObjType == VARIABLE &&  Mio.ObjType == VALUE) ||  (LastMio.ObjType == VALUE &&  Mio.ObjType == VARIABLE)
+             )
         {
 
 
@@ -615,12 +615,12 @@ MioneReturnObj Table(const MioneObj* Objs, const int ObjsSize,VariableObj * * Va
                     continue;
                 }
 
-                if (Mio.ObjType == 3 && strcmp(Mio.Symbol.Name, ";") == 0)continue;
+                if (Mio.ObjType == SYMBOL && strcmp(Mio.Symbol.Name, ";") == 0)continue;
             }
 
         }
 
-        if (Mio.ObjType == 1) // Head
+        if (Mio.ObjType == HEAD) // Head
         {
             for (int i = 0; 1; i++)
             {
@@ -648,7 +648,7 @@ MioneReturnObj Table(const MioneObj* Objs, const int ObjsSize,VariableObj * * Va
 
         }
 
-        if (Mio.ObjType == 2) // PROMPT
+        if (Mio.ObjType == PROMPT) // PROMPT
         {
             if (!HeadFuc) ErrCall(" head not foundadskakdpasdkas", "MI1",NULL, Mio.Line, Mio.Column);
             PairsSize++;
@@ -661,7 +661,7 @@ MioneReturnObj Table(const MioneObj* Objs, const int ObjsSize,VariableObj * * Va
 
         }
 
-        if (Mio.ObjType == 3 || Mio.ObjType == 4 || Mio.ObjType == 5) // SVV
+        if (Mio.ObjType == SYMBOL || Mio.ObjType == VARIABLE || Mio.ObjType == VALUE) // SVV
         {
             if (HeadFuc == 0) { // 偽HeadFuc
                 PairsSize++;

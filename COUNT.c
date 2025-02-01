@@ -35,7 +35,7 @@ CountObj COUNT(MioneObj*Pack,int PackSize)
 
         int PastCost = 0;//符號所前扣之值
 
-        if (Pack[i].ObjType == 3) // Symbol
+        if (Pack[i].ObjType == SYMBOL) // Symbol
         {
 
             if (strcmp(Pack[i].Symbol.Name, "(") == 0)
@@ -60,13 +60,13 @@ CountObj COUNT(MioneObj*Pack,int PackSize)
                     if (FirstBracketIndex > 0)
                     {
 
-                        if (Pack[FirstBracketIndex - 1].ObjType == 4 || Pack[FirstBracketIndex - 1].ObjType == 5)
+                        if (Pack[FirstBracketIndex - 1].ObjType == VARIABLE || Pack[FirstBracketIndex - 1].ObjType == VALUE)
                         {
 
-                            if (Pack[FirstBracketIndex - 1].ObjType == 4)
+                            if (Pack[FirstBracketIndex - 1].ObjType == VARIABLE)
                             {
 
-                                if (Pack[FirstBracketIndex - 1].VarUP->Val.ValueType == 4)
+                                if (Pack[FirstBracketIndex - 1].VarUP->Val.ValueType == VALUE_FUNCTION_TYPE)
                                 {
                                     MioneReturnObj F = Function(
                                         Pack[FirstBracketIndex - 1].VarUP->Val.Area.Area,
@@ -96,7 +96,7 @@ CountObj COUNT(MioneObj*Pack,int PackSize)
                                             NewPackSize++;
                                             NewPack = realloc(NewPack, sizeof(MioneObj) * (NewPackSize));
                                             NewPack[NewPackSize - 1] = (MioneObj){
-                                                .ObjType = 5,
+                                                .ObjType = VALUE,
                                                 .Val = V.Value[index],
                                                 .Line = Pack[i-1].Line,
                                                 .Column = Pack[i-1].Column
@@ -109,9 +109,9 @@ CountObj COUNT(MioneObj*Pack,int PackSize)
                                         NewPackSize++;
                                         NewPack = realloc(NewPack, sizeof(MioneObj) * (NewPackSize));
                                         NewPack[NewPackSize - 1] = (MioneObj){
-                                            .ObjType = 5,
+                                            .ObjType = VALUE,
                                             .Val = (ValueObj){
-                                            .ValueType = 2,.NPNumber = 0}
+                                            .ValueType = VALUE_NOPOINTNUMBER_TYPE,.NPNumber = 0}
                                         };
                                     }
 
@@ -155,7 +155,7 @@ CountObj COUNT(MioneObj*Pack,int PackSize)
                             else
                             {
 
-                                if (Pack[FirstBracketIndex - 1].Val.ValueType == 4)
+                                if (Pack[FirstBracketIndex - 1].Val.ValueType == VALUE_FUNCTION_TYPE)
                                 {
                                     MioneReturnObj F = Function(
                                         Pack[FirstBracketIndex - 1].Val.Area.Area,
@@ -184,7 +184,7 @@ CountObj COUNT(MioneObj*Pack,int PackSize)
                                             NewPackSize++;
                                             NewPack = realloc(NewPack, sizeof(MioneObj) * (NewPackSize));
                                             NewPack[NewPackSize - 1] = (MioneObj){
-                                                .ObjType = 5,
+                                                .ObjType = VALUE,
                                                 .Val = V.Value[index],
                                                 .Line = Pack[i-1].Line,
                                                 .Column = Pack[i-1].Column
@@ -199,7 +199,7 @@ CountObj COUNT(MioneObj*Pack,int PackSize)
                                         NewPack[NewPackSize - 1] = (MioneObj){
                                             .ObjType = 5,
                                             .Val = (ValueObj){
-                                            .ValueType = 2,.NPNumber = 0}
+                                            .ValueType = VALUE_NOPOINTNUMBER_TYPE,.NPNumber = 0}
                                         };
                                     }
 
@@ -295,7 +295,7 @@ CountObj COUNT(MioneObj*Pack,int PackSize)
                             );
                         }
 
-                        if (Pack[i-1].ObjType == 3 || Pack[i+1].ObjType == 3)
+                        if (Pack[i-1].ObjType == SYMBOL || Pack[i+1].ObjType == SYMBOL)
                         {
                             ErrCall(
                               "dkaopkdapskdpsa",
@@ -321,7 +321,7 @@ CountObj COUNT(MioneObj*Pack,int PackSize)
                             );
                         }
 
-                        if (Pack[i+1].ObjType == 3)
+                        if (Pack[i+1].ObjType == SYMBOL)
                         {
                             ErrCall(
                                 "dmakldmadma",
@@ -347,7 +347,7 @@ CountObj COUNT(MioneObj*Pack,int PackSize)
                            );
                         }
 
-                        if ( Pack[i+1].ObjType == 3)
+                        if ( Pack[i+1].ObjType == SYMBOL)
                         {
                             ErrCall(
                                "jdioasjdioas",
@@ -366,7 +366,7 @@ CountObj COUNT(MioneObj*Pack,int PackSize)
                             if (strcmp(Symbols[index].Name, Pack[i].Symbol.Name) == 0)
                             {
 
-                                if (i-1>=0 && (Pack[i-1].ObjType == 4 || Pack[i-1].ObjType == 5))
+                                if (i-1>=0 && (Pack[i-1].ObjType == VARIABLE || Pack[i-1].ObjType == VALUE))
                                 {
                                     if (Pack[i].Symbol.yIndex == CalculateLevel) CalculateType = Pack[i].Symbol.CurNumber;
                                 }else
@@ -386,7 +386,7 @@ CountObj COUNT(MioneObj*Pack,int PackSize)
 
                 }
             }
-        }else if (Pack[i].ObjType == 4 || Pack[i].ObjType == 5)
+        }else if (Pack[i].ObjType == VARIABLE || Pack[i].ObjType == VALUE)
         {
             if (CalculateType)
             {
@@ -396,19 +396,20 @@ CountObj COUNT(MioneObj*Pack,int PackSize)
                 switch (CalculateType)
                 {
                     case 1: // +
-                        if (Pack[i - 2].ObjType == 4 || Pack[i - 2].ObjType == 5)
+                        if (Pack[i - 2].ObjType == VARIABLE || Pack[i - 2].ObjType == VALUE)
                         {
 
                             ValueObj Target1 ;
                             ValueObj Target2 ;
 
-                            if (Pack[i - 2].ObjType == 4) Target1 = Pack[i - 2].VarUP->Val; else Target1 = Pack[i - 2].Val;
-                            if (Pack[i].ObjType == 4) Target2 = Pack[i].VarUP->Val; else Target2 = Pack[i].Val;
 
-                            if (!(Target1.ValueType == 2 || Target1.ValueType == 3)){ ErrCall("Type Error1","MG0011111","",
+                            if (Pack[i - 2].ObjType == VARIABLE) Target1 = Pack[i - 2].VarUP->Val; else Target1 = Pack[i - 2].Val;
+                            if (Pack[i].ObjType == VARIABLE) Target2 = Pack[i].VarUP->Val; else Target2 = Pack[i].Val;
+
+                            if (!(Target1.ValueType == VALUE_NOPOINTNUMBER_TYPE || Target1.ValueType == VALUE_POINTNUMBER_TYPE)){ ErrCall("Type Error1","MG0011111","",
                                 Pack[i-2].Line,
                                 Pack[i-2].Column);}
-                            if (!(Target2.ValueType == 2 || Target2.ValueType == 3)) {ErrCall("Type Error2","MG0011111","",
+                            if (!(Target2.ValueType == VALUE_NOPOINTNUMBER_TYPE || Target2.ValueType == VALUE_POINTNUMBER_TYPE)) {ErrCall("Type Error2","MG0011111","",
                                 Pack[i].Line,
                                 Pack[i].Column);}
 
@@ -484,7 +485,7 @@ CountObj COUNT(MioneObj*Pack,int PackSize)
                         break;
                 case 2: // ,
 
-                    ValueObj Target = Pack[i].ObjType == 4 ? Pack[i].VarUP->Val : Pack[i].Val;
+                    ValueObj Target = Pack[i].ObjType == VARIABLE ? Pack[i].VarUP->Val : Pack[i].Val;
 
                     Out = (MioneObj){
                         .ObjType = 5,
@@ -502,13 +503,13 @@ CountObj COUNT(MioneObj*Pack,int PackSize)
                     case 3: // *
                         
 
-                        if (Pack[i - 2].ObjType == 4 || Pack[i - 2].ObjType == 5)
+                        if (Pack[i - 2].ObjType == VARIABLE || Pack[i - 2].ObjType == VALUE)
                         {
                             ValueObj Target1 ;
                             ValueObj Target2 ;
 
-                            if (Pack[i - 2].ObjType == 4) Target1 = Pack[i - 2].VarUP->Val; else Target1 = Pack[i - 2].Val;
-                            if (Pack[i].ObjType == 4) Target2 = Pack[i].VarUP->Val; else Target2 = Pack[i].Val;
+                            if (Pack[i - 2].ObjType == VARIABLE) Target1 = Pack[i - 2].VarUP->Val; else Target1 = Pack[i - 2].Val;
+                            if (Pack[i].ObjType == VARIABLE) Target2 = Pack[i].VarUP->Val; else Target2 = Pack[i].Val;
 
                             if (!(Target1.ValueType == 2 || Target1.ValueType == 3)) ErrCall("Type Error 1","MG0011113","",
                                 Pack[i-2].Line,
@@ -590,7 +591,7 @@ CountObj COUNT(MioneObj*Pack,int PackSize)
                         break;
 
                 case 6: //-
-                    if (i-2>=0 && (Pack[i - 2].ObjType == 4 || Pack[i - 2].ObjType == 5))
+                    if (i-2>=0 && (Pack[i - 2].ObjType == VARIABLE || Pack[i - 2].ObjType == VALUE))
                     {
                         // 1- 1
                          ValueObj Target1 ;
@@ -600,8 +601,8 @@ CountObj COUNT(MioneObj*Pack,int PackSize)
 
 
 
-                            if (Pack[i - 2].ObjType == 4) Target1 = Pack[i - 2].VarUP->Val; else Target1 = Pack[i - 2].Val;
-                            if (Pack[i].ObjType == 4) Target2 = Pack[i].VarUP->Val; else Target2 = Pack[i].Val;
+                            if (Pack[i - 2].ObjType == VARIABLE) Target1 = Pack[i - 2].VarUP->Val; else Target1 = Pack[i - 2].Val;
+                            if (Pack[i].ObjType == VARIABLE) Target2 = Pack[i].VarUP->Val; else Target2 = Pack[i].Val;
 
                         if (!(Target1.ValueType == 2 || Target1.ValueType == 3)) ErrCall("Type Error 3","MG0011116","",
                             Pack[i-2].Line,
@@ -674,8 +675,8 @@ CountObj COUNT(MioneObj*Pack,int PackSize)
 
 
 
-                        if (Pack[i].ObjType == 4) Target = Pack[i].VarUP->Val;
-                        if (Pack[i].ObjType == 5) Target = Pack[i].Val;
+                        if (Pack[i].ObjType == VARIABLE) Target = Pack[i].VarUP->Val;
+                        if (Pack[i].ObjType == VALUE) Target = Pack[i].Val;
 
                         if (Target.ValueType == 3) UsePointNumber = 1;
 
@@ -731,17 +732,17 @@ CountObj COUNT(MioneObj*Pack,int PackSize)
                     break;
                 case 7: // .
 
-                    if (i-2>=0 && (Pack[i - 2].ObjType == 4 || Pack[i - 2].ObjType == 5))
+                    if (i-2>=0 && (Pack[i - 2].ObjType == VARIABLE || Pack[i - 2].ObjType == VALUE))
                     {
                         // 1.1
                             ValueObj Target1 ;
                             ValueObj Target2 ;
 
 
-                        if (Pack[i - 2].ObjType == 4) ErrCall("to do ; Variable can`t be Point Number","MG00111","IT IS TODO NOT ERROR",
+                        if (Pack[i - 2].ObjType == VARIABLE) ErrCall("to do ; Variable can`t be Point Number","MG00111","IT IS TODO NOT ERROR",
                             Pack[i].Line,
                             Pack[i].Column); else Target1 = Pack[i - 2].Val;
-                        if (Pack[i].ObjType == 4) ErrCall("to do ; Variable can`t be Point Number","MG00111","IT IS TODO NOT ERROR",
+                        if (Pack[i].ObjType == VARIABLE) ErrCall("to do ; Variable can`t be Point Number","MG00111","IT IS TODO NOT ERROR",
                             Pack[i].Line,
                             Pack[i].Column); else Target2 = Pack[i].Val;
 
@@ -801,10 +802,10 @@ CountObj COUNT(MioneObj*Pack,int PackSize)
                         // .1
                         ValueObj Target;
 
-                        if (Pack[i].ObjType == 4) ErrCall("to do ; Variable can`t be Point Number","MG00111","IT IS TODO NOT ERROR",
+                        if (Pack[i].ObjType == VARIABLE) ErrCall("to do ; Variable can`t be Point Number","MG00111","IT IS TODO NOT ERROR",
                                 Pack[i].Line,
                                 Pack[i].Column);
-                        if (Pack[i].ObjType == 5) Target = Pack[i].Val;
+                        if (Pack[i].ObjType == VALUE) Target = Pack[i].Val;
 
                         if (Target.ValueType == 3) UsePointNumber = 1;
 
@@ -860,13 +861,13 @@ CountObj COUNT(MioneObj*Pack,int PackSize)
                     CalculateType = 0;
                     break;
                 case 8:
-                    if (Pack[i - 2].ObjType == 4 || Pack[i - 2].ObjType == 5)
+                    if (Pack[i - 2].ObjType == VARIABLE || Pack[i - 2].ObjType == VALUE)
                     {
                         ValueObj Target1 ;
                         ValueObj Target2 ;
 
-                        if (Pack[i - 2].ObjType == 4) Target1 = Pack[i - 2].VarUP->Val; else Target1 = Pack[i - 2].Val;
-                        if (Pack[i].ObjType == 4) Target2 = Pack[i].VarUP->Val; else Target2 = Pack[i].Val;
+                        if (Pack[i - 2].ObjType == VARIABLE) Target1 = Pack[i - 2].VarUP->Val; else Target1 = Pack[i - 2].Val;
+                        if (Pack[i].ObjType == VARIABLE) Target2 = Pack[i].VarUP->Val; else Target2 = Pack[i].Val;
 
                         int db = 0;
 
@@ -972,7 +973,7 @@ CountObj COUNT(MioneObj*Pack,int PackSize)
 
         if (IfBrackets)
         {
-            if (Pack[i].ObjType == 3 && strcmp(Pack[i].Symbol.Name, "(") == 0) {}
+            if (Pack[i].ObjType == SYMBOL && strcmp(Pack[i].Symbol.Name, "(") == 0) {}
             else
             {
                 inBracketSize++;
@@ -999,15 +1000,15 @@ CountObj COUNT(MioneObj*Pack,int PackSize)
     for (int i = 0; i < PackSize; i++)
     {
 
-        if ( Pack[i].ObjType == 5)
+        if ( Pack[i].ObjType == VALUE)
         {
             VPackSize ++;
-            VPack = realloc(VPack, sizeof(MioneObj) * (VPackSize));
+            VPack = realloc(VPack, sizeof(ValueObj) * (VPackSize));
             VPack[VPackSize-1] = Pack[i].Val;
-        }else if (Pack[i].ObjType == 4)
+        }else if (Pack[i].ObjType == VARIABLE)
         {
             VPackSize ++;
-            VPack = realloc(VPack, sizeof(MioneObj) * (VPackSize));
+            VPack = realloc(VPack, sizeof(ValueObj) * (VPackSize));
             VPack[VPackSize-1] = Pack[i].VarUP->Val;
         }
     }
