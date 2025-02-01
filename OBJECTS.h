@@ -16,11 +16,7 @@ typedef struct _ValueReturnObject;
 typedef struct _HeadReturnObject;
 
 
-#define HEAD 1
-#define PROMPT 2
-#define SYMBOL 3
-#define VALUE 4
-#define VARIABLE  5
+
 
 #ifndef OBJECTS_H
 #define OBJECTS_H

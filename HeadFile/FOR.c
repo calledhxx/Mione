@@ -23,6 +23,7 @@ HeadReturnObj FOR(struct _PairObject*Pairs,int PairsSize)
     CountObj SetCounted = {.ValueSize = 0};
     CountObj DoCounted = {.ValueSize = 0};
     CountObj ToCounted = {.ValueSize = 0};
+    CountObj InCounted = {.ValueSize = 0};
 
     int Reverse = 1;
 
@@ -63,6 +64,14 @@ HeadReturnObj FOR(struct _PairObject*Pairs,int PairsSize)
 
                 to = 1;
                 break;
+            case 8: //in
+                InCounted = COUNT(Pairs[i].Source, Pairs[i].SourceSize);
+                if (InCounted.ValueSize !=1)ErrCall("in count error","M111",NULL,Prompt.Line,Prompt.Column);
+                if (ToCounted.Value[0].ValueType!= 6)ErrCall("to count error (NOT A TABLE)","M111",NULL,Prompt.Line,Prompt.Column);
+
+                 in = 1;
+                break;
+                 break;
             default:
                 ErrCall("unsupported prompt type","M111",NULL,Prompt.Line,Prompt.Column);
                 break;
@@ -127,6 +136,8 @@ HeadReturnObj FOR(struct _PairObject*Pairs,int PairsSize)
           		break;
          }
         }
+      }
+      if(in){
       }
     }
 
