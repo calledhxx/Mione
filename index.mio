@@ -1,1 +1,11 @@
-set x = 1+1+3-123-312+123
+set f = function
+    return 123
+end
+
+
+set x = {
+    "s":f();
+    "A":1;
+}
+
+set z = s+5

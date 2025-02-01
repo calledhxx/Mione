@@ -61,6 +61,7 @@ MioneObj *CMO(CaseObj*CASES,int CASESIZE,
            {
                Line++;
                Column = 0;
+               continue;
            };
 
             // printf("`%s`\n",CASES[i].ObjName);
@@ -171,17 +172,21 @@ MioneObj *CMO(CaseObj*CASES,int CASESIZE,
 
                    int MioObjSize = 0;
 
-                   MioneObj * MioObj = CMO(Area,AreaSize,&MioObjSize,MIONE[MIONESIZE-1].Line,MIONE[MIONESIZE-1].Column,DvoUP,DvoSizeUP);
+                   MioneObj * MioObj = CMO(Area,AreaSize,&MioObjSize,MIONESIZE ? MIONE[MIONESIZE-1].Line : Line,MIONESIZE ? MIONE[MIONESIZE-1].Column : Column,DvoUP,DvoSizeUP);
 
-                   VariableObj * TbMemory = malloc(0);
-                   int  TbMemorySize = 0;
-
-                   MioneReturnObj Tb = Table(MioObj,MioObjSize,&TbMemory,&TbMemorySize);
+                   // VariableObj * TbMemory = malloc(0);
+                   // int  TbMemorySize = 0;
+                   //
+                   // MioneReturnObj Tb = Table(MioObj,MioObjSize,&TbMemory,&TbMemorySize);
 
 
                    TableObj eTable = (TableObj){
-                       .Table = TbMemory,
-                       .Size = TbMemorySize,
+                       .MioneTable = MioObj,
+                       .MioneTableSize = MioObjSize,
+                       .CountedTable = NULL,
+                       .CountedTableSize = 0,
+
+                       .Counted = 0
                    };
 
                    ValueObj Value = (ValueObj){
@@ -222,16 +227,18 @@ MioneObj *CMO(CaseObj*CASES,int CASESIZE,
 
 
            //Value : lights,function or range END 
-           if (TableCount == 0)if (strcmp(CASES[i].ObjName,"end") == 0)
+           if (TableCount == 0) if (strcmp(CASES[i].ObjName,"end") == 0)
            {
-
                ChildCount--;
                if (ChildCount == 0 && TableCount == 0) //僅包覆最高層的子向
                {
 
                    int MioObjSize = 0;
 
-                   MioneObj * MioObj = CMO(Area,AreaSize,&MioObjSize,MIONE[MIONESIZE-1].Line,MIONE[MIONESIZE-1].Column,DvoUP,DvoSizeUP);
+
+
+                   MioneObj * MioObj = CMO(Area,AreaSize,&MioObjSize,MIONESIZE ? MIONE[MIONESIZE-1].Line : Line,MIONESIZE ? MIONE[MIONESIZE-1].Column : Column,DvoUP,DvoSizeUP);
+
 
                    AreaObj eArea = (AreaObj){
                        .Area =MioObj,
@@ -266,14 +273,17 @@ MioneObj *CMO(CaseObj*CASES,int CASESIZE,
 
                }else
                {
+
                    AreaSize++;
                    Area = realloc(Area,AreaSize*sizeof(CaseObj));
                    Area[AreaSize-1] = CASES[i];
                }
            }else
            {
+
                if (ChildCount)
                {
+
                    AreaSize++;
                    Area = realloc(Area,AreaSize*sizeof(CaseObj));
                    Area[AreaSize-1] = CASES[i];
@@ -378,7 +388,7 @@ MioneObj *CMO(CaseObj*CASES,int CASESIZE,
 
             int NewVar = 1;
 
-            VariableObj* VariableUP = malloc(sizeof (VariableObj));
+            VariableObj* VariableUP ;
 
 
              for (int DvoIndex = 0; DvoIndex < *DvoSizeUP; DvoIndex++)
@@ -397,17 +407,15 @@ MioneObj *CMO(CaseObj*CASES,int CASESIZE,
 
              if (NewVar)
              {
+                 VariableUP = malloc(sizeof (VariableObj));
                  *VariableUP = (VariableObj){
                      .Name = CASES[i].ObjName,
                  };
 
-                 VariableObj * VUP = malloc(sizeof(VariableObj));
-                 VUP = VariableUP;
-
 
                  (*((*DvoUP)[(*DvoSizeUP)-1].VariablesSizeUP))++;
                  (*((*DvoUP)[(*DvoSizeUP)-1].VariableUPsUP)) = realloc((*((*DvoUP)[(*DvoSizeUP)-1].VariableUPsUP)),(*((*DvoUP)[(*DvoSizeUP)-1].VariablesSizeUP))*sizeof(VariableObj**));
-                 (*((*DvoUP)[(*DvoSizeUP)-1].VariableUPsUP))[(*((*DvoUP)[(*DvoSizeUP)-1].VariablesSizeUP))-1] = VUP;
+                 (*((*DvoUP)[(*DvoSizeUP)-1].VariableUPsUP))[(*((*DvoUP)[(*DvoSizeUP)-1].VariablesSizeUP))-1] = VariableUP;
 
              }
 
@@ -431,6 +439,7 @@ MioneObj *CMO(CaseObj*CASES,int CASESIZE,
     }
     if (ChildCount) ErrCall("END???","M111",NULL,Line,Column);
     if (TableCount) ErrCall("}???","M111",NULL,Line,Column);
+
 
     (*SIZE) = (MIONESIZE);
     return MIONE;

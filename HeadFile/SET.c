@@ -19,7 +19,8 @@ HeadReturnObj SET(struct _PairObject*Pairs,int PairsSize)
     HeadReturnObj ToReturn;
     ToReturn.ToState = 0;
 
-    ToReturn.VAV = (DefinedVarAndValueObj){.Value = (ValueObj){.ValueType = 0},.TheDefinedVarUP = NULL};
+    ToReturn.VAVs.VAVs = malloc(0);
+    ToReturn.VAVs.VAVsSize = 0;
 
 
     //set x
@@ -45,6 +46,8 @@ HeadReturnObj SET(struct _PairObject*Pairs,int PairsSize)
             {
             case 1:
                 Counted = COUNT(Pairs[i].Source, Pairs[i].SourceSize);
+
+
                 if (Counted.ValueSize>Request.VariablesSize) ErrCall("More variables than values","M111",NULL,Prompt.Line,Prompt.Column);
 
                 set = 1;
@@ -88,12 +91,12 @@ HeadReturnObj SET(struct _PairObject*Pairs,int PairsSize)
                        (*Dvo[DvoIndex].VariableUPsUP)[VariableIndex]->Val = (ValueObj){
                             .ValueType = 0};
 
-                        ToReturn.VAV = (DefinedVarAndValueObj){
+                        ToReturn.VAVs.VAVsSize++;
+                        ToReturn.VAVs.VAVs = realloc( ToReturn.VAVs.VAVs, ToReturn.VAVs.VAVsSize * sizeof(DefinedVarAndValueObj));
+                        ToReturn.VAVs.VAVs[ToReturn.VAVs.VAVsSize-1] = (DefinedVarAndValueObj){
                             .Value = V,
                             .TheDefinedVarUP = (*Dvo[DvoIndex].VariableUPsUP)[VariableIndex]
                         };
-
-
 
                         break;
                     }

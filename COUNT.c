@@ -101,7 +101,6 @@ CountObj COUNT(MioneObj*Pack,int PackSize)
                                                 .Line = Pack[i-1].Line,
                                                 .Column = Pack[i-1].Column
                                             };
-
                                         }
 
                                     }else
@@ -197,7 +196,7 @@ CountObj COUNT(MioneObj*Pack,int PackSize)
                                         NewPackSize++;
                                         NewPack = realloc(NewPack, sizeof(MioneObj) * (NewPackSize));
                                         NewPack[NewPackSize - 1] = (MioneObj){
-                                            .ObjType = 5,
+                                            .ObjType = VALUE,
                                             .Val = (ValueObj){
                                             .ValueType = VALUE_NOPOINTNUMBER_TYPE,.NPNumber = 0}
                                         };
@@ -388,6 +387,36 @@ CountObj COUNT(MioneObj*Pack,int PackSize)
             }
         }else if (Pack[i].ObjType == VARIABLE || Pack[i].ObjType == VALUE)
         {
+
+            if (Pack[i].ObjType == VARIABLE ? Pack[i].VarUP->Val.ValueType == VALUE_TABLE_TYPE : Pack[i].Val.ValueType == VALUE_TABLE_TYPE)  if (Pack[i].ObjType == VARIABLE ? !Pack[i].VarUP->Val.Table.Counted: !Pack[i].Val.Table.Counted)
+            {
+                ValueObj V = Pack[i].ObjType == VARIABLE ? Pack[i].VarUP->Val : Pack[i].Val;
+
+                VariableObj * CountedTable = malloc(0);
+                int CountedTableSize = 0;
+
+                MioneReturnObj Tb = Table(V.Table.MioneTable,V.Table.MioneTableSize,&CountedTable,&CountedTableSize);
+
+                if (Pack[i].ObjType == VARIABLE)
+                {
+                    Pack[i].VarUP->Val.Table.Counted=1;
+                    Pack[i].VarUP->Val.Table.MioneTable = NULL;
+                    Pack[i].VarUP->Val.Table.MioneTableSize = 0;
+
+                    Pack[i].VarUP->Val.Table.CountedTable = CountedTable;
+                    Pack[i].VarUP->Val.Table.CountedTableSize = CountedTableSize;
+                }else
+                {
+                    Pack[i].Val.Table.Counted=1;
+                    Pack[i].Val.Table.MioneTable = NULL;
+                    Pack[i].Val.Table.MioneTableSize = 0;
+
+                    Pack[i].Val.Table.CountedTable = CountedTable;
+                    Pack[i].Val.Table.CountedTableSize = CountedTableSize;
+                }
+            }
+
+
             if (CalculateType)
             {
                 MioneObj Out;
@@ -894,7 +923,7 @@ CountObj COUNT(MioneObj*Pack,int PackSize)
                                 break;
 
                             case 6:
-                                if ((Target2.ValueType == 6 ? Target2.Table.Table : 0) == Target1.Table.Table) db =1;
+                                if ((Target2.ValueType == 6 ? Target2.Table.CountedTable : 0) == Target1.Table.CountedTable) db =1;
                                 break;
                             case 7:
                                 if ((Target2.ValueType == 7 ? Target2.Area.Area : 0) == Target1.Area.Area) db =1;
@@ -1013,9 +1042,10 @@ CountObj COUNT(MioneObj*Pack,int PackSize)
         }
     }
 
+
+
     for (int index = 0; index < VPackSize; index++)
     {
-
         if (VPack[index].ValueType == 2) printf("`NPN`:`%d`\n",VPack[index].NPNumber);
         else if (VPack[index].ValueType == 1) printf("`STRING`:`%s`\n",VPack[index].String);
         else if (VPack[index].ValueType == 3) printf("`PN`:`%lf`\n",VPack[index].PNumber);

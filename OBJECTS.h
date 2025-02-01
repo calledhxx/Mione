@@ -30,8 +30,13 @@ typedef struct _AreaObject
 
 typedef struct _TableObject
 {
-    int Size; //值大小
-    struct _VariableObject * Table; //給予表格(table)。
+    int CountedTableSize; //值大小
+    struct _VariableObject * CountedTable; //給予表格(table)。
+
+    int MioneTableSize;
+    struct _MioneObject * MioneTable;
+
+    int Counted; //是否已計算過
     //Name 為 Null 時，則以順序來排序
 }TableObj;
 
@@ -69,6 +74,7 @@ typedef struct _SymbolObject
     int SymbolType;
     int CurNumber;
     int CanConnect; //即本體是否可與前面符號相連
+    int AfterConnect; //後面是否可與VV相連
 
     int xIndex;
     int yIndex;
@@ -89,12 +95,6 @@ typedef struct _HeadObject
     int CurNumber;
     struct _HeadReturnObject (*Fuc)(struct _PairObject*Pairs,int PairsSize);
 }HeadObj;
-
-
-
-
-
-
 
 typedef struct _MioneObject
 {
@@ -172,6 +172,12 @@ typedef struct _DefinedVarAndValueObject
     VariableObj* TheDefinedVarUP;
 }DefinedVarAndValueObj;
 
+typedef struct _DefinedVarsAndValueObject
+{
+    DefinedVarAndValueObj * VAVs;
+    int VAVsSize;
+}DefinedVarsAndValueObj;
+
 typedef struct _VariablesObject
 {
     VariableObj * Vars;
@@ -189,7 +195,7 @@ typedef struct _HeadReturnObject
     */
 
     ValueReturnObj Vs;
-    DefinedVarAndValueObj VAV;
+    DefinedVarsAndValueObj VAVs;
     VariablesObj Vars;
 
 } HeadReturnObj;
