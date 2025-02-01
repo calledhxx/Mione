@@ -405,7 +405,6 @@ CountObj COUNT(MioneObj*Pack,int PackSize)
                             if (Pack[i - 2].ObjType == 4) Target1 = Pack[i - 2].VarUP->Val; else Target1 = Pack[i - 2].Val;
                             if (Pack[i].ObjType == 4) Target2 = Pack[i].VarUP->Val; else Target2 = Pack[i].Val;
 
-printf("Target1 : %d\n",Target1.ValueType);
                             if (!(Target1.ValueType == 2 || Target1.ValueType == 3)){ ErrCall("Type Error1","MG0011111","",
                                 Pack[i-2].Line,
                                 Pack[i-2].Column);}

@@ -490,14 +490,12 @@ MioneReturnObj mione(const MioneObj* Objs, const int ObjsSize)
         if (Mio.ObjType == 3 || Mio.ObjType == 4 || Mio.ObjType == 5) // SVV
         {
             if (HeadFuc == 0) { // 偽HeadFuc
-
                 PairsSize++;
                 Pairs = realloc(Pairs, sizeof(struct _PairObject) * PairsSize);
                 Pairs[PairsSize - 1].Prompt = Mio; // 自主
 
                 Pairs[PairsSize - 1].SourceSize = 0;
                 Pairs[PairsSize - 1].Source = malloc(0);
-
 
                 HeadFuc = SVV;
             }

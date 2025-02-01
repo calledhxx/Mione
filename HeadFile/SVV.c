@@ -65,7 +65,11 @@ HeadReturnObj SVV(struct _PairObject*Pairs,int PairsSize)
                 PointCounted = COUNT(Pairs[i].Source,Pairs[i].SourceSize);
                 point = 1;
                 break;
+            default:
+                ErrCall("unsupported prompt type","M111",NULL,Prompt.Line,Prompt.Column);
+                break;
             }
+
         }
 
 
@@ -109,8 +113,6 @@ HeadReturnObj SVV(struct _PairObject*Pairs,int PairsSize)
         VariableObj ** VarUPs = malloc(0);
         int VarUPsSize = 0;
 
-        printf("size %d\n",PointNamesCounted.ValueSize);
-        for (int PNCIndex = 0; PNCIndex < PointNamesCounted.ValueSize; PNCIndex++) printf("`%s`\n",PointNamesCounted.Value[PNCIndex].String);
 
         for (int PNCIndex = 0; PNCIndex < PointNamesCounted.ValueSize; PNCIndex++)
         {
