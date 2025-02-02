@@ -51,7 +51,6 @@ HeadReturnObj SVV(struct _PairObject*Pairs,int PairsSize)
                     Vars.Vars[Vars.VarsSize-1].Val = Counted.Value[a];
                 }
                 Re.Vars = Vars;
-
                 Re.ToState = Re.ToState+4;
             }else
             {

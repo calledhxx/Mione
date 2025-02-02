@@ -636,7 +636,6 @@ MioneReturnObj Table(const MioneObj* Objs, const int ObjsSize,VariableObj * * Va
                     a.ToState = a.ToState-4;
                     for (int i = 0; i<a.Vars.VarsSize; i++)
                     {
-
                         (*VariablesUPSizeUP)++;
                         (*VariablesUP) = realloc((*VariablesUP), (*VariablesUPSizeUP) * sizeof(VariableObj));
                         (*VariablesUP)[(*VariablesUPSizeUP) - 1] = a.Vars.Vars[i];

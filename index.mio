@@ -1,11 +1,3 @@
-set f = function
-    return 123
-end
-
-
 set x = {
-    "s":f();
-    "A":1;
-}
 
-set z = s+5
+}
