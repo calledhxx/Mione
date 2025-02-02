@@ -1,5 +1,0 @@
-set f = function
-    set x ; = 10
-end
-
-f();

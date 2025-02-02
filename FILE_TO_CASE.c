@@ -6,6 +6,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#include "ERR.h"
 #include "OBJECTS.h"
 
 int CheckCharType(const char Char)
@@ -108,7 +109,8 @@ CaseObj* FCO(FILE* F,int*CASESIZE)
     char c = 0;
     int cIndex = -1;
 
-
+    int Line=1;
+    int Colum = 0;
 
     do
     {
@@ -121,6 +123,8 @@ CaseObj* FCO(FILE* F,int*CASESIZE)
 
         int ZEROTILSC = 0;//清除ThislastSuperChar的用 1為清除 0為無
         if (ThislastSuperChar) ZEROTILSC++;
+
+        Colum++;
 
 
         switch (inLockinType)
@@ -512,19 +516,29 @@ CaseObj* FCO(FILE* F,int*CASESIZE)
                 }
                 break;
             case 12:
-                if (superCharSize) //防止上方的結構有加了
+                if (inLockinType == 1)
                 {
-                }
-                else
+                    if (superCharSize) //防止上方的結構有加了
+                    {
+                    }
+                    else
+                    {
+                        // printf("*[SUPER CHAR START]* ");
+                        superCharSize++;
+                        backslashOption = realloc(backslashOption, superCharSize);
+                        backslashOption[superCharSize - 1] = c;
+                    }
+                }else
                 {
-                    // printf("*[SUPER CHAR START]* ");
-                    superCharSize++;
-                    backslashOption = realloc(backslashOption, superCharSize);
-                    backslashOption[superCharSize - 1] = c;
+                    ErrCall("borken","M000",NULL,Line,Colum);
                 }
+
 
                 break;
             case 13:
+                Line++;
+                Colum = 0;
+
                 if (inLockinType)
                 {
 
