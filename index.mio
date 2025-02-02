@@ -1,6 +1,5 @@
+set f = function
+    set x ; = 10
+end
 
-
-set x = {
-    "a":2;
-    "b":a+1;
-}
+f();

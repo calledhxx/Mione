@@ -32,7 +32,7 @@ HeadReturnObj IF(struct _PairObject*Pairs,int PairsSize){
         if (Prompt.ObjType == 1) //Head代替Prompt
         {
             CountedDB = COUNT(Pairs[i].Source, Pairs[i].SourceSize);
-            if(CountedDB.ValueSize != 1) ErrCall("IF Error","M9121321",NULL,Prompt.Line,Prompt.Column);
+            if(CountedDB.ValueSize != 1) ErrCall("After `if` HEAD should be only a SOURCE","M020",NULL,Prompt.Line,Prompt.Column);
 
             db = (CountedDB.Value[0].ValueType) ? ((CountedDB.Value[0].ValueType != 8) ? 1 : CountedDB.Value[0].db) :0;
         }
@@ -58,7 +58,7 @@ HeadReturnObj IF(struct _PairObject*Pairs,int PairsSize){
                 break;
 
             default:
-                ErrCall("unsupported prompt type","M111",NULL,Prompt.Line,Prompt.Column);
+                ErrCall("This Prompt is not supported by IF","M111",NULL,Prompt.Line,Prompt.Column);
                 break;
             }
         }

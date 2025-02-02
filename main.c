@@ -43,7 +43,7 @@ int main(const int OptionsSize,char **Options)
                     f = fopen(Options[i],"r");
                     if (f){}else
                     {
-                        ErrCall("No file found","M001",NULL,0,0);
+                        ErrCall("No file found","FNF",NULL,0,0);
                     }
                     break;
                 }

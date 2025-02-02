@@ -127,7 +127,7 @@ MioneReturnObj Range(const MioneObj* Objs, const int ObjsSize)
                         HasFound = 1;
                         break;
                     }
-                    if (!HasFound) ErrCall("range support head not found", "MI1",NULL, Mio.Line, Mio.Column);
+                    if (!HasFound) ErrCall("This HEAD isn't be supported by range.", "M003",NULL, Mio.Line, Mio.Column);
 
                     PairsSize++;
                     Pairs = realloc(Pairs, sizeof(struct _PairObject) * PairsSize);
@@ -144,7 +144,7 @@ MioneReturnObj Range(const MioneObj* Objs, const int ObjsSize)
 
         if (Mio.ObjType == PROMPT) // PROMPT
         {
-            if (!HeadFuc) ErrCall(" head not foundadskakdpasdkas", "MI1",NULL, Mio.Line, Mio.Column);
+            if (!HeadFuc) ErrCall("PROMPT should be after HEAD.", "M002",NULL, Mio.Line, Mio.Column);
             PairsSize++;
             Pairs = realloc(Pairs, sizeof(struct _PairObject) * PairsSize);
 
@@ -258,8 +258,6 @@ MioneReturnObj Function(const MioneObj* Objs, const int ObjsSize,const ValueObj*
         (LastMio.ObjType == SYMBOL && LastMio.Symbol.AfterConnect == 0 && (Mio.ObjType == VARIABLE || Mio.ObjType == VALUE))
             )
         {
-
-
             if (HeadFuc != 0) {
                 HeadReturnObj a = HeadFuc(Pairs, PairsSize);
 
@@ -310,7 +308,7 @@ MioneReturnObj Function(const MioneObj* Objs, const int ObjsSize,const ValueObj*
                         HasFound = 1;
                         break;
                     }
-                    if (!HasFound) ErrCall("range support head not found", "MI1",NULL, Mio.Line, Mio.Column);
+                    if (!HasFound) ErrCall("This HEAD isn't be supported by function.", "M004",NULL, Mio.Line, Mio.Column);
 
                     PairsSize++;
                     Pairs = realloc(Pairs, sizeof(struct _PairObject) * PairsSize);
@@ -327,7 +325,8 @@ MioneReturnObj Function(const MioneObj* Objs, const int ObjsSize,const ValueObj*
 
         if (Mio.ObjType == PROMPT) // PROMPT
         {
-            if (!HeadFuc) ErrCall(" head not foundadskakdpasdkas", "MI1",NULL, Mio.Line, Mio.Column);
+            if (!HeadFuc) ErrCall("PROMPT should be after HEAD.", "M002",NULL, Mio.Line, Mio.Column);
+
             PairsSize++;
             Pairs = realloc(Pairs, sizeof(struct _PairObject) * PairsSize);
 
@@ -492,7 +491,7 @@ MioneReturnObj mione(const MioneObj* Objs, const int ObjsSize)
                         HasFound = 1;
                         break;
                     }
-                    if (!HasFound) ErrCall("range support head not found", "MI1",NULL, Mio.Line, Mio.Column);
+                    if (!HasFound) ErrCall("This HEAD isn't be supported by main Mione.", "M005",NULL, Mio.Line, Mio.Column);
 
                     PairsSize++;
                     Pairs = realloc(Pairs, sizeof(struct _PairObject) * PairsSize);
@@ -509,7 +508,8 @@ MioneReturnObj mione(const MioneObj* Objs, const int ObjsSize)
 
         if (Mio.ObjType == PROMPT) // PROMPT
         {
-            if (!HeadFuc) ErrCall(" head not foundadskakdpasdkas", "MI1",NULL, Mio.Line, Mio.Column);
+            if (!HeadFuc) ErrCall("PROMPT should be after HEAD.", "M002",NULL, Mio.Line, Mio.Column);
+
             PairsSize++;
             Pairs = realloc(Pairs, sizeof(struct _PairObject) * PairsSize);
 
@@ -682,7 +682,7 @@ MioneReturnObj Table(const MioneObj* Objs, const int ObjsSize,VariableObj * * Va
                         HasFound = 1;
                         break;
                     }
-                    if (!HasFound) ErrCall("mione support head not found", "MI1",NULL, Mio.Line, Mio.Column);
+                    if (!HasFound) ErrCall("This HEAD isn't be supported by table.", "M006",NULL, Mio.Line, Mio.Column);
 
                     PairsSize++;
                     Pairs = realloc(Pairs, sizeof(struct _PairObject) * PairsSize);
@@ -699,7 +699,7 @@ MioneReturnObj Table(const MioneObj* Objs, const int ObjsSize,VariableObj * * Va
 
         if (Mio.ObjType == PROMPT) // PROMPT
         {
-            if (!HeadFuc) ErrCall(" head not foundadskakdpasdkas", "MI1",NULL, Mio.Line, Mio.Column);
+            if (!HeadFuc) ErrCall("PROMPT should be after HEAD.", "M002",NULL, Mio.Line, Mio.Column);
             PairsSize++;
             Pairs = realloc(Pairs, sizeof(struct _PairObject) * PairsSize);
 

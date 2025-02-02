@@ -42,7 +42,7 @@ HeadReturnObj RETURN(struct _PairObject*Pairs,int PairsSize)
             switch (Prompt.Prompt.CurNumber)
             {
             default:
-                ErrCall("unsupported prompt type","M111",NULL,Prompt.Line,Prompt.Column);
+                ErrCall("`return` should be a NON-PROMPT HEAD sentence.","M001","Put a `;` after every end of sentences.",Prompt.Line,Prompt.Column);
                 break;
             }
         }

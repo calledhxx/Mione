@@ -36,7 +36,7 @@ HeadReturnObj FOR(struct _PairObject*Pairs,int PairsSize)
         if (Prompt.ObjType == 1) //Head代替Prompt
         {
             Request = REQUEST(Pairs[i].Source, Pairs[i].SourceSize);
-            if (Request.VariablesSize !=1)ErrCall("REQ error","M111",NULL,Prompt.Line,Prompt.Column);
+            if (Request.VariablesSize !=1)ErrCall("`for` only accept ONE VARIABLE.","M007",NULL,Prompt.Line,Prompt.Column);
 
         }
         if (Prompt.ObjType == 2)
@@ -47,33 +47,33 @@ HeadReturnObj FOR(struct _PairObject*Pairs,int PairsSize)
 
                 set = 1;
                 SetCounted = COUNT(Pairs[i].Source, Pairs[i].SourceSize);
-                if (SetCounted.ValueSize !=1)ErrCall("set count error","M111",NULL,Prompt.Line,Prompt.Column);
-                if (SetCounted.Value[0].ValueType!= VALUE_NOPOINTNUMBER_TYPE)ErrCall("set count error (NOT A NPN)","M111",NULL,Prompt.Line,Prompt.Column);
+                if (SetCounted.ValueSize !=1)ErrCall("`=` PROMPT in `for` only accept ONE SOURCE.","M008",NULL,Prompt.Line,Prompt.Column);
+                if (SetCounted.Value[0].ValueType!= VALUE_NOPOINTNUMBER_TYPE)ErrCall("After `=` PROMPT in `for` is`n a NPNumber.","M009",NULL,Prompt.Line,Prompt.Column);
 
                 break;
             case 5: //do
                 DoCounted = COUNT(Pairs[i].Source, Pairs[i].SourceSize);
-                if (DoCounted.ValueSize !=1)ErrCall("do count error","M111",NULL,Prompt.Line,Prompt.Column);
-                if (DoCounted.Value[0].ValueType!= VALUE_FUNCTION_TYPE)ErrCall("do count error (NOT A RANGE)","M111",NULL,Prompt.Line,Prompt.Column);
+                if (DoCounted.ValueSize !=1)ErrCall("`do` PROMPT in `for` only accept ONE SOURCE.","M010",NULL,Prompt.Line,Prompt.Column);
+                if (DoCounted.Value[0].ValueType!= VALUE_FUNCTION_TYPE)ErrCall("After `do` PROMPT in `for` is`n a Range.","M011",NULL,Prompt.Line,Prompt.Column);
               	_do = 1;
                 break;
             case 6: //to
               	ToCounted = COUNT(Pairs[i].Source, Pairs[i].SourceSize);
-                if (ToCounted.ValueSize !=1)ErrCall("to count error","M111",NULL,Prompt.Line,Prompt.Column);
-                if (ToCounted.Value[0].ValueType!= VALUE_NOPOINTNUMBER_TYPE)ErrCall("to count error (NOT A NPN)","M111",NULL,Prompt.Line,Prompt.Column);
+                if (ToCounted.ValueSize !=1)ErrCall("`to` PROMPT in `for` only accept ONE SOURCE.","M012",NULL,Prompt.Line,Prompt.Column);
+                if (ToCounted.Value[0].ValueType!= VALUE_NOPOINTNUMBER_TYPE)ErrCall("After `to` PROMPT in `for` is`n a NPNumber.","M013",NULL,Prompt.Line,Prompt.Column);
 
                 to = 1;
                 break;
             case 8: //in
                 InCounted = COUNT(Pairs[i].Source, Pairs[i].SourceSize);
-                if (InCounted.ValueSize !=1)ErrCall("in count error","M111",NULL,Prompt.Line,Prompt.Column);
-                if (InCounted.Value[0].ValueType!= VALUE_TABLE_TYPE)ErrCall("to count error (NOT A TABLE)","M111",NULL,Prompt.Line,Prompt.Column);
+                if (InCounted.ValueSize !=1)ErrCall("`in` PROMPT in `for` only accept ONE SOURCE.","M014",NULL,Prompt.Line,Prompt.Column);
+                if (InCounted.Value[0].ValueType!= VALUE_TABLE_TYPE)ErrCall("After `in` PROMPT in `for` is`n a Table.","M015",NULL,Prompt.Line,Prompt.Column);
 
                  in = 1;
                 break;
                  break;
             default:
-                ErrCall("unsupported prompt type","M111",NULL,Prompt.Line,Prompt.Column);
+                ErrCall("This Prompt is not supported by `for`","M016",NULL,Prompt.Line,Prompt.Column);
                 break;
             }
         }
@@ -84,9 +84,9 @@ HeadReturnObj FOR(struct _PairObject*Pairs,int PairsSize)
 
     int toTimes = 0;
 
-    if(in&&set)ErrCall("why `in` and `=` in the same time?","M111",NULL,Pairs[0].Prompt.Line,Pairs[0].Prompt.Column);
-    if(set&&with)ErrCall("`with` only works in `table loops`","M111",NULL,Pairs[0].Prompt.Line,Pairs[0].Prompt.Column);
-    if(to&&(!set))ErrCall("only using`to` won`t make us know what shall we use the value to count for loop.","M111",NULL,Pairs[0].Prompt.Line,Pairs[0].Prompt.Column);
+    if(in&&set)ErrCall("`in` and `=` isn't allowed at the same time in `for`","M017",NULL,Pairs[0].Prompt.Line,Pairs[0].Prompt.Column);
+    if(!set&&!(with&&in))ErrCall("`with` only works in `table loops`","M018",NULL,Pairs[0].Prompt.Line,Pairs[0].Prompt.Column);
+    if(to&&!set)ErrCall("only using`to` won`t make us know what shall we use the value to count for loop.","M019",NULL,Pairs[0].Prompt.Line,Pairs[0].Prompt.Column);
 
     if(set){
       	extern DefineVariableObj * Dvo;
