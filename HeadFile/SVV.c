@@ -109,10 +109,12 @@ HeadReturnObj SVV(struct _PairObject*Pairs,int PairsSize)
 
     if (point)
     {
-        Re.ToState = Re.ToState+2;
-
         extern DefineVariableObj * Dvo;
         extern int DvoSize;
+
+        DefinedVarsAndValueObj VAVs;
+        VAVs.VAVsSize = 0;
+        VAVs.VAVs = malloc(0);
 
         CountObj PointNamesCounted = COUNT(Pairs[0].Source,Pairs[0].SourceSize);
         if (PointCounted.ValueSize>PointNamesCounted.ValueSize) ErrCall("dkakakpdkapkdakd","iaijdaisod",NULL,Pairs[1].Source[0].Line,Pairs[1].Source[0].Column);
@@ -138,9 +140,9 @@ HeadReturnObj SVV(struct _PairObject*Pairs,int PairsSize)
                             (VarUPs[VarUPsSize-1]) = (*Dvo[DvoIndex].VariableUPsUP)[VariableIndex];
 
 
-                            Re.VAVs.VAVsSize++;
-                            Re.VAVs.VAVs = realloc(Re.VAVs.VAVs, (Re.VAVs.VAVsSize) * sizeof(DefinedVarAndValueObj));
-                            Re.VAVs.VAVs[Re.VAVs.VAVsSize-1].Value = (*Dvo[DvoIndex].VariableUPsUP)[VariableIndex]->Val;
+                            VAVs.VAVsSize++;
+                            VAVs.VAVs = realloc(VAVs.VAVs, (VAVs.VAVsSize) * sizeof(DefinedVarAndValueObj));
+                            VAVs.VAVs[VAVs.VAVsSize-1].Value = (*Dvo[DvoIndex].VariableUPsUP)[VariableIndex]->Val;
 
                             (*Dvo[DvoIndex].VariableUPsUP)[VariableIndex]->Val = PointCounted.Value[PNCIndex];
 
@@ -151,7 +153,7 @@ HeadReturnObj SVV(struct _PairObject*Pairs,int PairsSize)
                                 Vars.Vars[VariableIndex] = *((*Dvo[DvoIndex].VariableUPsUP)[VariableIndex]);
                             }
 
-                           Re.VAVs.VAVs[Re.VAVs.VAVsSize-1].TheDefinedVarUP = (*Dvo[DvoIndex].VariableUPsUP)[VariableIndex];
+                            VAVs.VAVs[VAVs.VAVsSize-1].TheDefinedVarUP = (*Dvo[DvoIndex].VariableUPsUP)[VariableIndex];
 
                             DvoIndex = DvoIndex + 1;
                             break;
@@ -176,10 +178,10 @@ HeadReturnObj SVV(struct _PairObject*Pairs,int PairsSize)
                     (*Dvo[DvoSize-1].VariableUPsUP) = realloc((*Dvo[DvoSize-1].VariableUPsUP), (*Dvo[DvoSize-1].VariablesSizeUP) * sizeof(VariableObj**));
                     (*Dvo[DvoSize-1].VariableUPsUP)[(*Dvo[DvoSize-1].VariablesSizeUP)-1] = (VarUPs[VarUPsSize-1]);
 
-                    Re.VAVs.VAVsSize++;
-                    Re.VAVs.VAVs = realloc(Re.VAVs.VAVs, (Re.VAVs.VAVsSize) * sizeof(DefinedVarAndValueObj));
-                    Re.VAVs.VAVs[Re.VAVs.VAVsSize-1].TheDefinedVarUP = (VarUPs[VarUPsSize-1]);
-                    Re.VAVs.VAVs[Re.VAVs.VAVsSize-1].Value = (ValueObj){.ValueType = 0};
+                    VAVs.VAVsSize++;
+                    VAVs.VAVs = realloc(VAVs.VAVs, (VAVs.VAVsSize) * sizeof(DefinedVarAndValueObj));
+                    VAVs.VAVs[VAVs.VAVsSize-1].TheDefinedVarUP = (VarUPs[VarUPsSize-1]);
+                    VAVs.VAVs[VAVs.VAVsSize-1].Value = (ValueObj){.ValueType = 0};
 
                     for (int VariableIndex = Vars.VarsSize; VariableIndex < VarUPsSize; VariableIndex++)
                     {
@@ -203,9 +205,9 @@ HeadReturnObj SVV(struct _PairObject*Pairs,int PairsSize)
                             VarUPs = realloc(VarUPs, (VarUPsSize) * sizeof(VariableObj*));
                             (VarUPs[VarUPsSize-1]) = (*Dvo[DvoIndex].VariableUPsUP)[VariableIndex];
 
-                            Re.VAVs.VAVsSize++;
-                            Re.VAVs.VAVs = realloc(Re.VAVs.VAVs, (Re.VAVs.VAVsSize) * sizeof(DefinedVarAndValueObj));
-                            Re.VAVs.VAVs[Re.VAVs.VAVsSize-1].Value = (*Dvo[DvoIndex].VariableUPsUP)[VariableIndex]->Val;
+                            VAVs.VAVsSize++;
+                            VAVs.VAVs = realloc(VAVs.VAVs, (VAVs.VAVsSize) * sizeof(DefinedVarAndValueObj));
+                            VAVs.VAVs[VAVs.VAVsSize-1].Value = (*Dvo[DvoIndex].VariableUPsUP)[VariableIndex]->Val;
 
 
                             (*Dvo[DvoIndex].VariableUPsUP)[VariableIndex]->Val = PointCounted.Value[PNCIndex];
@@ -217,7 +219,7 @@ HeadReturnObj SVV(struct _PairObject*Pairs,int PairsSize)
                                 Vars.Vars[VariableIndex] = *((*Dvo[DvoIndex].VariableUPsUP)[VariableIndex]);
                             }
 
-                            Re.VAVs.VAVs[Re.VAVs.VAVsSize-1].TheDefinedVarUP = (*Dvo[DvoIndex].VariableUPsUP)[VariableIndex];
+                            VAVs.VAVs[VAVs.VAVsSize-1].TheDefinedVarUP = (*Dvo[DvoIndex].VariableUPsUP)[VariableIndex];
 
 
                             DvoIndex = DvoIndex + 1;
@@ -241,10 +243,10 @@ HeadReturnObj SVV(struct _PairObject*Pairs,int PairsSize)
                     (*Dvo[DvoSize-1].VariableUPsUP) = realloc((*Dvo[DvoSize-1].VariableUPsUP), (*Dvo[DvoSize-1].VariablesSizeUP) * sizeof(VariableObj*));
                     (*Dvo[DvoSize-1].VariableUPsUP)[*Dvo[DvoSize-1].VariablesSizeUP-1] = (VarUPs[VarUPsSize-1]);
 
-                    Re.VAVs.VAVsSize++;
-                    Re.VAVs.VAVs = realloc(Re.VAVs.VAVs, (Re.VAVs.VAVsSize) * sizeof(DefinedVarAndValueObj));
-                    Re.VAVs.VAVs[Re.VAVs.VAVsSize-1].TheDefinedVarUP = (VarUPs[VarUPsSize-1]);
-                    Re.VAVs.VAVs[Re.VAVs.VAVsSize-1].Value = (ValueObj){.ValueType = 0};
+                    VAVs.VAVsSize++;
+                    VAVs.VAVs = realloc(VAVs.VAVs, (VAVs.VAVsSize) * sizeof(DefinedVarAndValueObj));
+                    VAVs.VAVs[VAVs.VAVsSize-1].TheDefinedVarUP = (VarUPs[VarUPsSize-1]);
+                    VAVs.VAVs[VAVs.VAVsSize-1].Value = (ValueObj){.ValueType = 0};
 
 
                     for (int VariableIndex = Vars.VarsSize; VariableIndex < VarUPsSize; VariableIndex++)
@@ -260,7 +262,7 @@ HeadReturnObj SVV(struct _PairObject*Pairs,int PairsSize)
             }
         }
 
-
+        for (int i = 0; i < VAVs.VAVsSize; i++) VAVs.VAVs[i].TheDefinedVarUP-> Val = VAVs.VAVs[i].Value;
     }
 
     if (set || point)

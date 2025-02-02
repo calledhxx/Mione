@@ -61,7 +61,6 @@ MioneObj *CMO(CaseObj*CASES,int CASESIZE,
            {
                Line++;
                Column = 0;
-               continue;
            };
 
             // printf("`%s`\n",CASES[i].ObjName);
@@ -172,6 +171,7 @@ MioneObj *CMO(CaseObj*CASES,int CASESIZE,
 
                    int MioObjSize = 0;
 
+                   printf("%d %d\n",MIONESIZE ? MIONE[MIONESIZE-1].Line : Line,MIONESIZE ? MIONE[MIONESIZE-1].Column : Column);
                    MioneObj * MioObj = CMO(Area,AreaSize,&MioObjSize,MIONESIZE ? MIONE[MIONESIZE-1].Line : Line,MIONESIZE ? MIONE[MIONESIZE-1].Column : Column,DvoUP,DvoSizeUP);
 
                    // VariableObj * TbMemory = malloc(0);
