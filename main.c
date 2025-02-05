@@ -24,6 +24,8 @@
 DefineVariableObj * Dvo;
 int DvoSize;
 
+#include "MTC.h"
+
 int main(const int OptionsSize,char **Options)
 {
     FILE *f = NULL;
@@ -76,7 +78,40 @@ int main(const int OptionsSize,char **Options)
 
         MioneObj * MioObj = CMO(CASES,CaseObjSize,&MioObjSize,1,0,&Dvo,&DvoSize);
 
-        mione(MioObj,MioObjSize);
+        Threads.Threads = malloc(0);
+
+        ThreadObj newThread = (ThreadObj){
+            .Fuc = mione,
+            .Index = 0,
+            .Objs = MioObj,
+            .ObjsSize = MioObjSize,
+
+            .VariablesUP = NULL,
+            .VariablesUPSizeUP = NULL,
+
+            .Request = NULL,
+            .RequestSize = 0,
+
+            .EndLoacl = malloc(0),
+            .EndLoaclSize = 0,
+            .HeadFuc = NULL,
+
+            .Pairs = malloc(0),
+            .PairsSize = 0,
+
+            .LastMio = {0},
+            .Return = {.ToState = 0,.Vs.ValueSize = 0}
+        };
+
+        Threads.ThreadsSize++;
+        Threads.Threads = realloc(Threads.Threads,sizeof(ThreadObj)*Threads.ThreadsSize);
+        Threads.Threads[Threads.ThreadsSize-1] = newThread;
+
+        MTC();
+
+        // mione(MioObj,MioObjSize);
+
+
 
         printf("\n # Well down. Have a good day.");
 

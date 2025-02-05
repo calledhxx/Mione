@@ -214,5 +214,43 @@ typedef struct _DefineVariableObject
 
 } DefineVariableObj;
 
+typedef struct _ThreadObject
+{
+    MioneReturnObj (*Fuc)();
+    int Index;
+
+    //
+    MioneObj* Objs;
+    int ObjsSize;
+
+    VariableObj * * VariablesUP;
+    int * VariablesUPSizeUP;
+
+    ValueObj* Request;
+    int RequestSize;
+
+    //
+
+    DefinedVarAndValueObj * EndLoacl;
+    int EndLoaclSize;
+
+    HeadReturnObj (*HeadFuc)(struct _PairObject* Pairs, int PairsSize);
+    PairObj *Pairs;
+    int PairsSize;
+
+    MioneObj LastMio;
+
+    MioneReturnObj Return;
+
+    //
+} ThreadObj;
+
+typedef struct _ThreadsObjet
+{
+    int ThreadsSize;
+    ThreadObj * Threads;
+
+} ThreadsObj;
+
 
 #endif //OBJECTS_H

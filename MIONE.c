@@ -38,27 +38,20 @@ int TableSupportHeads[]={
     1
 };
 
-MioneReturnObj Range(const MioneObj* Objs, const int ObjsSize)
+//TODO
+
+MioneReturnObj Range(const MioneObj* Objs, const int ObjsSize,ThreadObj Thread)
 {
-    DefinedVarAndValueObj * EndLoacl = malloc(0);
-    int EndLoaclSize = 0;
+    DefinedVarAndValueObj * EndLoacl = Thread.EndLoacl;
+    int EndLoaclSize = Thread.EndLoaclSize;
+    
+    HeadReturnObj (*HeadFuc)(struct _PairObject* Pairs, int PairsSize) = Thread.HeadFuc;
+    PairObj *Pairs = Thread.Pairs;
+    int PairsSize = Thread.PairsSize;
 
+    MioneObj LastMio = Thread.LastMio;
 
-
-    HeadReturnObj (*HeadFuc)(struct _PairObject* Pairs, int PairsSize) = 0;
-    PairObj *Pairs = malloc(0);
-    int PairsSize = 0;
-
-    MioneObj LastMio = (MioneObj) {
-        .ObjType = 0
-    };
-
-    MioneReturnObj Return;
-    Return.ToState = 0;
-    Return.Vs.ValueSize = 0;
-
-
-    int MioneReturnStats = 1;
+    MioneReturnObj Return = Thread.Return;
 
     for (int index = 0; index < ObjsSize; index++)
     {
@@ -223,27 +216,18 @@ MioneReturnObj Range(const MioneObj* Objs, const int ObjsSize)
     return Return;
 }
 
-MioneReturnObj Function(const MioneObj* Objs, const int ObjsSize,const ValueObj* Request, const int RequestSize)
+MioneReturnObj Function(const MioneObj* Objs, const int ObjsSize, ValueObj* Request, int RequestSize,ThreadObj Thread)
 {
-    DefinedVarAndValueObj * EndLoacl = malloc(0);
-    int EndLoaclSize = 0;
+    DefinedVarAndValueObj * EndLoacl = Thread.EndLoacl;
+    int EndLoaclSize = Thread.EndLoaclSize;
 
+    HeadReturnObj (*HeadFuc)(struct _PairObject* Pairs, int PairsSize) = Thread.HeadFuc;
+    PairObj *Pairs = Thread.Pairs;
+    int PairsSize = Thread.PairsSize;
 
+    MioneObj LastMio = Thread.LastMio;
 
-    HeadReturnObj (*HeadFuc)(struct _PairObject* Pairs, int PairsSize) = 0;
-    PairObj *Pairs = malloc(0);
-    int PairsSize = 0;
-
-    MioneObj LastMio = (MioneObj) {
-        .ObjType = 0
-    };
-
-    MioneReturnObj Return;
-    Return.ToState = 0;
-    Return.Vs.ValueSize = 0;
-
-
-    int MioneReturnStats = 1;
+    MioneReturnObj Return = Thread.Return;
 
     for (int index = 0; index < ObjsSize; index++)
     {
@@ -400,31 +384,25 @@ MioneReturnObj Function(const MioneObj* Objs, const int ObjsSize,const ValueObj*
     }
     for (int i = 0; i<EndLoaclSize; i++) if (EndLoacl[i].TheDefinedVarUP != 0) EndLoacl[i].TheDefinedVarUP->Val = EndLoacl[i].Value;
 
-    
+
 
     return Return;
 }
 
-MioneReturnObj mione(const MioneObj* Objs, const int ObjsSize)
+MioneReturnObj mione(const MioneObj* Objs, const int ObjsSize,ThreadObj Thread)
 {
 
-    DefinedVarAndValueObj * EndLoacl = malloc(0);
-    int EndLoaclSize = 0;
+    DefinedVarAndValueObj * EndLoacl = Thread.EndLoacl;
+    int EndLoaclSize = Thread.EndLoaclSize;
+
+    HeadReturnObj (*HeadFuc)(struct _PairObject* Pairs, int PairsSize) = Thread.HeadFuc;
+    PairObj *Pairs = Thread.Pairs;
+    int PairsSize = Thread.PairsSize;
+
+    MioneObj LastMio = Thread.LastMio;
+
+    MioneReturnObj Return = Thread.Return;
     
-
-    HeadReturnObj (*HeadFuc)(struct _PairObject* Pairs, int PairsSize) = 0;
-    PairObj *Pairs = malloc(0);
-    int PairsSize = 0;
-
-    MioneObj LastMio = (MioneObj) {
-        .ObjType = 0
-    };
-
-    MioneReturnObj Return;
-    Return.ToState = 0;
-    Return.Vs.ValueSize = 0;
-
-    int MioneReturnStats = 1;
 
     for (int index = 0; index < ObjsSize; index++)
     {
@@ -584,30 +562,24 @@ MioneReturnObj mione(const MioneObj* Objs, const int ObjsSize)
     }
     for (int i = 0; i<EndLoaclSize; i++) if (EndLoacl[i].TheDefinedVarUP != 0) EndLoacl[i].TheDefinedVarUP->Val = EndLoacl[i].Value;
 
-    
+
 
     return Return;
 }
 
-MioneReturnObj Table(const MioneObj* Objs, const int ObjsSize,VariableObj * * VariablesUP, int * VariablesUPSizeUP/*不需要固定變數記憶位置*/)
+MioneReturnObj Table(const MioneObj* Objs, const int ObjsSize,VariableObj * * VariablesUP, int * VariablesUPSizeUP/*不需要固定變數記憶位置*/,ThreadObj Thread)
 {
-    DefinedVarAndValueObj * EndLoacl = malloc(0);
-    int EndLoaclSize = 0;
+    DefinedVarAndValueObj * EndLoacl = Thread.EndLoacl;
+    int EndLoaclSize = Thread.EndLoaclSize;
 
-    HeadReturnObj (*HeadFuc)(struct _PairObject* Pairs, int PairsSize) = 0;
-    PairObj *Pairs = malloc(0);
-    int PairsSize = 0;
+    HeadReturnObj (*HeadFuc)(struct _PairObject* Pairs, int PairsSize) = Thread.HeadFuc;
+    PairObj *Pairs = Thread.Pairs;
+    int PairsSize = Thread.PairsSize;
 
-    MioneObj LastMio = (MioneObj) {
-        .ObjType = 0
-    };
+    MioneObj LastMio = Thread.LastMio;
 
-    MioneReturnObj Return;
-    Return.ToState = 0;
-    Return.Vs.ValueSize = 0;
+    MioneReturnObj Return = Thread.Return;
 
-
-    int MioneReturnStats = 1;
 
     for (int index = 0; index < ObjsSize; index++)
     {
