@@ -82,26 +82,32 @@ int main(const int OptionsSize,char **Options)
 
         ThreadObj newThread = (ThreadObj){
             .Fuc = mione,
-            .Index = 0,
+            .IndexUP = malloc(sizeof(int)),
             .Objs = MioObj,
             .ObjsSize = MioObjSize,
 
-            .VariablesUP = NULL,
-            .VariablesUPSizeUP = NULL,
+            .VariablesUP = malloc(sizeof(VariableObj*)),
+            .VariablesUPSizeUP = malloc(sizeof(int)),
 
             .Request = NULL,
             .RequestSize = 0,
 
-            .EndLoacl = malloc(0),
-            .EndLoaclSize = 0,
+            .EndLoaclUP = malloc(sizeof(DefinedVarAndValueObj*)),
+            .EndLoaclSizeUP = malloc(sizeof(int)),
             .HeadFuc = NULL,
 
             .Pairs = malloc(0),
             .PairsSize = 0,
 
-            .LastMio = {0},
+            .LastMioUP = &(MioneObj){0},
             .Return = {.ToState = 0,.Vs.ValueSize = 0}
         };
+
+        *newThread.IndexUP = 0;
+        *newThread.VariablesUP = malloc(0);
+        *newThread.VariablesUPSizeUP = 0;
+        *newThread.EndLoaclUP = malloc(0);
+        *newThread.EndLoaclSizeUP = 0;
 
         Threads.ThreadsSize++;
         Threads.Threads = realloc(Threads.Threads,sizeof(ThreadObj)*Threads.ThreadsSize);

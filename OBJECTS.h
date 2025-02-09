@@ -217,7 +217,7 @@ typedef struct _DefineVariableObject
 typedef struct _ThreadObject
 {
     MioneReturnObj (*Fuc)();
-    int Index;
+    int *IndexUP;
 
     //
     MioneObj* Objs;
@@ -231,14 +231,14 @@ typedef struct _ThreadObject
 
     //
 
-    DefinedVarAndValueObj * EndLoacl;
-    int EndLoaclSize;
+    DefinedVarAndValueObj * * EndLoaclUP;
+    int * EndLoaclSizeUP;
 
     HeadReturnObj (*HeadFuc)(struct _PairObject* Pairs, int PairsSize);
     PairObj *Pairs;
     int PairsSize;
 
-    MioneObj LastMio;
+    MioneObj * LastMioUP;
 
     MioneReturnObj Return;
 
@@ -251,6 +251,12 @@ typedef struct _ThreadsObjet
     ThreadObj * Threads;
 
 } ThreadsObj;
+
+typedef struct _ThreadReturnObject
+{
+    MioneReturnObj Return;
+}
+ThreadReturnObj;
 
 
 #endif //OBJECTS_H

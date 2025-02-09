@@ -42,28 +42,31 @@ int TableSupportHeads[]={
 
 MioneReturnObj Range(const MioneObj* Objs, const int ObjsSize,ThreadObj Thread)
 {
-    DefinedVarAndValueObj * EndLoacl = Thread.EndLoacl;
-    int EndLoaclSize = Thread.EndLoaclSize;
+    DefinedVarAndValueObj * * EndLoaclUP = Thread.EndLoaclUP;
+    int * EndLoaclSizeUP = Thread.EndLoaclSizeUP;
     
     HeadReturnObj (*HeadFuc)(struct _PairObject* Pairs, int PairsSize) = Thread.HeadFuc;
     PairObj *Pairs = Thread.Pairs;
     int PairsSize = Thread.PairsSize;
 
-    MioneObj LastMio = Thread.LastMio;
+    MioneObj * LastMioUP = Thread.LastMioUP;
 
     MioneReturnObj Return = Thread.Return;
 
-    for (int index = 0; index < ObjsSize; index++)
+    
+   int index;
+    for (;*Thread.IndexUP < ObjsSize; (*Thread.IndexUP)++)
     {
+        index = *Thread.IndexUP;
 
         MioneObj Mio = Objs[index];
 
 
        if ((Mio.ObjType == SYMBOL && strcmp(Mio.Symbol.Name, ";") == 0) ||
             Mio.ObjType == HEAD ||
-        (LastMio.ObjType == Mio.ObjType && (Mio.ObjType == SYMBOL ? !Mio.Symbol.CanConnect : 1) && Mio.ObjType != PROMPT) ||
-        (LastMio.ObjType == VARIABLE &&  Mio.ObjType == VALUE) ||  (LastMio.ObjType == VALUE &&  Mio.ObjType == VARIABLE)||
-        (LastMio.ObjType == SYMBOL && LastMio.Symbol.AfterConnect == 0 && (Mio.ObjType == VARIABLE || Mio.ObjType == VALUE))
+        ((*LastMioUP).ObjType == Mio.ObjType && (Mio.ObjType == SYMBOL ? !Mio.Symbol.CanConnect : 1) && Mio.ObjType != PROMPT) ||
+        ((*LastMioUP).ObjType == VARIABLE &&  Mio.ObjType == VALUE) ||  ((*LastMioUP).ObjType == VALUE &&  Mio.ObjType == VARIABLE)||
+        ((*LastMioUP).ObjType == SYMBOL && (*LastMioUP).Symbol.AfterConnect == 0 && (Mio.ObjType == VARIABLE || Mio.ObjType == VALUE))
             )
         {
 
@@ -75,32 +78,40 @@ MioneReturnObj Range(const MioneObj* Objs, const int ObjsSize,ThreadObj Thread)
                 Pairs = NULL;
                 PairsSize = 0;
 
-                if (a.ToState >= 4)
+                int States[] =  {
+                    4,2,1
+                };
+                
+                for (int StateIndex = 0; StateIndex<(sizeof(States)/sizeof(int)); StateIndex++)
                 {
-                    a.ToState = a.ToState-4;
-                    //printf("todo MIONE.c MIONE FUC\n");
-                    //exit(200);
-                }
-                if (a.ToState >= 2)
-                {
-                    a.ToState = a.ToState-2;
-                   EndLoacl = realloc((EndLoacl), (EndLoaclSize+a.VAVs.VAVsSize)*sizeof(VariableObj));
-                    for (int ELIndex = EndLoaclSize; ELIndex<EndLoaclSize+a.VAVs.VAVsSize; ELIndex++)
+                    if (a.ToState >= States[StateIndex])
                     {
-                        EndLoacl[ELIndex] = a.VAVs.VAVs[ELIndex-EndLoaclSize];
+                        a.ToState = a.ToState-States[StateIndex];
+
+                        switch (StateIndex)
+                        {
+                        case 4:
+                            break;
+                        case 2:
+                            (*EndLoaclUP) = realloc(((*EndLoaclUP)), ((*EndLoaclSizeUP)+a.VAVs.VAVsSize)*sizeof(VariableObj));
+                            for (int ELIndex = (*EndLoaclSizeUP); ELIndex<(*EndLoaclSizeUP)+a.VAVs.VAVsSize; ELIndex++)
+                            {
+                                (*EndLoaclUP)[ELIndex] = a.VAVs.VAVs[ELIndex-(*EndLoaclSizeUP)];
+                            }
+                            (*EndLoaclSizeUP) = (*EndLoaclSizeUP)+a.VAVs.VAVsSize;
+                            break;
+                        case 1:
+                            Return.Vs = a.Vs;
+
+                            Return.ToState =  Return.ToState +1;
+
+                            index=ObjsSize; //break break
+                            continue;
+                        }
                     }
-                    EndLoaclSize = EndLoaclSize+a.VAVs.VAVsSize;
                 }
-                if (a.ToState >= 1)
-                {
-                    a.ToState = a.ToState-1;
-                    Return.Vs = a.Vs;
 
-                    Return.ToState =  Return.ToState +1;
 
-                    index=ObjsSize; //break break
-                    continue;
-                }
 
                 if (Mio.ObjType == SYMBOL && strcmp(Mio.Symbol.Name, ";") == 0)continue;
             }
@@ -179,37 +190,45 @@ MioneReturnObj Range(const MioneObj* Objs, const int ObjsSize,ThreadObj Thread)
                 PairsSize = 0;
 
 
-                if (a.ToState >= 4)
+                int States[] =  {
+                    4,2,1
+                };
+                
+                for (int StateIndex = 0; StateIndex<(sizeof(States)/sizeof(int)); StateIndex++)
                 {
-                    a.ToState = a.ToState-4;
-                    //printf("todo MIONE.c MIONE FUC\n");
-                    //exit(200);
-                }
-                if (a.ToState >= 2)
-                {
-                    a.ToState = a.ToState-2;
-                   EndLoacl = realloc((EndLoacl), (EndLoaclSize+a.VAVs.VAVsSize)*sizeof(VariableObj));
-                    for (int ELIndex = EndLoaclSize; ELIndex<EndLoaclSize+a.VAVs.VAVsSize; ELIndex++)
+                    if (a.ToState >= States[StateIndex])
                     {
-                        EndLoacl[ELIndex] = a.VAVs.VAVs[ELIndex-EndLoaclSize];
+                        a.ToState = a.ToState-States[StateIndex];
+
+                        switch (StateIndex)
+                        {
+                        case 4:
+                            break;
+                        case 2:
+                            (*EndLoaclUP) = realloc(((*EndLoaclUP)), ((*EndLoaclSizeUP)+a.VAVs.VAVsSize)*sizeof(VariableObj));
+                            for (int ELIndex = (*EndLoaclSizeUP); ELIndex<(*EndLoaclSizeUP)+a.VAVs.VAVsSize; ELIndex++)
+                            {
+                                (*EndLoaclUP)[ELIndex] = a.VAVs.VAVs[ELIndex-(*EndLoaclSizeUP)];
+                            }
+                            (*EndLoaclSizeUP) = (*EndLoaclSizeUP)+a.VAVs.VAVsSize;
+                            break;
+                        case 1:
+                            Return.Vs = a.Vs;
+
+                            Return.ToState =  Return.ToState +1;
+
+                            index=ObjsSize; //break break
+                            continue;
+                        }
                     }
-                    EndLoaclSize = EndLoaclSize+a.VAVs.VAVsSize;
                 }
-                if (a.ToState >= 1)
-                {
-                    a.ToState = a.ToState-1;
-                    Return.Vs = a.Vs;
 
-                    Return.ToState =  Return.ToState +1;
 
-                    index=ObjsSize; //break break
-                    continue;
-                }
             }
         }
-        LastMio = Mio;
+        (*LastMioUP) = Mio;
     }
-    for (int i = 0; i<EndLoaclSize; i++) if (EndLoacl[i].TheDefinedVarUP != 0) EndLoacl[i].TheDefinedVarUP->Val = EndLoacl[i].Value;
+    for (int i = 0; i<(*EndLoaclSizeUP); i++) if ((*EndLoaclUP)[i].TheDefinedVarUP != 0) (*EndLoaclUP)[i].TheDefinedVarUP->Val = (*EndLoaclUP)[i].Value;
 
     
 
@@ -218,30 +237,35 @@ MioneReturnObj Range(const MioneObj* Objs, const int ObjsSize,ThreadObj Thread)
 
 MioneReturnObj Function(const MioneObj* Objs, const int ObjsSize, ValueObj* Request, int RequestSize,ThreadObj Thread)
 {
-    DefinedVarAndValueObj * EndLoacl = Thread.EndLoacl;
-    int EndLoaclSize = Thread.EndLoaclSize;
+     DefinedVarAndValueObj * * EndLoaclUP = Thread.EndLoaclUP;
+    int * EndLoaclSizeUP = Thread.EndLoaclSizeUP;
 
     HeadReturnObj (*HeadFuc)(struct _PairObject* Pairs, int PairsSize) = Thread.HeadFuc;
     PairObj *Pairs = Thread.Pairs;
     int PairsSize = Thread.PairsSize;
 
-    MioneObj LastMio = Thread.LastMio;
+    MioneObj * LastMioUP = Thread.LastMioUP;
 
     MioneReturnObj Return = Thread.Return;
 
-    for (int index = 0; index < ObjsSize; index++)
+
+   int index;
+    for (;*Thread.IndexUP < ObjsSize; (*Thread.IndexUP)++)
     {
+        index = *Thread.IndexUP;
 
         MioneObj Mio = Objs[index];
 
 
        if ((Mio.ObjType == SYMBOL && strcmp(Mio.Symbol.Name, ";") == 0) ||
             Mio.ObjType == HEAD ||
-        (LastMio.ObjType == Mio.ObjType && (Mio.ObjType == SYMBOL ? !Mio.Symbol.CanConnect : 1) && Mio.ObjType != PROMPT) ||
-        (LastMio.ObjType == VARIABLE &&  Mio.ObjType == VALUE) ||  (LastMio.ObjType == VALUE &&  Mio.ObjType == VARIABLE)||
-        (LastMio.ObjType == SYMBOL && LastMio.Symbol.AfterConnect == 0 && (Mio.ObjType == VARIABLE || Mio.ObjType == VALUE))
+        ((*LastMioUP).ObjType == Mio.ObjType && (Mio.ObjType == SYMBOL ? !Mio.Symbol.CanConnect : 1) && Mio.ObjType != PROMPT) ||
+        ((*LastMioUP).ObjType == VARIABLE &&  Mio.ObjType == VALUE) ||  ((*LastMioUP).ObjType == VALUE &&  Mio.ObjType == VARIABLE)||
+        ((*LastMioUP).ObjType == SYMBOL && (*LastMioUP).Symbol.AfterConnect == 0 && (Mio.ObjType == VARIABLE || Mio.ObjType == VALUE))
             )
         {
+
+
             if (HeadFuc != 0) {
                 HeadReturnObj a = HeadFuc(Pairs, PairsSize);
 
@@ -249,30 +273,40 @@ MioneReturnObj Function(const MioneObj* Objs, const int ObjsSize, ValueObj* Requ
                 Pairs = NULL;
                 PairsSize = 0;
 
-                if (a.ToState >= 4)
+                int States[] =  {
+                    4,2,1
+                };
+                
+                for (int StateIndex = 0; StateIndex<(sizeof(States)/sizeof(int)); StateIndex++)
                 {
-                    a.ToState = a.ToState-4;
-                    //printf("todo MIONE.c MIONE FUC\n");
-                    //exit(200);
-                }
-                if (a.ToState >= 2)
-                {
-                    a.ToState = a.ToState-2;
-                   EndLoacl = realloc((EndLoacl), (EndLoaclSize+a.VAVs.VAVsSize)*sizeof(VariableObj));
-                    for (int ELIndex = EndLoaclSize; ELIndex<EndLoaclSize+a.VAVs.VAVsSize; ELIndex++)
+                    if (a.ToState >= States[StateIndex])
                     {
-                        EndLoacl[ELIndex] = a.VAVs.VAVs[ELIndex-EndLoaclSize];
-                    }
-                    EndLoaclSize = EndLoaclSize+a.VAVs.VAVsSize;
-                }
-                if (a.ToState >= 1)
-                {
-                    a.ToState = a.ToState-1;
-                    Return.Vs = a.Vs;
+                        a.ToState = a.ToState-States[StateIndex];
 
-                    index=ObjsSize; //break break
-                    continue;
+                        switch (StateIndex)
+                        {
+                        case 4:
+                            break;
+                        case 2:
+                            (*EndLoaclUP) = realloc(((*EndLoaclUP)), ((*EndLoaclSizeUP)+a.VAVs.VAVsSize)*sizeof(VariableObj));
+                            for (int ELIndex = (*EndLoaclSizeUP); ELIndex<(*EndLoaclSizeUP)+a.VAVs.VAVsSize; ELIndex++)
+                            {
+                                (*EndLoaclUP)[ELIndex] = a.VAVs.VAVs[ELIndex-(*EndLoaclSizeUP)];
+                            }
+                            (*EndLoaclSizeUP) = (*EndLoaclSizeUP)+a.VAVs.VAVsSize;
+                            break;
+                        case 1:
+                            Return.Vs = a.Vs;
+
+                            Return.ToState =  Return.ToState +1;
+
+                            index=ObjsSize; //break break
+                            continue;
+                        }
+                    }
                 }
+
+
 
                 if (Mio.ObjType == SYMBOL && strcmp(Mio.Symbol.Name, ";") == 0)continue;
             }
@@ -292,7 +326,7 @@ MioneReturnObj Function(const MioneObj* Objs, const int ObjsSize, ValueObj* Requ
                         HasFound = 1;
                         break;
                     }
-                    if (!HasFound) ErrCall("This HEAD isn't be supported by function.", "M004",NULL, Mio.Line, Mio.Column);
+                    if (!HasFound) ErrCall("This HEAD isn't be supported by range.", "M003",NULL, Mio.Line, Mio.Column);
 
                     PairsSize++;
                     Pairs = realloc(Pairs, sizeof(struct _PairObject) * PairsSize);
@@ -310,7 +344,6 @@ MioneReturnObj Function(const MioneObj* Objs, const int ObjsSize, ValueObj* Requ
         if (Mio.ObjType == PROMPT) // PROMPT
         {
             if (!HeadFuc) ErrCall("PROMPT should be after HEAD.", "M002",NULL, Mio.Line, Mio.Column);
-
             PairsSize++;
             Pairs = realloc(Pairs, sizeof(struct _PairObject) * PairsSize);
 
@@ -352,37 +385,45 @@ MioneReturnObj Function(const MioneObj* Objs, const int ObjsSize, ValueObj* Requ
                 PairsSize = 0;
 
 
-                if (a.ToState >= 4)
+                int States[] =  {
+                    4,2,1
+                };
+                
+                for (int StateIndex = 0; StateIndex<(sizeof(States)/sizeof(int)); StateIndex++)
                 {
-                    a.ToState = a.ToState-4;
-                    //printf("todo MIONE.c MIONE FUC\n");
-                    //exit(200);
-                }
-                if (a.ToState >= 2)
-                {
-                    a.ToState = a.ToState-2;
-                   EndLoacl = realloc((EndLoacl), (EndLoaclSize+a.VAVs.VAVsSize)*sizeof(VariableObj));
-                    for (int ELIndex = EndLoaclSize; ELIndex<EndLoaclSize+a.VAVs.VAVsSize; ELIndex++)
+                    if (a.ToState >= States[StateIndex])
                     {
-                        EndLoacl[ELIndex] = a.VAVs.VAVs[ELIndex-EndLoaclSize];
+                        a.ToState = a.ToState-States[StateIndex];
+
+                        switch (StateIndex)
+                        {
+                        case 4:
+                            break;
+                        case 2:
+                            (*EndLoaclUP) = realloc(((*EndLoaclUP)), ((*EndLoaclSizeUP)+a.VAVs.VAVsSize)*sizeof(VariableObj));
+                            for (int ELIndex = (*EndLoaclSizeUP); ELIndex<(*EndLoaclSizeUP)+a.VAVs.VAVsSize; ELIndex++)
+                            {
+                                (*EndLoaclUP)[ELIndex] = a.VAVs.VAVs[ELIndex-(*EndLoaclSizeUP)];
+                            }
+                            (*EndLoaclSizeUP) = (*EndLoaclSizeUP)+a.VAVs.VAVsSize;
+                            break;
+                        case 1:
+                            Return.Vs = a.Vs;
+
+                            Return.ToState =  Return.ToState +1;
+
+                            index=ObjsSize; //break break
+                            continue;
+                        }
                     }
-                    EndLoaclSize = EndLoaclSize+a.VAVs.VAVsSize;
                 }
-                if (a.ToState >= 1)
-                {
-                    a.ToState = a.ToState-1;
-                    Return.Vs = a.Vs;
 
-                    Return.ToState =  Return.ToState +1;
 
-                    index=ObjsSize; //break break
-                    continue;
-                }
             }
         }
-        LastMio = Mio;
+        (*LastMioUP) = Mio;
     }
-    for (int i = 0; i<EndLoaclSize; i++) if (EndLoacl[i].TheDefinedVarUP != 0) EndLoacl[i].TheDefinedVarUP->Val = EndLoacl[i].Value;
+    for (int i = 0; i<(*EndLoaclSizeUP); i++) if ((*EndLoaclUP)[i].TheDefinedVarUP != 0) (*EndLoaclUP)[i].TheDefinedVarUP->Val = (*EndLoaclUP)[i].Value;
 
 
 
@@ -392,29 +433,31 @@ MioneReturnObj Function(const MioneObj* Objs, const int ObjsSize, ValueObj* Requ
 MioneReturnObj mione(const MioneObj* Objs, const int ObjsSize,ThreadObj Thread)
 {
 
-    DefinedVarAndValueObj * EndLoacl = Thread.EndLoacl;
-    int EndLoaclSize = Thread.EndLoaclSize;
+     DefinedVarAndValueObj * * EndLoaclUP = Thread.EndLoaclUP;
+    int * EndLoaclSizeUP = Thread.EndLoaclSizeUP;
 
     HeadReturnObj (*HeadFuc)(struct _PairObject* Pairs, int PairsSize) = Thread.HeadFuc;
     PairObj *Pairs = Thread.Pairs;
     int PairsSize = Thread.PairsSize;
 
-    MioneObj LastMio = Thread.LastMio;
+    MioneObj * LastMioUP = Thread.LastMioUP;
 
     MioneReturnObj Return = Thread.Return;
-    
 
-    for (int index = 0; index < ObjsSize; index++)
+
+   int index;
+    for (;*Thread.IndexUP < ObjsSize; (*Thread.IndexUP)++)
     {
+        index = *Thread.IndexUP;
 
         MioneObj Mio = Objs[index];
 
 
        if ((Mio.ObjType == SYMBOL && strcmp(Mio.Symbol.Name, ";") == 0) ||
             Mio.ObjType == HEAD ||
-        (LastMio.ObjType == Mio.ObjType && (Mio.ObjType == SYMBOL ? !Mio.Symbol.CanConnect : 1) && Mio.ObjType != PROMPT) ||
-        (LastMio.ObjType == VARIABLE &&  Mio.ObjType == VALUE) ||  (LastMio.ObjType == VALUE &&  Mio.ObjType == VARIABLE)||
-        (LastMio.ObjType == SYMBOL && LastMio.Symbol.AfterConnect == 0 && (Mio.ObjType == VARIABLE || Mio.ObjType == VALUE))
+        ((*LastMioUP).ObjType == Mio.ObjType && (Mio.ObjType == SYMBOL ? !Mio.Symbol.CanConnect : 1) && Mio.ObjType != PROMPT) ||
+        ((*LastMioUP).ObjType == VARIABLE &&  Mio.ObjType == VALUE) ||  ((*LastMioUP).ObjType == VALUE &&  Mio.ObjType == VARIABLE)||
+        ((*LastMioUP).ObjType == SYMBOL && (*LastMioUP).Symbol.AfterConnect == 0 && (Mio.ObjType == VARIABLE || Mio.ObjType == VALUE))
             )
         {
 
@@ -426,30 +469,40 @@ MioneReturnObj mione(const MioneObj* Objs, const int ObjsSize,ThreadObj Thread)
                 Pairs = NULL;
                 PairsSize = 0;
 
-                if (a.ToState >= 4)
+                int States[] =  {
+                    4,2,1
+                };
+                
+                for (int StateIndex = 0; StateIndex<(sizeof(States)/sizeof(int)); StateIndex++)
                 {
-                    a.ToState = a.ToState-4;
-                    //printf("todo MIONE.c MIONE FUC\n");
-                    //exit(200);
-                }
-                if (a.ToState >= 2)
-                {
-                    a.ToState = a.ToState-2;
-                   EndLoacl = realloc((EndLoacl), (EndLoaclSize+a.VAVs.VAVsSize)*sizeof(VariableObj));
-                    for (int ELIndex = EndLoaclSize; ELIndex<EndLoaclSize+a.VAVs.VAVsSize; ELIndex++)
+                    if (a.ToState >= States[StateIndex])
                     {
-                        EndLoacl[ELIndex] = a.VAVs.VAVs[ELIndex-EndLoaclSize];
-                    }
-                    EndLoaclSize = EndLoaclSize+a.VAVs.VAVsSize;
-                }
-                if (a.ToState >= 1)
-                {
-                    a.ToState = a.ToState-1;
-                    Return.Vs = a.Vs;
+                        a.ToState = a.ToState-States[StateIndex];
 
-                    index=ObjsSize; //break break
-                    continue;
+                        switch (StateIndex)
+                        {
+                        case 4:
+                            break;
+                        case 2:
+                            (*EndLoaclUP) = realloc(((*EndLoaclUP)), ((*EndLoaclSizeUP)+a.VAVs.VAVsSize)*sizeof(VariableObj));
+                            for (int ELIndex = (*EndLoaclSizeUP); ELIndex<(*EndLoaclSizeUP)+a.VAVs.VAVsSize; ELIndex++)
+                            {
+                                (*EndLoaclUP)[ELIndex] = a.VAVs.VAVs[ELIndex-(*EndLoaclSizeUP)];
+                            }
+                            (*EndLoaclSizeUP) = (*EndLoaclSizeUP)+a.VAVs.VAVsSize;
+                            break;
+                        case 1:
+                            Return.Vs = a.Vs;
+
+                            Return.ToState =  Return.ToState +1;
+
+                            index=ObjsSize; //break break
+                            continue;
+                        }
+                    }
                 }
+
+                return Return;
 
                 if (Mio.ObjType == SYMBOL && strcmp(Mio.Symbol.Name, ";") == 0)continue;
             }
@@ -469,7 +522,7 @@ MioneReturnObj mione(const MioneObj* Objs, const int ObjsSize,ThreadObj Thread)
                         HasFound = 1;
                         break;
                     }
-                    if (!HasFound) ErrCall("This HEAD isn't be supported by main Mione.", "M005",NULL, Mio.Line, Mio.Column);
+                    if (!HasFound) ErrCall("This HEAD isn't be supported by range.", "M003",NULL, Mio.Line, Mio.Column);
 
                     PairsSize++;
                     Pairs = realloc(Pairs, sizeof(struct _PairObject) * PairsSize);
@@ -487,15 +540,12 @@ MioneReturnObj mione(const MioneObj* Objs, const int ObjsSize,ThreadObj Thread)
         if (Mio.ObjType == PROMPT) // PROMPT
         {
             if (!HeadFuc) ErrCall("PROMPT should be after HEAD.", "M002",NULL, Mio.Line, Mio.Column);
-
             PairsSize++;
             Pairs = realloc(Pairs, sizeof(struct _PairObject) * PairsSize);
 
             Pairs[PairsSize - 1].SourceSize = 0;
             Pairs[PairsSize - 1].Source = malloc(0);
             Pairs[PairsSize - 1].Prompt = Mio; // Type = 2
-
-
         }
 
         if (Mio.ObjType == SYMBOL || Mio.ObjType == VARIABLE || Mio.ObjType == VALUE) // SVV
@@ -508,6 +558,7 @@ MioneReturnObj mione(const MioneObj* Objs, const int ObjsSize,ThreadObj Thread)
                 Pairs[PairsSize - 1].SourceSize = 0;
                 Pairs[PairsSize - 1].Source = malloc(0);
 
+
                 HeadFuc = SVV;
             }
 
@@ -518,9 +569,7 @@ MioneReturnObj mione(const MioneObj* Objs, const int ObjsSize,ThreadObj Thread)
 
         }
 
-        if (
-            (ObjsSize - 1 == index)
-        )
+        if (ObjsSize - 1 == index)
         {
             if (HeadFuc != 0) {
                 HeadReturnObj a = HeadFuc(Pairs, PairsSize);
@@ -529,38 +578,46 @@ MioneReturnObj mione(const MioneObj* Objs, const int ObjsSize,ThreadObj Thread)
                 Pairs = NULL;
                 PairsSize = 0;
 
-
-                if (a.ToState >= 4)
+                int States[] =  {
+                    4,2,1
+                };
+                
+                for (int StateIndex = 0; StateIndex<(sizeof(States)/sizeof(int)); StateIndex++)
                 {
-                    a.ToState = a.ToState-4;
-                    //printf("todo MIONE.c MIONE FUC\n");
-                    //exit(200);
-                }
-                if (a.ToState >= 2)
-                {
-                    a.ToState = a.ToState-2;
-                   EndLoacl = realloc((EndLoacl), (EndLoaclSize+a.VAVs.VAVsSize)*sizeof(VariableObj));
-                    for (int ELIndex = EndLoaclSize; ELIndex<EndLoaclSize+a.VAVs.VAVsSize; ELIndex++)
+                    if (a.ToState >= States[StateIndex])
                     {
-                        EndLoacl[ELIndex] = a.VAVs.VAVs[ELIndex-EndLoaclSize];
+                        a.ToState = a.ToState-States[StateIndex];
+
+                        switch (StateIndex)
+                        {
+                        case 4:
+                            break;
+                        case 2:
+                            (*EndLoaclUP) = realloc(((*EndLoaclUP)), ((*EndLoaclSizeUP)+a.VAVs.VAVsSize)*sizeof(VariableObj));
+                            for (int ELIndex = (*EndLoaclSizeUP); ELIndex<(*EndLoaclSizeUP)+a.VAVs.VAVsSize; ELIndex++)
+                            {
+                                (*EndLoaclUP)[ELIndex] = a.VAVs.VAVs[ELIndex-(*EndLoaclSizeUP)];
+                            }
+                            (*EndLoaclSizeUP) = (*EndLoaclSizeUP)+a.VAVs.VAVsSize;
+                            break;
+                        case 1:
+                            Return.Vs = a.Vs;
+
+                            Return.ToState =  Return.ToState +1;
+
+                            index=ObjsSize; //break break
+                            continue;
+                        }
                     }
-                    EndLoaclSize = EndLoaclSize+a.VAVs.VAVsSize;
                 }
-                if (a.ToState >= 1)
-                {
-                    a.ToState = a.ToState-1;
-                    Return.Vs = a.Vs;
 
-                    Return.ToState =  Return.ToState +1;
+                return Return;
 
-                    index=ObjsSize; //break break
-                    continue;
-                }
             }
         }
-        LastMio = Mio;
+        (*LastMioUP) = Mio;
     }
-    for (int i = 0; i<EndLoaclSize; i++) if (EndLoacl[i].TheDefinedVarUP != 0) EndLoacl[i].TheDefinedVarUP->Val = EndLoacl[i].Value;
+    for (int i = 0; i<(*EndLoaclSizeUP); i++) if ((*EndLoaclUP)[i].TheDefinedVarUP != 0) (*EndLoaclUP)[i].TheDefinedVarUP->Val = (*EndLoaclUP)[i].Value;
 
 
 
@@ -569,33 +626,33 @@ MioneReturnObj mione(const MioneObj* Objs, const int ObjsSize,ThreadObj Thread)
 
 MioneReturnObj Table(const MioneObj* Objs, const int ObjsSize,VariableObj * * VariablesUP, int * VariablesUPSizeUP/*不需要固定變數記憶位置*/,ThreadObj Thread)
 {
-    DefinedVarAndValueObj * EndLoacl = Thread.EndLoacl;
-    int EndLoaclSize = Thread.EndLoaclSize;
+     DefinedVarAndValueObj * * EndLoaclUP = Thread.EndLoaclUP;
+    int * EndLoaclSizeUP = Thread.EndLoaclSizeUP;
 
     HeadReturnObj (*HeadFuc)(struct _PairObject* Pairs, int PairsSize) = Thread.HeadFuc;
     PairObj *Pairs = Thread.Pairs;
     int PairsSize = Thread.PairsSize;
 
-    MioneObj LastMio = Thread.LastMio;
+    MioneObj * LastMioUP = Thread.LastMioUP;
 
     MioneReturnObj Return = Thread.Return;
 
 
-    for (int index = 0; index < ObjsSize; index++)
+   int index;
+    for (;*Thread.IndexUP < ObjsSize; (*Thread.IndexUP)++)
     {
+        index = *Thread.IndexUP;
 
         MioneObj Mio = Objs[index];
 
 
-        if ((Mio.ObjType == SYMBOL && strcmp(Mio.Symbol.Name, ";") == 0) ||
-             Mio.ObjType == HEAD ||
-         (LastMio.ObjType == Mio.ObjType && (Mio.ObjType == SYMBOL ? !Mio.Symbol.CanConnect : 1) && Mio.ObjType != PROMPT) ||
-         (LastMio.ObjType == VARIABLE &&  Mio.ObjType == VALUE) ||  (LastMio.ObjType == VALUE &&  Mio.ObjType == VARIABLE)||
-        (LastMio.ObjType == SYMBOL && LastMio.Symbol.AfterConnect == 0 && (Mio.ObjType == VARIABLE || Mio.ObjType == VALUE))
-             )
+       if ((Mio.ObjType == SYMBOL && strcmp(Mio.Symbol.Name, ";") == 0) ||
+            Mio.ObjType == HEAD ||
+        ((*LastMioUP).ObjType == Mio.ObjType && (Mio.ObjType == SYMBOL ? !Mio.Symbol.CanConnect : 1) && Mio.ObjType != PROMPT) ||
+        ((*LastMioUP).ObjType == VARIABLE &&  Mio.ObjType == VALUE) ||  ((*LastMioUP).ObjType == VALUE &&  Mio.ObjType == VARIABLE)||
+        ((*LastMioUP).ObjType == SYMBOL && (*LastMioUP).Symbol.AfterConnect == 0 && (Mio.ObjType == VARIABLE || Mio.ObjType == VALUE))
+            )
         {
-
-
             if (HeadFuc != 0) {
                 HeadReturnObj a = HeadFuc(Pairs, PairsSize);
 
@@ -603,39 +660,46 @@ MioneReturnObj Table(const MioneObj* Objs, const int ObjsSize,VariableObj * * Va
                 Pairs = NULL;
                 PairsSize = 0;
 
-                if (a.ToState >= 4)
+                int States[] =  {
+                    4,2,1
+                };
+                
+                for (int StateIndex = 0; StateIndex<(sizeof(States)/sizeof(int)); StateIndex++)
                 {
-                    a.ToState = a.ToState-4;
-                    for (int i = 0; i<a.Vars.VarsSize; i++)
+                    if (a.ToState >= States[StateIndex])
                     {
-                        (*VariablesUPSizeUP)++;
-                        (*VariablesUP) = realloc((*VariablesUP), (*VariablesUPSizeUP) * sizeof(VariableObj));
-                        (*VariablesUP)[(*VariablesUPSizeUP) - 1] = a.Vars.Vars[i];
+                        a.ToState = a.ToState-States[StateIndex];
+
+                        switch (StateIndex)
+                        {
+                        case 4:
+                            for (int i = 0; i<a.Vars.VarsSize; i++)
+                            {
+                                (*VariablesUPSizeUP)++;
+                                (*VariablesUP) = realloc((*VariablesUP), (*VariablesUPSizeUP) * sizeof(VariableObj));
+                                (*VariablesUP)[(*VariablesUPSizeUP) - 1] = a.Vars.Vars[i];
+                            }
+                            break;
+                        case 2:
+                            (*EndLoaclUP) = realloc(((*EndLoaclUP)), ((*EndLoaclSizeUP)+a.VAVs.VAVsSize)*sizeof(VariableObj));
+                            for (int ELIndex = (*EndLoaclSizeUP); ELIndex<(*EndLoaclSizeUP)+a.VAVs.VAVsSize; ELIndex++)
+                            {
+                                (*EndLoaclUP)[ELIndex] = a.VAVs.VAVs[ELIndex-(*EndLoaclSizeUP)];
+                            }
+                            (*EndLoaclSizeUP) = (*EndLoaclSizeUP)+a.VAVs.VAVsSize;
+                            break;
+                        case 1:
+                            Return.Vs = a.Vs;
+
+                            Return.ToState =  Return.ToState +1;
+
+                            index=ObjsSize; //break break
+                            continue;
+                        }
                     }
                 }
-                if (a.ToState >= 2)
-                {
-                    a.ToState = a.ToState-2;
-                    EndLoacl = realloc((EndLoacl), (EndLoaclSize+a.VAVs.VAVsSize)*sizeof(VariableObj));
-                    for (int ELIndex = EndLoaclSize; ELIndex<EndLoaclSize+a.VAVs.VAVsSize; ELIndex++)
-                    {
-                        EndLoacl[ELIndex] = a.VAVs.VAVs[ELIndex-EndLoaclSize];
-                    }
-                    EndLoaclSize = EndLoaclSize+a.VAVs.VAVsSize;
 
-                }
-
-                if (a.ToState >= 1)
-                {
-                    a.ToState = a.ToState-1;
-                    Return.Vs = a.Vs;
-
-                    Return.ToState =  Return.ToState +1;
-
-                    index=ObjsSize; //break break
-                    continue;
-                }
-
+              
                 if (Mio.ObjType == SYMBOL && strcmp(Mio.Symbol.Name, ";") == 0)continue;
             }
 
@@ -649,12 +713,12 @@ MioneReturnObj Table(const MioneObj* Objs, const int ObjsSize,VariableObj * * Va
                 if (strcmp(Mio.Head.Name, Heads[i].Name) == 0)
                 {
                     int HasFound = 0;
-                    for (int SPHIndex = 0; SPHIndex < sizeof(TableSupportHeads) / sizeof(int); SPHIndex++) if (TableSupportHeads[SPHIndex] == Mio.Head.CurNumber)
+                    for (int SPHIndex = 0; SPHIndex < sizeof(RangeSupportHeads) / sizeof(int); SPHIndex++) if (RangeSupportHeads[SPHIndex] == Mio.Head.CurNumber)
                     {
                         HasFound = 1;
                         break;
                     }
-                    if (!HasFound) ErrCall("This HEAD isn't be supported by table.", "M006",NULL, Mio.Line, Mio.Column);
+                    if (!HasFound) ErrCall("This HEAD isn't be supported by range.", "M003",NULL, Mio.Line, Mio.Column);
 
                     PairsSize++;
                     Pairs = realloc(Pairs, sizeof(struct _PairObject) * PairsSize);
@@ -712,46 +776,53 @@ MioneReturnObj Table(const MioneObj* Objs, const int ObjsSize,VariableObj * * Va
                 Pairs = NULL;
                 PairsSize = 0;
 
-
-                if (a.ToState >= 4)
+                int States[] =  {
+                    4,2,1
+                };
+                
+                for (int StateIndex = 0; StateIndex<(sizeof(States)/sizeof(int)); StateIndex++)
                 {
-                    a.ToState = a.ToState-4;
-                    for (int i = 0; i<a.Vars.VarsSize; i++)
+                    if (a.ToState >= States[StateIndex])
                     {
-                        (*VariablesUPSizeUP)++;
-                        (*VariablesUP) = realloc((*VariablesUP), (*VariablesUPSizeUP) * sizeof(VariableObj));
-                        (*VariablesUP)[(*VariablesUPSizeUP) - 1] = a.Vars.Vars[i];
+                        a.ToState = a.ToState-States[StateIndex];
+
+                        switch (StateIndex)
+                        {
+                        case 4:
+                            for (int i = 0; i<a.Vars.VarsSize; i++)
+                            {
+                                (*VariablesUPSizeUP)++;
+                                (*VariablesUP) = realloc((*VariablesUP), (*VariablesUPSizeUP) * sizeof(VariableObj));
+                                (*VariablesUP)[(*VariablesUPSizeUP) - 1] = a.Vars.Vars[i];
+                            }
+                            break;
+                        case 2:
+                            (*EndLoaclUP) = realloc(((*EndLoaclUP)), ((*EndLoaclSizeUP)+a.VAVs.VAVsSize)*sizeof(VariableObj));
+                            for (int ELIndex = (*EndLoaclSizeUP); ELIndex<(*EndLoaclSizeUP)+a.VAVs.VAVsSize; ELIndex++)
+                            {
+                                (*EndLoaclUP)[ELIndex] = a.VAVs.VAVs[ELIndex-(*EndLoaclSizeUP)];
+                            }
+                            (*EndLoaclSizeUP) = (*EndLoaclSizeUP)+a.VAVs.VAVsSize;
+                            break;
+                        case 1:
+                            Return.Vs = a.Vs;
+
+                            Return.ToState =  Return.ToState +1;
+
+                            index=ObjsSize; //break break
+                            continue;
+                        }
                     }
                 }
-                if (a.ToState >= 2)
-                {
-                    a.ToState = a.ToState-2;
-                   EndLoacl = realloc((EndLoacl), (EndLoaclSize+a.VAVs.VAVsSize)*sizeof(VariableObj));
-                    for (int ELIndex = EndLoaclSize; ELIndex<EndLoaclSize+a.VAVs.VAVsSize; ELIndex++)
-                    {
-                        EndLoacl[ELIndex] = a.VAVs.VAVs[ELIndex-EndLoaclSize];
-                    }
-                    EndLoaclSize = EndLoaclSize+a.VAVs.VAVsSize;
-
-
-                }
-                if (a.ToState >= 1)
-                {
-                    a.ToState = a.ToState-1;
-                    Return.Vs = a.Vs;
-
-                    Return.ToState =  Return.ToState +1;
-
-                    index=ObjsSize; //break break
-                    continue;
-                }
+                
 
             }
         }
-        LastMio = Mio;
+        (*LastMioUP) = Mio;
     }
+    for (int i = 0; i<(*EndLoaclSizeUP); i++) if ((*EndLoaclUP)[i].TheDefinedVarUP != 0) (*EndLoaclUP)[i].TheDefinedVarUP->Val = (*EndLoaclUP)[i].Value;
 
-    for (int i = 0; i<EndLoaclSize; i++) if (EndLoacl[i].TheDefinedVarUP != 0) EndLoacl[i].TheDefinedVarUP->Val = EndLoacl[i].Value;
+
 
     return Return;
 }
