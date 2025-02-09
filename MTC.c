@@ -38,7 +38,16 @@ ThreadReturnObj MTC(){
 
                 if(Threads.Threads[nowThreadIn].Fuc == Range) RunningReturned = Threads.Threads[nowThreadIn].Fuc(
                       Threads.Threads[nowThreadIn].Objs,
-                      Threads.Threads[nowThreadIn].ObjsSize
+                      Threads.Threads[nowThreadIn].ObjsSize,
+                      Threads.Threads[nowThreadIn]
+                      );
+
+                if(Threads.Threads[nowThreadIn].Fuc == Function) RunningReturned = Threads.Threads[nowThreadIn].Fuc(
+                      Threads.Threads[nowThreadIn].Objs,
+                      Threads.Threads[nowThreadIn].ObjsSize,
+                      Threads.Threads[nowThreadIn].Request,
+                      Threads.Threads[nowThreadIn].RequestSize,
+                      Threads.Threads[nowThreadIn]
                       );
 
 
@@ -62,16 +71,21 @@ ThreadReturnObj MTC(){
 
 
             }else{
+                toReturn.Return = Threads.Threads[nowThreadIn].Return;
+                if(Threads.Threads[nowThreadIn].isChild) return toReturn;
+
+
+
                 ThreadsObj newThreads;
                 newThreads.ThreadsSize = 0;
                 newThreads.Threads = malloc(0);
+
                 for (int i = 0; i < Threads.ThreadsSize; i++) if(nowThreadIn!=i){
                     newThreads.ThreadsSize++;
                     newThreads.Threads = realloc(newThreads.Threads, (newThreads.ThreadsSize) * sizeof(ThreadObj));
                     newThreads.Threads[newThreads.ThreadsSize-1] = Threads.Threads[i];
                 }
 
-                toReturn.Return = Threads.Threads[nowThreadIn].Return;
 
                 Threads = newThreads;
 

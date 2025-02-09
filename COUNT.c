@@ -11,6 +11,7 @@
 #include "Mione.h"
 #include "PROMPT_DEF.h"
 #include "SYMBOL_DEF.h"
+#include "MTC.h"
 
 
 
@@ -68,12 +69,33 @@ CountObj COUNT(MioneObj*Pack,int PackSize)
 
                                 if (Pack[FirstBracketIndex - 1].VarUP->Val.ValueType == VALUE_FUNCTION_TYPE)
                                 {
-                                    MioneReturnObj F = Function(
-                                        Pack[FirstBracketIndex - 1].VarUP->Val.Area.Area,
-                                        Pack[FirstBracketIndex - 1].VarUP->Val.Area.Size,
-                                        ChildCount.Value,
-                                        ChildCount.ValueSize
-                                        );
+                                    //todo
+                                    ThreadObj orgThread = Threads.Threads[nowThreadIn];
+                                    printf("org index %d\n",*Threads.Threads[nowThreadIn].IndexUP);
+
+                                    Threads.Threads[nowThreadIn].Fuc = Function;
+                                    *Threads.Threads[nowThreadIn].IndexUP = 0;
+                                    Threads.Threads[nowThreadIn].Objs = Pack[FirstBracketIndex - 1].VarUP->Val.Area.Area;
+                                    Threads.Threads[nowThreadIn].ObjsSize = Pack[FirstBracketIndex - 1].VarUP->Val.Area.Size;
+
+                                    Threads.Threads[nowThreadIn].Request = ChildCount.Value;
+                                    Threads.Threads[nowThreadIn].RequestSize = ChildCount.ValueSize;
+
+                                    Threads.Threads[nowThreadIn].LastMioUP = &(MioneObj){.ObjType = 0};
+
+
+                                    Threads.Threads[nowThreadIn].EndLoaclUP = malloc(sizeof(DefinedVarAndValueObj*));
+                                    *Threads.Threads[nowThreadIn].EndLoaclUP = malloc(0);
+
+                                    Threads.Threads[nowThreadIn].EndLoaclSizeUP = malloc(sizeof(int));
+                                    *Threads.Threads[nowThreadIn].EndLoaclSizeUP = 0;
+
+                                    Threads.Threads[nowThreadIn].isChild = 1;
+
+                                    MioneReturnObj F = MTC().Return;
+
+                                    Threads.Threads[nowThreadIn] = orgThread;
+                                    *Threads.Threads[nowThreadIn].IndexUP =  (*Threads.Threads[nowThreadIn].IndexUP) -1;
 
                                     ValueReturnObj V = F.Vs;
 
@@ -86,6 +108,7 @@ CountObj COUNT(MioneObj*Pack,int PackSize)
                                         NewPack = realloc(NewPack, sizeof(MioneObj) * (NewPackSize));
                                         NewPack[NewPackSize - 1] = Pack[index];
                                     }
+                                    printf("back to %d\n",*Threads.Threads[nowThreadIn].IndexUP);
 
                                     printf("sizoe of fuc returned : %d\n",V.ValueSize);
 
@@ -115,6 +138,7 @@ CountObj COUNT(MioneObj*Pack,int PackSize)
                                     }
 
 
+
                                     for (int index = i+1 ; index < PackSize; index++)
                                     {
 
@@ -123,8 +147,11 @@ CountObj COUNT(MioneObj*Pack,int PackSize)
                                         NewPack[NewPackSize - 1] = Pack[index];
                                     }
 
+
+
                                     PackSize = NewPackSize;
                                     Pack = NewPack;
+
 
                                     i = FirstBracketIndex - 1;
 
@@ -156,12 +183,32 @@ CountObj COUNT(MioneObj*Pack,int PackSize)
 
                                 if (Pack[FirstBracketIndex - 1].Val.ValueType == VALUE_FUNCTION_TYPE)
                                 {
-                                    MioneReturnObj F = Function(
-                                        Pack[FirstBracketIndex - 1].Val.Area.Area,
-                                        Pack[FirstBracketIndex - 1].Val.Area.Size,
-                                        ChildCount.Value,
-                                        ChildCount.ValueSize
-                                        );
+                                    ThreadObj orgThread = Threads.Threads[nowThreadIn];
+
+                                    Threads.Threads[nowThreadIn].Fuc = Function;
+                                    *Threads.Threads[nowThreadIn].IndexUP = 0;
+                                    Threads.Threads[nowThreadIn].Objs = Pack[FirstBracketIndex - 1].Val.Area.Area;
+                                    Threads.Threads[nowThreadIn].ObjsSize = Pack[FirstBracketIndex - 1].Val.Area.Size;
+
+                                    Threads.Threads[nowThreadIn].Request = ChildCount.Value;
+                                    Threads.Threads[nowThreadIn].RequestSize = ChildCount.ValueSize;
+
+                                    Threads.Threads[nowThreadIn].LastMioUP = &(MioneObj){.ObjType = 0};
+
+
+                                    Threads.Threads[nowThreadIn].EndLoaclUP = malloc(sizeof(DefinedVarAndValueObj*));
+                                    *Threads.Threads[nowThreadIn].EndLoaclUP = malloc(0);
+
+                                    Threads.Threads[nowThreadIn].EndLoaclSizeUP = malloc(sizeof(int));
+                                    *Threads.Threads[nowThreadIn].EndLoaclSizeUP = 0;
+
+                                    Threads.Threads[nowThreadIn].isChild = 1;
+
+                                    MioneReturnObj F = MTC().Return;
+
+                                    Threads.Threads[nowThreadIn] = orgThread;
+                                    *Threads.Threads[nowThreadIn].IndexUP =  (*Threads.Threads[nowThreadIn].IndexUP) -1;
+
                                     ValueReturnObj V = F.Vs;
 
                                     MioneObj* NewPack = malloc(0);
@@ -293,6 +340,10 @@ CountObj COUNT(MioneObj*Pack,int PackSize)
                                 Pack[i].Column
                             );
                         }
+
+                        printf("dsiez %d\n",PackSize);
+
+                        for (int index = 0; index < PackSize; index++) printf("%d ",Pack[index].ObjType);
 
                         if (Pack[i-1].ObjType == SYMBOL || Pack[i+1].ObjType == SYMBOL)
                         {
@@ -1059,6 +1110,7 @@ CountObj COUNT(MioneObj*Pack,int PackSize)
         .ValueSize= VPackSize
     };
 
+    printf("end\n");
 
     return Returns;
 }

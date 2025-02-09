@@ -98,9 +98,18 @@ SymbolObj Symbols[] =
     },
     (SymbolObj){
         .Name = "==",
-        .SymbolType = 2,
+        .SymbolType = 1,
         .xIndex = 2,
         .CurNumber = 8,
+        .CanConnect = 1,
+        .AfterConnect = 1,
+    },
+
+    (SymbolObj){
+        .Name = "multiple",
+        .SymbolType = 2,
+        .xIndex = 0,
+        .CurNumber = 9,
         .CanConnect = 1,
         .AfterConnect = 1,
     },

@@ -241,6 +241,10 @@ typedef struct _ThreadObject
     MioneReturnObj Return;
 
     //
+
+    int isChild; // 該Thread階段是否為子項
+
+    //
 } ThreadObj;
 
 typedef struct _ThreadsObjet

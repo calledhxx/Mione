@@ -87,7 +87,7 @@ MioneReturnObj Range(const MioneObj* Objs, const int ObjsSize,ThreadObj Thread)
                     {
                         a.ToState = a.ToState-States[StateIndex];
 
-                        switch (StateIndex)
+                        switch (States[StateIndex])
                         {
                         case 4:
                             break;
@@ -199,7 +199,7 @@ MioneReturnObj Range(const MioneObj* Objs, const int ObjsSize,ThreadObj Thread)
                     {
                         a.ToState = a.ToState-States[StateIndex];
 
-                        switch (StateIndex)
+                        switch (States[StateIndex])
                         {
                         case 4:
                             break;
@@ -282,7 +282,7 @@ MioneReturnObj Function(const MioneObj* Objs, const int ObjsSize, ValueObj* Requ
                     {
                         a.ToState = a.ToState-States[StateIndex];
 
-                        switch (StateIndex)
+                        switch (States[StateIndex])
                         {
                         case 4:
                             break;
@@ -380,6 +380,8 @@ MioneReturnObj Function(const MioneObj* Objs, const int ObjsSize, ValueObj* Requ
                 int States[] =  {
                     4,2,1
                 };
+
+
                 
                 for (int StateIndex = 0; StateIndex<(sizeof(States)/sizeof(int)); StateIndex++)
                 {
@@ -387,7 +389,8 @@ MioneReturnObj Function(const MioneObj* Objs, const int ObjsSize, ValueObj* Requ
                     {
                         a.ToState = a.ToState-States[StateIndex];
 
-                        switch (StateIndex)
+
+                        switch (States[StateIndex])
                         {
                         case 4:
                             break;
@@ -440,6 +443,7 @@ MioneReturnObj mione(const MioneObj* Objs, const int ObjsSize,ThreadObj Thread)
         MioneObj Mio = Objs[index];
 
 
+
        if ((Mio.ObjType == SYMBOL && strcmp(Mio.Symbol.Name, ";") == 0) ||
             Mio.ObjType == HEAD ||
         ((*LastMioUP).ObjType == Mio.ObjType && (Mio.ObjType == SYMBOL ? !Mio.Symbol.CanConnect : 1) && Mio.ObjType != PROMPT) ||
@@ -464,7 +468,7 @@ MioneReturnObj mione(const MioneObj* Objs, const int ObjsSize,ThreadObj Thread)
                     {
                         a.ToState = a.ToState-States[StateIndex];
 
-                        switch (StateIndex)
+                        switch (States[StateIndex])
                         {
                         case 4:
                             break;
@@ -572,7 +576,7 @@ MioneReturnObj mione(const MioneObj* Objs, const int ObjsSize,ThreadObj Thread)
                     {
                         a.ToState = a.ToState-States[StateIndex];
 
-                        switch (StateIndex)
+                        switch (States[StateIndex])
                         {
                         case 4:
                             break;
@@ -654,7 +658,7 @@ MioneReturnObj Table(const MioneObj* Objs, const int ObjsSize,VariableObj * * Va
                     {
                         a.ToState = a.ToState-States[StateIndex];
 
-                        switch (StateIndex)
+                        switch (States[StateIndex])
                         {
                         case 4:
                             for (int i = 0; i<a.Vars.VarsSize; i++)
@@ -770,7 +774,7 @@ MioneReturnObj Table(const MioneObj* Objs, const int ObjsSize,VariableObj * * Va
                     {
                         a.ToState = a.ToState-States[StateIndex];
 
-                        switch (StateIndex)
+                        switch (States[StateIndex])
                         {
                         case 4:
                             for (int i = 0; i<a.Vars.VarsSize; i++)

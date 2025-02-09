@@ -80,6 +80,8 @@ int main(const int OptionsSize,char **Options)
 
         Threads.Threads = malloc(0);
 
+
+
         ThreadObj newThread = (ThreadObj){
             .Fuc = mione,
             .IndexUP = malloc(sizeof(int)),
@@ -89,17 +91,19 @@ int main(const int OptionsSize,char **Options)
             .VariablesUP = malloc(sizeof(VariableObj*)),
             .VariablesUPSizeUP = malloc(sizeof(int)),
 
-            .Request = NULL,
+            .Request = NULL, //TODO
             .RequestSize = 0,
 
             .EndLoaclUP = malloc(sizeof(DefinedVarAndValueObj*)),
             .EndLoaclSizeUP = malloc(sizeof(int)),
             .HeadFuc = NULL,
 
-
             .LastMioUP = &(MioneObj){0},
-            .Return = {.ToState = 0,.Vs.ValueSize = 0}
+            .Return = {.ToState = 0,.Vs.ValueSize = 0},
+
+            .isChild = 0,
         };
+
 
         *newThread.IndexUP = 0;
         *newThread.VariablesUP = malloc(0);

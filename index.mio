@@ -1,2 +1,6 @@
-set x = 1
-x = x + 2
+set y = function
+    set x = 1
+    return x
+end
+
+set x = y() * 10
