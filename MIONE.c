@@ -506,7 +506,6 @@ MioneReturnObj mione(const MioneObj* Objs, const int ObjsSize,ThreadObj Thread)
 
                 if (Mio.ObjType == SYMBOL && strcmp(Mio.Symbol.Name, ";") == 0)continue;
             }
-
         }
 
         if (Mio.ObjType == HEAD) // Head
