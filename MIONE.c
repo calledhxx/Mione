@@ -306,11 +306,8 @@ MioneReturnObj Function(const MioneObj* Objs, const int ObjsSize, ValueObj* Requ
                     }
                 }
 
-
-
                 if (Mio.ObjType == SYMBOL && strcmp(Mio.Symbol.Name, ";") == 0)continue;
             }
-
         }
 
         if (Mio.ObjType == HEAD) // Head
