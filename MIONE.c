@@ -417,8 +417,6 @@ MioneReturnObj Function(const MioneObj* Objs, const int ObjsSize, ValueObj* Requ
                         }
                     }
                 }
-
-
             }
         }
         (*LastMioUP) = Mio;
