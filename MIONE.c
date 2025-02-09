@@ -444,8 +444,8 @@ MioneReturnObj mione(const MioneObj* Objs, const int ObjsSize,ThreadObj Thread)
 
     MioneReturnObj Return = Thread.Return;
 
-
    int index;
+
     for (;*Thread.IndexUP < ObjsSize; (*Thread.IndexUP)++)
     {
         index = *Thread.IndexUP;
