@@ -432,7 +432,6 @@ MioneReturnObj Function(const MioneObj* Objs, const int ObjsSize, ValueObj* Requ
 
 MioneReturnObj mione(const MioneObj* Objs, const int ObjsSize,ThreadObj Thread)
 {
-
      DefinedVarAndValueObj * * EndLoaclUP = Thread.EndLoaclUP;
     int * EndLoaclSizeUP = Thread.EndLoaclSizeUP;
 
