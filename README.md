@@ -1,5 +1,7 @@
 <div align="center">
 
+# ⚠️處於實驗及開發階段🚧
+
 ### [ ![](https://raw.githubusercontent.com/calledhxx/Mione/69d1345bbe08240b36d845ccacaa5ce43d2a6be1/Mione.svg)](https://github.com/CalledHxx/Mione)
 
 ###### Mione Programming Laguage
