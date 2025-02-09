@@ -350,8 +350,6 @@ MioneReturnObj Function(const MioneObj* Objs, const int ObjsSize, ValueObj* Requ
             Pairs[PairsSize - 1].SourceSize = 0;
             Pairs[PairsSize - 1].Source = malloc(0);
             Pairs[PairsSize - 1].Prompt = Mio; // Type = 2
-
-
         }
 
         if (Mio.ObjType == SYMBOL || Mio.ObjType == VARIABLE || Mio.ObjType == VALUE) // SVV
