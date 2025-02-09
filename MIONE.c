@@ -338,7 +338,6 @@ MioneReturnObj Function(const MioneObj* Objs, const int ObjsSize, ValueObj* Requ
                     HeadFuc = Heads[i].Fuc;
                 }
             }
-
         }
 
         if (Mio.ObjType == PROMPT) // PROMPT
