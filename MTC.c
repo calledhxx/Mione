@@ -19,54 +19,64 @@ int nowThreadIn = 0;
 //TODO
 
 ThreadReturnObj MTC(){
-    ThreadReturnObj toReturn;
+    ThreadReturnObj toReturn = {0};
 
-    for (; nowThreadIn < Threads.ThreadsSize; nowThreadIn++){
-      if(Threads.Threads[nowThreadIn].ObjsSize > *(Threads.Threads[nowThreadIn].IndexUP)){
+    while(1){
+        nowThreadIn = 0;
 
-        MioneReturnObj RunningReturned;
+        for (; nowThreadIn < Threads.ThreadsSize; nowThreadIn++){
 
-        if(Threads.Threads[nowThreadIn].Fuc == mione) RunningReturned = Threads.Threads[nowThreadIn].Fuc(
-        Threads.Threads[nowThreadIn].Objs,
-        Threads.Threads[nowThreadIn].ObjsSize,
-              Threads.Threads[nowThreadIn]
-        );
+            if((Threads.Threads[nowThreadIn].ObjsSize-1) > *(Threads.Threads[nowThreadIn].IndexUP)){
 
-          if(Threads.Threads[nowThreadIn].Fuc == Range) RunningReturned = Threads.Threads[nowThreadIn].Fuc(
+                MioneReturnObj RunningReturned;
+
+                if(Threads.Threads[nowThreadIn].Fuc == mione) RunningReturned = Threads.Threads[nowThreadIn].Fuc(
                 Threads.Threads[nowThreadIn].Objs,
-                Threads.Threads[nowThreadIn].ObjsSize
+                Threads.Threads[nowThreadIn].ObjsSize,
+                      Threads.Threads[nowThreadIn]
                 );
 
-
-          int States[] =  {
-              1
-          };
-
-          for (int StateIndex = 0; StateIndex<(sizeof(States)/sizeof(int)); StateIndex++)
-          {
-              if (RunningReturned.ToState >= States[StateIndex])
-              {
-                   RunningReturned.ToState = RunningReturned.ToState-States[StateIndex];
-
-                   switch (States[StateIndex]){
-                     case 1:
-                       toReturn.Return = RunningReturned;
-                       break;
-                   }
-              }
-          }
+                if(Threads.Threads[nowThreadIn].Fuc == Range) RunningReturned = Threads.Threads[nowThreadIn].Fuc(
+                      Threads.Threads[nowThreadIn].Objs,
+                      Threads.Threads[nowThreadIn].ObjsSize
+                      );
 
 
-      }else{
-          ThreadsObj newThreads;
-          newThreads.Threads = malloc(0);
-          for (int i = 0; i < Threads.ThreadsSize; i++) if(nowThreadIn!=i){
-              newThreads.ThreadsSize++;
-              newThreads.Threads = realloc(newThreads.Threads, ( newThreads.ThreadsSize) * sizeof(ThreadObj));
-              newThreads.Threads[ newThreads.ThreadsSize-1] = Threads.Threads[i];
-          }
+                int States[] =  {
+                    1
+                };
 
-          return (ThreadReturnObj){.Return = Threads.Threads[nowThreadIn].Return};
-      }
+                for (int StateIndex = 0; StateIndex<(sizeof(States)/sizeof(int)); StateIndex++)
+                {
+                    if (RunningReturned.ToState >= States[StateIndex])
+                    {
+                        RunningReturned.ToState = RunningReturned.ToState-States[StateIndex];
+
+                        switch (States[StateIndex]){
+                        case 1:
+                            toReturn.Return = RunningReturned;
+                            return toReturn;
+                        }
+                    }
+                }
+
+
+            }else{
+                ThreadsObj newThreads;
+                newThreads.ThreadsSize = 0;
+                newThreads.Threads = malloc(0);
+                for (int i = 0; i < Threads.ThreadsSize; i++) if(nowThreadIn!=i){
+                    newThreads.ThreadsSize++;
+                    newThreads.Threads = realloc(newThreads.Threads, (newThreads.ThreadsSize) * sizeof(ThreadObj));
+                    newThreads.Threads[newThreads.ThreadsSize-1] = Threads.Threads[i];
+                }
+
+                toReturn.Return = Threads.Threads[nowThreadIn].Return;
+
+                Threads = newThreads;
+
+                return toReturn;
+            }
+        }
     }
 }

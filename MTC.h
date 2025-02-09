@@ -4,4 +4,4 @@
 
 extern ThreadsObj Threads;
 extern int nowThreadIn;
-extern void MTC();
+extern ThreadReturnObj MTC();

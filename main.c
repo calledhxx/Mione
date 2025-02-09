@@ -96,8 +96,6 @@ int main(const int OptionsSize,char **Options)
             .EndLoaclSizeUP = malloc(sizeof(int)),
             .HeadFuc = NULL,
 
-            .Pairs = malloc(0),
-            .PairsSize = 0,
 
             .LastMioUP = &(MioneObj){0},
             .Return = {.ToState = 0,.Vs.ValueSize = 0}
@@ -113,11 +111,9 @@ int main(const int OptionsSize,char **Options)
         Threads.Threads = realloc(Threads.Threads,sizeof(ThreadObj)*Threads.ThreadsSize);
         Threads.Threads[Threads.ThreadsSize-1] = newThread;
 
-        MTC();
+        ThreadReturnObj MTCReturned = MTC();
 
         // mione(MioObj,MioObjSize);
-
-
 
         printf("\n # Well down. Have a good day.");
 

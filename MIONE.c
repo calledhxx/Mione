@@ -46,8 +46,8 @@ MioneReturnObj Range(const MioneObj* Objs, const int ObjsSize,ThreadObj Thread)
     int * EndLoaclSizeUP = Thread.EndLoaclSizeUP;
     
     HeadReturnObj (*HeadFuc)(struct _PairObject* Pairs, int PairsSize) = Thread.HeadFuc;
-    PairObj *Pairs = Thread.Pairs;
-    int PairsSize = Thread.PairsSize;
+    PairObj *Pairs = malloc(0);
+    int PairsSize = 0;
 
     MioneObj * LastMioUP = Thread.LastMioUP;
 
@@ -69,7 +69,6 @@ MioneReturnObj Range(const MioneObj* Objs, const int ObjsSize,ThreadObj Thread)
         ((*LastMioUP).ObjType == SYMBOL && (*LastMioUP).Symbol.AfterConnect == 0 && (Mio.ObjType == VARIABLE || Mio.ObjType == VALUE))
             )
         {
-
 
             if (HeadFuc != 0) {
                 HeadReturnObj a = HeadFuc(Pairs, PairsSize);
@@ -105,7 +104,7 @@ MioneReturnObj Range(const MioneObj* Objs, const int ObjsSize,ThreadObj Thread)
 
                             Return.ToState =  Return.ToState +1;
 
-                            index=ObjsSize; //break break
+                            (*Thread.IndexUP)=ObjsSize; //break break
                             continue;
                         }
                     }
@@ -217,7 +216,7 @@ MioneReturnObj Range(const MioneObj* Objs, const int ObjsSize,ThreadObj Thread)
 
                             Return.ToState =  Return.ToState +1;
 
-                            index=ObjsSize; //break break
+                            (*Thread.IndexUP)=ObjsSize; //break break
                             continue;
                         }
                     }
@@ -241,8 +240,8 @@ MioneReturnObj Function(const MioneObj* Objs, const int ObjsSize, ValueObj* Requ
     int * EndLoaclSizeUP = Thread.EndLoaclSizeUP;
 
     HeadReturnObj (*HeadFuc)(struct _PairObject* Pairs, int PairsSize) = Thread.HeadFuc;
-    PairObj *Pairs = Thread.Pairs;
-    int PairsSize = Thread.PairsSize;
+    PairObj *Pairs = malloc(0);
+    int PairsSize = 0;
 
     MioneObj * LastMioUP = Thread.LastMioUP;
 
@@ -300,7 +299,7 @@ MioneReturnObj Function(const MioneObj* Objs, const int ObjsSize, ValueObj* Requ
 
                             Return.ToState =  Return.ToState +1;
 
-                            index=ObjsSize; //break break
+                            (*Thread.IndexUP)=ObjsSize; //break break
                             continue;
                         }
                     }
@@ -405,7 +404,7 @@ MioneReturnObj Function(const MioneObj* Objs, const int ObjsSize, ValueObj* Requ
 
                             Return.ToState =  Return.ToState +1;
 
-                            index=ObjsSize; //break break
+                            (*Thread.IndexUP)=ObjsSize; //break break
                             continue;
                         }
                     }
@@ -425,8 +424,8 @@ MioneReturnObj mione(const MioneObj* Objs, const int ObjsSize,ThreadObj Thread)
     int * EndLoaclSizeUP = Thread.EndLoaclSizeUP;
 
     HeadReturnObj (*HeadFuc)(struct _PairObject* Pairs, int PairsSize) = Thread.HeadFuc;
-    PairObj *Pairs = Thread.Pairs;
-    int PairsSize = Thread.PairsSize;
+    PairObj *Pairs = malloc(0);
+    int PairsSize = 0;
 
     MioneObj * LastMioUP = Thread.LastMioUP;
 
@@ -482,7 +481,7 @@ MioneReturnObj mione(const MioneObj* Objs, const int ObjsSize,ThreadObj Thread)
 
                             Return.ToState =  Return.ToState +1;
 
-                            index=ObjsSize; //break break
+                            (*Thread.IndexUP)=ObjsSize; //break break
                             continue;
                         }
                     }
@@ -590,7 +589,7 @@ MioneReturnObj mione(const MioneObj* Objs, const int ObjsSize,ThreadObj Thread)
 
                             Return.ToState =  Return.ToState +1;
 
-                            index=ObjsSize; //break break
+                            (*Thread.IndexUP)=ObjsSize; //break break
                             continue;
                         }
                     }
@@ -615,8 +614,8 @@ MioneReturnObj Table(const MioneObj* Objs, const int ObjsSize,VariableObj * * Va
     int * EndLoaclSizeUP = Thread.EndLoaclSizeUP;
 
     HeadReturnObj (*HeadFuc)(struct _PairObject* Pairs, int PairsSize) = Thread.HeadFuc;
-    PairObj *Pairs = Thread.Pairs;
-    int PairsSize = Thread.PairsSize;
+    PairObj *Pairs = malloc(0);
+    int PairsSize = 0;
 
     MioneObj * LastMioUP = Thread.LastMioUP;
 
@@ -678,7 +677,7 @@ MioneReturnObj Table(const MioneObj* Objs, const int ObjsSize,VariableObj * * Va
 
                             Return.ToState =  Return.ToState +1;
 
-                            index=ObjsSize; //break break
+                            (*Thread.IndexUP)=ObjsSize; //break break
                             continue;
                         }
                     }
@@ -794,7 +793,7 @@ MioneReturnObj Table(const MioneObj* Objs, const int ObjsSize,VariableObj * * Va
 
                             Return.ToState =  Return.ToState +1;
 
-                            index=ObjsSize; //break break
+                            (*Thread.IndexUP)=ObjsSize; //break break
                             continue;
                         }
                     }
