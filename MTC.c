@@ -25,7 +25,6 @@ ThreadReturnObj MTC(){
         nowThreadIn = 0;
 
         for (; nowThreadIn < Threads.ThreadsSize; nowThreadIn++){
-
             if((Threads.Threads[nowThreadIn].ObjsSize-1) > *(Threads.Threads[nowThreadIn].IndexUP)){
 
                 MioneReturnObj RunningReturned;

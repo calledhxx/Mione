@@ -112,7 +112,9 @@ MioneReturnObj Range(const MioneObj* Objs, const int ObjsSize,ThreadObj Thread)
 
 
 
-                if (Mio.ObjType == SYMBOL && strcmp(Mio.Symbol.Name, ";") == 0)continue;
+                if (Mio.ObjType == SYMBOL && strcmp(Mio.Symbol.Name, ";") == 0) (*Thread.IndexUP)++;
+
+                return Return;
             }
 
         }
@@ -304,7 +306,9 @@ MioneReturnObj Function(const MioneObj* Objs, const int ObjsSize, ValueObj* Requ
                         }
                     }
                 }
-                if (Mio.ObjType == SYMBOL && strcmp(Mio.Symbol.Name, ";") == 0)continue;
+                if (Mio.ObjType == SYMBOL && strcmp(Mio.Symbol.Name, ";") == 0) (*Thread.IndexUP)++;
+
+                return Return;
             }
         }
 
@@ -491,9 +495,9 @@ MioneReturnObj mione(const MioneObj* Objs, const int ObjsSize,ThreadObj Thread)
                     }
                 }
 
-                return Return;
+                if (Mio.ObjType == SYMBOL && strcmp(Mio.Symbol.Name, ";") == 0) (*Thread.IndexUP)++;
 
-                if (Mio.ObjType == SYMBOL && strcmp(Mio.Symbol.Name, ";") == 0)continue;
+                return Return;
             }
         }
 
@@ -598,6 +602,7 @@ MioneReturnObj mione(const MioneObj* Objs, const int ObjsSize,ThreadObj Thread)
                         }
                     }
                 }
+
 
                 return Return;
 

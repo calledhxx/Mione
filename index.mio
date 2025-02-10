@@ -1,6 +1,5 @@
-set y = function
-    set x = 1
-    return x
+set x = function
+    return 50
 end
 
-set x = y() * 10
+x() + x()
