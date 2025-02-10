@@ -1,2 +1,4 @@
 function
+    set x = 1
+    return x
 end()

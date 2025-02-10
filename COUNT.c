@@ -39,17 +39,27 @@ CountObj COUNT(MioneObj*Pack,int PackSize)
         if (Pack[i].ObjType == SYMBOL) // Symbol
         {
 
-            if (Pack[i].Symbol.CurNumber == 12)
+            switch (Pack[i].Symbol.CurNumber)
             {
+            case 10:
+                {
 
-                FirstBracketIndex = i;
-                IfBrackets = 1;
+                }
+                break;
+            case 11:
+                {
 
-            }
-            else if (Pack[i].Symbol.CurNumber == 13)
-            {
-
-                if (IfBrackets)
+                }
+                break;
+            case 12:
+                {
+                    FirstBracketIndex = i;
+                    IfBrackets = 1;
+                }
+                break;
+            case 13:
+                {
+                    if (IfBrackets)
                 {
                     PairsOfBrackets++;
                     IfBrackets = 0;
@@ -403,13 +413,11 @@ CountObj COUNT(MioneObj*Pack,int PackSize)
                         i = FirstBracketIndex -1;
                     }
                 }
-
-            }
-            else
-            {
-
-                if(!IfBrackets)
-                {
+                }
+                break;
+            default:
+                    {
+                        if(!IfBrackets){
                     switch (Pack[i].Symbol.SymbolType)
                     {
                     case 1:
@@ -511,11 +519,11 @@ CountObj COUNT(MioneObj*Pack,int PackSize)
                                 }
 
                             }
-                            break;
+                                break;
+                                }
+                            }
                         }
                     }
-
-                }
             }
         }else if (Pack[i].ObjType == VARIABLE || Pack[i].ObjType == VALUE)
         {
