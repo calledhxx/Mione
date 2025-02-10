@@ -39,14 +39,14 @@ CountObj COUNT(MioneObj*Pack,int PackSize)
         if (Pack[i].ObjType == SYMBOL) // Symbol
         {
 
-            if (strcmp(Pack[i].Symbol.Name, "(") == 0)
+            if (Pack[i].Symbol.CurNumber == 12)
             {
 
                 FirstBracketIndex = i;
                 IfBrackets = 1;
 
             }
-            else if (strcmp(Pack[i].Symbol.Name, ")") == 0)
+            else if (Pack[i].Symbol.CurNumber == 13)
             {
 
                 if (IfBrackets)
@@ -1203,7 +1203,7 @@ CountObj COUNT(MioneObj*Pack,int PackSize)
 
         if (IfBrackets)
         {
-            if (Pack[i].ObjType == SYMBOL && strcmp(Pack[i].Symbol.Name, "(") == 0) {}
+            if (Pack[i].ObjType == SYMBOL && Pack[i].Symbol.CurNumber == 12) {}
             else
             {
                 inBracketSize++;
