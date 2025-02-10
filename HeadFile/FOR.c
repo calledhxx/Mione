@@ -129,12 +129,15 @@ HeadReturnObj FOR(struct _PairObject*Pairs,int PairsSize)
 
           Threads.Threads[nowThreadIn].Fuc = Range;
 
+          Threads.Threads[nowThreadIn].IndexUP = malloc(sizeof(int));
+
+          Threads.Threads[nowThreadIn].Objs = DoCounted.Value[0].Area.Area;
+          Threads.Threads[nowThreadIn].ObjsSize = DoCounted.Value[0].Area.Size;
+
           for (int LoopIndex = 0; LoopIndex < toTimes; LoopIndex++){
 
-              Threads.Threads[nowThreadIn].IndexUP = malloc(sizeof(int));
               *Threads.Threads[nowThreadIn].IndexUP = 0;
-              Threads.Threads[nowThreadIn].Objs = DoCounted.Value[0].Area.Area;
-              Threads.Threads[nowThreadIn].ObjsSize = DoCounted.Value[0].Area.Size;
+
 
               Threads.Threads[nowThreadIn].Request = NULL;
               Threads.Threads[nowThreadIn].RequestSize = 0;

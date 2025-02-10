@@ -1144,7 +1144,7 @@ CountObj COUNT(MioneObj*Pack,int PackSize)
 
                     case 9:{ //multiple
                             ValueObj Target;
-                            
+
                             if (Pack[i].ObjType == VARIABLE) Target = Pack[i].VarUP->Val;
                             if (Pack[i].ObjType == VALUE) Target = Pack[i].Val;
 
@@ -1168,13 +1168,13 @@ CountObj COUNT(MioneObj*Pack,int PackSize)
                                     .Line = Pack[i].Line,
                                     .Column = Pack[i].Column
                             };
-                            
+
                             PastCost = 1;
-                            
+
                             CalculateType = 0;
                             break;
                     }
-                
+
                     default:
                         break;
                 }
@@ -1267,8 +1267,5 @@ CountObj COUNT(MioneObj*Pack,int PackSize)
         .ValueSize= VPackSize
     };
 
-
     return Returns;
 }
-
-
