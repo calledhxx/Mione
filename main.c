@@ -80,8 +80,6 @@ int main(const int OptionsSize,char **Options)
 
         Threads.Threads = malloc(0);
 
-
-
         ThreadObj newThread = (ThreadObj){
             .Fuc = mione,
             .IndexUP = malloc(sizeof(int)),

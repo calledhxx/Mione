@@ -69,34 +69,76 @@ CountObj COUNT(MioneObj*Pack,int PackSize)
 
                                 if (Pack[FirstBracketIndex - 1].VarUP->Val.ValueType == VALUE_FUNCTION_TYPE)
                                 {
-                                    ThreadObj orgThread = Threads.Threads[nowThreadIn];
+                                    ValueReturnObj V;
 
-                                    Threads.Threads[nowThreadIn].Fuc = Function;
-                                    Threads.Threads[nowThreadIn].IndexUP = malloc(sizeof(int));
-                                    *Threads.Threads[nowThreadIn].IndexUP = 0;
-                                    Threads.Threads[nowThreadIn].Objs = Pack[FirstBracketIndex - 1].VarUP->Val.Area.Area;
-                                    Threads.Threads[nowThreadIn].ObjsSize = Pack[FirstBracketIndex - 1].VarUP->Val.Area.Size;
+                                    if (Pack[FirstBracketIndex - 1].VarUP->Val.Area.isMultiple == 1)
+                                    {
+                                        V.ValueSize = 0;
 
-                                    Threads.Threads[nowThreadIn].Request = ChildCount.Value;
-                                    Threads.Threads[nowThreadIn].RequestSize = ChildCount.ValueSize;
+                                        ThreadObj newThread = (ThreadObj){
+                                            .Fuc = mione,
+                                            .IndexUP = malloc(sizeof(int)),
+                                            .Objs = Pack[FirstBracketIndex - 1].VarUP->Val.Area.Area,
+                                            .ObjsSize = Pack[FirstBracketIndex - 1].VarUP->Val.Area.Size,
 
-                                    Threads.Threads[nowThreadIn].LastMioUP = &(MioneObj){.ObjType = 0};
+                                            .VariablesUP = malloc(sizeof(VariableObj*)),
+                                            .VariablesUPSizeUP = malloc(sizeof(int)),
+
+                                            .Request = ChildCount.Value, //TODO
+                                            .RequestSize = ChildCount.ValueSize,
+
+                                            .EndLoaclUP = malloc(sizeof(DefinedVarAndValueObj*)),
+                                            .EndLoaclSizeUP = malloc(sizeof(int)),
+                                            .HeadFuc = NULL,
+
+                                            .LastMioUP = &(MioneObj){0},
+                                            .Return = {.ToState = 0,.Vs.ValueSize = 0},
+
+                                            .isChild = 0,
+                                        };
 
 
-                                    Threads.Threads[nowThreadIn].EndLoaclUP = malloc(sizeof(DefinedVarAndValueObj*));
-                                    *Threads.Threads[nowThreadIn].EndLoaclUP = malloc(0);
+                                        *newThread.IndexUP = 0;
+                                        *newThread.VariablesUP = malloc(0);
+                                        *newThread.VariablesUPSizeUP = 0;
+                                        *newThread.EndLoaclUP = malloc(0);
+                                        *newThread.EndLoaclSizeUP = 0;
 
-                                    Threads.Threads[nowThreadIn].EndLoaclSizeUP = malloc(sizeof(int));
-                                    *Threads.Threads[nowThreadIn].EndLoaclSizeUP = 0;
+                                        Threads.ThreadsSize++;
+                                        Threads.Threads = realloc(Threads.Threads,sizeof(ThreadObj)*Threads.ThreadsSize);
+                                        Threads.Threads[Threads.ThreadsSize-1] = newThread;
 
-                                    Threads.Threads[nowThreadIn].isChild = 1;
+                                        MTC();
+                                    }else
+                                    {
+                                        ThreadObj orgThread = Threads.Threads[nowThreadIn];
 
-                                    MioneReturnObj F = MTC().Return;
+                                        Threads.Threads[nowThreadIn].Fuc = Function;
+                                        Threads.Threads[nowThreadIn].IndexUP = malloc(sizeof(int));
+                                        *Threads.Threads[nowThreadIn].IndexUP = 0;
+                                        Threads.Threads[nowThreadIn].Objs = Pack[FirstBracketIndex - 1].VarUP->Val.Area.Area;
+                                        Threads.Threads[nowThreadIn].ObjsSize = Pack[FirstBracketIndex - 1].VarUP->Val.Area.Size;
+
+                                        Threads.Threads[nowThreadIn].Request = ChildCount.Value;
+                                        Threads.Threads[nowThreadIn].RequestSize = ChildCount.ValueSize;
+
+                                        Threads.Threads[nowThreadIn].LastMioUP = &(MioneObj){.ObjType = 0};
 
 
-                                    Threads.Threads[nowThreadIn] = orgThread;
+                                        Threads.Threads[nowThreadIn].EndLoaclUP = malloc(sizeof(DefinedVarAndValueObj*));
+                                        *Threads.Threads[nowThreadIn].EndLoaclUP = malloc(0);
 
-                                    ValueReturnObj V = F.Vs;
+                                        Threads.Threads[nowThreadIn].EndLoaclSizeUP = malloc(sizeof(int));
+                                        *Threads.Threads[nowThreadIn].EndLoaclSizeUP = 0;
+
+                                        Threads.Threads[nowThreadIn].isChild = 1;
+
+                                        MioneReturnObj F = MTC().Return;
+
+                                        Threads.Threads[nowThreadIn] = orgThread;
+
+                                        V = F.Vs;
+                                    }
 
                                     MioneObj* NewPack = malloc(0);
                                     int NewPackSize = 0;
@@ -178,36 +220,80 @@ CountObj COUNT(MioneObj*Pack,int PackSize)
                             }
                             else
                             {
-
                                 if (Pack[FirstBracketIndex - 1].Val.ValueType == VALUE_FUNCTION_TYPE)
                                 {
-                                    ThreadObj orgThread = Threads.Threads[nowThreadIn];
-
-                                    Threads.Threads[nowThreadIn].Fuc = Function;
-                                    Threads.Threads[nowThreadIn].IndexUP = malloc(sizeof(int));
-                                    *Threads.Threads[nowThreadIn].IndexUP = 0;
-                                    Threads.Threads[nowThreadIn].Objs = Pack[FirstBracketIndex - 1].Val.Area.Area;
-                                    Threads.Threads[nowThreadIn].ObjsSize = Pack[FirstBracketIndex - 1].Val.Area.Size;
-
-                                    Threads.Threads[nowThreadIn].Request = ChildCount.Value;
-                                    Threads.Threads[nowThreadIn].RequestSize = ChildCount.ValueSize;
-
-                                    Threads.Threads[nowThreadIn].LastMioUP = &(MioneObj){.ObjType = 0};
 
 
-                                    Threads.Threads[nowThreadIn].EndLoaclUP = malloc(sizeof(DefinedVarAndValueObj*));
-                                    *Threads.Threads[nowThreadIn].EndLoaclUP = malloc(0);
+                                    ValueReturnObj V;
 
-                                    Threads.Threads[nowThreadIn].EndLoaclSizeUP = malloc(sizeof(int));
-                                    *Threads.Threads[nowThreadIn].EndLoaclSizeUP = 0;
+                                    if (Pack[FirstBracketIndex - 1].Val.Area.isMultiple == 1)
+                                    {
+                                        V.ValueSize = 0;
 
-                                    Threads.Threads[nowThreadIn].isChild = 1;
+                                        ThreadObj newThread = (ThreadObj){
+                                            .Fuc = mione,
+                                            .IndexUP = malloc(sizeof(int)),
+                                            .Objs = Pack[FirstBracketIndex - 1].Val.Area.Area,
+                                            .ObjsSize =  Pack[FirstBracketIndex - 1].Val.Area.Size,
 
-                                    MioneReturnObj F = MTC().Return;
+                                            .VariablesUP = malloc(sizeof(VariableObj*)),
+                                            .VariablesUPSizeUP = malloc(sizeof(int)),
 
-                                    Threads.Threads[nowThreadIn] = orgThread;
+                                            .Request = ChildCount.Value, //TODO
+                                            .RequestSize = ChildCount.ValueSize,
 
-                                    ValueReturnObj V = F.Vs;
+                                            .EndLoaclUP = malloc(sizeof(DefinedVarAndValueObj*)),
+                                            .EndLoaclSizeUP = malloc(sizeof(int)),
+                                            .HeadFuc = NULL,
+
+                                            .LastMioUP = &(MioneObj){0},
+                                            .Return = {.ToState = 0,.Vs.ValueSize = 0},
+
+                                            .isChild = 0,
+                                        };
+
+
+                                        *newThread.IndexUP = 0;
+                                        *newThread.VariablesUP = malloc(0);
+                                        *newThread.VariablesUPSizeUP = 0;
+                                        *newThread.EndLoaclUP = malloc(0);
+                                        *newThread.EndLoaclSizeUP = 0;
+
+                                        Threads.ThreadsSize++;
+                                        Threads.Threads = realloc(Threads.Threads,sizeof(ThreadObj)*Threads.ThreadsSize);
+                                        Threads.Threads[Threads.ThreadsSize-1] = newThread;
+
+                                        MTC();
+                                    }else
+                                    {
+                                        ThreadObj orgThread = Threads.Threads[nowThreadIn];
+
+                                        Threads.Threads[nowThreadIn].Fuc = Function;
+                                        Threads.Threads[nowThreadIn].IndexUP = malloc(sizeof(int));
+                                        *Threads.Threads[nowThreadIn].IndexUP = 0;
+                                        Threads.Threads[nowThreadIn].Objs = Pack[FirstBracketIndex - 1].Val.Area.Area;
+                                        Threads.Threads[nowThreadIn].ObjsSize = Pack[FirstBracketIndex - 1].Val.Area.Size;
+
+                                        Threads.Threads[nowThreadIn].Request = ChildCount.Value;
+                                        Threads.Threads[nowThreadIn].RequestSize = ChildCount.ValueSize;
+
+                                        Threads.Threads[nowThreadIn].LastMioUP = &(MioneObj){.ObjType = 0};
+
+
+                                        Threads.Threads[nowThreadIn].EndLoaclUP = malloc(sizeof(DefinedVarAndValueObj*));
+                                        *Threads.Threads[nowThreadIn].EndLoaclUP = malloc(0);
+
+                                        Threads.Threads[nowThreadIn].EndLoaclSizeUP = malloc(sizeof(int));
+                                        *Threads.Threads[nowThreadIn].EndLoaclSizeUP = 0;
+
+                                        Threads.Threads[nowThreadIn].isChild = 1;
+
+                                        MioneReturnObj F = MTC().Return;
+
+                                        Threads.Threads[nowThreadIn] = orgThread;
+
+                                        V = F.Vs;
+                                    }
 
                                     MioneObj* NewPack = malloc(0);
                                     int NewPackSize = 0;
@@ -299,7 +385,7 @@ CountObj COUNT(MioneObj*Pack,int PackSize)
                             NewPackSize++;
                             NewPack = realloc(NewPack, NewPackSize * sizeof(MioneObj));
                             NewPack[NewPackSize - 1] = (MioneObj){
-                                .ObjType = 5,
+                                .ObjType = VALUE,
                                 .Val = ChildCount.Value[index]
                             };
                         }
@@ -327,107 +413,106 @@ CountObj COUNT(MioneObj*Pack,int PackSize)
                     switch (Pack[i].Symbol.SymbolType)
                     {
                     case 1:
-
-                        if (i == PackSize - 1 || i - 1 <0)
                         {
-                            ErrCall(
-                                "You can't connect any Two-side-count-SymbolGet.a to VOID (Meaning Nothing, even no Mione Object).",
-                                "MG003",
-                                "Maybe you can try `1+1` or anything else.",
-                                Pack[i].Line,
-                                Pack[i].Column
-                            );
-                        }
-
-
-
-                        if (Pack[i-1].ObjType == SYMBOL || Pack[i+1].ObjType == SYMBOL)
-                        {
-                            ErrCall(
-                              "dkaopkdapskdpsa",
-                              "MG3123i13",
-                              "Maybe you can try `1+1` or anything else.",
-                              Pack[i].Line,
-                              Pack[i].Column
-                          );
-                        }
-                        if (Pack[i].Symbol.xIndex == CalculateLevel) CalculateType = Pack[i].Symbol.CurNumber;
-
-                        break;
-                    case 2:
-
-                        if (i == PackSize - 1 )
-                        {
-                            ErrCall(
-                                "bbbbb",
-                                "MG007",
-                                "Maybe you can try `typeof 1` or anything else.",
-                                Pack[i].Line,
-                                Pack[i].Column
-                            );
-                        }
-
-                        if (Pack[i+1].ObjType == SYMBOL)
-                        {
-                            ErrCall(
-                                "dmakldmadma",
-                                "MG03127",
-                                "Maybe you can try `typeof 1` or anything else.",
-                                Pack[i].Line,
-                                Pack[i].Column
-                            );
-                        }
-                        if (Pack[i].Symbol.xIndex == CalculateLevel) CalculateType = Pack[i].Symbol.CurNumber;
-
-                       break;
-                    case 3:
-
-                        if (i == PackSize - 1)
-                        {
-                            ErrCall(
-                               "ccccc",
-                               "MG008",
-                               "Maybe you can try `- 1` or anything else.",
-                                Pack[i].Line,
-                                Pack[i].Column
-                           );
-                        }
-
-                        if ( Pack[i+1].ObjType == SYMBOL)
-                        {
-                            ErrCall(
-                               "jdioasjdioas",
-                               "MG0428",
-                               "Maybe you can try `- 1` or anything else.",
-                                Pack[i].Line,
-                                Pack[i].Column
-                           );
-                        }
-
-
-                        for (int index = 0; 1 ; index++)
-                        {
-                            if (Symbols[index].CurNumber == -1) break;
-
-                            if (strcmp(Symbols[index].Name, Pack[i].Symbol.Name) == 0)
+                            if (i == PackSize - 1 || i - 1 <0)
                             {
+                                ErrCall(
+                                    "You can't connect any Two-side-count-SymbolGet.a to VOID (Meaning Nothing, even no Mione Object).",
+                                    "MG003",
+                                    "Maybe you can try `1+1` or anything else.",
+                                    Pack[i].Line,
+                                    Pack[i].Column
+                                );
+                            }
 
-                                if (i-1>=0 && (Pack[i-1].ObjType == VARIABLE || Pack[i-1].ObjType == VALUE))
+
+
+                            if (Pack[i-1].ObjType == SYMBOL || Pack[i+1].ObjType == SYMBOL)
+                            {
+                                ErrCall(
+                                  "dkaopkdapskdpsa",
+                                  "MG3123i13",
+                                  "Maybe you can try `1+1` or anything else.",
+                                  Pack[i].Line,
+                                  Pack[i].Column
+                              );
+                            }
+                            if (Pack[i].Symbol.xIndex == CalculateLevel) CalculateType = Pack[i].Symbol.CurNumber;
+
+                            break;
+                        }
+                    case 2:
+                        {
+                            if (i == PackSize - 1 )
+                            {
+                                ErrCall(
+                                    "bbbbb",
+                                    "MG007",
+                                    "Maybe you can try `typeof 1` or anything else.",
+                                    Pack[i].Line,
+                                    Pack[i].Column
+                                );
+                            }
+
+                            if (Pack[i+1].ObjType == SYMBOL)
+                            {
+                                ErrCall(
+                                    "dmakldmadma",
+                                    "MG03127",
+                                    "Maybe you can try `typeof 1` or anything else.",
+                                    Pack[i].Line,
+                                    Pack[i].Column
+                                );
+                            }
+                            if (Pack[i].Symbol.xIndex == CalculateLevel) CalculateType = Pack[i].Symbol.CurNumber;
+
+                            break;
+                        }
+                    case 3:
+                        {
+                            if (i == PackSize - 1)
+                            {
+                                ErrCall(
+                                   "ccccc",
+                                   "MG008",
+                                   "Maybe you can try `- 1` or anything else.",
+                                    Pack[i].Line,
+                                    Pack[i].Column
+                               );
+                            }
+
+                            if ( Pack[i+1].ObjType == SYMBOL)
+                            {
+                                ErrCall(
+                                   "jdioasjdioas",
+                                   "MG0428",
+                                   "Maybe you can try `- 1` or anything else.",
+                                    Pack[i].Line,
+                                    Pack[i].Column
+                               );
+                            }
+
+
+                            for (int index = 0; 1 ; index++)
+                            {
+                                if (Symbols[index].CurNumber == -1) break;
+
+                                if (strcmp(Symbols[index].Name, Pack[i].Symbol.Name) == 0)
                                 {
-                                    if (Pack[i].Symbol.yIndex == CalculateLevel) CalculateType = Pack[i].Symbol.CurNumber;
-                                }else
-                                {
-                                    if (Pack[i].Symbol.xIndex == CalculateLevel) CalculateType = Pack[i].Symbol.CurNumber;
+
+                                    if (i-1>=0 && (Pack[i-1].ObjType == VARIABLE || Pack[i-1].ObjType == VALUE))
+                                    {
+                                        if (Pack[i].Symbol.yIndex == CalculateLevel) CalculateType = Pack[i].Symbol.CurNumber;
+                                    }else
+                                    {
+                                        if (Pack[i].Symbol.xIndex == CalculateLevel) CalculateType = Pack[i].Symbol.CurNumber;
+                                    }
+
                                 }
 
                             }
-
+                            break;
                         }
-                        break;
-
-
-
-
                     }
 
                 }
@@ -472,7 +557,8 @@ CountObj COUNT(MioneObj*Pack,int PackSize)
                 switch (CalculateType)
                 {
                     case 1: // +
-                        if (Pack[i - 2].ObjType == VARIABLE || Pack[i - 2].ObjType == VALUE)
+                        {
+                            if (Pack[i - 2].ObjType == VARIABLE || Pack[i - 2].ObjType == VALUE)
                         {
 
                             ValueObj Target1 ;
@@ -512,7 +598,7 @@ CountObj COUNT(MioneObj*Pack,int PackSize)
                                 }
 
                                 Out = (MioneObj){
-                                    .ObjType = 5,
+                                    .ObjType = VALUE,
                                     .Val = (ValueObj){
                                         .ValueType = 3,
                                         .PNumber = Value1 + Value2,
@@ -535,7 +621,7 @@ CountObj COUNT(MioneObj*Pack,int PackSize)
 
 
                                 Out = (MioneObj){
-                                    .ObjType = 5,
+                                    .ObjType = VALUE,
                                     .Val = (ValueObj){
                                         .ValueType = 2,
                                         .NPNumber = Value1 + Value2,
@@ -559,25 +645,29 @@ CountObj COUNT(MioneObj*Pack,int PackSize)
                         }
                         CalculateType = 0;
                         break;
+                        }
                 case 2: // ,
+                        {
 
-                    ValueObj Target = Pack[i].ObjType == VARIABLE ? Pack[i].VarUP->Val : Pack[i].Val;
+                            ValueObj Target = Pack[i].ObjType == VARIABLE ? Pack[i].VarUP->Val : Pack[i].Val;
 
-                    Out = (MioneObj){
-                        .ObjType = 5,
-                        .Val = Target,
-                        .Line = Pack[i].Line,
-                        .Column = Pack[i].Column
-                    };
+                            Out = (MioneObj){
+                                .ObjType = VALUE,
+                                .Val = Target,
+                                .Line = Pack[i].Line,
+                                .Column = Pack[i].Column
+                            };
 
-                    PastCost = 1;
+                            PastCost = 1;
 
 
-                    CalculateType = 0;
+                            CalculateType = 0;
 
-                    break;
+                            break;
+                        }
                     case 3: // *
-                        
+                        {
+
 
                         if (Pack[i - 2].ObjType == VARIABLE || Pack[i - 2].ObjType == VALUE)
                         {
@@ -618,7 +708,7 @@ CountObj COUNT(MioneObj*Pack,int PackSize)
                                 }
 
                                 Out = (MioneObj){
-                                    .ObjType = 5,
+                                    .ObjType = VALUE,
                                     .Val = (ValueObj){
                                         .ValueType = 3,
                                         .PNumber = Value1 * Value2,
@@ -641,7 +731,7 @@ CountObj COUNT(MioneObj*Pack,int PackSize)
 
 
                                 Out = (MioneObj){
-                                    .ObjType = 5,
+                                    .ObjType = VALUE,
                                     .Val = (ValueObj){
                                         .ValueType = 2,
                                         .NPNumber = Value1 * Value2,
@@ -666,8 +756,10 @@ CountObj COUNT(MioneObj*Pack,int PackSize)
                         CalculateType = 0;
                         break;
 
+                        }
                 case 6: //-
-                    if (i-2>=0 && (Pack[i - 2].ObjType == VARIABLE || Pack[i - 2].ObjType == VALUE))
+                        {
+                             if (i-2>=0 && (Pack[i - 2].ObjType == VARIABLE || Pack[i - 2].ObjType == VALUE))
                     {
                         // 1- 1
                          ValueObj Target1 ;
@@ -710,7 +802,7 @@ CountObj COUNT(MioneObj*Pack,int PackSize)
                                 }
 
                                 Out = (MioneObj){
-                                    .ObjType = 5,
+                                    .ObjType = VALUE,
                                     .Val = (ValueObj){
                                         .ValueType = 3,
                                         .PNumber = Value1 -  Value2,
@@ -733,7 +825,7 @@ CountObj COUNT(MioneObj*Pack,int PackSize)
 
 
                                 Out = (MioneObj){
-                                    .ObjType = 5,
+                                    .ObjType = VALUE,
                                     .Val = (ValueObj){
                                         .ValueType = 2,
                                         .NPNumber = Value1 - Value2,
@@ -773,7 +865,7 @@ CountObj COUNT(MioneObj*Pack,int PackSize)
 
 
                             Out = (MioneObj){
-                                .ObjType = 5,
+                                .ObjType = VALUE,
                                 .Val = (ValueObj){
                                     .ValueType = 3,
                                     .PNumber = Value1
@@ -791,7 +883,7 @@ CountObj COUNT(MioneObj*Pack,int PackSize)
 
 
                             Out = (MioneObj){
-                                .ObjType = 5,
+                                .ObjType = VALUE,
                                 .Val = (ValueObj){
                                     .ValueType = 2,
                                     .NPNumber = Value1
@@ -806,9 +898,10 @@ CountObj COUNT(MioneObj*Pack,int PackSize)
                     }
                     CalculateType = 0;
                     break;
+                        }
                 case 7: // .
-
-                    if (i-2>=0 && (Pack[i - 2].ObjType == VARIABLE || Pack[i - 2].ObjType == VALUE))
+                        {
+                             if (i-2>=0 && (Pack[i - 2].ObjType == VARIABLE || Pack[i - 2].ObjType == VALUE))
                     {
                         // 1.1
                             ValueObj Target1 ;
@@ -862,7 +955,7 @@ CountObj COUNT(MioneObj*Pack,int PackSize)
 
 
                                 Out = (MioneObj){
-                                    .ObjType = 5,
+                                    .ObjType = VALUE,
                                     .Val = (ValueObj){
                                         .ValueType = 3,
                                         .PNumber = Value1*1 + Points,
@@ -921,7 +1014,7 @@ CountObj COUNT(MioneObj*Pack,int PackSize)
                             }
 
                             Out = (MioneObj){
-                                .ObjType = 5,
+                                .ObjType = VALUE,
                                 .Val = (ValueObj){
                                     .ValueType = 3,
                                     .PNumber = Points
@@ -936,8 +1029,10 @@ CountObj COUNT(MioneObj*Pack,int PackSize)
                     }
                     CalculateType = 0;
                     break;
+                        }
                 case 8:
-                    if (Pack[i - 2].ObjType == VARIABLE || Pack[i - 2].ObjType == VALUE)
+                        {
+                             if (Pack[i - 2].ObjType == VARIABLE || Pack[i - 2].ObjType == VALUE)
                     {
                         ValueObj Target1 ;
                         ValueObj Target2 ;
@@ -989,9 +1084,9 @@ CountObj COUNT(MioneObj*Pack,int PackSize)
 
 
                         Out = (MioneObj){
-                            .ObjType = 5,
+                            .ObjType = VALUE,
                             .Val = (ValueObj){
-                                .ValueType = 8,
+                                .ValueType = VALUE_DB_TYPE,
                                 .db = db,
                             },
                             .Line = Pack[i].Line,
@@ -1011,8 +1106,41 @@ CountObj COUNT(MioneObj*Pack,int PackSize)
                         }
                         CalculateType = 0;
                         break;
+                        }
+
+                    case 9:{ //multiple
+                            ValueObj Target;
+                            
+                            if (Pack[i].ObjType == VARIABLE) Target = Pack[i].VarUP->Val;
+                            if (Pack[i].ObjType == VALUE) Target = Pack[i].Val;
+
+                            if (Target.ValueType == VALUE_FUNCTION_TYPE){}else
+                            {
+                                ErrCall("Type error aaaa","MG00111","aa",
+                                    Pack[i].Line,
+                                    Pack[i].Column);
+                            }
+
+                            AreaObj newFuc = Target.Area;
+                            newFuc.isMultiple = 1;
 
 
+                            Out = (MioneObj){
+                                .ObjType = VALUE,
+                                .Val = (ValueObj){
+                                    .ValueType = VALUE_FUNCTION_TYPE,
+                                    .Area = newFuc
+                                },
+                                    .Line = Pack[i].Line,
+                                    .Column = Pack[i].Column
+                            };
+                            
+                            PastCost = 1;
+                            
+                            CalculateType = 0;
+                            break;
+                    }
+                
                     default:
                         break;
                 }

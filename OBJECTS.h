@@ -26,6 +26,8 @@ typedef struct _AreaObject
     struct _MioneObject * Area;//給於函數(function)或者執行式(range)。
     int Index; //開頭位置
 
+    int isMultiple; //是否為多執行 僅適用於FUNCTION
+
 }AreaObj;
 
 typedef struct _TableObject
