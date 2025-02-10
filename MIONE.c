@@ -612,8 +612,6 @@ MioneReturnObj mione(const MioneObj* Objs, const int ObjsSize,ThreadObj Thread)
     }
     for (int i = 0; i<(*EndLoaclSizeUP); i++) if ((*EndLoaclUP)[i].TheDefinedVarUP != 0) (*EndLoaclUP)[i].TheDefinedVarUP->Val = (*EndLoaclUP)[i].Value;
 
-
-
     return Return;
 }
 

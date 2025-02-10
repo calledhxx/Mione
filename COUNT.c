@@ -527,7 +527,33 @@ CountObj COUNT(MioneObj*Pack,int PackSize)
                 VariableObj * CountedTable = malloc(0);
                 int CountedTableSize = 0;
 
-                MioneReturnObj Tb = Table(V.Table.MioneTable,V.Table.MioneTableSize,&CountedTable,&CountedTableSize);
+                ThreadObj orgThread = Threads.Threads[nowThreadIn];
+
+                Threads.Threads[nowThreadIn].Fuc = Table;
+                Threads.Threads[nowThreadIn].IndexUP = malloc(sizeof(int));
+                *Threads.Threads[nowThreadIn].IndexUP = 0;
+                Threads.Threads[nowThreadIn].Objs = V.Table.MioneTable;
+                Threads.Threads[nowThreadIn].ObjsSize = V.Table.MioneTableSize;
+
+                Threads.Threads[nowThreadIn].Request = NULL;
+                Threads.Threads[nowThreadIn].RequestSize = 0;
+
+                Threads.Threads[nowThreadIn].VariablesUP = &CountedTable;
+                Threads.Threads[nowThreadIn].VariablesUPSizeUP = &CountedTableSize;
+
+                Threads.Threads[nowThreadIn].LastMioUP = &(MioneObj){.ObjType = 0};
+
+                Threads.Threads[nowThreadIn].EndLoaclUP = malloc(sizeof(DefinedVarAndValueObj*));
+                *Threads.Threads[nowThreadIn].EndLoaclUP = malloc(0);
+
+                Threads.Threads[nowThreadIn].EndLoaclSizeUP = malloc(sizeof(int));
+                *Threads.Threads[nowThreadIn].EndLoaclSizeUP = 0;
+
+                Threads.Threads[nowThreadIn].isChild = 1;
+
+                MioneReturnObj R = MTC(Threads.ThreadsSize-1).Return;
+
+                Threads.Threads[nowThreadIn] = orgThread;
 
                 if (Pack[i].ObjType == VARIABLE)
                 {

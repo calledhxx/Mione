@@ -586,7 +586,10 @@ CaseObj* FCO(FILE* F,int*CASESIZE)
     }
     while (1);
 
-
+    if (inLockinType)
+    {
+        ErrCall("no end FILE TO CASE","M245",NULL,Line,Colum);
+    }
 
     *CASESIZE = CaseObjectsSize;
     return CaseObjects;

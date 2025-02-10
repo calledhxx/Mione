@@ -27,7 +27,7 @@ ThreadReturnObj MTC(int StartAt){
 
         if (Threads.ThreadsSize ) {
           for (; nowThreadIn < Threads.ThreadsSize; nowThreadIn++){
-//            printf("Truned to THREAD %d\n", nowThreadIn);
+//            printf("Truned to THREAD %d \n", nowThreadIn);
 
             if((Threads.Threads[nowThreadIn].ObjsSize-1) > *(Threads.Threads[nowThreadIn].IndexUP)){
                 MioneReturnObj RunningReturned;
@@ -62,6 +62,17 @@ ThreadReturnObj MTC(int StartAt){
                             Threads.Threads[nowThreadIn].ObjsSize,
                             Threads.Threads[nowThreadIn].Request,
                             Threads.Threads[nowThreadIn].RequestSize,
+                            Threads.Threads[nowThreadIn]
+                            );
+                        break;
+                    }
+
+                    if(Threads.Threads[nowThreadIn].Fuc == Table) {
+                        RunningReturned = Threads.Threads[nowThreadIn].Fuc(
+                            Threads.Threads[nowThreadIn].Objs,
+                            Threads.Threads[nowThreadIn].ObjsSize,
+                            Threads.Threads[nowThreadIn].VariablesUP,
+                            Threads.Threads[nowThreadIn].VariablesUPSizeUP,
                             Threads.Threads[nowThreadIn]
                             );
                         break;
