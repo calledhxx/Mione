@@ -1,5 +1,11 @@
-set x =  function
-    return 50
+set x = multiple function
+    for i = 0 to 40 do range
+        set a host = i
+    end
 end;
 
-(multiple x)() + x()
+
+
+set g = 100 + x(); //多重在同一句 該句將在多重執行完後完成
+
+set g = 500;

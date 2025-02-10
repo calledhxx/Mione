@@ -7,6 +7,7 @@
 #include "../COUNT.h"
 #include "../ERR.h"
 #include "../MIONE.h"
+#include "../MTC.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -54,7 +55,7 @@ HeadReturnObj FOR(struct _PairObject*Pairs,int PairsSize)
             case 5: //do
                 DoCounted = COUNT(Pairs[i].Source, Pairs[i].SourceSize);
                 if (DoCounted.ValueSize !=1)ErrCall("`do` PROMPT in `for` only accept ONE SOURCE.","M010",NULL,Prompt.Line,Prompt.Column);
-                if (DoCounted.Value[0].ValueType!= VALUE_FUNCTION_TYPE)ErrCall("After `do` PROMPT in `for` is`n a Range.","M011",NULL,Prompt.Line,Prompt.Column);
+                if (DoCounted.Value[0].ValueType!= VALUE_RANGE_TYPE)ErrCall("After `do` PROMPT in `for` is`n a Range.","M011",NULL,Prompt.Line,Prompt.Column);
               	_do = 1;
                 break;
             case 6: //to
@@ -124,20 +125,60 @@ HeadReturnObj FOR(struct _PairObject*Pairs,int PairsSize)
       if(set){
         Request.VariableUPs[0]->Val.NPNumber = Request.VariableUPs[0]->Val.NPNumber+1;
 
-        for (int LoopIndex = 0; LoopIndex < toTimes; LoopIndex++){
-         MioneReturnObj R = Range(DoCounted.Value[0].Area.Area, DoCounted.Value[0].Area.Size);
+          ThreadObj orgThread = Threads.Threads[nowThreadIn];
 
- 		Request.VariableUPs[0]->Val.NPNumber = Request.VariableUPs[0]->Val.NPNumber+1;
+          Threads.Threads[nowThreadIn].Fuc = Range;
 
-      	 switch(R.ToState){
-        	case 1:
-          		ToReturn.ToState = ToReturn.ToState+1;
-          		ToReturn.Vs = R.Vs;
-          		break;
-         }
-        }
+          for (int LoopIndex = 0; LoopIndex < toTimes; LoopIndex++){
+
+              Threads.Threads[nowThreadIn].IndexUP = malloc(sizeof(int));
+              *Threads.Threads[nowThreadIn].IndexUP = 0;
+              Threads.Threads[nowThreadIn].Objs = DoCounted.Value[0].Area.Area;
+              Threads.Threads[nowThreadIn].ObjsSize = DoCounted.Value[0].Area.Size;
+
+              Threads.Threads[nowThreadIn].Request = NULL;
+              Threads.Threads[nowThreadIn].RequestSize = 0;
+
+              Threads.Threads[nowThreadIn].LastMioUP = &(MioneObj){.ObjType = 0};
+
+              Threads.Threads[nowThreadIn].EndLoaclUP = malloc(sizeof(DefinedVarAndValueObj*));
+              *Threads.Threads[nowThreadIn].EndLoaclUP = malloc(0);
+
+              Threads.Threads[nowThreadIn].EndLoaclSizeUP = malloc(sizeof(int));
+              *Threads.Threads[nowThreadIn].EndLoaclSizeUP = 0;
+
+              Threads.Threads[nowThreadIn].isChild = 1;
+
+              MioneReturnObj R = MTC(Threads.ThreadsSize-1).Return;
+
+              Request.VariableUPs[0]->Val.NPNumber = Request.VariableUPs[0]->Val.NPNumber+1;
+
+
+              int States[] =  {
+                  1
+              };
+
+              for (int StateIndex = 0; StateIndex<(sizeof(States)/sizeof(int)); StateIndex++)
+              {
+                  if (R.ToState >= States[StateIndex])
+                  {
+                      R.ToState = R.ToState-States[StateIndex];
+
+                      switch (States[StateIndex]){
+                      case 1:
+                          ToReturn.ToState = ToReturn.ToState+1;
+                          ToReturn.Vs = R.Vs;
+                          break;
+                      }
+                  }
+              }
+          }
+
+          Threads.Threads[nowThreadIn] = orgThread;
+
       }
       if(in){
+        //todo
       }
     }
 

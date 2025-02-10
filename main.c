@@ -113,7 +113,9 @@ int main(const int OptionsSize,char **Options)
         Threads.Threads = realloc(Threads.Threads,sizeof(ThreadObj)*Threads.ThreadsSize);
         Threads.Threads[Threads.ThreadsSize-1] = newThread;
 
-        ThreadReturnObj MTCReturned = MTC();
+
+
+        ThreadReturnObj MTCReturned = MTC(0);
 
         // mione(MioObj,MioObjSize);
 

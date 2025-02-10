@@ -18,36 +18,59 @@ int nowThreadIn = 0;
 
 //TODO
 
-ThreadReturnObj MTC(){
+ThreadReturnObj MTC(int StartAt){
     ThreadReturnObj toReturn = {0};
 
+    nowThreadIn = StartAt;
+
     while(1){
-        nowThreadIn = 0;
 
-        for (; nowThreadIn < Threads.ThreadsSize; nowThreadIn++){
+        if (Threads.ThreadsSize ) {
+          for (; nowThreadIn < Threads.ThreadsSize; nowThreadIn++){
+//            printf("Truned to THREAD %d\n", nowThreadIn);
+
             if((Threads.Threads[nowThreadIn].ObjsSize-1) > *(Threads.Threads[nowThreadIn].IndexUP)){
-
                 MioneReturnObj RunningReturned;
 
-                if(Threads.Threads[nowThreadIn].Fuc == mione) RunningReturned = Threads.Threads[nowThreadIn].Fuc(
-                Threads.Threads[nowThreadIn].Objs,
-                Threads.Threads[nowThreadIn].ObjsSize,
-                      Threads.Threads[nowThreadIn]
-                );
 
-                if(Threads.Threads[nowThreadIn].Fuc == Range) RunningReturned = Threads.Threads[nowThreadIn].Fuc(
-                      Threads.Threads[nowThreadIn].Objs,
-                      Threads.Threads[nowThreadIn].ObjsSize,
-                      Threads.Threads[nowThreadIn]
-                      );
 
-                if(Threads.Threads[nowThreadIn].Fuc == Function) RunningReturned = Threads.Threads[nowThreadIn].Fuc(
-                      Threads.Threads[nowThreadIn].Objs,
-                      Threads.Threads[nowThreadIn].ObjsSize,
-                      Threads.Threads[nowThreadIn].Request,
-                      Threads.Threads[nowThreadIn].RequestSize,
-                      Threads.Threads[nowThreadIn]
-                      );
+                for (;;){
+
+                    if(Threads.Threads[nowThreadIn].Fuc == mione) {
+                        RunningReturned = Threads.Threads[nowThreadIn].Fuc(
+                    Threads.Threads[nowThreadIn].Objs,
+                    Threads.Threads[nowThreadIn].ObjsSize,
+                          Threads.Threads[nowThreadIn]
+                    );
+                        break;
+                    };
+
+
+                    if(Threads.Threads[nowThreadIn].Fuc == Range){
+                        RunningReturned = Threads.Threads[nowThreadIn].Fuc(
+                           Threads.Threads[nowThreadIn].Objs,
+                           Threads.Threads[nowThreadIn].ObjsSize,
+                           Threads.Threads[nowThreadIn]
+                           );
+                        break;
+
+                    }
+
+                    if(Threads.Threads[nowThreadIn].Fuc == Function) {
+                        RunningReturned = Threads.Threads[nowThreadIn].Fuc(
+                            Threads.Threads[nowThreadIn].Objs,
+                            Threads.Threads[nowThreadIn].ObjsSize,
+                            Threads.Threads[nowThreadIn].Request,
+                            Threads.Threads[nowThreadIn].RequestSize,
+                            Threads.Threads[nowThreadIn]
+                            );
+                        break;
+
+                    }
+
+                    break;
+                }
+
 
 
                 int States[] =  {
@@ -71,9 +94,11 @@ ThreadReturnObj MTC(){
 
             }else{
                 toReturn.Return = Threads.Threads[nowThreadIn].Return;
-                if(Threads.Threads[nowThreadIn].isChild) return toReturn;
-
-
+                if(Threads.Threads[nowThreadIn].isChild) {
+//                    printf("THREAD %d return to Parent\n", nowThreadIn);
+                    return toReturn;
+                };
+//                printf("THREAD %d is done\n", nowThreadIn);
 
                 ThreadsObj newThreads;
                 newThreads.ThreadsSize = 0;
@@ -90,6 +115,11 @@ ThreadReturnObj MTC(){
 
                 return toReturn;
             }
-        }
+        };
+        }else return toReturn;
+
+        nowThreadIn = 0;
     }
+
+    //printf("MTC done\n");
 }

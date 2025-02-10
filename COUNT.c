@@ -76,7 +76,7 @@ CountObj COUNT(MioneObj*Pack,int PackSize)
                                         V.ValueSize = 0;
 
                                         ThreadObj newThread = (ThreadObj){
-                                            .Fuc = mione,
+                                            .Fuc = Function,
                                             .IndexUP = malloc(sizeof(int)),
                                             .Objs = Pack[FirstBracketIndex - 1].VarUP->Val.Area.Area,
                                             .ObjsSize = Pack[FirstBracketIndex - 1].VarUP->Val.Area.Size,
@@ -108,7 +108,7 @@ CountObj COUNT(MioneObj*Pack,int PackSize)
                                         Threads.Threads = realloc(Threads.Threads,sizeof(ThreadObj)*Threads.ThreadsSize);
                                         Threads.Threads[Threads.ThreadsSize-1] = newThread;
 
-                                        MTC();
+                                        MTC(Threads.ThreadsSize-1);
                                     }else
                                     {
                                         ThreadObj orgThread = Threads.Threads[nowThreadIn];
@@ -133,7 +133,7 @@ CountObj COUNT(MioneObj*Pack,int PackSize)
 
                                         Threads.Threads[nowThreadIn].isChild = 1;
 
-                                        MioneReturnObj F = MTC().Return;
+                                        MioneReturnObj F = MTC(Threads.ThreadsSize-1).Return;
 
                                         Threads.Threads[nowThreadIn] = orgThread;
 
@@ -231,7 +231,7 @@ CountObj COUNT(MioneObj*Pack,int PackSize)
                                         V.ValueSize = 0;
 
                                         ThreadObj newThread = (ThreadObj){
-                                            .Fuc = mione,
+                                            .Fuc = Function,
                                             .IndexUP = malloc(sizeof(int)),
                                             .Objs = Pack[FirstBracketIndex - 1].Val.Area.Area,
                                             .ObjsSize =  Pack[FirstBracketIndex - 1].Val.Area.Size,
@@ -263,7 +263,7 @@ CountObj COUNT(MioneObj*Pack,int PackSize)
                                         Threads.Threads = realloc(Threads.Threads,sizeof(ThreadObj)*Threads.ThreadsSize);
                                         Threads.Threads[Threads.ThreadsSize-1] = newThread;
 
-                                        MTC();
+                                        MTC(Threads.ThreadsSize-1);
                                     }else
                                     {
                                         ThreadObj orgThread = Threads.Threads[nowThreadIn];
@@ -288,7 +288,7 @@ CountObj COUNT(MioneObj*Pack,int PackSize)
 
                                         Threads.Threads[nowThreadIn].isChild = 1;
 
-                                        MioneReturnObj F = MTC().Return;
+                                        MioneReturnObj F = MTC(Threads.ThreadsSize-1).Return;
 
                                         Threads.Threads[nowThreadIn] = orgThread;
 
@@ -1116,7 +1116,7 @@ CountObj COUNT(MioneObj*Pack,int PackSize)
 
                             if (Target.ValueType == VALUE_FUNCTION_TYPE){}else
                             {
-                                ErrCall("Type error aaaa","MG00111","aa",
+                                ErrCall("MUP Type error aaaa","MG00111312","aa",
                                     Pack[i].Line,
                                     Pack[i].Column);
                             }
@@ -1223,9 +1223,8 @@ CountObj COUNT(MioneObj*Pack,int PackSize)
     {
         if (VPack[index].ValueType == 2) printf("`NPN`:`%d`\n",VPack[index].NPNumber);
         else if (VPack[index].ValueType == 1) printf("`STRING`:`%s`\n",VPack[index].String);
-        else if (VPack[index].ValueType == 3) printf("`PN`:`%lf`\n",VPack[index].PNumber);
+        else if (VPack[index].ValueType == 3) printf("`PN`:`%Lf`\n",VPack[index].PNumber);
         else if (VPack[index].ValueType == 8) printf("`db`:`%d`\n",VPack[index].db);
-        else if (VPack[index].ValueType == 5) printf("`range omg`\n");
     }
 
 
