@@ -1,3 +1,6 @@
-for i = 0 to 10 do range
-    set x = i
+set x = multiple function
+    set y host = 1;
 end
+
+set z = x() + 500;
+

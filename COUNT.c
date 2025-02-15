@@ -118,7 +118,7 @@ CountObj COUNT(MioneObj*Pack,int PackSize)
                                         Threads.Threads = realloc(Threads.Threads,sizeof(ThreadObj)*Threads.ThreadsSize);
                                         Threads.Threads[Threads.ThreadsSize-1] = newThread;
 
-                                        MTC(Threads.ThreadsSize-1);
+                                        // MTC(Threads.ThreadsSize-1);
                                     }else
                                     {
                                         ThreadObj orgThread = Threads.Threads[nowThreadIn];
@@ -273,7 +273,7 @@ CountObj COUNT(MioneObj*Pack,int PackSize)
                                         Threads.Threads = realloc(Threads.Threads,sizeof(ThreadObj)*Threads.ThreadsSize);
                                         Threads.Threads[Threads.ThreadsSize-1] = newThread;
 
-                                        MTC(Threads.ThreadsSize-1);
+                                        // MTC(Threads.ThreadsSize-1);
                                     }else
                                     {
                                         ThreadObj orgThread = Threads.Threads[nowThreadIn];
