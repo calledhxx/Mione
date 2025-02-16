@@ -39,7 +39,6 @@ HeadReturnObj SVV(struct _PairObject*Pairs,int PairsSize)
         {
             if (PairsSize == 1)
             {
-                printf("ppp\n");
                 Counted = COUNT(Pairs[i].Source,Pairs[i].SourceSize);
 
 
