@@ -71,8 +71,6 @@ MioneObj *CMO(CaseObj*CASES,int CASESIZE,
              if (Heads[Ci].CurNumber == -1) break;
 
              if (strcmp(CASES[i].ObjName,Heads[Ci].Name) == 0)  {
-
-
                  Column++;
 
                  (MIONESIZE)++;

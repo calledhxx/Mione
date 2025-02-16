@@ -1,6 +1,8 @@
-set x = multiple function
-    set y host = 1;
+set x = function
+    s g return 1
 end
 
-set z = x() + 500;
+x = x()
 
+
+x

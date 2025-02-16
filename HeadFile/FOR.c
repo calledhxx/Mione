@@ -142,7 +142,6 @@ HeadReturnObj FOR(struct _PairObject*Pairs,int PairsSize)
               Threads.Threads[nowThreadIn].Request = NULL;
               Threads.Threads[nowThreadIn].RequestSize = 0;
 
-              Threads.Threads[nowThreadIn].LastMioUP = &(MioneObj){.ObjType = 0};
 
               Threads.Threads[nowThreadIn].EndLoaclUP = malloc(sizeof(DefinedVarAndValueObj*));
               *Threads.Threads[nowThreadIn].EndLoaclUP = malloc(0);

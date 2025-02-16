@@ -27,12 +27,10 @@ ThreadReturnObj MTC(int StartAt){
 
         if (Threads.ThreadsSize ) {
           for (; nowThreadIn < Threads.ThreadsSize; nowThreadIn++){
-//            printf("Truned to THREAD %d \n", nowThreadIn);
+//         printf("Truned to THREAD %d %d %d \n", nowThreadIn,(Threads.Threads[nowThreadIn].ObjsSize-1),*(Threads.Threads[nowThreadIn].IndexUP));
 
-            if((Threads.Threads[nowThreadIn].ObjsSize-1) > *(Threads.Threads[nowThreadIn].IndexUP)){
+            if((Threads.Threads[nowThreadIn].ObjsSize-1) >= *(Threads.Threads[nowThreadIn].IndexUP)){
                 MioneReturnObj RunningReturned;
-
-
 
                 for (;;){
 

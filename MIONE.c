@@ -49,12 +49,13 @@ MioneReturnObj Range(const MioneObj* Objs, const int ObjsSize,ThreadObj Thread)
     PairObj *Pairs = malloc(0);
     int PairsSize = 0;
 
-    MioneObj * LastMioUP = Thread.LastMioUP;
+    
 
     MioneReturnObj Return = Thread.Return;
 
-    
-   int index;
+
+    int index;
+
     for (;*Thread.IndexUP < ObjsSize; (*Thread.IndexUP)++)
     {
         index = *Thread.IndexUP;
@@ -62,14 +63,10 @@ MioneReturnObj Range(const MioneObj* Objs, const int ObjsSize,ThreadObj Thread)
         MioneObj Mio = Objs[index];
 
 
-       if ((Mio.ObjType == SYMBOL && strcmp(Mio.Symbol.Name, ";") == 0) ||
-            Mio.ObjType == HEAD ||
-        ((*LastMioUP).ObjType == Mio.ObjType && (Mio.ObjType == SYMBOL ? !Mio.Symbol.CanConnect : 1) && Mio.ObjType != PROMPT) ||
-        ((*LastMioUP).ObjType == VARIABLE &&  Mio.ObjType == VALUE) ||  ((*LastMioUP).ObjType == VALUE &&  Mio.ObjType == VARIABLE)||
-        ((*LastMioUP).ObjType == SYMBOL && (*LastMioUP).Symbol.AfterConnect == 0 && (Mio.ObjType == VARIABLE || Mio.ObjType == VALUE))
+       if (
+            (Mio.ObjType == SYMBOL && strcmp(Mio.Symbol.Name, ";") == 0)
             )
         {
-
             if (HeadFuc != 0) {
                 HeadReturnObj a = HeadFuc(Pairs, PairsSize);
 
@@ -112,12 +109,13 @@ MioneReturnObj Range(const MioneObj* Objs, const int ObjsSize,ThreadObj Thread)
 
 
 
-                if (Mio.ObjType == SYMBOL && strcmp(Mio.Symbol.Name, ";") == 0) (*Thread.IndexUP)++;
+                if (Mio.ObjType == SYMBOL && strcmp(Mio.Symbol.Name, ";") == 0) continue;
 
                 return Return;
             }
-
         }
+
+
 
         if (Mio.ObjType == HEAD) // Head
         {
@@ -181,7 +179,16 @@ MioneReturnObj Range(const MioneObj* Objs, const int ObjsSize,ThreadObj Thread)
 
         }
 
-        if (ObjsSize - 1 == index)
+         if (
+            ObjsSize - 1 == index ||
+            ((index != ObjsSize - 1) &&
+                (Objs[index+1].ObjType == HEAD ||
+                (Mio.ObjType == Objs[index+1].ObjType && (Objs[index+1].ObjType == SYMBOL ? !Objs[index+1].Symbol.CanConnect : 1)) ||
+                (Mio.ObjType == VARIABLE &&  Objs[index+1].ObjType == VALUE) ||  (Mio.ObjType == VALUE &&  Objs[index+1].ObjType == VARIABLE)||
+                (Mio.ObjType == SYMBOL && Mio.Symbol.AfterConnect == 0 && (Objs[index+1].ObjType == VARIABLE || Objs[index+1].ObjType == VALUE))
+                    )
+                )
+            )
         {
             if (HeadFuc != 0) {
                 HeadReturnObj a = HeadFuc(Pairs, PairsSize);
@@ -227,7 +234,7 @@ MioneReturnObj Range(const MioneObj* Objs, const int ObjsSize,ThreadObj Thread)
 
             }
         }
-        (*LastMioUP) = Mio;
+        
     }
     for (int i = 0; i<(*EndLoaclSizeUP); i++) if ((*EndLoaclUP)[i].TheDefinedVarUP != 0) (*EndLoaclUP)[i].TheDefinedVarUP->Val = (*EndLoaclUP)[i].Value;
 
@@ -245,7 +252,7 @@ MioneReturnObj Function(const MioneObj* Objs, const int ObjsSize, ValueObj* Requ
     PairObj *Pairs = malloc(0);
     int PairsSize = 0;
 
-    MioneObj * LastMioUP = Thread.LastMioUP;
+    
 
     MioneReturnObj Return = Thread.Return;
 
@@ -258,11 +265,8 @@ MioneReturnObj Function(const MioneObj* Objs, const int ObjsSize, ValueObj* Requ
         MioneObj Mio = Objs[index];
 
 
-       if ((Mio.ObjType == SYMBOL && strcmp(Mio.Symbol.Name, ";") == 0) ||
-            Mio.ObjType == HEAD ||
-        ((*LastMioUP).ObjType == Mio.ObjType && (Mio.ObjType == SYMBOL ? !Mio.Symbol.CanConnect : 1) && Mio.ObjType != PROMPT) ||
-        ((*LastMioUP).ObjType == VARIABLE &&  Mio.ObjType == VALUE) ||  ((*LastMioUP).ObjType == VALUE &&  Mio.ObjType == VARIABLE)||
-        ((*LastMioUP).ObjType == SYMBOL && (*LastMioUP).Symbol.AfterConnect == 0 && (Mio.ObjType == VARIABLE || Mio.ObjType == VALUE))
+       if (
+            (Mio.ObjType == SYMBOL && strcmp(Mio.Symbol.Name, ";") == 0)
             )
         {
 
@@ -306,7 +310,7 @@ MioneReturnObj Function(const MioneObj* Objs, const int ObjsSize, ValueObj* Requ
                         }
                     }
                 }
-                if (Mio.ObjType == SYMBOL && strcmp(Mio.Symbol.Name, ";") == 0) (*Thread.IndexUP)++;
+                if (Mio.ObjType == SYMBOL && strcmp(Mio.Symbol.Name, ";") == 0) continue;
 
                 return Return;
             }
@@ -371,7 +375,16 @@ MioneReturnObj Function(const MioneObj* Objs, const int ObjsSize, ValueObj* Requ
 
         }
 
-        if (ObjsSize - 1 == index)
+         if (
+            ObjsSize - 1 == index ||
+            ((index != ObjsSize - 1) &&
+                (Objs[index+1].ObjType == HEAD ||
+                (Mio.ObjType == Objs[index+1].ObjType && (Objs[index+1].ObjType == SYMBOL ? !Objs[index+1].Symbol.CanConnect : 1)) ||
+                (Mio.ObjType == VARIABLE &&  Objs[index+1].ObjType == VALUE) ||  (Mio.ObjType == VALUE &&  Objs[index+1].ObjType == VARIABLE)||
+                (Mio.ObjType == SYMBOL && Mio.Symbol.AfterConnect == 0 && (Objs[index+1].ObjType == VARIABLE || Objs[index+1].ObjType == VALUE))
+                    )
+                )
+            )
         {
             if (HeadFuc != 0) {
                 HeadReturnObj a = HeadFuc(Pairs, PairsSize);
@@ -418,7 +431,7 @@ MioneReturnObj Function(const MioneObj* Objs, const int ObjsSize, ValueObj* Requ
                 }
             }
         }
-        (*LastMioUP) = Mio;
+        
     }
     for (int i = 0; i<(*EndLoaclSizeUP); i++) if ((*EndLoaclUP)[i].TheDefinedVarUP != 0) (*EndLoaclUP)[i].TheDefinedVarUP->Val = (*EndLoaclUP)[i].Value;
 
@@ -434,28 +447,25 @@ MioneReturnObj mione(const MioneObj* Objs, const int ObjsSize,ThreadObj Thread)
     PairObj *Pairs = malloc(0);
     int PairsSize = 0;
 
-    MioneObj * LastMioUP = Thread.LastMioUP;
+    
 
     MioneReturnObj Return = Thread.Return;
 
-   int index;
-
+    int index;
+    
     for (;*Thread.IndexUP < ObjsSize; (*Thread.IndexUP)++)
     {
+
         index = *Thread.IndexUP;
 
         MioneObj Mio = Objs[index];
 
-
-
-       if ((Mio.ObjType == SYMBOL && strcmp(Mio.Symbol.Name, ";") == 0) ||
-            Mio.ObjType == HEAD ||
-        ((*LastMioUP).ObjType == Mio.ObjType && (Mio.ObjType == SYMBOL ? !Mio.Symbol.CanConnect : 1) && Mio.ObjType != PROMPT) ||
-        ((*LastMioUP).ObjType == VARIABLE &&  Mio.ObjType == VALUE) ||  ((*LastMioUP).ObjType == VALUE &&  Mio.ObjType == VARIABLE)||
-        ((*LastMioUP).ObjType == SYMBOL && (*LastMioUP).Symbol.AfterConnect == 0 && (Mio.ObjType == VARIABLE || Mio.ObjType == VALUE))
+       if (
+            (Mio.ObjType == SYMBOL && strcmp(Mio.Symbol.Name, ";") == 0)
             )
         {
             if (HeadFuc != 0) {
+
                 HeadReturnObj a = HeadFuc(Pairs, PairsSize);
 
                 HeadFuc = 0;
@@ -495,8 +505,9 @@ MioneReturnObj mione(const MioneObj* Objs, const int ObjsSize,ThreadObj Thread)
                     }
                 }
 
-                if (Mio.ObjType == SYMBOL && strcmp(Mio.Symbol.Name, ";") == 0) (*Thread.IndexUP)++;
+                if (Mio.ObjType == SYMBOL && strcmp(Mio.Symbol.Name, ";") == 0) continue;
 
+                
                 return Return;
             }
         }
@@ -561,9 +572,20 @@ MioneReturnObj mione(const MioneObj* Objs, const int ObjsSize,ThreadObj Thread)
 
         }
 
-        if (ObjsSize - 1 == index)
+        if (
+            ObjsSize - 1 == index ||
+            ((index != ObjsSize - 1) &&
+                (Objs[index+1].ObjType == HEAD ||
+                (Mio.ObjType == Objs[index+1].ObjType && (Objs[index+1].ObjType == SYMBOL ? !Objs[index+1].Symbol.CanConnect : 1)) ||
+                (Mio.ObjType == VARIABLE &&  Objs[index+1].ObjType == VALUE) ||  (Mio.ObjType == VALUE &&  Objs[index+1].ObjType == VARIABLE)||
+                (Mio.ObjType == SYMBOL && Mio.Symbol.AfterConnect == 0 && (Objs[index+1].ObjType == VARIABLE || Objs[index+1].ObjType == VALUE))
+                    )
+                )
+            )
         {
+
             if (HeadFuc != 0) {
+
                 HeadReturnObj a = HeadFuc(Pairs, PairsSize);
 
                 HeadFuc = 0;
@@ -603,12 +625,12 @@ MioneReturnObj mione(const MioneObj* Objs, const int ObjsSize,ThreadObj Thread)
                     }
                 }
 
-
+                (*Thread.IndexUP)++;
+                
                 return Return;
-
             }
         }
-        (*LastMioUP) = Mio;
+        
     }
     for (int i = 0; i<(*EndLoaclSizeUP); i++) if ((*EndLoaclUP)[i].TheDefinedVarUP != 0) (*EndLoaclUP)[i].TheDefinedVarUP->Val = (*EndLoaclUP)[i].Value;
 
@@ -624,7 +646,7 @@ MioneReturnObj Table(const MioneObj* Objs, const int ObjsSize,VariableObj * * Va
     PairObj *Pairs = malloc(0);
     int PairsSize = 0;
 
-    MioneObj * LastMioUP = Thread.LastMioUP;
+    
 
     MioneReturnObj Return = Thread.Return;
 
@@ -637,11 +659,8 @@ MioneReturnObj Table(const MioneObj* Objs, const int ObjsSize,VariableObj * * Va
         MioneObj Mio = Objs[index];
 
 
-       if ((Mio.ObjType == SYMBOL && strcmp(Mio.Symbol.Name, ";") == 0) ||
-            Mio.ObjType == HEAD ||
-        ((*LastMioUP).ObjType == Mio.ObjType && (Mio.ObjType == SYMBOL ? !Mio.Symbol.CanConnect : 1) && Mio.ObjType != PROMPT) ||
-        ((*LastMioUP).ObjType == VARIABLE &&  Mio.ObjType == VALUE) ||  ((*LastMioUP).ObjType == VALUE &&  Mio.ObjType == VARIABLE)||
-        ((*LastMioUP).ObjType == SYMBOL && (*LastMioUP).Symbol.AfterConnect == 0 && (Mio.ObjType == VARIABLE || Mio.ObjType == VALUE))
+       if (
+            (Mio.ObjType == SYMBOL && strcmp(Mio.Symbol.Name, ";") == 0)
             )
         {
             if (HeadFuc != 0) {
@@ -758,7 +777,16 @@ MioneReturnObj Table(const MioneObj* Objs, const int ObjsSize,VariableObj * * Va
 
         }
 
-        if (ObjsSize - 1 == index)
+         if (
+            ObjsSize - 1 == index ||
+            ((index != ObjsSize - 1) &&
+                (Objs[index+1].ObjType == HEAD ||
+                (Mio.ObjType == Objs[index+1].ObjType && (Objs[index+1].ObjType == SYMBOL ? !Objs[index+1].Symbol.CanConnect : 1)) ||
+                (Mio.ObjType == VARIABLE &&  Objs[index+1].ObjType == VALUE) ||  (Mio.ObjType == VALUE &&  Objs[index+1].ObjType == VARIABLE)||
+                (Mio.ObjType == SYMBOL && Mio.Symbol.AfterConnect == 0 && (Objs[index+1].ObjType == VARIABLE || Objs[index+1].ObjType == VALUE))
+                    )
+                )
+            )
         {
             if (HeadFuc != 0) {
                 HeadReturnObj a = HeadFuc(Pairs, PairsSize);
@@ -809,7 +837,7 @@ MioneReturnObj Table(const MioneObj* Objs, const int ObjsSize,VariableObj * * Va
 
             }
         }
-        (*LastMioUP) = Mio;
+        
     }
     for (int i = 0; i<(*EndLoaclSizeUP); i++) if ((*EndLoaclUP)[i].TheDefinedVarUP != 0) (*EndLoaclUP)[i].TheDefinedVarUP->Val = (*EndLoaclUP)[i].Value;
 

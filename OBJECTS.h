@@ -238,7 +238,6 @@ typedef struct _ThreadObject
 
     HeadReturnObj (*HeadFuc)(struct _PairObject* Pairs, int PairsSize);
 
-    MioneObj * LastMioUP;
 
     MioneReturnObj Return;
 

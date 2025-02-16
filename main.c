@@ -96,8 +96,8 @@ int main(const int OptionsSize,char **Options)
             .EndLoaclSizeUP = malloc(sizeof(int)),
             .HeadFuc = NULL,
 
-            .LastMioUP = &(MioneObj){0},
             .Return = {.ToState = 0,.Vs.ValueSize = 0},
+
 
             .isChild = 0,
         };

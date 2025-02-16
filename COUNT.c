@@ -101,7 +101,6 @@ CountObj COUNT(MioneObj*Pack,int PackSize)
                                             .EndLoaclSizeUP = malloc(sizeof(int)),
                                             .HeadFuc = NULL,
 
-                                            .LastMioUP = &(MioneObj){0},
                                             .Return = {.ToState = 0,.Vs.ValueSize = 0},
 
                                             .isChild = 0,
@@ -132,7 +131,6 @@ CountObj COUNT(MioneObj*Pack,int PackSize)
                                         Threads.Threads[nowThreadIn].Request = ChildCount.Value;
                                         Threads.Threads[nowThreadIn].RequestSize = ChildCount.ValueSize;
 
-                                        Threads.Threads[nowThreadIn].LastMioUP = &(MioneObj){.ObjType = 0};
 
 
                                         Threads.Threads[nowThreadIn].EndLoaclUP = malloc(sizeof(DefinedVarAndValueObj*));
@@ -256,7 +254,6 @@ CountObj COUNT(MioneObj*Pack,int PackSize)
                                             .EndLoaclSizeUP = malloc(sizeof(int)),
                                             .HeadFuc = NULL,
 
-                                            .LastMioUP = &(MioneObj){0},
                                             .Return = {.ToState = 0,.Vs.ValueSize = 0},
 
                                             .isChild = 0,
@@ -287,7 +284,6 @@ CountObj COUNT(MioneObj*Pack,int PackSize)
                                         Threads.Threads[nowThreadIn].Request = ChildCount.Value;
                                         Threads.Threads[nowThreadIn].RequestSize = ChildCount.ValueSize;
 
-                                        Threads.Threads[nowThreadIn].LastMioUP = &(MioneObj){.ObjType = 0};
 
 
                                         Threads.Threads[nowThreadIn].EndLoaclUP = malloc(sizeof(DefinedVarAndValueObj*));
@@ -549,7 +545,6 @@ CountObj COUNT(MioneObj*Pack,int PackSize)
                 Threads.Threads[nowThreadIn].VariablesUP = &CountedTable;
                 Threads.Threads[nowThreadIn].VariablesUPSizeUP = &CountedTableSize;
 
-                Threads.Threads[nowThreadIn].LastMioUP = &(MioneObj){.ObjType = 0};
 
                 Threads.Threads[nowThreadIn].EndLoaclUP = malloc(sizeof(DefinedVarAndValueObj*));
                 *Threads.Threads[nowThreadIn].EndLoaclUP = malloc(0);
@@ -1255,10 +1250,12 @@ CountObj COUNT(MioneObj*Pack,int PackSize)
 
     for (int index = 0; index < VPackSize; index++)
     {
+        printf("%d/%d ",Pack[index].Line, Pack[index].Column);
         if (VPack[index].ValueType == 2) printf("`NPN`:`%d`\n",VPack[index].NPNumber);
         else if (VPack[index].ValueType == 1) printf("`STRING`:`%s`\n",VPack[index].String);
         else if (VPack[index].ValueType == 3) printf("`PN`:`%Lf`\n",VPack[index].PNumber);
         else if (VPack[index].ValueType == 8) printf("`db`:`%d`\n",VPack[index].db);
+        else if (VPack[index].ValueType == 0) printf("`NULL`:`NON`\n");
     }
 
 

@@ -9,6 +9,9 @@
 
 HeadReturnObj SVV(struct _PairObject*Pairs,int PairsSize)
 {
+    extern DefineVariableObj * Dvo;
+    extern int DvoSize;
+
     HeadReturnObj Re;
     Re.ToState = 0;
     Re.Vars.VarsSize = 0;
@@ -25,7 +28,6 @@ HeadReturnObj SVV(struct _PairObject*Pairs,int PairsSize)
     CountObj PointCounted;
 
 
-
     int set = 0,point = 0;
 
     for (int i = 0; i < PairsSize; i++)
@@ -37,6 +39,7 @@ HeadReturnObj SVV(struct _PairObject*Pairs,int PairsSize)
         {
             if (PairsSize == 1)
             {
+                printf("ppp\n");
                 Counted = COUNT(Pairs[i].Source,Pairs[i].SourceSize);
 
 
@@ -48,8 +51,11 @@ HeadReturnObj SVV(struct _PairObject*Pairs,int PairsSize)
                     Vars.VarsSize++;
                     Vars.Vars = realloc(Vars.Vars,Vars.VarsSize*sizeof(VariableObj));
                     Vars.Vars[Vars.VarsSize-1].Name = NULL;
+                    // Vars.Vars[Vars.VarsSize-1].Place = 1; TODO
                     Vars.Vars[Vars.VarsSize-1].Val = Counted.Value[a];
                 }
+
+
                 Re.Vars = Vars;
                 Re.ToState = Re.ToState+4;
             }else
@@ -109,8 +115,7 @@ HeadReturnObj SVV(struct _PairObject*Pairs,int PairsSize)
 
     if (point)
     {
-        extern DefineVariableObj * Dvo;
-        extern int DvoSize;
+
 
         DefinedVarsAndValueObj VAVs;
         VAVs.VAVsSize = 0;
@@ -230,7 +235,7 @@ HeadReturnObj SVV(struct _PairObject*Pairs,int PairsSize)
 
                 if (!VarUPsSize)
                 {
-
+                    if (PointNamesCounted.Value[PNCIndex].NPNumber<=0) ErrCall("aaa","aaaa",NULL,Pairs[0].Source[0].Line,Pairs[0].Source[0].Column);
                     VarUPsSize++;
                     VarUPs = realloc(VarUPs, (VarUPsSize) * sizeof(VariableObj*));
                     (VarUPs[VarUPsSize-1]) = malloc(sizeof(VariableObj));
