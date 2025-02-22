@@ -19,7 +19,6 @@ MioneObj *CMO(CaseObj*CASES,int CASESIZE,
     int * SIZE,int LineADD,int ColumnADD,DefineVariableObj * *DvoUP,int * DvoSizeUP)
 {
 
-
     MioneObj *MIONE = 0;
     int MIONESIZE = 0;
 
