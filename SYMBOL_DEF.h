@@ -1,0 +1,2 @@
+
+extern SymbolObj Symbols[];
