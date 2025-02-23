@@ -68,56 +68,10 @@ HeadReturnObj IF(struct _PairObject*Pairs,int PairsSize){
     if(then || _else){
       if(_else ? _else != then : 0) ErrCall("IF-THEN-ELSE Error","M9121321",NULL,Pairs[0].Prompt.Line,Pairs[0].Prompt.Column);
 
-
-      if(then == db || _else != db){
-
-      	  ValueObj RangeArea = db?CountedThenRange.Value[0]:CountedElseRange.Value[0];
-
-          ThreadObj orgThread = Threads.Threads[nowThreadIn];
-
-          Threads.Threads[nowThreadIn].Fuc = Range;
-          Threads.Threads[nowThreadIn].IndexUP = malloc(sizeof(int));
-          *Threads.Threads[nowThreadIn].IndexUP = 0;
-          Threads.Threads[nowThreadIn].Objs = RangeArea.Area.Area;
-          Threads.Threads[nowThreadIn].ObjsSize = RangeArea.Area.Size;
-
-          Threads.Threads[nowThreadIn].Request = NULL;
-          Threads.Threads[nowThreadIn].RequestSize = 0;
-
-
-          Threads.Threads[nowThreadIn].EndLoaclUP = malloc(sizeof(DefinedVarAndValueObj*));
-          *Threads.Threads[nowThreadIn].EndLoaclUP = malloc(0);
-
-          Threads.Threads[nowThreadIn].EndLoaclSizeUP = malloc(sizeof(int));
-          *Threads.Threads[nowThreadIn].EndLoaclSizeUP = 0;
-
-
-          Threads.Threads[nowThreadIn].isChild = 1;
-
-          MioneReturnObj R = MTC(Threads.ThreadsSize-1).Return;
-
-          Threads.Threads[nowThreadIn] = orgThread;
-
-
-          int States[] =  {
-             1
-         };
-
-          for (int StateIndex = 0; StateIndex<(sizeof(States)/sizeof(int)); StateIndex++)
-          {
-              if (R.ToState >= States[StateIndex])
-              {
-                  R.ToState = R.ToState-States[StateIndex];
-
-                  switch (States[StateIndex]){
-                  case 1:
-                      ToReturn.ToState = ToReturn.ToState+1;
-                      ToReturn.Vs = R.Vs;
-                      break;
-                  }
-              }
-          }
-      }
+        if(then == db || _else != db){
+            ValueObj RangeArea = db?CountedThenRange.Value[0]:CountedElseRange.Value[0];
+            //todo
+        }
     }
     return ToReturn;
 }

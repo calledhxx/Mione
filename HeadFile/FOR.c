@@ -124,95 +124,12 @@ HeadReturnObj FOR(struct _PairObject*Pairs,int PairsSize)
     }
 
     if(_do){
-      if(set){
-        Request.VariableUPs[0]->Val.NPNumber = Request.VariableUPs[0]->Val.NPNumber+1;
-
-          ThreadObj orgThread = Threads.Threads[nowThreadIn];
-
-          Threads.Threads[nowThreadIn].Fuc = Range;
-
-          Threads.Threads[nowThreadIn].IndexUP = malloc(sizeof(int));
-
-          Threads.Threads[nowThreadIn].Objs = DoCounted.Value[0].Area.Area;
-          Threads.Threads[nowThreadIn].ObjsSize = DoCounted.Value[0].Area.Size;
-
-
-          for (int LoopIndex = 0; LoopIndex < toTimes; LoopIndex++){
-
-
-              Threads.Threads[nowThreadIn].IndexUP = NULL;
-              Threads.Threads[nowThreadIn].IndexUP = malloc(sizeof(int));
-              *Threads.Threads[nowThreadIn].IndexUP = 0;
-
-
-              Threads.Threads[nowThreadIn].Request = NULL;
-              Threads.Threads[nowThreadIn].RequestSize = 0;
-
-
-              Threads.Threads[nowThreadIn].EndLoaclUP = malloc(sizeof(DefinedVarAndValueObj*));
-              *Threads.Threads[nowThreadIn].EndLoaclUP = malloc(0);
-
-              Threads.Threads[nowThreadIn].EndLoaclSizeUP = malloc(sizeof(int));
-              *Threads.Threads[nowThreadIn].EndLoaclSizeUP = 0;
-
-              Threads.Threads[nowThreadIn].isChild = 1;
-
-
-              ThreadReturnObj ThreadReturn = MTC(Threads.ThreadsSize-1);
-
-              int MTCStates[] =  {
-                  2,1
-              };
-
-              for (int MTCStateIndex = 0; MTCStateIndex<(sizeof(MTCStates)/sizeof(int)); MTCStateIndex++)
-              {
-                  if (ThreadReturn.ToState >= MTCStates[MTCStateIndex])
-                  {
-                      ThreadReturn.ToState = ThreadReturn.ToState-MTCStates[MTCStateIndex];
-
-                      switch (MTCStates[MTCStateIndex]){
-                        case 1 :{
-
-                        }
-                      case 2:{
-                              int States[] =  {
-                                  1
-                              };
-
-                              for (int StateIndex = 0; StateIndex<(sizeof(States)/sizeof(int)); StateIndex++)
-                              {
-                                  if (ThreadReturn.Return.ToState >= States[StateIndex])
-                                  {
-                                      ThreadReturn.Return.ToState = ThreadReturn.Return.ToState-States[StateIndex];
-
-                                      switch (States[StateIndex]){
-                                      case 1:
-                                          ToReturn.ToState = ToReturn.ToState+1;
-                                          ToReturn.Vs = ThreadReturn.Return.Vs;
-                                          break;
-                                      }
-                                  }
-                              }
-                              break;
-                        }
-                      }
-                  }
-              }
-
-
-
-              Request.VariableUPs[0]->Val.NPNumber = Request.VariableUPs[0]->Val.NPNumber+1;
-
-
-
-          }
-
-          Threads.Threads[nowThreadIn] = orgThread;
-
-      }
-      if(in){
-        //todo
-      }
+        if(set){
+            //todo toTimes
+        }
+        if(in){
+            //todo
+        }
     }
 
     VariableUP->Val = V;

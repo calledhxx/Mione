@@ -18,8 +18,8 @@ int nowThreadIn = 0;
 
 //TODO
 
-ThreadReturnObj MTC(int StartAt){
-    ThreadReturnObj toReturn = {0};
+void MTC(int StartAt){
+
 
     nowThreadIn = StartAt;
 
@@ -29,11 +29,11 @@ ThreadReturnObj MTC(int StartAt){
 //         printf("Truned to THREAD %d %d\n", nowThreadIn,Threads.ThreadsSize);
 
             if((Threads.Threads[nowThreadIn].ObjsSize-1) >= *(Threads.Threads[nowThreadIn].IndexUP)){
-                MioneReturnObj RunningReturned;
+                MioneReturnObj RunningReturned = {0};
 
                 for (;;){
                     if(Threads.Threads[nowThreadIn].Fuc == mione) {
-                        RunningReturned = Threads.Threads[nowThreadIn].Fuc(
+                        RunningReturned = mione(
                     Threads.Threads[nowThreadIn].Objs,
                     Threads.Threads[nowThreadIn].ObjsSize,
                           Threads.Threads[nowThreadIn]
@@ -43,7 +43,7 @@ ThreadReturnObj MTC(int StartAt){
 
 
                     if(Threads.Threads[nowThreadIn].Fuc == Range){
-                        RunningReturned = Threads.Threads[nowThreadIn].Fuc(
+                       RunningReturned = Range(
                            Threads.Threads[nowThreadIn].Objs,
                            Threads.Threads[nowThreadIn].ObjsSize,
                            Threads.Threads[nowThreadIn]
@@ -53,7 +53,7 @@ ThreadReturnObj MTC(int StartAt){
                     }
 
                     if(Threads.Threads[nowThreadIn].Fuc == Function) {
-                        RunningReturned = Threads.Threads[nowThreadIn].Fuc(
+                       RunningReturned = Function(
                             Threads.Threads[nowThreadIn].Objs,
                             Threads.Threads[nowThreadIn].ObjsSize,
                             Threads.Threads[nowThreadIn].Request,
@@ -64,7 +64,7 @@ ThreadReturnObj MTC(int StartAt){
                     }
 
                     if(Threads.Threads[nowThreadIn].Fuc == Table) {
-                        RunningReturned = Threads.Threads[nowThreadIn].Fuc(
+                        RunningReturned = Table(
                             Threads.Threads[nowThreadIn].Objs,
                             Threads.Threads[nowThreadIn].ObjsSize,
                             Threads.Threads[nowThreadIn].VariablesUP,
@@ -89,8 +89,9 @@ ThreadReturnObj MTC(int StartAt){
 
                         switch (States[StateIndex]){
                         case 1:
-                            toReturn.Return = RunningReturned;
-                            return toReturn;
+                            *(Threads.Threads[nowThreadIn].IndexUP) = (Threads.Threads[nowThreadIn].ObjsSize-1);
+                            Threads.Threads[nowThreadIn].MioneReturnUP = &RunningReturned;
+                            break;
                         }
                     }
                 }
@@ -98,29 +99,38 @@ ThreadReturnObj MTC(int StartAt){
 
             }else{
 
-                toReturn.Return = Threads.Threads[nowThreadIn].Return;
-                if(Threads.Threads[nowThreadIn].isChild) {
-//                    printf("THREAD %d return to Parent\n", nowThreadIn);
-                    return toReturn;
+                if(Threads.Threads[nowThreadIn].OrgThreadObjUP) {
+                    if (Threads.Threads[nowThreadIn].AbleToRepair == 1)
+                        Threads.Threads[nowThreadIn] = *Threads.Threads[nowThreadIn].OrgThreadObjUP;
+                    else
+                        *Threads.Threads[nowThreadIn].IndexUP = 0;
+                }else
+                {
+                    ThreadsObj newThreads;
+                    newThreads.ThreadsSize = 0;
+                    newThreads.Threads = malloc(0);
+
+                    for (int i = 0; i < Threads.ThreadsSize; i++) if(nowThreadIn!=i){
+                        newThreads.ThreadsSize++;
+                        newThreads.Threads = realloc(newThreads.Threads, (newThreads.ThreadsSize) * sizeof(ThreadObj));
+                        newThreads.Threads[newThreads.ThreadsSize-1] = Threads.Threads[i];
+                    }else
+                    {
+                        //todo FREE
+                        free(Threads.Threads[i].Objs);
+                        free(Threads.Threads[i].IndexUP);
+                    }
+
+                    free(Threads.Threads);
+                    Threads = newThreads;
                 };
-//                printf("THREAD %d is done\n", nowThreadIn);
-
-                ThreadsObj newThreads;
-                newThreads.ThreadsSize = 0;
-                newThreads.Threads = malloc(0);
-
-                for (int i = 0; i < Threads.ThreadsSize; i++) if(nowThreadIn!=i){
-                    newThreads.ThreadsSize++;
-                    newThreads.Threads = realloc(newThreads.Threads, (newThreads.ThreadsSize) * sizeof(ThreadObj));
-                    newThreads.Threads[newThreads.ThreadsSize-1] = Threads.Threads[i];
-                }
-
-                Threads = newThreads;
-
-                return toReturn;
             }
         };
-        }else return toReturn;
+        }else
+        {
+            free(Threads.Threads);
+            return;
+        };
 
         nowThreadIn = 0;
     }

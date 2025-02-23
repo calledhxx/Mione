@@ -92,7 +92,6 @@ HeadReturnObj SVV(struct _PairObject*Pairs,int PairsSize)
     Vars.VarsSize = 0;
     Vars.Vars = malloc(0);
 
-
     if (set)
     {
         Requested = REQUEST(Pairs[0].Source,Pairs[0].SourceSize);

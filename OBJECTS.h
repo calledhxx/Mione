@@ -216,6 +216,7 @@ typedef struct _DefineVariableObject
 
 } DefineVariableObj;
 
+
 typedef struct _ThreadObject
 {
     MioneReturnObj (*Fuc)();
@@ -243,11 +244,15 @@ typedef struct _ThreadObject
 
     //
 
-    int isChild; // 該Thread階段是否為子項
+    MioneReturnObj * MioneReturnUP;
 
     //
 
-    typedef struct _ThreadReturnObject * ThreadReturnUP;
+    struct _ThreadObject * OrgThreadObjUP;
+
+    //
+
+    int AbleToRepair; //是否可以回至原狀態。
 
 } ThreadObj;
 
@@ -255,20 +260,9 @@ typedef struct _ThreadsObjet
 {
     int ThreadsSize;
     ThreadObj * Threads;
-
 } ThreadsObj;
 
-typedef struct _ThreadReturnObject
-{
-    int ToState;/*
-        0:正常
-        1:回傳
-        2:取消這次並重新調度
-    */
-    MioneReturnObj Return;
 
-}
-ThreadReturnObj;
 
 
 

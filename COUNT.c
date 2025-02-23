@@ -122,6 +122,8 @@ CountObj COUNT(MioneObj*Pack,int PackSize)
                                     {
                                         ThreadObj orgThread = Threads.Threads[nowThreadIn];
 
+                                        Threads.Threads[nowThreadIn].OrgThreadObject;
+
                                         Threads.Threads[nowThreadIn].Fuc = Function;
                                         Threads.Threads[nowThreadIn].IndexUP = malloc(sizeof(int));
                                         *Threads.Threads[nowThreadIn].IndexUP = 0;
