@@ -1,8 +1,0 @@
-set x = -50 host;
-
-set a = function
-    set x host = 50 ;
-    return x+2;
-end;
-
-a() + 5 + x
