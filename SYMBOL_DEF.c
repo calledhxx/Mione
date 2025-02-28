@@ -107,15 +107,6 @@ SymbolObj Symbols[] =
     },
 
     (SymbolObj){
-        .Name = "multiple",
-        .SymbolType = 2,
-        .xIndex = 0,
-        .CurNumber = 9,
-        .CanConnect = 1,
-        .AfterConnect = 1,
-    },
-
-    (SymbolObj){
         .Name = "[",
         .SymbolType = 0,
         .xIndex = 0, //這邊的設定有點無效 只是標住他的確與階級0同樣層級執行

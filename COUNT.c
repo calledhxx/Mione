@@ -11,7 +11,6 @@
 #include "Mione.h"
 #include "PROMPT_DEF.h"
 #include "SYMBOL_DEF.h"
-#include "MTC.h"
 
 
 
@@ -79,76 +78,10 @@ CountObj COUNT(MioneObj*Pack,int PackSize)
 
                                 if (Pack[FirstBracketIndex - 1].VarUP->Val.ValueType == VALUE_FUNCTION_TYPE)
                                 {
-                                    ValueReturnObj V;
-
-                                    if (Pack[FirstBracketIndex - 1].VarUP->Val.Area.isMultiple == 1)
-                                    {
-                                        V.ValueSize = 0;
-
-                                        ThreadObj newThread = (ThreadObj){
-                                            .Fuc = Function,
-                                            .IndexUP = malloc(sizeof(int)),
-                                            .Objs = Pack[FirstBracketIndex - 1].VarUP->Val.Area.Area,
-                                            .ObjsSize = Pack[FirstBracketIndex - 1].VarUP->Val.Area.Size,
-
-                                            .VariablesUP = malloc(sizeof(VariableObj*)),
-                                            .VariablesUPSizeUP = malloc(sizeof(int)),
-
-                                            .Request = ChildCount.Value, //TODO
-                                            .RequestSize = ChildCount.ValueSize,
-
-                                            .EndLoaclUP = malloc(sizeof(DefinedVarAndValueObj*)),
-                                            .EndLoaclSizeUP = malloc(sizeof(int)),
-                                            .HeadFuc = NULL,
-
-                                            .Return = {.ToState = 0,.Vs.ValueSize = 0},
-
-                                            .isChild = 0,
-                                        };
-
-
-                                        *newThread.IndexUP = 0;
-                                        *newThread.VariablesUP = malloc(0);
-                                        *newThread.VariablesUPSizeUP = 0;
-                                        *newThread.EndLoaclUP = malloc(0);
-                                        *newThread.EndLoaclSizeUP = 0;
-
-                                        Threads.ThreadsSize++;
-                                        Threads.Threads = realloc(Threads.Threads,sizeof(ThreadObj)*Threads.ThreadsSize);
-                                        Threads.Threads[Threads.ThreadsSize-1] = newThread;
-
-                                        // MTC(Threads.ThreadsSize-1);
-                                    }else
-                                    {
-                                        ThreadObj orgThread = Threads.Threads[nowThreadIn];
-
-                                        Threads.Threads[nowThreadIn].OrgThreadObject;
-
-                                        Threads.Threads[nowThreadIn].Fuc = Function;
-                                        Threads.Threads[nowThreadIn].IndexUP = malloc(sizeof(int));
-                                        *Threads.Threads[nowThreadIn].IndexUP = 0;
-                                        Threads.Threads[nowThreadIn].Objs = Pack[FirstBracketIndex - 1].VarUP->Val.Area.Area;
-                                        Threads.Threads[nowThreadIn].ObjsSize = Pack[FirstBracketIndex - 1].VarUP->Val.Area.Size;
-
-                                        Threads.Threads[nowThreadIn].Request = ChildCount.Value;
-                                        Threads.Threads[nowThreadIn].RequestSize = ChildCount.ValueSize;
-
-
-
-                                        Threads.Threads[nowThreadIn].EndLoaclUP = malloc(sizeof(DefinedVarAndValueObj*));
-                                        *Threads.Threads[nowThreadIn].EndLoaclUP = malloc(0);
-
-                                        Threads.Threads[nowThreadIn].EndLoaclSizeUP = malloc(sizeof(int));
-                                        *Threads.Threads[nowThreadIn].EndLoaclSizeUP = 0;
-
-                                        Threads.Threads[nowThreadIn].isChild = 1;
-
-                                        MioneReturnObj F = MTC(Threads.ThreadsSize-1).Return;
-
-                                        Threads.Threads[nowThreadIn] = orgThread;
-
-                                        V = F.Vs;
-                                    }
+                                    ValueReturnObj V = Function(
+                                        Pack[FirstBracketIndex - 1].VarUP->Val.Area.Area,
+                                        Pack[FirstBracketIndex - 1].VarUP->Val.Area.Size
+                                        ).Vs;
 
                                     MioneObj* NewPack = malloc(0);
                                     int NewPackSize = 0;
@@ -232,76 +165,10 @@ CountObj COUNT(MioneObj*Pack,int PackSize)
                             {
                                 if (Pack[FirstBracketIndex - 1].Val.ValueType == VALUE_FUNCTION_TYPE)
                                 {
-
-
-                                    ValueReturnObj V;
-
-                                    if (Pack[FirstBracketIndex - 1].Val.Area.isMultiple == 1)
-                                    {
-                                        V.ValueSize = 0;
-
-                                        ThreadObj newThread = (ThreadObj){
-                                            .Fuc = Function,
-                                            .IndexUP = malloc(sizeof(int)),
-                                            .Objs = Pack[FirstBracketIndex - 1].Val.Area.Area,
-                                            .ObjsSize =  Pack[FirstBracketIndex - 1].Val.Area.Size,
-
-                                            .VariablesUP = malloc(sizeof(VariableObj*)),
-                                            .VariablesUPSizeUP = malloc(sizeof(int)),
-
-                                            .Request = ChildCount.Value, //TODO
-                                            .RequestSize = ChildCount.ValueSize,
-
-                                            .EndLoaclUP = malloc(sizeof(DefinedVarAndValueObj*)),
-                                            .EndLoaclSizeUP = malloc(sizeof(int)),
-                                            .HeadFuc = NULL,
-
-                                            .Return = {.ToState = 0,.Vs.ValueSize = 0},
-
-                                            .isChild = 0,
-                                        };
-
-
-                                        *newThread.IndexUP = 0;
-                                        *newThread.VariablesUP = malloc(0);
-                                        *newThread.VariablesUPSizeUP = 0;
-                                        *newThread.EndLoaclUP = malloc(0);
-                                        *newThread.EndLoaclSizeUP = 0;
-
-                                        Threads.ThreadsSize++;
-                                        Threads.Threads = realloc(Threads.Threads,sizeof(ThreadObj)*Threads.ThreadsSize);
-                                        Threads.Threads[Threads.ThreadsSize-1] = newThread;
-
-                                        // MTC(Threads.ThreadsSize-1);
-                                    }else
-                                    {
-                                        ThreadObj orgThread = Threads.Threads[nowThreadIn];
-
-                                        Threads.Threads[nowThreadIn].Fuc = Function;
-                                        Threads.Threads[nowThreadIn].IndexUP = malloc(sizeof(int));
-                                        *Threads.Threads[nowThreadIn].IndexUP = 0;
-                                        Threads.Threads[nowThreadIn].Objs = Pack[FirstBracketIndex - 1].Val.Area.Area;
-                                        Threads.Threads[nowThreadIn].ObjsSize = Pack[FirstBracketIndex - 1].Val.Area.Size;
-
-                                        Threads.Threads[nowThreadIn].Request = ChildCount.Value;
-                                        Threads.Threads[nowThreadIn].RequestSize = ChildCount.ValueSize;
-
-
-
-                                        Threads.Threads[nowThreadIn].EndLoaclUP = malloc(sizeof(DefinedVarAndValueObj*));
-                                        *Threads.Threads[nowThreadIn].EndLoaclUP = malloc(0);
-
-                                        Threads.Threads[nowThreadIn].EndLoaclSizeUP = malloc(sizeof(int));
-                                        *Threads.Threads[nowThreadIn].EndLoaclSizeUP = 0;
-
-                                        Threads.Threads[nowThreadIn].isChild = 1;
-
-                                        MioneReturnObj F = MTC(Threads.ThreadsSize-1).Return;
-
-                                        Threads.Threads[nowThreadIn] = orgThread;
-
-                                        V = F.Vs;
-                                    }
+                                    ValueReturnObj V = Function(
+                                        Pack[FirstBracketIndex - 1].Val.Area.Area,
+                                        Pack[FirstBracketIndex - 1].Val.Area.Size
+                                        ).Vs;
 
                                     MioneObj* NewPack = malloc(0);
                                     int NewPackSize = 0;
@@ -533,32 +400,7 @@ CountObj COUNT(MioneObj*Pack,int PackSize)
                 VariableObj * CountedTable = malloc(0);
                 int CountedTableSize = 0;
 
-                ThreadObj orgThread = Threads.Threads[nowThreadIn];
-
-                Threads.Threads[nowThreadIn].Fuc = Table;
-                Threads.Threads[nowThreadIn].IndexUP = malloc(sizeof(int));
-                *Threads.Threads[nowThreadIn].IndexUP = 0;
-                Threads.Threads[nowThreadIn].Objs = V.Table.MioneTable;
-                Threads.Threads[nowThreadIn].ObjsSize = V.Table.MioneTableSize;
-
-                Threads.Threads[nowThreadIn].Request = NULL;
-                Threads.Threads[nowThreadIn].RequestSize = 0;
-
-                Threads.Threads[nowThreadIn].VariablesUP = &CountedTable;
-                Threads.Threads[nowThreadIn].VariablesUPSizeUP = &CountedTableSize;
-
-
-                Threads.Threads[nowThreadIn].EndLoaclUP = malloc(sizeof(DefinedVarAndValueObj*));
-                *Threads.Threads[nowThreadIn].EndLoaclUP = malloc(0);
-
-                Threads.Threads[nowThreadIn].EndLoaclSizeUP = malloc(sizeof(int));
-                *Threads.Threads[nowThreadIn].EndLoaclSizeUP = 0;
-
-                Threads.Threads[nowThreadIn].isChild = 1;
-
-                MioneReturnObj R = MTC(Threads.ThreadsSize-1).Return;
-
-                Threads.Threads[nowThreadIn] = orgThread;
+                MioneReturnObj R = Table(V.Table.MioneTable,V.Table.MioneTableSize);
 
                 if (Pack[i].ObjType == VARIABLE)
                 {
@@ -1153,7 +995,6 @@ CountObj COUNT(MioneObj*Pack,int PackSize)
                             }
 
                             AreaObj newFuc = Target.Area;
-                            newFuc.isMultiple = 1;
 
 
                             Out = (MioneObj){

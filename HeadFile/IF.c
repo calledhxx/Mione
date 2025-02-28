@@ -9,7 +9,6 @@
 #include "../COUNT.h"
 #include "../MIONE.h"
 #include "../ERR.h"
-#include "../MTC.h"
 
 HeadReturnObj IF(struct _PairObject*Pairs,int PairsSize){
     HeadReturnObj ToReturn;
@@ -70,7 +69,32 @@ HeadReturnObj IF(struct _PairObject*Pairs,int PairsSize){
 
         if(then == db || _else != db){
             ValueObj RangeArea = db?CountedThenRange.Value[0]:CountedElseRange.Value[0];
-            //todo
+
+            MioneReturnObj RangeReturn = Range(RangeArea.Area.Area,RangeArea.Area.Size);
+
+            const int States[] =  {
+                1
+            };
+
+            for (int StateIndex = 0; StateIndex<(sizeof(States)/sizeof(int)); StateIndex++)
+            {
+
+                if (RangeReturn.ToState >= States[StateIndex])
+                {
+                    RangeReturn.ToState = RangeReturn.ToState-States[StateIndex];
+
+                    switch (States[StateIndex])
+                    {
+                    case 1:
+                        {
+
+                            ToReturn.ToState+=1;
+                            return ToReturn;
+                        }
+                        break;
+                    }
+                }
+            }
         }
     }
     return ToReturn;

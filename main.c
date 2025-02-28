@@ -14,18 +14,13 @@
 #endif
 
 #include "main.h"
-#include "MTC.h"
 
 
 //
-
-
-
-//
+    //
 
 DefineVariableObj * Dvo;
 int DvoSize;
-
 
 int main(const int OptionsSize,char **Options)
 {
@@ -60,7 +55,6 @@ int main(const int OptionsSize,char **Options)
         }
     }else
     {
-        
         f = fopen("D:\\Mione\\index.mio","r");
     }
 
@@ -76,48 +70,9 @@ int main(const int OptionsSize,char **Options)
         Dvo = malloc(0);
         DvoSize = 0;
 
-
         MioneObj * MioObj = CMO(CASES,CaseObjSize,&MioObjSize,1,0,&Dvo,&DvoSize);
 
-        Threads.Threads = malloc(0);
-
-        ThreadObj newThread = (ThreadObj){
-            .Fuc = mione,
-            .IndexUP = malloc(sizeof(int)),
-            .Objs = MioObj,
-            .ObjsSize = MioObjSize,
-
-            .VariablesUP = malloc(sizeof(VariableObj*)),
-            .VariablesUPSizeUP = malloc(sizeof(int)),
-
-            .Request = NULL, //TODO
-            .RequestSize = 0,
-
-            .EndLoaclUP = malloc(sizeof(DefinedVarAndValueObj*)),
-            .EndLoaclSizeUP = malloc(sizeof(int)),
-            .HeadFuc = NULL,
-
-            .Return = {.ToState = 0,.Vs.ValueSize = 0},
-
-            .isChild = 0,
-        };
-
-
-        *newThread.IndexUP = 0;
-        *newThread.VariablesUP = malloc(0);
-        *newThread.VariablesUPSizeUP = 0;
-        *newThread.EndLoaclUP = malloc(0);
-        *newThread.EndLoaclSizeUP = 0;
-
-        Threads.ThreadsSize++;
-        Threads.Threads = realloc(Threads.Threads,sizeof(ThreadObj)*Threads.ThreadsSize);
-        Threads.Threads[Threads.ThreadsSize-1] = newThread;
-
-
-
-        ThreadReturnObj MTCReturned = MTC(0);
-
-        // mione(MioObj,MioObjSize);
+        mione(MioObj,MioObjSize);
 
         printf("\n # Well down. Have a good day.");
 

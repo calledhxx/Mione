@@ -25,9 +25,6 @@ typedef struct _AreaObject
     int Size; //值大小
     struct _MioneObject * Area;//給於函數(function)或者執行式(range)。
     int Index; //開頭位置
-
-    int isMultiple; //是否為多執行 僅適用於FUNCTION
-
 }AreaObj;
 
 typedef struct _TableObject
@@ -215,55 +212,6 @@ typedef struct _DefineVariableObject
     int * VariablesSizeUP;
 
 } DefineVariableObj;
-
-
-typedef struct _ThreadObject
-{
-    MioneReturnObj (*Fuc)();
-    int *IndexUP;
-
-    //
-    MioneObj* Objs;
-    int ObjsSize;
-
-    VariableObj * * VariablesUP;
-    int * VariablesUPSizeUP;
-
-    ValueObj* Request;
-    int RequestSize;
-
-    //
-
-    DefinedVarAndValueObj * * EndLoaclUP;
-    int * EndLoaclSizeUP;
-
-    HeadReturnObj (*HeadFuc)(struct _PairObject* Pairs, int PairsSize);
-
-
-    MioneReturnObj Return;
-
-    //
-
-    MioneReturnObj * MioneReturnUP;
-
-    //
-
-    struct _ThreadObject * OrgThreadObjUP;
-
-    //
-
-    int AbleToRepair; //是否可以回至原狀態。
-
-} ThreadObj;
-
-typedef struct _ThreadsObjet
-{
-    int ThreadsSize;
-    ThreadObj * Threads;
-} ThreadsObj;
-
-
-
 
 
 #endif //OBJECTS_H

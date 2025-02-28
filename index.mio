@@ -1,11 +1,3 @@
-set fuc = multiple function
-    for i = 0 to 100 do range
-        set x = i;
-    end
-end
-
-fuc();
-
-for j = 0 to 100 do range
-    set y = 100+j;
-end
+set a = {
+    return
+}

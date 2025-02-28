@@ -7,7 +7,6 @@
 #include "../COUNT.h"
 #include "../ERR.h"
 #include "../MIONE.h"
-#include "../MTC.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -80,7 +79,6 @@ HeadReturnObj FOR(struct _PairObject*Pairs,int PairsSize)
         }
     }
 
-    extern ThreadsObj Threads;
 
     ValueObj V = (ValueObj){.ValueType = 0};
     VariableObj * VariableUP = NULL;
@@ -125,7 +123,40 @@ HeadReturnObj FOR(struct _PairObject*Pairs,int PairsSize)
 
     if(_do){
         if(set){
-            //todo toTimes
+            CountObj ReqCounted = COUNT(Pairs[0].Source, Pairs[0].SourceSize);
+            int LRofZero = toTimes - ReqCounted.Value[0].NPNumber;
+
+            for (int TimesIndex = ReqCounted.Value[0].NPNumber ; LRofZero > 0 ? TimesIndex < (toTimes) : TimesIndex > (toTimes) ; TimesIndex = TimesIndex + (LRofZero > 0 ? 1 : -1))
+            {
+                Request.VariableUPs[0]->Val.NPNumber =  Request.VariableUPs[0]->Val.NPNumber +( LRofZero > 0 ? 1 : -1);
+                printf("%d %d\n",ReqCounted.Value[0].NPNumber, Request.VariableUPs[0]->Val.NPNumber);
+
+                MioneReturnObj RangeReturn =  Range(DoCounted.Value[0].Area.Area,DoCounted.Value[0].Area.Size);
+
+
+                int States[] =  {
+                    1
+                };
+
+
+                for (int StateIndex = 0; StateIndex<(sizeof(States)/sizeof(int)); StateIndex++)
+                {
+                    if (RangeReturn.ToState >= States[StateIndex])
+                    {
+                        RangeReturn.ToState = RangeReturn.ToState-States[StateIndex];
+
+                        switch (States[StateIndex])
+                        {
+                        case 1:
+                            {
+                                ToReturn.ToState+=1;
+                                return ToReturn;
+                            }
+                            break;
+                        }
+                    }
+                }
+            }
         }
         if(in){
             //todo
