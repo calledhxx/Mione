@@ -180,7 +180,7 @@ MioneReturnObj Range(const MioneObj* Objs, const int ObjsSize)
                 (Mio.ObjType == VARIABLE &&  Objs[index+1].ObjType == VALUE) ||  (Mio.ObjType == VALUE &&  Objs[index+1].ObjType == VARIABLE)||
                 (Mio.ObjType == SYMBOL && Mio.Symbol.AfterConnect == 0 && (Objs[index+1].ObjType == VARIABLE || Objs[index+1].ObjType == VALUE))
                     )
-                )
+                )&& (Mio.ObjType != PROMPT)
             )
         {
             if (HeadFuc != 0) {
@@ -366,13 +366,14 @@ MioneReturnObj Function(const MioneObj* Objs, const int ObjsSize, ValueObj* Requ
 
          if (
             ObjsSize - 1 == index ||
-            ((index != ObjsSize - 1) &&
+            (
+                (index != ObjsSize - 1) &&
                 (Objs[index+1].ObjType == HEAD ||
                 (Mio.ObjType == Objs[index+1].ObjType && (Objs[index+1].ObjType == SYMBOL ? !Objs[index+1].Symbol.CanConnect : 1)) ||
                 (Mio.ObjType == VARIABLE &&  Objs[index+1].ObjType == VALUE) ||  (Mio.ObjType == VALUE &&  Objs[index+1].ObjType == VARIABLE)||
                 (Mio.ObjType == SYMBOL && Mio.Symbol.AfterConnect == 0 && (Objs[index+1].ObjType == VARIABLE || Objs[index+1].ObjType == VALUE))
                     )
-                )
+                )&& (Mio.ObjType != PROMPT)
             )
         {
             if (HeadFuc != 0) {
@@ -565,7 +566,7 @@ MioneReturnObj mione(const MioneObj* Objs, const int ObjsSize)
                 (Mio.ObjType == VARIABLE &&  Objs[index+1].ObjType == VALUE) ||  (Mio.ObjType == VALUE &&  Objs[index+1].ObjType == VARIABLE)||
                 (Mio.ObjType == SYMBOL && Mio.Symbol.AfterConnect == 0 && (Objs[index+1].ObjType == VARIABLE || Objs[index+1].ObjType == VALUE))
                     )
-                )
+                )&& (Mio.ObjType != PROMPT)
             )
         {
             if (HeadFuc != 0) {
@@ -764,7 +765,7 @@ MioneReturnObj Table(const MioneObj* Objs, const int ObjsSize,VariableObj * * Va
                 (Mio.ObjType == VARIABLE &&  Objs[index+1].ObjType == VALUE) ||  (Mio.ObjType == VALUE &&  Objs[index+1].ObjType == VARIABLE)||
                 (Mio.ObjType == SYMBOL && Mio.Symbol.AfterConnect == 0 && (Objs[index+1].ObjType == VARIABLE || Objs[index+1].ObjType == VALUE))
                     )
-                )
+                )&& (Mio.ObjType != PROMPT)
             )
         {
             if (HeadFuc != 0) {

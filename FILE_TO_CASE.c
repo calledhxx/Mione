@@ -97,6 +97,8 @@ CaseObj* FCO(FILE* F,int*CASESIZE)
 
     char* backslashOption = malloc(0);
 
+
+
     char* superCharOpt = malloc(0); //每個模式自己個用
     int superCharOptSize = 0;
 
@@ -585,6 +587,8 @@ CaseObj* FCO(FILE* F,int*CASESIZE)
         if (c == EOF) break;
     }
     while (1);
+
+
 
     if (inLockinType)
     {
