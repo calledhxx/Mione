@@ -120,19 +120,6 @@ typedef struct _CaseObject
     char * ObjName;
 } CaseObj;
 
-
-
-
-/*
- *
- *
- *
- *
- *
- */
-
-
-
 typedef struct _PairObject
 {
     MioneObj Prompt;

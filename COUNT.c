@@ -18,21 +18,19 @@ CountObj COUNT(MioneObj*Pack,int PackSize)
 {
 
     int FirstBracketIndex = 0;
-    int IfBrackets = 0; // 0 = 0 1 = only ( 2 = ()
-    int PairsOfBrackets = 0;
+    int BracketsChild = 0; //括號多寡
 
+    int BracketCur = 0;//1 : [, 2 : (
 
     MioneObj* inBracket = malloc(0);
     int inBracketSize = 0;
 
     int CalculateType = 0;
-
     int CalculateLevel = 0;
 
 
     for(int i = 0; i < PackSize; i++)
     {
-
         int PastCost = 0;//符號所前扣之值
 
         if (Pack[i].ObjType == SYMBOL) // Symbol
@@ -42,376 +40,421 @@ CountObj COUNT(MioneObj*Pack,int PackSize)
             {
             case 10:
                 {
+                    if (!BracketsChild)
+                    {
+                        BracketCur = 1;
+                        FirstBracketIndex = i;
 
+                        inBracketSize = 0;
+                        free(inBracket);
+                        inBracket = malloc(0);
+                    }else
+                    {
+                        inBracketSize++;
+                        inBracket = realloc(inBracket, sizeof(MioneObj) * (inBracketSize));
+                        inBracket[inBracketSize - 1] = Pack[i];
+                    }
+                    BracketsChild++;
                 }
                 break;
             case 11:
                 {
-
+                    BracketsChild--;
+                    if (!BracketsChild && BracketCur == 1)
+                    {
+                        BracketCur = 0;
+                    }else
+                    {
+                        inBracketSize++;
+                        inBracket = realloc(inBracket, sizeof(MioneObj) * (inBracketSize));
+                        inBracket[inBracketSize - 1] = Pack[i];
+                    }
                 }
                 break;
             case 12:
                 {
-                    FirstBracketIndex = i;
-                    IfBrackets = 1;
+
+                    if (!BracketsChild)
+                    {
+                        BracketCur = 2;
+                        FirstBracketIndex = i;
+
+
+                        inBracketSize = 0;
+                        free(inBracket);
+                        inBracket = malloc(0);
+                    }else
+                    {
+                        inBracketSize++;
+                        inBracket = realloc(inBracket, sizeof(MioneObj) * (inBracketSize));
+                        inBracket[inBracketSize - 1] = Pack[i];
+                    }
+
+                    BracketsChild++;
                 }
                 break;
-            case 13:
+                case 13:
                 {
-                    if (IfBrackets)
-                {
-                    PairsOfBrackets++;
-                    IfBrackets = 0;
-
-                    int FunctionCalled = 0;
-
-                    CountObj ChildCount = COUNT(inBracket, inBracketSize);
-
-                    if (FirstBracketIndex > 0)
+                    BracketsChild--;
+                    if (!BracketsChild && BracketCur == 2)
                     {
+                        int FunctionCalled = 0;
+                        BracketCur = 0;
 
-                        if (Pack[FirstBracketIndex - 1].ObjType == VARIABLE || Pack[FirstBracketIndex - 1].ObjType == VALUE)
+                        CountObj ChildCount = COUNT(inBracket, inBracketSize);
+
+                        if (FirstBracketIndex > 0)
                         {
-
-                            if (Pack[FirstBracketIndex - 1].ObjType == VARIABLE)
+                             if (Pack[FirstBracketIndex - 1].ObjType == VARIABLE || Pack[FirstBracketIndex - 1].ObjType == VALUE)
                             {
 
-                                if (Pack[FirstBracketIndex - 1].VarUP->Val.ValueType == VALUE_FUNCTION_TYPE)
+                                if (Pack[FirstBracketIndex - 1].ObjType == VARIABLE)
                                 {
-                                    ValueReturnObj V = Function(
-                                        Pack[FirstBracketIndex - 1].VarUP->Val.Area.Area,
-                                        Pack[FirstBracketIndex - 1].VarUP->Val.Area.Size
-                                        ).Vs;
 
-                                    MioneObj* NewPack = malloc(0);
-                                    int NewPackSize = 0;
-
-                                    for (int index = 0; index < FirstBracketIndex-1; index++)
+                                    if (Pack[FirstBracketIndex - 1].VarUP->Val.ValueType == VALUE_FUNCTION_TYPE)
                                     {
-                                        NewPackSize++;
-                                        NewPack = realloc(NewPack, sizeof(MioneObj) * (NewPackSize));
-                                        NewPack[NewPackSize - 1] = Pack[index];
-                                    }
+                                        ValueReturnObj V = Function(
+                                            Pack[FirstBracketIndex - 1].VarUP->Val.Area.Area,
+                                            Pack[FirstBracketIndex - 1].VarUP->Val.Area.Size
+                                            ).Vs;
 
-                                    printf("sizoe of fuc returned : %d\n",V.ValueSize);
+                                        MioneObj* NewPack = malloc(0);
+                                        int NewPackSize = 0;
 
-                                    if (V.ValueSize)
-                                    {
-                                        for (int index = 0; index < V.ValueSize; index++)
+                                        for (int index = 0; index < FirstBracketIndex-1; index++)
+                                        {
+                                            NewPackSize++;
+                                            NewPack = realloc(NewPack, sizeof(MioneObj) * (NewPackSize));
+                                            NewPack[NewPackSize - 1] = Pack[index];
+                                        }
+
+                                        printf("sizoe of fuc returned : %d\n",V.ValueSize);
+
+                                        if (V.ValueSize)
+                                        {
+                                            for (int index = 0; index < V.ValueSize; index++)
+                                            {
+                                                NewPackSize++;
+                                                NewPack = realloc(NewPack, sizeof(MioneObj) * (NewPackSize));
+                                                NewPack[NewPackSize - 1] = (MioneObj){
+                                                    .ObjType = VALUE,
+                                                    .Val = V.Value[index],
+                                                    .Line = Pack[i-1].Line,
+                                                    .Column = Pack[i-1].Column
+                                                };
+                                            }
+
+                                        }else
                                         {
                                             NewPackSize++;
                                             NewPack = realloc(NewPack, sizeof(MioneObj) * (NewPackSize));
                                             NewPack[NewPackSize - 1] = (MioneObj){
                                                 .ObjType = VALUE,
-                                                .Val = V.Value[index],
-                                                .Line = Pack[i-1].Line,
-                                                .Column = Pack[i-1].Column
+                                                .Val = (ValueObj){
+                                                    .ValueType = VALUE_NOPOINTNUMBER_TYPE,.NPNumber = 0}
                                             };
                                         }
 
-                                    }else
-                                    {
-                                        NewPackSize++;
-                                        NewPack = realloc(NewPack, sizeof(MioneObj) * (NewPackSize));
-                                        NewPack[NewPackSize - 1] = (MioneObj){
-                                            .ObjType = VALUE,
-                                            .Val = (ValueObj){
-                                            .ValueType = VALUE_NOPOINTNUMBER_TYPE,.NPNumber = 0}
-                                        };
+
+
+                                        for (int index = i+1 ; index < PackSize; index++)
+                                        {
+
+                                            NewPackSize++;
+                                            NewPack = realloc(NewPack, sizeof(MioneObj) * (NewPackSize));
+                                            NewPack[NewPackSize - 1] = Pack[index];
+                                        }
+
+
+
+                                        PackSize = NewPackSize;
+                                        Pack = NewPack;
+
+
+                                        i = FirstBracketIndex - 1;
+
+                                        FunctionCalled = 1;
                                     }
-
-
-
-                                    for (int index = i+1 ; index < PackSize; index++)
+                                    else
                                     {
 
-                                        NewPackSize++;
-                                        NewPack = realloc(NewPack, sizeof(MioneObj) * (NewPackSize));
-                                        NewPack[NewPackSize - 1] = Pack[index];
+                                        char *str1 = "The Type of `";
+                                        char *str2 = "` isn't a FUNCTION";
+                                        char *VName = Pack[FirstBracketIndex - 1].VarUP->Name;
+
+                                        char *REASON = malloc(sizeof(char) * (int)(strlen(str1) + strlen(str2) + strlen(VName) + 1));
+                                        strcpy(REASON, str1);
+                                        strcat(REASON, VName);
+                                        strcat(REASON, str2);
+
+                                        ErrCall(
+                                            REASON,
+                                                "MG001",
+                                            "Maybe you can change the Variable Type to FUNCTION.",
+                                            Pack[FirstBracketIndex - 1].Line,
+                                            Pack[FirstBracketIndex - 1].Column
+
+                                        );
                                     }
-
-
-
-                                    PackSize = NewPackSize;
-                                    Pack = NewPack;
-
-
-                                    i = FirstBracketIndex - 1;
-
-                                    FunctionCalled = 1;
                                 }
                                 else
                                 {
-
-                                    char *str1 = "The Type of `";
-                                    char *str2 = "` isn't a FUNCTION";
-                                    char *VName = Pack[FirstBracketIndex - 1].VarUP->Name;
-
-                                    char *REASON = malloc(sizeof(char) * (int)(strlen(str1) + strlen(str2) + strlen(VName) + 1));
-                                    strcpy(REASON, str1);
-                                    strcat(REASON, VName);
-                                    strcat(REASON, str2);
-
-                                    ErrCall(
-                                        REASON,
-                                            "MG001",
-                                        "Maybe you can change the Variable Type to FUNCTION.",
-                                        Pack[FirstBracketIndex - 1].Line,
-                                        Pack[FirstBracketIndex - 1].Column
-                                    );
-                                }
-                            }
-                            else
-                            {
-                                if (Pack[FirstBracketIndex - 1].Val.ValueType == VALUE_FUNCTION_TYPE)
-                                {
-                                    ValueReturnObj V = Function(
-                                        Pack[FirstBracketIndex - 1].Val.Area.Area,
-                                        Pack[FirstBracketIndex - 1].Val.Area.Size
-                                        ).Vs;
-
-                                    MioneObj* NewPack = malloc(0);
-                                    int NewPackSize = 0;
-
-                                    for (int index = 0; index < FirstBracketIndex-1; index++)
+                                    if (Pack[FirstBracketIndex - 1].Val.ValueType == VALUE_FUNCTION_TYPE)
                                     {
-                                        NewPackSize++;
-                                        NewPack = realloc(NewPack, sizeof(MioneObj) * (NewPackSize));
-                                        NewPack[NewPackSize - 1] = Pack[index];
-                                    }
+                                        ValueReturnObj V = Function(
+                                            Pack[FirstBracketIndex - 1].Val.Area.Area,
+                                            Pack[FirstBracketIndex - 1].Val.Area.Size
+                                            ).Vs;
 
-                                    printf("sizoe of fuc returned : %d\n",V.ValueSize);
+                                        MioneObj* NewPack = malloc(0);
+                                        int NewPackSize = 0;
 
-                                    if (V.ValueSize)
-                                    {
-                                        for (int index = 0; index < V.ValueSize; index++)
+                                        for (int index = 0; index < FirstBracketIndex-1; index++)
+                                        {
+                                            NewPackSize++;
+                                            NewPack = realloc(NewPack, sizeof(MioneObj) * (NewPackSize));
+                                            NewPack[NewPackSize - 1] = Pack[index];
+                                        }
+
+                                        printf("sizoe of fuc returned : %d\n",V.ValueSize);
+
+                                        if (V.ValueSize)
+                                        {
+                                            for (int index = 0; index < V.ValueSize; index++)
+                                            {
+                                                NewPackSize++;
+                                                NewPack = realloc(NewPack, sizeof(MioneObj) * (NewPackSize));
+                                                NewPack[NewPackSize - 1] = (MioneObj){
+                                                    .ObjType = VALUE,
+                                                    .Val = V.Value[index],
+                                                    .Line = Pack[i-1].Line,
+                                                    .Column = Pack[i-1].Column
+                                                };
+
+                                            }
+
+                                        }else
                                         {
                                             NewPackSize++;
                                             NewPack = realloc(NewPack, sizeof(MioneObj) * (NewPackSize));
                                             NewPack[NewPackSize - 1] = (MioneObj){
                                                 .ObjType = VALUE,
-                                                .Val = V.Value[index],
-                                                .Line = Pack[i-1].Line,
-                                                .Column = Pack[i-1].Column
+                                                .Val = (ValueObj){
+                                                    .ValueType = VALUE_NOPOINTNUMBER_TYPE,.NPNumber = 0}
                                             };
-
                                         }
 
-                                    }else
-                                    {
-                                        NewPackSize++;
-                                        NewPack = realloc(NewPack, sizeof(MioneObj) * (NewPackSize));
-                                        NewPack[NewPackSize - 1] = (MioneObj){
-                                            .ObjType = VALUE,
-                                            .Val = (ValueObj){
-                                            .ValueType = VALUE_NOPOINTNUMBER_TYPE,.NPNumber = 0}
-                                        };
+
+                                        for (int index = i+1 ; index < PackSize; index++)
+                                        {
+
+                                            NewPackSize++;
+                                            NewPack = realloc(NewPack, sizeof(MioneObj) * (NewPackSize));
+                                            NewPack[NewPackSize - 1] = Pack[index];
+                                        }
+
+                                        PackSize = NewPackSize;
+                                        Pack = NewPack;
+
+
+                                        i = FirstBracketIndex - 1;
+
+
+
+
+
+                                        FunctionCalled = 1;
                                     }
-
-
-                                    for (int index = i+1 ; index < PackSize; index++)
+                                    else
                                     {
-
-                                        NewPackSize++;
-                                        NewPack = realloc(NewPack, sizeof(MioneObj) * (NewPackSize));
-                                        NewPack[NewPackSize - 1] = Pack[index];
+                                        ErrCall(
+                                            "The Value before `()` Isn't a Function",
+                                            "MG002",
+                                            "Maybe you can try `function() <...:Mione> end()`.",
+                                            Pack[FirstBracketIndex - 1].Line,
+                                            Pack[FirstBracketIndex - 1].Column
+                                        );
                                     }
-
-                                    PackSize = NewPackSize;
-                                    Pack = NewPack;
-
-
-                                    i = FirstBracketIndex - 1;
-
-
-
-
-
-                                    FunctionCalled = 1;
-                                }
-                                else
-                                {
-                                    ErrCall(
-                                        "The Value before `()` Isn't a Function",
-                                        "MG002",
-                                        "Maybe you can try `function() <...:Mione> end()`.",
-                                        Pack[FirstBracketIndex - 1].Line,
-                                        Pack[FirstBracketIndex - 1].Column
-                                    );
                                 }
                             }
                         }
-                    }
 
-                    if (!FunctionCalled)
+
+                        if (!FunctionCalled)
+                        {
+                            MioneObj* NewPack = malloc(0);
+                            int NewPackSize = 0;
+
+                            for (int index = 0; index < FirstBracketIndex; index++)
+                            {
+                                NewPackSize++;
+                                NewPack = realloc(NewPack, NewPackSize * sizeof(MioneObj));
+                                NewPack[NewPackSize - 1] = Pack[index];
+                            }
+
+
+                            for (int index = 0; index < ChildCount.ValueSize; index++)
+                            {
+                                NewPackSize++;
+                                NewPack = realloc(NewPack, NewPackSize * sizeof(MioneObj));
+                                NewPack[NewPackSize - 1] = (MioneObj){
+                                    .ObjType = VALUE,
+                                    .Val = ChildCount.Value[index]
+                                };
+                            }
+
+                            for (int index = i + 1; index < PackSize; index++)
+                            {
+                                NewPackSize++;
+                                NewPack = realloc(NewPack, NewPackSize * sizeof(MioneObj));
+                                NewPack[NewPackSize - 1] = Pack[index];
+                            }
+
+                            Pack = NewPack;
+                            PackSize = NewPackSize;
+
+                            i = FirstBracketIndex -1;
+                        }
+                    }else
                     {
-                        MioneObj* NewPack = malloc(0);
-                        int NewPackSize = 0;
-
-                        for (int index = 0; index < FirstBracketIndex; index++)
-                        {
-                            NewPackSize++;
-                            NewPack = realloc(NewPack, NewPackSize * sizeof(MioneObj));
-                            NewPack[NewPackSize - 1] = Pack[index];
-                        }
-
-                        for (int index = 0; index < ChildCount.ValueSize; index++)
-                        {
-                            NewPackSize++;
-                            NewPack = realloc(NewPack, NewPackSize * sizeof(MioneObj));
-                            NewPack[NewPackSize - 1] = (MioneObj){
-                                .ObjType = VALUE,
-                                .Val = ChildCount.Value[index]
-                            };
-                        }
-
-                        for (int index = i + 1; index < PackSize; index++)
-                        {
-                            NewPackSize++;
-                            NewPack = realloc(NewPack, NewPackSize * sizeof(MioneObj));
-                            NewPack[NewPackSize - 1] = Pack[index];
-                        }
-
-                        Pack = NewPack;
-                        PackSize = NewPackSize;
-
-                        i = FirstBracketIndex -1;
+                        inBracketSize++;
+                        inBracket = realloc(inBracket, sizeof(MioneObj) * (inBracketSize));
+                        inBracket[inBracketSize - 1] = Pack[i];
                     }
-                }
+
                 }
                 break;
             default:
                     {
-                        if(!IfBrackets){
-                    switch (Pack[i].Symbol.SymbolType)
-                    {
-                    case 1:
-                        {
-                            if (i == PackSize - 1 || i - 1 <0)
+                        if(!BracketsChild){
+
+                            if (CalculateLevel) switch (Pack[i].Symbol.SymbolType)
                             {
-                                ErrCall(
-                                    "You can't connect any Two-side-count-SymbolGet.a to VOID (Meaning Nothing, even no Mione Object).",
-                                    "MG003",
-                                    "Maybe you can try `1+1` or anything else.",
-                                    Pack[i].Line,
-                                    Pack[i].Column
-                                );
-                            }
-
-
-
-                            if (Pack[i-1].ObjType == SYMBOL || Pack[i+1].ObjType == SYMBOL)
-                            {
-                                ErrCall(
-                                  "dkaopkdapskdpsa",
-                                  "MG3123i13",
-                                  "Maybe you can try `1+1` or anything else.",
-                                  Pack[i].Line,
-                                  Pack[i].Column
-                              );
-                            }
-                            if (Pack[i].Symbol.xIndex == CalculateLevel) CalculateType = Pack[i].Symbol.CurNumber;
-
-                            break;
-                        }
-                    case 2:
-                        {
-                            if (i == PackSize - 1 )
-                            {
-                                ErrCall(
-                                    "bbbbb",
-                                    "MG007",
-                                    "Maybe you can try `typeof 1` or anything else.",
-                                    Pack[i].Line,
-                                    Pack[i].Column
-                                );
-                            }
-
-                            if (Pack[i+1].ObjType == SYMBOL)
-                            {
-                                ErrCall(
-                                    "dmakldmadma",
-                                    "MG03127",
-                                    "Maybe you can try `typeof 1` or anything else.",
-                                    Pack[i].Line,
-                                    Pack[i].Column
-                                );
-                            }
-                            if (Pack[i].Symbol.xIndex == CalculateLevel) CalculateType = Pack[i].Symbol.CurNumber;
-
-                            break;
-                        }
-                    case 3:
-                        {
-                            if (i == PackSize - 1)
-                            {
-                                ErrCall(
-                                   "ccccc",
-                                   "MG008",
-                                   "Maybe you can try `- 1` or anything else.",
-                                    Pack[i].Line,
-                                    Pack[i].Column
-                               );
-                            }
-
-                            if ( Pack[i+1].ObjType == SYMBOL)
-                            {
-                                ErrCall(
-                                   "jdioasjdioas",
-                                   "MG0428",
-                                   "Maybe you can try `- 1` or anything else.",
-                                    Pack[i].Line,
-                                    Pack[i].Column
-                               );
-                            }
-
-
-                            for (int index = 0; 1 ; index++)
-                            {
-                                if (Symbols[index].CurNumber == -1) break;
-
-                                if (strcmp(Symbols[index].Name, Pack[i].Symbol.Name) == 0)
-                                {
-
-                                    if (i-1>=0 && (Pack[i-1].ObjType == VARIABLE || Pack[i-1].ObjType == VALUE))
+                                case 1:
                                     {
-                                        if (Pack[i].Symbol.yIndex == CalculateLevel) CalculateType = Pack[i].Symbol.CurNumber;
-                                    }else
-                                    {
+
+                                        if (i == PackSize - 1 || i - 1 <0)
+                                        {
+                                            ErrCall(
+                                                "You can't connect any Two-side-count-SymbolGet.a to VOID (Meaning Nothing, even no Mione Object).",
+                                                "MG003",
+                                                "Maybe you can try `1+1` or anything else.",
+                                                Pack[i].Line,
+                                                Pack[i].Column
+                                            );
+                                        }
+
+
+
+                                        if (Pack[i-1].ObjType == SYMBOL || Pack[i+1].ObjType == SYMBOL)
+                                        {
+                                            ErrCall(
+                                              "dkaopkdapskdpsa",
+                                              "MG3123i13",
+                                              "Maybe you can try `1+1` or anything else.",
+                                              Pack[i].Line,
+                                              Pack[i].Column
+                                          );
+                                        }
                                         if (Pack[i].Symbol.xIndex == CalculateLevel) CalculateType = Pack[i].Symbol.CurNumber;
+
+                                        break;
                                     }
+                                 case 2:
+                                     {
+                                        if (i == PackSize - 1 )
+                                        {
+                                            ErrCall(
+                                                "bbbbb",
+                                                "MG007",
+                                                "Maybe you can try `typeof 1` or anything else.",
+                                                Pack[i].Line,
+                                                Pack[i].Column
+                                            );
+                                        }
 
-                                }
+                                        if (Pack[i+1].ObjType == SYMBOL)
+                                        {
+                                            ErrCall(
+                                                "dmakldmadma",
+                                                "MG03127",
+                                                "Maybe you can try `typeof 1` or anything else.",
+                                                Pack[i].Line,
+                                                Pack[i].Column
+                                            );
+                                        }
+                                        if (Pack[i].Symbol.xIndex == CalculateLevel) CalculateType = Pack[i].Symbol.CurNumber;
 
+                                        break;
+                                     }
+                                case 3:
+                                    {
+                                        if (i == PackSize - 1)
+                                        {
+                                            ErrCall(
+                                               "ccccc",
+                                               "MG008",
+                                               "Maybe you can try `- 1` or anything else.",
+                                                Pack[i].Line,
+                                                Pack[i].Column
+                                           );
+                                        }
+
+                                        if ( Pack[i+1].ObjType == SYMBOL)
+                                        {
+                                            ErrCall(
+                                               "jdioasjdioas",
+                                               "MG0428",
+                                               "Maybe you can try `- 1` or anything else.",
+                                                Pack[i].Line,
+                                                Pack[i].Column
+                                           );
+                                        }
+
+
+                                        for (int index = 0; 1 ; index++)
+                                        {
+                                            if (Symbols[index].CurNumber == -1) break;
+
+                                            if (strcmp(Symbols[index].Name, Pack[i].Symbol.Name) == 0)
+                                            {
+
+                                                if (i-1>=0 && (Pack[i-1].ObjType == VARIABLE || Pack[i-1].ObjType == VALUE))
+                                                {
+                                                    if (Pack[i].Symbol.yIndex == CalculateLevel) CalculateType = Pack[i].Symbol.CurNumber;
+                                                }else
+                                                {
+                                                    if (Pack[i].Symbol.xIndex == CalculateLevel) CalculateType = Pack[i].Symbol.CurNumber;
+                                                }
+
+                                            }
+
+                                        }
+                                        break;
+                                    }
                             }
-                                break;
-                                }
-                            }
+                        }else
+                        {
+                            inBracketSize++;
+                            inBracket = realloc(inBracket, sizeof(MioneObj) * (inBracketSize));
+                            inBracket[inBracketSize - 1] = Pack[i];
                         }
                     }
             }
         }else if (Pack[i].ObjType == VARIABLE || Pack[i].ObjType == VALUE)
         {
-
-            if (Pack[i].ObjType == VARIABLE ? Pack[i].VarUP->Val.ValueType == VALUE_TABLE_TYPE : Pack[i].Val.ValueType == VALUE_TABLE_TYPE)  if (Pack[i].ObjType == VARIABLE ? !Pack[i].VarUP->Val.Table.Counted: !Pack[i].Val.Table.Counted)
+            if (!BracketsChild)
             {
-                ValueObj V = Pack[i].ObjType == VARIABLE ? Pack[i].VarUP->Val : Pack[i].Val;
-
-                VariableObj * CountedTable = malloc(0);
-                int CountedTableSize = 0;
-
-                MioneReturnObj R = Table(V.Table.MioneTable,V.Table.MioneTableSize);
-
-                if (Pack[i].ObjType == VARIABLE)
+                if (Pack[i].ObjType == VALUE && Pack[i].Val.ValueType == VALUE_TABLE_TYPE && !Pack[i].Val.Table.Counted)
                 {
-                    Pack[i].VarUP->Val.Table.Counted=1;
-                    Pack[i].VarUP->Val.Table.MioneTable = NULL;
-                    Pack[i].VarUP->Val.Table.MioneTableSize = 0;
+                    ValueObj V = Pack[i].Val;
 
-                    Pack[i].VarUP->Val.Table.CountedTable = CountedTable;
-                    Pack[i].VarUP->Val.Table.CountedTableSize = CountedTableSize;
-                }else
-                {
+                    VariableObj * CountedTable = malloc(0);
+                    int CountedTableSize = 0;
+
+                    // MioneReturnObj R =
+                    Table(V.Table.MioneTable,V.Table.MioneTableSize,&CountedTable,&CountedTableSize);
+
                     Pack[i].Val.Table.Counted=1;
                     Pack[i].Val.Table.MioneTable = NULL;
                     Pack[i].Val.Table.MioneTableSize = 0;
@@ -419,10 +462,8 @@ CountObj COUNT(MioneObj*Pack,int PackSize)
                     Pack[i].Val.Table.CountedTable = CountedTable;
                     Pack[i].Val.Table.CountedTableSize = CountedTableSize;
                 }
-            }
 
-
-            if (CalculateType)
+                if (CalculateType)
             {
                 MioneObj Out;
                 int UsePointNumber = 0;
@@ -1045,12 +1086,7 @@ CountObj COUNT(MioneObj*Pack,int PackSize)
 
                 i = ToIndex-1;
             }
-        }
-
-        if (IfBrackets)
-        {
-            if (Pack[i].ObjType == SYMBOL && Pack[i].Symbol.CurNumber == 12) {}
-            else
+            }else
             {
                 inBracketSize++;
                 inBracket = realloc(inBracket, sizeof(MioneObj) * (inBracketSize));
@@ -1102,6 +1138,7 @@ CountObj COUNT(MioneObj*Pack,int PackSize)
         else printf("`UNDEFINED`\n");
     }
 
+    if (BracketCur) ErrCall("cadasdas","dasdada",NULL,0,0);
 
     CountObj Returns = (CountObj){
         .Value = VPack,

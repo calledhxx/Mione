@@ -1,0 +1,21 @@
+set f =
+function
+    return function
+        return function
+            return function
+                return function
+                    return function
+                        return function
+                            return false
+                        end()
+                    end()
+                end()
+            end()
+        end()
+    end()
+end()
+
+
+if (f) then range end else range
+    set x = 500;
+end
