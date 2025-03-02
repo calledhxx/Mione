@@ -691,11 +691,10 @@ MioneReturnObj Table(const MioneObj* Objs, const int ObjsSize,VariableObj * * Va
                             {
                                 int theSame = 0;
 
-
                                 for (int j = 0; j<(*VariablesUPSizeUP); j++)
                                 {
                                     if (
-                                        strcmp((*VariablesUP)[j].Name, a.Vars.Vars[i].Name) == 0 ||
+                                        (a.Vars.Vars[i].Name && (*VariablesUP)[j].Name && strcmp((*VariablesUP)[j].Name, a.Vars.Vars[i].Name) == 0) ||
                                         (*VariablesUP)[j].Place == a.Vars.Vars[i].Place
                                         )
                                     {
@@ -844,9 +843,26 @@ MioneReturnObj Table(const MioneObj* Objs, const int ObjsSize,VariableObj * * Va
                         case 4:
                             for (int i = 0; i<a.Vars.VarsSize; i++)
                             {
-                                (*VariablesUPSizeUP)++;
-                                (*VariablesUP) = realloc((*VariablesUP), (*VariablesUPSizeUP) * sizeof(VariableObj));
-                                (*VariablesUP)[(*VariablesUPSizeUP) - 1] = a.Vars.Vars[i];
+                                int theSame = 0;
+
+                                for (int j = 0; j<(*VariablesUPSizeUP); j++)
+                                {
+                                    if (
+                                        (a.Vars.Vars[i].Name && (*VariablesUP)[j].Name && strcmp((*VariablesUP)[j].Name, a.Vars.Vars[i].Name) == 0) ||
+                                        (*VariablesUP)[j].Place == a.Vars.Vars[i].Place
+                                        )
+                                    {
+                                        theSame = 1;
+                                        (*VariablesUP)[j].Val = a.Vars.Vars[i].Val;
+                                    }
+                                }
+
+                                if (!theSame)
+                                {
+                                    (*VariablesUPSizeUP)++;
+                                    (*VariablesUP) = realloc((*VariablesUP), (*VariablesUPSizeUP) * sizeof(VariableObj));
+                                    (*VariablesUP)[(*VariablesUPSizeUP) - 1] = a.Vars.Vars[i];
+                                }
                             }
                             break;
                         case 2:
