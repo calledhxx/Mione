@@ -13,13 +13,18 @@
 #include <string.h>
 
 
-HeadReturnObj FOR(struct _PairObject*Pairs,int PairsSize)
+HeadReturnObj FOR(HeadRequestObj HeadRequest)
 {
+    PairObj * Pairs = HeadRequest.Pairs;
+    int PairsSize = HeadRequest.PairsSize;
+
     HeadReturnObj ToReturn;
     ToReturn.ToState = 0;
 
 
     VariableRequestUPObj Request = {.VariablesSize = 0};
+    VariableRequestUPObj WithCounted = {.VariablesSize = 0};
+
     CountObj SetCounted = {.ValueSize = 0};
     CountObj DoCounted = {.ValueSize = 0};
     CountObj ToCounted = {.ValueSize = 0};
@@ -72,6 +77,12 @@ HeadReturnObj FOR(struct _PairObject*Pairs,int PairsSize)
                  in = 1;
                 break;
                  break;
+            case 9: //with
+                WithCounted = REQUEST(Pairs[i].Source, Pairs[i].SourceSize);
+                if (WithCounted.VariablesSize !=1)ErrCall("`with` PROMPT in `for` only accept ONE REQUEST.","M016",NULL,Prompt.Line,Prompt.Column);
+
+                with = 1;
+                break;
             default:
                 ErrCall("This Prompt is not supported by `for`","M016",NULL,Prompt.Line,Prompt.Column);
                 break;
@@ -85,9 +96,13 @@ HeadReturnObj FOR(struct _PairObject*Pairs,int PairsSize)
 
     int toTimes = 0;
 
+    if (!set&&!in) ErrCall("`for`err.","M017",NULL,Pairs[0].Prompt.Line,Pairs[0].Prompt.Column);
+
     if(in&&set)ErrCall("`in` and `=` isn't allowed at the same time in `for`","M017",NULL,Pairs[0].Prompt.Line,Pairs[0].Prompt.Column);
-    if(!set&&!(with&&in))ErrCall("`with` only works in `table loops`","M018",NULL,Pairs[0].Prompt.Line,Pairs[0].Prompt.Column);
+    if(with&&!in)ErrCall("`with` only works in `table loops`","M018",NULL,Pairs[0].Prompt.Line,Pairs[0].Prompt.Column);
     if(to&&!set)ErrCall("only using`to` won`t make us know what shall we use the value to count for loop.","M019",NULL,Pairs[0].Prompt.Line,Pairs[0].Prompt.Column);
+
+
 
     if(set){
       	extern DefineVariableObj * Dvo;
@@ -159,7 +174,13 @@ HeadReturnObj FOR(struct _PairObject*Pairs,int PairsSize)
             }
         }
         if(in){
-            //todo
+            for (int TableIndex = 0; TableIndex < InCounted.Value[0].Table.CountedTableSize; TableIndex++)
+            {
+
+            }
+            if (with)
+            {
+            }
         }
     }
 

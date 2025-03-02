@@ -10,7 +10,11 @@
 #include "../MIONE.h"
 #include "../ERR.h"
 
-HeadReturnObj IF(struct _PairObject*Pairs,int PairsSize){
+HeadReturnObj IF(HeadRequestObj HeadRequest)
+{
+    PairObj * Pairs = HeadRequest.Pairs;
+    int PairsSize = HeadRequest.PairsSize;
+
     HeadReturnObj ToReturn;
     ToReturn.ToState = 0;
 

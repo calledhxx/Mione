@@ -45,7 +45,8 @@ MioneReturnObj Range(const MioneObj* Objs, const int ObjsSize)
     DefinedVarAndValueObj * EndLoacl = malloc(0);
     int EndLoaclSize = 0;
 
-    HeadReturnObj (*HeadFuc)(struct _PairObject* Pairs, int PairsSize) = 0;
+       HeadReturnObj (*HeadFuc)(HeadRequestObj HeadRequest) = 0;
+
     PairObj *Pairs = malloc(0);
     int PairsSize = 0;
     
@@ -61,7 +62,10 @@ MioneReturnObj Range(const MioneObj* Objs, const int ObjsSize)
             )
         {
             if (HeadFuc != 0) {
-                HeadReturnObj a = HeadFuc(Pairs, PairsSize);
+                HeadReturnObj a = HeadFuc((HeadRequestObj){
+                    .Pairs = Pairs,
+                    .PairsSize = PairsSize,
+                });
 
                 HeadFuc = 0;
                 Pairs = NULL;
@@ -184,7 +188,10 @@ MioneReturnObj Range(const MioneObj* Objs, const int ObjsSize)
             )
         {
             if (HeadFuc != 0) {
-                HeadReturnObj a = HeadFuc(Pairs, PairsSize);
+                HeadReturnObj a = HeadFuc((HeadRequestObj){
+                    .Pairs = Pairs,
+                    .PairsSize = PairsSize,
+                });
 
                 HeadFuc = 0;
                 Pairs = NULL;
@@ -238,7 +245,8 @@ MioneReturnObj Function(const MioneObj* Objs, const int ObjsSize, ValueObj* Requ
     DefinedVarAndValueObj * EndLoacl = malloc(0);
     int EndLoaclSize = 0;
 
-    HeadReturnObj (*HeadFuc)(struct _PairObject* Pairs, int PairsSize) = 0;
+       HeadReturnObj (*HeadFuc)(HeadRequestObj HeadRequest) = 0;
+
     PairObj *Pairs = malloc(0);
     int PairsSize = 0;
 
@@ -254,7 +262,10 @@ MioneReturnObj Function(const MioneObj* Objs, const int ObjsSize, ValueObj* Requ
             )
         {
             if (HeadFuc != 0) {
-                HeadReturnObj a = HeadFuc(Pairs, PairsSize);
+                HeadReturnObj a = HeadFuc((HeadRequestObj){
+                    .Pairs = Pairs,
+                    .PairsSize = PairsSize,
+                });
 
                 HeadFuc = 0;
                 Pairs = NULL;
@@ -377,7 +388,10 @@ MioneReturnObj Function(const MioneObj* Objs, const int ObjsSize, ValueObj* Requ
             )
         {
             if (HeadFuc != 0) {
-                HeadReturnObj a = HeadFuc(Pairs, PairsSize);
+                HeadReturnObj a = HeadFuc((HeadRequestObj){
+                    .Pairs = Pairs,
+                    .PairsSize = PairsSize,
+                });
 
                 HeadFuc = 0;
                 Pairs = NULL;
@@ -432,7 +446,8 @@ MioneReturnObj mione(const MioneObj* Objs, const int ObjsSize)
      DefinedVarAndValueObj * EndLoacl = malloc(0);
     int EndLoaclSize = 0;
 
-    HeadReturnObj (*HeadFuc)(struct _PairObject* Pairs, int PairsSize) = 0;
+       HeadReturnObj (*HeadFuc)(HeadRequestObj HeadRequest) = 0;
+
     PairObj *Pairs = malloc(0);
     int PairsSize = 0;
 
@@ -448,7 +463,10 @@ MioneReturnObj mione(const MioneObj* Objs, const int ObjsSize)
             )
         {
             if (HeadFuc != 0) {
-                HeadReturnObj a = HeadFuc(Pairs, PairsSize);
+                HeadReturnObj a = HeadFuc((HeadRequestObj){
+                    .Pairs = Pairs,
+                    .PairsSize = PairsSize,
+                });
 
                 HeadFuc = 0;
                 Pairs = NULL;
@@ -570,7 +588,10 @@ MioneReturnObj mione(const MioneObj* Objs, const int ObjsSize)
             )
         {
             if (HeadFuc != 0) {
-                HeadReturnObj a = HeadFuc(Pairs, PairsSize);
+                HeadReturnObj a = HeadFuc((HeadRequestObj){
+                    .Pairs = Pairs,
+                    .PairsSize = PairsSize,
+                });
 
                 HeadFuc = 0;
                 Pairs = NULL;
@@ -625,7 +646,7 @@ MioneReturnObj Table(const MioneObj* Objs, const int ObjsSize,VariableObj * * Va
      DefinedVarAndValueObj * EndLoacl = malloc(0);
     int EndLoaclSize = 0;
 
-    HeadReturnObj (*HeadFuc)(struct _PairObject* Pairs, int PairsSize) = 0;
+    HeadReturnObj (*HeadFuc)(HeadRequestObj HeadRequest) = 0;
     PairObj *Pairs = malloc(0);
     int PairsSize = 0;
 
@@ -641,7 +662,13 @@ MioneReturnObj Table(const MioneObj* Objs, const int ObjsSize,VariableObj * * Va
             )
         {
             if (HeadFuc != 0) {
-                HeadReturnObj a = HeadFuc(Pairs, PairsSize);
+                HeadReturnObj a = HeadFuc((HeadRequestObj){
+                    .Pairs = Pairs,
+                    .PairsSize = PairsSize,
+
+                   .VariablesUPSizeUP = VariablesUPSizeUP,
+                   .VariablesUP = VariablesUP,
+                });
 
                 HeadFuc = 0;
                 Pairs = NULL;
@@ -662,9 +689,27 @@ MioneReturnObj Table(const MioneObj* Objs, const int ObjsSize,VariableObj * * Va
                         case 4:
                             for (int i = 0; i<a.Vars.VarsSize; i++)
                             {
-                                (*VariablesUPSizeUP)++;
-                                (*VariablesUP) = realloc((*VariablesUP), (*VariablesUPSizeUP) * sizeof(VariableObj));
-                                (*VariablesUP)[(*VariablesUPSizeUP) - 1] = a.Vars.Vars[i];
+                                int theSame = 0;
+
+
+                                for (int j = 0; j<(*VariablesUPSizeUP); j++)
+                                {
+                                    if (
+                                        strcmp((*VariablesUP)[j].Name, a.Vars.Vars[i].Name) == 0 ||
+                                        (*VariablesUP)[j].Place == a.Vars.Vars[i].Place
+                                        )
+                                    {
+                                        theSame = 1;
+                                        (*VariablesUP)[j].Val = a.Vars.Vars[i].Val;
+                                    }
+                                }
+
+                                if (!theSame)
+                                {
+                                    (*VariablesUPSizeUP)++;
+                                    (*VariablesUP) = realloc((*VariablesUP), (*VariablesUPSizeUP) * sizeof(VariableObj));
+                                    (*VariablesUP)[(*VariablesUPSizeUP) - 1] = a.Vars.Vars[i];
+                                }
                             }
                             break;
                         case 2:
@@ -769,7 +814,15 @@ MioneReturnObj Table(const MioneObj* Objs, const int ObjsSize,VariableObj * * Va
             )
         {
             if (HeadFuc != 0) {
-                HeadReturnObj a = HeadFuc(Pairs, PairsSize);
+                printf("%p\n",VariablesUP);
+
+                HeadReturnObj a = HeadFuc((HeadRequestObj){
+                    .Pairs = Pairs,
+                    .PairsSize = PairsSize,
+
+                    .VariablesUPSizeUP = VariablesUPSizeUP,
+                    .VariablesUP = VariablesUP,
+                });
 
                 HeadFuc = 0;
                 Pairs = NULL;

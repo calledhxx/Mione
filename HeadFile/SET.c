@@ -14,8 +14,11 @@
 #include <stdlib.h>
 #include <string.h>
 
-HeadReturnObj SET(struct _PairObject*Pairs,int PairsSize)
+HeadReturnObj SET(HeadRequestObj HeadRequest)
 {
+    PairObj * Pairs = HeadRequest.Pairs;
+    int PairsSize = HeadRequest.PairsSize;
+
     HeadReturnObj ToReturn;
     ToReturn.ToState = 0;
 

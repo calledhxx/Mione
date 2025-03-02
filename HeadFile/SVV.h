@@ -1,3 +1,3 @@
 
-extern  HeadReturnObj SVV(struct _PairObject*Pairs,int PairsSize);
+extern  HeadReturnObj SVV();
 

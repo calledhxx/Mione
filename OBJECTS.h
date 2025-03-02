@@ -92,7 +92,7 @@ typedef struct _HeadObject
 {
     char * Name;
     int CurNumber;
-    struct _HeadReturnObject (*Fuc)(struct _PairObject*Pairs,int PairsSize);
+    struct _HeadReturnObject (*Fuc)(struct _HeadRequestObject);
 }HeadObj;
 
 typedef struct _MioneObject
@@ -199,6 +199,15 @@ typedef struct _DefineVariableObject
     int * VariablesSizeUP;
 
 } DefineVariableObj;
+
+typedef struct _HeadRequestObject
+{
+    PairObj * Pairs;
+    int PairsSize;
+
+    VariableObj * * VariablesUP;
+    int * VariablesUPSizeUP;
+} HeadRequestObj;
 
 
 #endif //OBJECTS_H

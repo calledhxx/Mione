@@ -7,8 +7,14 @@
 #include "../ERR.h"
 #include "../REQUEST.h"
 
-HeadReturnObj SVV(struct _PairObject*Pairs,int PairsSize)
+HeadReturnObj SVV(HeadRequestObj HeadRequest)
 {
+    PairObj * Pairs = HeadRequest.Pairs;
+    int PairsSize = HeadRequest.PairsSize;
+
+    VariableObj ** VariablesUP = HeadRequest.VariablesUP;
+    int * VariablesUPSizeUP = HeadRequest.VariablesUPSizeUP;
+
     extern DefineVariableObj * Dvo;
     extern int DvoSize;
 
@@ -38,24 +44,26 @@ HeadReturnObj SVV(struct _PairObject*Pairs,int PairsSize)
         {
             if (PairsSize == 1)
             {
-                Counted = COUNT(Pairs[i].Source,Pairs[i].SourceSize);
-
-
-                VariablesObj Vars;
-                Vars.VarsSize = 0;
-                Vars.Vars = malloc(Vars.VarsSize);
-                for (int a = 0; a < Counted.ValueSize; a++)
+                if (VariablesUP)
                 {
-                    Vars.VarsSize++;
-                    Vars.Vars = realloc(Vars.Vars,Vars.VarsSize*sizeof(VariableObj));
-                    Vars.Vars[Vars.VarsSize-1].Name = NULL;
-                    // Vars.Vars[Vars.VarsSize-1].Place = 1; TODO
-                    Vars.Vars[Vars.VarsSize-1].Val = Counted.Value[a];
-                }
+                    Counted = COUNT(Pairs[i].Source,Pairs[i].SourceSize);
+
+                    VariablesObj Vars;
+                    Vars.VarsSize = 0;
+                    Vars.Vars = malloc(Vars.VarsSize);
+                    for (int a = 0; a < Counted.ValueSize; a++)
+                    {
+                        Vars.VarsSize++;
+                        Vars.Vars = realloc(Vars.Vars,Vars.VarsSize*sizeof(VariableObj));
+                        Vars.Vars[Vars.VarsSize-1].Name = NULL;
+                        Vars.Vars[Vars.VarsSize-1].Place = (*VariablesUPSizeUP)+1;
+                        Vars.Vars[Vars.VarsSize-1].Val = Counted.Value[a];
+                    }
 
 
-                Re.Vars = Vars;
-                Re.ToState = Re.ToState+4;
+                    Re.Vars = Vars;
+                    Re.ToState = Re.ToState+4;
+                } else ErrCall("無意義的語句","M111",NULL,Prompt.Line,Prompt.Column);
             }
         }else
         {
@@ -131,7 +139,7 @@ HeadReturnObj SVV(struct _PairObject*Pairs,int PairsSize)
                 {
                     for (int VariableIndex = 0; VariableIndex < *(Dvo[DvoIndex].VariablesSizeUP); VariableIndex++)
                     {
-
+                        printf("%d\n",(*Dvo[DvoIndex].VariableUPsUP)[VariableIndex]->Place);
                         if (strcmp((*Dvo[DvoIndex].VariableUPsUP)[VariableIndex]->Name, PointNamesCounted.Value[PNCIndex].String) == 0)
                         {
                             VarUPsSize++;
@@ -150,6 +158,10 @@ HeadReturnObj SVV(struct _PairObject*Pairs,int PairsSize)
                                 Vars.VarsSize++;
                                 Vars.Vars = realloc(Vars.Vars, (VariableIndex + 1) * sizeof(VariableObj));
                                 Vars.Vars[VariableIndex] = *((*Dvo[DvoIndex].VariableUPsUP)[VariableIndex]);
+                                Vars.Vars[VariableIndex] = (VariableObj){
+                                    .Val = (*Dvo[DvoIndex].VariableUPsUP)[VariableIndex]->Val,
+                                    .Name = PointNamesCounted.Value[PNCIndex].String
+                                };;
                             }
 
                             VAVs.VAVs[VAVs.VAVsSize-1].TheDefinedVarUP = (*Dvo[DvoIndex].VariableUPsUP)[VariableIndex];
@@ -198,7 +210,7 @@ HeadReturnObj SVV(struct _PairObject*Pairs,int PairsSize)
                 {
                     for (int VariableIndex = 0; VariableIndex < *(Dvo[DvoIndex].VariablesSizeUP); VariableIndex++)
                     {
-                        if ((*Dvo[DvoIndex].VariableUPsUP)[VariableIndex]->Place, PointNamesCounted.Value[PNCIndex].NPNumber && PointNamesCounted.Value[PNCIndex].NPNumber > 1)
+                        if (PointNamesCounted.Value[PNCIndex].NPNumber && PointNamesCounted.Value[PNCIndex].NPNumber > 1)
                         {
                             VarUPsSize++;
                             VarUPs = realloc(VarUPs, (VarUPsSize) * sizeof(VariableObj*));
@@ -215,7 +227,10 @@ HeadReturnObj SVV(struct _PairObject*Pairs,int PairsSize)
                             {
                                 Vars.VarsSize++;
                                 Vars.Vars = realloc(Vars.Vars, (VariableIndex + 1) * sizeof(VariableObj));
-                                Vars.Vars[VariableIndex] = *((*Dvo[DvoIndex].VariableUPsUP)[VariableIndex]);
+                                Vars.Vars[VariableIndex] = (VariableObj){
+                                    .Val = (*Dvo[DvoIndex].VariableUPsUP)[VariableIndex]->Val,
+                                    .Place = PointNamesCounted.Value[PNCIndex].NPNumber
+                                };
                             }
 
                             VAVs.VAVs[VAVs.VAVsSize-1].TheDefinedVarUP = (*Dvo[DvoIndex].VariableUPsUP)[VariableIndex];

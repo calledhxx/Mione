@@ -37,6 +37,10 @@ PromptObj Prompts[] = {
         .CurNumber = 8,
     },
     (PromptObj) {
+        .Name = "with",
+        .CurNumber = 9,
+    },
+    (PromptObj) {
         .CurNumber = -1,
     },
 };

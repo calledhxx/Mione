@@ -10,8 +10,11 @@
 #include "../ERR.h"
 #include <stdio.h>
 
-HeadReturnObj RETURN(struct _PairObject*Pairs,int PairsSize)
+HeadReturnObj RETURN(HeadRequestObj HeadRequest)
 {
+    PairObj * Pairs = HeadRequest.Pairs;
+    int PairsSize = HeadRequest.PairsSize;
+
     HeadReturnObj ToReturn;
     ToReturn.ToState = 0;
 
