@@ -19,7 +19,6 @@ HeadReturnObj SVV(struct _PairObject*Pairs,int PairsSize)
     Re.VAVs.VAVsSize = 0;
     Re.VAVs.VAVs = malloc(0);
 
-    int PROMPTSection = 0;
 
     CountObj Counted;
     VariableRequestUPObj Requested;
@@ -57,9 +56,6 @@ HeadReturnObj SVV(struct _PairObject*Pairs,int PairsSize)
 
                 Re.Vars = Vars;
                 Re.ToState = Re.ToState+4;
-            }else
-            {
-                PROMPTSection=1;
             }
         }else
         {

@@ -81,7 +81,7 @@ HeadReturnObj FOR(struct _PairObject*Pairs,int PairsSize)
 
 
     ValueObj V = (ValueObj){.ValueType = 0};
-    VariableObj * VariableUP = NULL;
+    VariableObj * CountVariableUP = NULL;
 
     int toTimes = 0;
 
@@ -104,7 +104,7 @@ HeadReturnObj FOR(struct _PairObject*Pairs,int PairsSize)
                         V = (*Dvo[DvoIndex].VariableUPsUP)[VariableIndex]->Val;
                        (*Dvo[DvoIndex].VariableUPsUP)[VariableIndex]->Val = (ValueObj){
                             .ValueType = 0};
-                       VariableUP = (*Dvo[DvoIndex].VariableUPsUP)[VariableIndex];
+                       CountVariableUP = (*Dvo[DvoIndex].VariableUPsUP)[VariableIndex];
 
                         break;
                     }
@@ -163,7 +163,7 @@ HeadReturnObj FOR(struct _PairObject*Pairs,int PairsSize)
         }
     }
 
-    VariableUP->Val = V;
+    if (CountVariableUP) CountVariableUP->Val = V;
 
     return ToReturn;
 }

@@ -88,7 +88,6 @@ HeadReturnObj IF(struct _PairObject*Pairs,int PairsSize){
                     {
                     case 1:
                         {
-
                             ToReturn.ToState+=1;
                             return ToReturn;
                         }
