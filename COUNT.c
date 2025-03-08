@@ -33,10 +33,11 @@ CountObj COUNT(MioneObj*Pack,int PackSize)
     {
         int PastCost = 0;//符號所前扣之值
 
-        if (Pack[i].ObjType == SYMBOL) // Symbol
+        switch (Pack[i].ObjType)
         {
-
-            switch (Pack[i].Symbol.CurNumber)
+        case SYMBOL:
+            {
+                switch (Pack[i].Symbol.CurNumber)
             {
             case 10:
                 {
@@ -441,8 +442,10 @@ CountObj COUNT(MioneObj*Pack,int PackSize)
                         }
                     }
             }
-        }else if (Pack[i].ObjType == VARIABLE || Pack[i].ObjType == VALUE)
-        {
+            }
+            break;
+            default:
+            {
             if (!BracketsChild)
             {
                 if (Pack[i].ObjType == VALUE && Pack[i].Val.ValueType == VALUE_TABLE_TYPE && !Pack[i].Val.Table.Counted)
@@ -1090,6 +1093,7 @@ CountObj COUNT(MioneObj*Pack,int PackSize)
                     }
 
                     default:
+                        ErrCall("dsa","不支援",NULL,Pack[i-1].Line,Pack[i-1].Column);
                         break;
                 }
 
@@ -1127,6 +1131,7 @@ CountObj COUNT(MioneObj*Pack,int PackSize)
                 inBracket = realloc(inBracket, sizeof(MioneObj) * (inBracketSize));
                 inBracket[inBracketSize - 1] = Pack[i];
             }
+        }
         }
 
         if (i == PackSize - 1)

@@ -32,8 +32,6 @@ HeadReturnObj RETURN(HeadRequestObj HeadRequest)
         {
             CountObj Counted = COUNT(Pairs[i].Source, Pairs[i].SourceSize);
 
-
-
             ToReturn.ToState = ToReturn.ToState+1;
             ToReturn.Vs = (ValueReturnObj){
                 .ValueSize = Counted.ValueSize,

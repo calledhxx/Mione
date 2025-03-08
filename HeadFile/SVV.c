@@ -44,13 +44,14 @@ HeadReturnObj SVV(HeadRequestObj HeadRequest)
         {
             if (PairsSize == 1)
             {
+                Counted = COUNT(Pairs[i].Source,Pairs[i].SourceSize);
+
                 if (VariablesUP)
                 {
-                    Counted = COUNT(Pairs[i].Source,Pairs[i].SourceSize);
-
                     VariablesObj Vars;
                     Vars.VarsSize = 0;
                     Vars.Vars = malloc(Vars.VarsSize);
+
                     for (int a = 0; a < Counted.ValueSize; a++)
                     {
                         Vars.VarsSize++;
@@ -63,7 +64,8 @@ HeadReturnObj SVV(HeadRequestObj HeadRequest)
 
                     Re.Vars = Vars;
                     Re.ToState = Re.ToState+4;
-                } else ErrCall("無意義的語句","M111",NULL,Prompt.Line,Prompt.Column);
+                }
+                // else ErrCall("無意義的語句","M111",NULL,Prompt.Line,Prompt.Column);
             }
         }else
         {

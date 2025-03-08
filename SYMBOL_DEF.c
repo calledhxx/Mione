@@ -41,23 +41,6 @@ SymbolObj Symbols[] =
         .AfterConnect = 1,
     },
 
-    (SymbolObj){
-        .Name = "(",
-        .SymbolType = 0,
-        .xIndex = 0, //這邊的設定有點無效 只是標住他的確與階級0同樣層級執行
-        .CurNumber = 12,
-        .CanConnect = 1,
-        .AfterConnect = 1,
-    },
-
-    (SymbolObj){
-        .Name = ")",
-        .SymbolType = 0,
-        .xIndex = 0, //這邊的設定有點無效 只是標住他的確與階級0同樣層級執行
-        .CurNumber = 13,
-        .CanConnect = 1,
-        .AfterConnect = 0,
-    },
 
 
     (SymbolObj){
@@ -122,6 +105,32 @@ SymbolObj Symbols[] =
         .CurNumber = 11,
         .CanConnect = 1,
         .AfterConnect = 0,
+    },
+    (SymbolObj){
+        .Name = "(",
+        .SymbolType = 0,
+        .xIndex = 0, //這邊的設定有點無效 只是標住他的確與階級0同樣層級執行
+        .CurNumber = 12,
+        .CanConnect = 1,
+        .AfterConnect = 1,
+    },
+
+    (SymbolObj){
+        .Name = ")",
+        .SymbolType = 0,
+        .xIndex = 0, //這邊的設定有點無效 只是標住他的確與階級0同樣層級執行
+        .CurNumber = 13,
+        .CanConnect = 1,
+        .AfterConnect = 0,
+    },
+
+ (SymbolObj){
+        .Name = "@",
+        .SymbolType = 2,
+        .xIndex = 1,
+        .CurNumber = 14,
+        .CanConnect = 1,
+        .AfterConnect = 1,
     },
 
     (SymbolObj){ //衛兵值
