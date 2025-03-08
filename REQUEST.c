@@ -539,7 +539,8 @@ VariableRequestUPObj REQUEST(MioneObj*Pack,int PackSize)
                                {
                                case VALUE_STRING_TYPE:
                                    {
-                                       if (strcmp((*Dvo[DvoIndex].VariableUPsUP)[VariableIndex]->Name, Target.String) == 0)
+
+                                       if ((*Dvo[DvoIndex].VariableUPsUP)[VariableIndex]->Name && strcmp((*Dvo[DvoIndex].VariableUPsUP)[VariableIndex]->Name, Target.String) == 0)
                                        {
                                            FoundVarUP = (*Dvo[DvoIndex].VariableUPsUP)[VariableIndex];
                                        }
@@ -548,7 +549,7 @@ VariableRequestUPObj REQUEST(MioneObj*Pack,int PackSize)
 
                                case VALUE_NOPOINTNUMBER_TYPE:
                                    {
-                                       if ((*Dvo[DvoIndex].VariableUPsUP)[VariableIndex]->Place, Target.NPNumber)
+                                       if ((*Dvo[DvoIndex].VariableUPsUP)[VariableIndex]->Place == Target.NPNumber)
                                        {
                                            FoundVarUP = (*Dvo[DvoIndex].VariableUPsUP)[VariableIndex];
 
