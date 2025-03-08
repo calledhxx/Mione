@@ -510,6 +510,7 @@ CountObj COUNT(MioneObj*Pack,int PackSize)
                     {
                         if (CountedTable[TableChildIndex].Place) printf("bbb %d\n", CountedTable[TableChildIndex].Place);
                         if (CountedTable[TableChildIndex].Name) printf("aaa %s\n", CountedTable[TableChildIndex].Name);
+                        printf("dada %d\n", CountedTable[TableChildIndex].Val.ValueType);
                     }
 
 

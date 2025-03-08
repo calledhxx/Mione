@@ -1,8 +1,9 @@
 set table = {
     "Hello": "John";
-    "World": "John";
+    "World": "JohnDADAS";
 };
 
 for i in table with key do range
-
+    key
+    i
 end

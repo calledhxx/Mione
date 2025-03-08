@@ -23,7 +23,7 @@ HeadReturnObj FOR(HeadRequestObj HeadRequest)
 
 
     VariableRequestUPObj Request = {.VariablesSize = 0};
-    VariableRequestUPObj WithCounted = {.VariablesSize = 0};
+    VariableRequestUPObj WithRequest = {.VariablesSize = 0};
 
     CountObj SetCounted = {.ValueSize = 0};
     CountObj DoCounted = {.ValueSize = 0};
@@ -78,8 +78,8 @@ HeadReturnObj FOR(HeadRequestObj HeadRequest)
                 break;
                  break;
             case 9: //with
-                WithCounted = REQUEST(Pairs[i].Source, Pairs[i].SourceSize);
-                if (WithCounted.VariablesSize !=1)ErrCall("`with` PROMPT in `for` only accept ONE REQUEST.","M016",NULL,Prompt.Line,Prompt.Column);
+                WithRequest = REQUEST(Pairs[i].Source, Pairs[i].SourceSize);
+                if (WithRequest.VariablesSize !=1)ErrCall("`with` PROMPT in `for` only accept ONE REQUEST.","M016",NULL,Prompt.Line,Prompt.Column);
 
                 with = 1;
                 break;
@@ -179,8 +179,44 @@ HeadReturnObj FOR(HeadRequestObj HeadRequest)
             {
                 if (with)
                 {
+                    *WithRequest.VariableUPs[0] = (VariableObj){
+                        .Val = (ValueObj){
+                            .ValueType = VALUE_STRING_TYPE,
+                            .String = InCounted.Value[0].Table.CountedTable[TableIndex].Name
+                        },
 
+                    };
                 }
+                *Request.VariableUPs[0] = (VariableObj){
+                    .Val = InCounted.Value[0].Table.CountedTable[TableIndex].Val
+                };
+
+                MioneReturnObj RangeReturn =  Range(DoCounted.Value[0].Area.Area,DoCounted.Value[0].Area.Size);
+
+                int States[] =  {
+                    1
+                };
+
+
+                for (int StateIndex = 0; StateIndex<(sizeof(States)/sizeof(int)); StateIndex++)
+                {
+                    if (RangeReturn.ToState >= States[StateIndex])
+                    {
+                        RangeReturn.ToState = RangeReturn.ToState-States[StateIndex];
+
+                        switch (States[StateIndex])
+                        {
+                        case 1:
+                            {
+                                ToReturn.ToState+=1;
+                                return ToReturn;
+                            }
+                            break;
+                        }
+                    }
+                }
+
+
             }
 
         }
