@@ -1075,37 +1075,79 @@ CountObj COUNT(MioneObj*Pack,int PackSize)
                         break;
                         }
 
-                    case 9:{ //multiple
-                            ValueObj Target;
 
-                            if (Pack[i].ObjType == VARIABLE) Target = Pack[i].VarUP->Val;
-                            if (Pack[i].ObjType == VALUE) Target = Pack[i].Val;
+                case 14:
+                        {
+                            ValueObj Target = Pack[i].ObjType == VARIABLE ? Pack[i].VarUP->Val : Pack[i].Val;
 
-                            if (Target.ValueType == VALUE_FUNCTION_TYPE){}else
+                            extern DefineVariableObj * Dvo;
+                        extern int DvoSize;
+
+                        VariableObj * FoundVarUP = NULL;
+
+                       for (int DvoIndex = 0; DvoIndex < DvoSize; DvoIndex++)
+                       {
+                           for (int VariableIndex = 0; VariableIndex < *(Dvo[DvoIndex].VariablesSizeUP); VariableIndex++)
+                           {
+                               switch (Target.ValueType)
+                               {
+                               case VALUE_STRING_TYPE:
+                                   {
+                                       if (strcmp((*Dvo[DvoIndex].VariableUPsUP)[VariableIndex]->Name, Target.String) == 0)
+                                       {
+                                           FoundVarUP = (*Dvo[DvoIndex].VariableUPsUP)[VariableIndex];
+                                       }
+                                   }
+                                   break;
+
+                               case VALUE_NOPOINTNUMBER_TYPE:
+                                   {
+                                       if ((*Dvo[DvoIndex].VariableUPsUP)[VariableIndex]->Place, Target.NPNumber)
+                                       {
+                                           FoundVarUP = (*Dvo[DvoIndex].VariableUPsUP)[VariableIndex];
+
+                                       }
+                                   }
+                                   break;
+                                   default:
+                                       {
+                                           ErrCall("dasdaskdoppas","dasjiodjaosjdoias",NULL,Pack[i-1].Line,Pack[i-1].Column);
+                                       }
+                               }
+
+                           }
+                       }
+
+                        if (!FoundVarUP)
+                        {
+                            FoundVarUP = malloc(sizeof(VariableObj));
+
+                            if (Target.ValueType == VALUE_STRING_TYPE)
                             {
-                                ErrCall("MUP Type error aaaa","MG00111312","aa",
-                                    Pack[i].Line,
-                                    Pack[i].Column);
+                                *FoundVarUP = (VariableObj){
+                                    .Name = Target.String
+                                };
+                            }else
+                            {
+                                *FoundVarUP = (VariableObj){
+                                    .Place = Target.NPNumber
+                                };
                             }
 
-                            AreaObj newFuc = Target.Area;
+                            (*Dvo[DvoSize-1].VariablesSizeUP)++;
+                            (*Dvo[DvoSize-1].VariableUPsUP) = realloc((*Dvo[DvoSize-1].VariableUPsUP), (*Dvo[DvoSize-1].VariablesSizeUP) * sizeof(VariableObj**));
+                            (*Dvo[DvoSize-1].VariableUPsUP)[(*Dvo[DvoSize-1].VariablesSizeUP)-1] = FoundVarUP;
+                        }
 
+                        Out = (MioneObj){
+                            .ObjType = VALUE,
+                            .Val = FoundVarUP->Val,
+                        };
 
-                            Out = (MioneObj){
-                                .ObjType = VALUE,
-                                .Val = (ValueObj){
-                                    .ValueType = VALUE_FUNCTION_TYPE,
-                                    .Area = newFuc
-                                },
-                                    .Line = Pack[i].Line,
-                                    .Column = Pack[i].Column
-                            };
-
-                            PastCost = 1;
-
-                            CalculateType = 0;
-                            break;
-                    }
+                        PastCost = 1;
+                        CalculateType = 0;
+                        break;
+                        }
 
                     default:
                         ErrCall("dsa","不支援",NULL,Pack[i-1].Line,Pack[i-1].Column);

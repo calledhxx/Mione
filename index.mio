@@ -1,9 +1,3 @@
-fuc = function
-    return "Hello"
-end;
+set x = 100;
 
-@(fuc()) = function
-    return 1+500;
-end()
-
-Hello + 500;
+@"x" + 5

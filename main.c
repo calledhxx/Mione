@@ -26,20 +26,6 @@ int main(const int OptionsSize,char **Options)
 {
     FILE *f = NULL;
 
-    // if (OptionsSize-1)
-    // {
-    //
-    // }else
-    // {
-    //     while (1)
-    //     {
-    //         char str[128];
-    //         scanf("%s",&str);
-    //
-    //         if (strcmp (str,"exit")==0) break;
-    //     }
-    // }
-
     f = fopen("D:\\Mione\\index.mio","r");
 
     if (f != NULL)
