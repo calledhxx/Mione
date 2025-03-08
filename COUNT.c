@@ -501,6 +501,7 @@ CountObj COUNT(MioneObj*Pack,int PackSize)
                         }
                     }
 
+                    printf("size %d\n",CountedTableSize);
 
                     CountedTable = NewTable;
                     CountedTableSize = NewTableSize;

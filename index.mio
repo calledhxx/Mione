@@ -1,3 +1,8 @@
-set x = 100;
+set table = {
+    "Hello": "John";
+    "World": "John";
+};
 
-@"x" + 5
+for i in table with key do range
+
+end

@@ -174,13 +174,15 @@ HeadReturnObj FOR(HeadRequestObj HeadRequest)
             }
         }
         if(in){
+            printf("size of %d\n",InCounted.Value[0].Table.CountedTableSize);
             for (int TableIndex = 0; TableIndex < InCounted.Value[0].Table.CountedTableSize; TableIndex++)
             {
+                if (with)
+                {
 
+                }
             }
-            if (with)
-            {
-            }
+
         }
     }
 

@@ -690,18 +690,18 @@ MioneReturnObj Table(const MioneObj* Objs, const int ObjsSize,VariableObj * * Va
                             for (int i = 0; i<a.Vars.VarsSize; i++)
                             {
                                 int theSame = 0;
-
                                 for (int j = 0; j<(*VariablesUPSizeUP); j++)
                                 {
                                     if (
                                         (a.Vars.Vars[i].Name && (*VariablesUP)[j].Name && strcmp((*VariablesUP)[j].Name, a.Vars.Vars[i].Name) == 0) ||
-                                        (*VariablesUP)[j].Place == a.Vars.Vars[i].Place
+                                        (!a.Vars.Vars[i].Name && !(*VariablesUP)[j].Name && a.Vars.Vars[i].Place == (*VariablesUP)[j].Place)
                                         )
                                     {
                                         theSame = 1;
                                         (*VariablesUP)[j].Val = a.Vars.Vars[i].Val;
                                     }
                                 }
+                                printf("aijdjdiajsdoajdidd %d\n",theSame);
 
                                 if (!theSame)
                                 {
@@ -849,7 +849,7 @@ MioneReturnObj Table(const MioneObj* Objs, const int ObjsSize,VariableObj * * Va
                                 {
                                     if (
                                         (a.Vars.Vars[i].Name && (*VariablesUP)[j].Name && strcmp((*VariablesUP)[j].Name, a.Vars.Vars[i].Name) == 0) ||
-                                        (*VariablesUP)[j].Place == a.Vars.Vars[i].Place
+                                        (!a.Vars.Vars[i].Name && !(*VariablesUP)[j].Name && a.Vars.Vars[i].Place == (*VariablesUP)[j].Place)
                                         )
                                     {
                                         theSame = 1;
