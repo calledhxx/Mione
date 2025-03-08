@@ -383,6 +383,21 @@ VariableRequestUPObj REQUEST(MioneObj*Pack,int PackSize)
                                                 Pack[i].Column
                                             );
                                         }
+
+                                        if (i)
+                                        {
+                                            if (Pack[i-1].ObjType != SYMBOL)
+                                            {
+                                                ErrCall(
+                                                    "[dlsapld[pasd[l",
+                                                    "dasdsadasa",
+                                                    NULL,
+                                                    Pack[i].Line,
+                                                    Pack[i].Column
+                                                );
+                                            }
+                                        }
+
                                         if (Pack[i].Symbol.xIndex == CalculateLevel) CalculateType = Pack[i].Symbol.CurNumber;
 
                                         break;

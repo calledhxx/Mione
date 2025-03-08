@@ -26,38 +26,21 @@ int main(const int OptionsSize,char **Options)
 {
     FILE *f = NULL;
 
-    if (OptionsSize>1)
-    {
-        int Mode = 0;
-        for (int i = 0;i<OptionsSize;i++)
-        {
-            int isChoosingMode = Options[i][0]=='-';
+    // if (OptionsSize-1)
+    // {
+    //
+    // }else
+    // {
+    //     while (1)
+    //     {
+    //         char str[128];
+    //         scanf("%s",&str);
+    //
+    //         if (strcmp (str,"exit")==0) break;
+    //     }
+    // }
 
-            if (Mode)
-            {
-                switch (Mode)
-                {
-                case 1:
-                    f = fopen(Options[i],"r");
-                    if (f){}else
-                    {
-                        ErrCall("No file found","FNF",NULL,0,0);
-                    }
-                    break;
-                }
-                Mode = 0;
-            }
-
-            if (isChoosingMode)
-            {
-                if (strcmp(strlwr(Options[i]),"-f")==0)  Mode = 1;
-            }
-        }
-    }else
-    {
-        f = fopen("D:\\Mione\\index.mio","r");
-    }
-
+    f = fopen("D:\\Mione\\index.mio","r");
 
     if (f != NULL)
     {

@@ -1,3 +1,9 @@
-set @"HELLO" = function
+fuc = function
+    return "Hello"
+end;
+
+@(fuc()) = function
     return 1+500;
 end()
+
+Hello + 500;
