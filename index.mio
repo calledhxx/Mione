@@ -1,9 +1,6 @@
-
 set server = {
-    "ip": "127.0.0.1";
-    "port": 8080;
-    "root": "/";
-
+    "a": 5;
+    "b": 3;
 };
 
 for i in server with key do range

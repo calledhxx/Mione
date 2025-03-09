@@ -1,3 +1,4 @@
+#include <inttypes.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -105,8 +106,10 @@ HeadReturnObj SVV(HeadRequestObj HeadRequest)
 
         for(int CountedIndex = 0; CountedIndex < SetCounted.ValueSize; CountedIndex++)
         {
-            Requested.VariableUPs[CountedIndex]->Val = SetCounted.Value[CountedIndex];
-
+            *Requested.VariableUPs[CountedIndex] = (VariableObj){
+                .Name = Requested.VariableUPs[CountedIndex]->Name,
+                .Val = SetCounted.Value[CountedIndex]
+            };
         }
 
         for (int VariableIndex = 0; VariableIndex < Requested.VariablesSize; VariableIndex++)
@@ -119,8 +122,6 @@ HeadReturnObj SVV(HeadRequestObj HeadRequest)
 
     if (point)
     {
-
-
         DefinedVarsAndValueObj VAVs;
         VAVs.VAVsSize = 0;
         VAVs.VAVs = malloc(0);
@@ -147,27 +148,30 @@ HeadReturnObj SVV(HeadRequestObj HeadRequest)
                             VarUPs = realloc(VarUPs, (VarUPsSize) * sizeof(VariableObj*));
                             (VarUPs[VarUPsSize-1]) = (*Dvo[DvoIndex].VariableUPsUP)[VariableIndex];
 
-
                             VAVs.VAVsSize++;
                             VAVs.VAVs = realloc(VAVs.VAVs, (VAVs.VAVsSize) * sizeof(DefinedVarAndValueObj));
                             VAVs.VAVs[VAVs.VAVsSize-1].Value = (*Dvo[DvoIndex].VariableUPsUP)[VariableIndex]->Val;
 
-                            (*Dvo[DvoIndex].VariableUPsUP)[VariableIndex]->Val = PointCounted.Value[PNCIndex];
+                            *(*Dvo[DvoIndex].VariableUPsUP)[VariableIndex] = (VariableObj){
+                                .Name = PointNamesCounted.Value[PNCIndex].String,
+                                .Val = PointCounted.Value[PNCIndex]
+                            };
+
 
                             for (int VariableIndex = Vars.VarsSize; VariableIndex < VarUPsSize; VariableIndex++)
                             {
                                 Vars.VarsSize++;
                                 Vars.Vars = realloc(Vars.Vars, (VariableIndex + 1) * sizeof(VariableObj));
-                                Vars.Vars[VariableIndex] = *((*Dvo[DvoIndex].VariableUPsUP)[VariableIndex]);
                                 Vars.Vars[VariableIndex] = (VariableObj){
-                                    .Val = (*Dvo[DvoIndex].VariableUPsUP)[VariableIndex]->Val,
-                                    .Name = PointNamesCounted.Value[PNCIndex].String
-                                };;
+                                    .Name = PointNamesCounted.Value[PNCIndex].String,
+                                    .Val = PointCounted.Value[PNCIndex]
+                                };
                             }
 
                             VAVs.VAVs[VAVs.VAVsSize-1].TheDefinedVarUP = (*Dvo[DvoIndex].VariableUPsUP)[VariableIndex];
 
-                            DvoIndex = DvoIndex + 1;
+
+                            DvoIndex = DvoSize;
                             break;
                         }
                     }
@@ -220,7 +224,6 @@ HeadReturnObj SVV(HeadRequestObj HeadRequest)
                             VAVs.VAVsSize++;
                             VAVs.VAVs = realloc(VAVs.VAVs, (VAVs.VAVsSize) * sizeof(DefinedVarAndValueObj));
                             VAVs.VAVs[VAVs.VAVsSize-1].Value = (*Dvo[DvoIndex].VariableUPsUP)[VariableIndex]->Val;
-                            printf("adijoso %p\n",(*Dvo[DvoIndex].VariableUPsUP)[VariableIndex]);
 
 
                             (*Dvo[DvoIndex].VariableUPsUP)[VariableIndex]->Val = PointCounted.Value[PNCIndex];
@@ -238,7 +241,7 @@ HeadReturnObj SVV(HeadRequestObj HeadRequest)
                             VAVs.VAVs[VAVs.VAVsSize-1].TheDefinedVarUP = (*Dvo[DvoIndex].VariableUPsUP)[VariableIndex];
 
 
-                            DvoIndex = DvoIndex + 1;
+                            DvoIndex = DvoSize;
                             break;
                         }
                     }
@@ -278,7 +281,16 @@ HeadReturnObj SVV(HeadRequestObj HeadRequest)
             }
         }
 
-        for (int i = 0; i < VAVs.VAVsSize; i++) VAVs.VAVs[i].TheDefinedVarUP-> Val = VAVs.VAVs[i].Value;
+        for (int i = 0; i < VAVs.VAVsSize; i++)
+        {
+
+            *VAVs.VAVs[i].TheDefinedVarUP = (VariableObj){
+                .Name = VAVs.VAVs[i].TheDefinedVarUP->Name,
+                .Place = VAVs.VAVs[i].TheDefinedVarUP->Place,
+                .Val = VAVs.VAVs[i].Value
+            };
+
+        }
     }
 
     if (set || point)
@@ -286,6 +298,8 @@ HeadReturnObj SVV(HeadRequestObj HeadRequest)
         Re.ToState = Re.ToState+4;
         Re.Vars = Vars;
     }
+
+
 
     return Re;
 }

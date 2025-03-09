@@ -130,13 +130,18 @@ HeadReturnObj FOR(HeadRequestObj HeadRequest)
         }
 
 
-      	Request.VariableUPs[0]->Val = SetCounted.Value[0];
+      	*Request.VariableUPs[0] = (VariableObj){
+      	    .Val  = SetCounted.Value[0],
+      	    .Name = Request.VariableUPs[0]->Name,
+      	    .Place = Request.VariableUPs[0]->Place
+      	};
     }
     if(to&&set){
       toTimes = ToCounted.Value[0].NPNumber - SetCounted.Value[0].NPNumber;
     }
 
     if(_do){
+
         if(set){
             CountObj ReqCounted = COUNT(Pairs[0].Source, Pairs[0].SourceSize);
             int LRofZero = toTimes - ReqCounted.Value[0].NPNumber;
@@ -172,6 +177,7 @@ HeadReturnObj FOR(HeadRequestObj HeadRequest)
                 }
             }
         }
+
         if(in){
             for (int TableIndex = 0; TableIndex < InCounted.Value[0].Table.CountedTableSize; TableIndex++)
             {
@@ -207,9 +213,13 @@ HeadReturnObj FOR(HeadRequestObj HeadRequest)
                     }
 
                 }
-                *Request.VariableUPs[0] = (VariableObj){
-                    .Val = InCounted.Value[0].Table.CountedTable[TableIndex].Val
+
+                *(Request.VariableUPs[0]) = (VariableObj){
+                    .Val = InCounted.Value[0].Table.CountedTable[TableIndex].Val,
+                    .Name = Request.VariableUPs[0]->Name,
+                    .Place = Request.VariableUPs[0]->Place
                 };
+
 
                 MioneReturnObj RangeReturn =  Range(DoCounted.Value[0].Area.Area,DoCounted.Value[0].Area.Size);
 
@@ -240,10 +250,10 @@ HeadReturnObj FOR(HeadRequestObj HeadRequest)
             }
 
         }
+
     }
 
     if (CountVariableUP) CountVariableUP->Val = V;
-
     return ToReturn;
 }
 

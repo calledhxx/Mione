@@ -539,7 +539,6 @@ VariableRequestUPObj REQUEST(MioneObj*Pack,int PackSize)
                                {
                                case VALUE_STRING_TYPE:
                                    {
-                                      printf("%s\n", (*Dvo[DvoIndex].VariableUPsUP)[VariableIndex]->Name);
                                        if ((*Dvo[DvoIndex].VariableUPsUP)[VariableIndex]->Name && strcmp((*Dvo[DvoIndex].VariableUPsUP)[VariableIndex]->Name, Target.String) == 0)
                                        {
                                            FoundVarUP = (*Dvo[DvoIndex].VariableUPsUP)[VariableIndex];
@@ -665,7 +664,6 @@ VariableRequestUPObj REQUEST(MioneObj*Pack,int PackSize)
             VPackSize ++;
             VPack = realloc(VPack, sizeof(VariableObj*) * (VPackSize));
             VPack[VPackSize-1] = Pack[i].VarUP;
-
         }
     }
 

@@ -473,7 +473,6 @@ CountObj COUNT(MioneObj*Pack,int PackSize)
                     // MioneReturnObj R =
                     Table(V.Table.MioneTable,V.Table.MioneTableSize,&CountedTable,&CountedTableSize);
 
-
                     Pack[i].Val.Table.Counted=1;
                     Pack[i].Val.Table.MioneTable = NULL;
                     Pack[i].Val.Table.MioneTableSize = 0;
@@ -506,13 +505,12 @@ CountObj COUNT(MioneObj*Pack,int PackSize)
                     CountedTable = NewTable;
                     CountedTableSize = NewTableSize;
 
-                    /*
-                    for (int TableChildIndex = 0; TableChildIndex<CountedTableSize ; TableChildIndex++)
-                    {
-                        if (CountedTable[TableChildIndex].Place) printf("bbb %d\n", CountedTable[TableChildIndex].Place);
-                        if (CountedTable[TableChildIndex].Name) printf("aaa %s\n", CountedTable[TableChildIndex].Name);
-                    }
-                    */
+
+                    // for (int TableChildIndex = 0; TableChildIndex<CountedTableSize ; TableChildIndex++)
+                    // {
+                    //     if (CountedTable[TableChildIndex].Name) printf("aaa %s %d\n", CountedTable[TableChildIndex].Name,CountedTable[TableChildIndex].Val.ValueType);
+                    // }
+
 
 
                     Pack[i].Val.Table.CountedTable = CountedTable;
@@ -1222,6 +1220,7 @@ CountObj COUNT(MioneObj*Pack,int PackSize)
             VPackSize ++;
             VPack = realloc(VPack, sizeof(ValueObj) * (VPackSize));
             VPack[VPackSize-1] = Pack[i].VarUP->Val;
+
         }
     }
 

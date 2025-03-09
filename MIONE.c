@@ -708,6 +708,7 @@ MioneReturnObj Table(const MioneObj* Objs, const int ObjsSize,VariableObj * * Va
                                     (*VariablesUPSizeUP)++;
                                     (*VariablesUP) = realloc((*VariablesUP), (*VariablesUPSizeUP) * sizeof(VariableObj));
                                     (*VariablesUP)[(*VariablesUPSizeUP) - 1] = a.Vars.Vars[i];
+
                                 }
                             }
                             break;
@@ -857,12 +858,12 @@ MioneReturnObj Table(const MioneObj* Objs, const int ObjsSize,VariableObj * * Va
                                     }
                                 }
 
-
                                 if (!theSame)
                                 {
                                     (*VariablesUPSizeUP)++;
                                     (*VariablesUP) = realloc((*VariablesUP), (*VariablesUPSizeUP) * sizeof(VariableObj));
                                     (*VariablesUP)[(*VariablesUPSizeUP) - 1] = a.Vars.Vars[i];
+
                                 }
                             }
                             break;
