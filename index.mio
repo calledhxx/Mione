@@ -1,8 +1,13 @@
 set server = {
-    "a": 5;
-    "b": 3;
+    "a": "c";
+    "b": "d";
 };
 
 for i in server with key do range
-    @key = i
+    @key,@i = i,key
 end
+
+a
+b
+c
+d

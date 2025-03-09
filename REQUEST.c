@@ -346,16 +346,16 @@ VariableRequestUPObj REQUEST(MioneObj*Pack,int PackSize)
 
 
 
-                                        if (Pack[i-1].ObjType == SYMBOL || Pack[i+1].ObjType == SYMBOL)
-                                        {
-                                            ErrCall(
-                                              "dkaopkdapskdpsa",
-                                              "MG3123i13",
-                                              "Maybe you can try `1+1` or anything else.",
-                                              Pack[i].Line,
-                                              Pack[i].Column
-                                          );
-                                        }
+                                        // if (Pack[i-1].ObjType == SYMBOL || Pack[i+1].ObjType == SYMBOL)
+                                        // {
+                                        //     ErrCall(
+                                        //       "dkaopkdapskdpsa",
+                                        //       "MG3123i13",
+                                        //       "Maybe you can try `1+1` or anything else.",
+                                        //       Pack[i].Line,
+                                        //       Pack[i].Column
+                                        //   );
+                                        // }
                                         if (Pack[i].Symbol.xIndex == CalculateLevel) CalculateType = Pack[i].Symbol.CurNumber;
 
                                         break;

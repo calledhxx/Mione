@@ -158,7 +158,10 @@ HeadReturnObj SVV(HeadRequestObj HeadRequest)
                             {
                                 Vars.VarsSize++;
                                 Vars.Vars = realloc(Vars.Vars, (VariableIndex + 1) * sizeof(VariableObj));
-                                Vars.Vars[VariableIndex] = *(*Dvo[DvoIndex].VariableUPsUP)[VariableIndex];
+                                Vars.Vars[VariableIndex] = (VariableObj){
+                                    .Name = PointNamesCounted.Value[PNCIndex].String,
+                                    .Val = PointCounted.Value[PNCIndex]
+                                };
                             }
 
                             VAVs.VAVs[VAVs.VAVsSize-1].TheDefinedVarUP = (*Dvo[DvoIndex].VariableUPsUP)[VariableIndex];
@@ -224,7 +227,10 @@ HeadReturnObj SVV(HeadRequestObj HeadRequest)
                             {
                                 Vars.VarsSize++;
                                 Vars.Vars = realloc(Vars.Vars, (VariableIndex + 1) * sizeof(VariableObj));
-                                Vars.Vars[VariableIndex] = *(*Dvo[DvoIndex].VariableUPsUP)[VariableIndex];
+                                Vars.Vars[VariableIndex] = (VariableObj){
+                                    .Val = (*Dvo[DvoIndex].VariableUPsUP)[VariableIndex]->Val,
+                                    .Place = PointNamesCounted.Value[PNCIndex].NPNumber
+                                };
                             }
 
                             VAVs.VAVs[VAVs.VAVsSize-1].TheDefinedVarUP = (*Dvo[DvoIndex].VariableUPsUP)[VariableIndex];
