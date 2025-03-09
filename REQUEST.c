@@ -666,7 +666,6 @@ VariableRequestUPObj REQUEST(MioneObj*Pack,int PackSize)
             VPack = realloc(VPack, sizeof(VariableObj*) * (VPackSize));
             VPack[VPackSize-1] = Pack[i].VarUP;
 
-            printf("added %p\n",Pack[i].VarUP);
         }
     }
 

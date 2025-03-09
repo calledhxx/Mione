@@ -701,7 +701,6 @@ MioneReturnObj Table(const MioneObj* Objs, const int ObjsSize,VariableObj * * Va
                                         (*VariablesUP)[j].Val = a.Vars.Vars[i].Val;
                                     }
                                 }
-                                printf("%d type\n",a.Vars.Vars[i].Val.ValueType);
 
 
                                 if (!theSame)

@@ -501,17 +501,18 @@ CountObj COUNT(MioneObj*Pack,int PackSize)
                         }
                     }
 
-                    printf("size %d\n",CountedTableSize);
+                    //printf("size %d\n",CountedTableSize);
 
                     CountedTable = NewTable;
                     CountedTableSize = NewTableSize;
 
+                    /*
                     for (int TableChildIndex = 0; TableChildIndex<CountedTableSize ; TableChildIndex++)
                     {
                         if (CountedTable[TableChildIndex].Place) printf("bbb %d\n", CountedTable[TableChildIndex].Place);
                         if (CountedTable[TableChildIndex].Name) printf("aaa %s\n", CountedTable[TableChildIndex].Name);
-                        printf("dada %d\n", CountedTable[TableChildIndex].Val.ValueType);
                     }
+                    */
 
 
                     Pack[i].Val.Table.CountedTable = CountedTable;
