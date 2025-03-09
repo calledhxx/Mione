@@ -144,7 +144,6 @@ HeadReturnObj FOR(HeadRequestObj HeadRequest)
             for (int TimesIndex = ReqCounted.Value[0].NPNumber ; LRofZero > 0 ? TimesIndex < (toTimes) : TimesIndex > (toTimes) ; TimesIndex = TimesIndex + (LRofZero > 0 ? 1 : -1))
             {
                 Request.VariableUPs[0]->Val.NPNumber =  Request.VariableUPs[0]->Val.NPNumber +( LRofZero > 0 ? 1 : -1);
-                printf("%d %d\n",ReqCounted.Value[0].NPNumber, Request.VariableUPs[0]->Val.NPNumber);
 
                 MioneReturnObj RangeReturn =  Range(DoCounted.Value[0].Area.Area,DoCounted.Value[0].Area.Size);
 
@@ -174,18 +173,39 @@ HeadReturnObj FOR(HeadRequestObj HeadRequest)
             }
         }
         if(in){
-            printf("size of %d\n",InCounted.Value[0].Table.CountedTableSize);
             for (int TableIndex = 0; TableIndex < InCounted.Value[0].Table.CountedTableSize; TableIndex++)
             {
                 if (with)
                 {
-                    *WithRequest.VariableUPs[0] = (VariableObj){
-                        .Val = (ValueObj){
-                            .ValueType = VALUE_STRING_TYPE,
-                            .String = InCounted.Value[0].Table.CountedTable[TableIndex].Name
-                        },
+                    if (InCounted.Value[0].Table.CountedTable[TableIndex].Name)
+                    {
+                        *WithRequest.VariableUPs[0] = (VariableObj){
+                            .Val = (ValueObj){
+                                .ValueType = VALUE_STRING_TYPE,
+                                .String = InCounted.Value[0].Table.CountedTable[TableIndex].Name
+                            },
 
-                    };
+                        };
+                    }else if (InCounted.Value[0].Table.CountedTable[TableIndex].Place)
+                    {
+                        *WithRequest.VariableUPs[0] = (VariableObj){
+                            .Val = (ValueObj){
+                                .ValueType = VALUE_NOPOINTNUMBER_TYPE,
+                                .NPNumber = InCounted.Value[0].Table.CountedTable[TableIndex].Place
+                            },
+
+                        };
+                    }else
+                    {
+                        *WithRequest.VariableUPs[0] = (VariableObj){
+                            .Val = (ValueObj){
+                                .ValueType = VALUE_NOPOINTNUMBER_TYPE,
+                                .NPNumber = 0
+                            },
+
+                        };
+                    }
+
                 }
                 *Request.VariableUPs[0] = (VariableObj){
                     .Val = InCounted.Value[0].Table.CountedTable[TableIndex].Val

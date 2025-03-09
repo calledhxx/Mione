@@ -3,36 +3,9 @@ set server = {
     "ip": "127.0.0.1";
     "port": 8080;
     "root": "/";
-    "index": "index.mio";
-    "error_page": "error.mio";
-    "charset": "utf-8";
-    "log_file": "access.log";
-    "log_level": "info";
-    "access_log": true;
-    "error_log": true;
-    "daemon": false;
-    "max_request": 1000;
-    "keep_alive": true;
-    "timeout": 30;
-    "ssl": false;
-    "ssl_cert": "ssl.crt";
-    "ssl_key": "ssl.key";
-    "ssl_ca": "ca.crt";
-    "ssl_ciphers": "TLSv1.2+HIGH:TLSv1.3+HIGH:!aNULL:!eNULL:!EXPORT:!DES:!RC4:!MD5:!PSK:!aECDH:!EDH-DSS-DES-CBC3-SHA:!EDH-RSA-DES-CBC3-SHA:!KRB5-DES-CBC3-SHA";
-    "ssl_protocols": "TLSv1.2 TLSv1.3";
-    "ssl_session_cache": "shared:SSL:10m";
-    "ssl_session_timeout": 10m;
-    "ssl_prefer_server_ciphers": true;
-    "ssl_verify_client": false;
-    "ssl_verify_depth": 1;
-    "ssl_client_certificate": "client.crt";
-    "ssl_client_key": "client.key";
-    "ssl_client_verify": "optional";
-    "ssl_verify_peer": true;
-    "ssl_verify_fail_if_no_peer_cert": true;
+
 };
 
 for i in server with key do range
-    i
-    key
+    @key = i
 end
