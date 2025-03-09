@@ -152,20 +152,13 @@ HeadReturnObj SVV(HeadRequestObj HeadRequest)
                             VAVs.VAVs = realloc(VAVs.VAVs, (VAVs.VAVsSize) * sizeof(DefinedVarAndValueObj));
                             VAVs.VAVs[VAVs.VAVsSize-1].Value = (*Dvo[DvoIndex].VariableUPsUP)[VariableIndex]->Val;
 
-                            *(*Dvo[DvoIndex].VariableUPsUP)[VariableIndex] = (VariableObj){
-                                .Name = PointNamesCounted.Value[PNCIndex].String,
-                                .Val = PointCounted.Value[PNCIndex]
-                            };
-
+                            (*Dvo[DvoIndex].VariableUPsUP)[VariableIndex]->Val = PointCounted.Value[PNCIndex];
 
                             for (int VariableIndex = Vars.VarsSize; VariableIndex < VarUPsSize; VariableIndex++)
                             {
                                 Vars.VarsSize++;
                                 Vars.Vars = realloc(Vars.Vars, (VariableIndex + 1) * sizeof(VariableObj));
-                                Vars.Vars[VariableIndex] = (VariableObj){
-                                    .Name = PointNamesCounted.Value[PNCIndex].String,
-                                    .Val = PointCounted.Value[PNCIndex]
-                                };
+                                Vars.Vars[VariableIndex] = *(*Dvo[DvoIndex].VariableUPsUP)[VariableIndex];
                             }
 
                             VAVs.VAVs[VAVs.VAVsSize-1].TheDefinedVarUP = (*Dvo[DvoIndex].VariableUPsUP)[VariableIndex];
@@ -225,17 +218,13 @@ HeadReturnObj SVV(HeadRequestObj HeadRequest)
                             VAVs.VAVs = realloc(VAVs.VAVs, (VAVs.VAVsSize) * sizeof(DefinedVarAndValueObj));
                             VAVs.VAVs[VAVs.VAVsSize-1].Value = (*Dvo[DvoIndex].VariableUPsUP)[VariableIndex]->Val;
 
-
                             (*Dvo[DvoIndex].VariableUPsUP)[VariableIndex]->Val = PointCounted.Value[PNCIndex];
 
                             for (int VariableIndex = Vars.VarsSize; VariableIndex < VarUPsSize; VariableIndex++)
                             {
                                 Vars.VarsSize++;
                                 Vars.Vars = realloc(Vars.Vars, (VariableIndex + 1) * sizeof(VariableObj));
-                                Vars.Vars[VariableIndex] = (VariableObj){
-                                    .Val = (*Dvo[DvoIndex].VariableUPsUP)[VariableIndex]->Val,
-                                    .Place = PointNamesCounted.Value[PNCIndex].NPNumber
-                                };
+                                Vars.Vars[VariableIndex] = *(*Dvo[DvoIndex].VariableUPsUP)[VariableIndex];
                             }
 
                             VAVs.VAVs[VAVs.VAVsSize-1].TheDefinedVarUP = (*Dvo[DvoIndex].VariableUPsUP)[VariableIndex];
