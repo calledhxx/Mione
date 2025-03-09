@@ -228,7 +228,7 @@ HeadReturnObj SVV(HeadRequestObj HeadRequest)
                                 Vars.VarsSize++;
                                 Vars.Vars = realloc(Vars.Vars, (VariableIndex + 1) * sizeof(VariableObj));
                                 Vars.Vars[VariableIndex] = (VariableObj){
-                                    .Val = (*Dvo[DvoIndex].VariableUPsUP)[VariableIndex]->Val,
+                                    .Val = PointCounted.Value[PNCIndex],
                                     .Place = PointNamesCounted.Value[PNCIndex].NPNumber
                                 };
                             }
