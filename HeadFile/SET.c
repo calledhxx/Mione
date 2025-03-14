@@ -87,6 +87,7 @@ HeadReturnObj SET(HeadRequestObj HeadRequest)
             {
                 for (int VariableIndex = 0; VariableIndex < *(Dvo[DvoIndex].VariablesSizeUP); VariableIndex++)
                 {
+                    if ((*Dvo[DvoIndex].VariableUPsUP)[VariableIndex]->Name && Request.VariableUPs[RequestIndex]->Name)
                     if (strcmp((*Dvo[DvoIndex].VariableUPsUP)[VariableIndex]->Name, Request.VariableUPs[RequestIndex]->Name) == 0)
                     {
                         V = (*Dvo[DvoIndex].VariableUPsUP)[VariableIndex]->Val;

@@ -1,13 +1,19 @@
 set server = {
-    "a": "c";
-    "b": "d";
+    "a": 1;
+    "b": 1;
 };
 
+set index = 0;
+
 for i in server with key do range
-    @key,@i = i,key
+    index = index+1;
+    @key = i;
+    set ai = @key host;
+
+    function
+        @key = ai + 5 + index;
+    end ()
 end
 
 a
 b
-c
-d

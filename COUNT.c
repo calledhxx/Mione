@@ -1094,6 +1094,7 @@ CountObj COUNT(MioneObj*Pack,int PackSize)
                                {
                                case VALUE_STRING_TYPE:
                                    {
+                                       if ((*Dvo[DvoIndex].VariableUPsUP)[VariableIndex]->Name)
                                        if (strcmp((*Dvo[DvoIndex].VariableUPsUP)[VariableIndex]->Name, Target.String) == 0)
                                        {
                                            FoundVarUP = (*Dvo[DvoIndex].VariableUPsUP)[VariableIndex];
