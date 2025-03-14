@@ -1,18 +1,19 @@
-set server = {
-    "a": 1;
-    "b": 1;
+set table = {
+    "a":100;
+    "b":5100;
 };
 
 set index = 0;
 
-for i in server with key do range
-    index = index+1;
-    @key = i;
-    set ai = @key host;
+for child in table with key do range
+    index = index + 1;
+
+    set butter = @key;
+    @key = child + 1;
 
     function
-        @key = ai + 5 + index;
-    end ()
+        @key = butter + index*500;
+    end()
 end
 
 a

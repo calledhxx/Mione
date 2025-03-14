@@ -27,14 +27,14 @@ MioneObj *CMO(CaseObj*CASES,int CASESIZE,
 
     int Lock = -1; //被封鎖到...
 
-    int goEndType = 0; //range or function or lights
-
-
     CaseObj* Area = malloc(0);
     int AreaSize = 0;
 
     int Line = 0+LineADD;
     int Column = 0+ColumnADD;
+
+    int goEndType = 0; //range or function or lights
+    int CapLine = 0; //行
 
     (*DvoSizeUP)++;
     *DvoUP = realloc(*DvoUP,(*DvoSizeUP)*sizeof(DefineVariableObj));
@@ -167,8 +167,7 @@ MioneObj *CMO(CaseObj*CASES,int CASESIZE,
 
                    int MioObjSize = 0;
 
-                   MioneObj * MioObj = CMO(Area,AreaSize,&MioObjSize,MIONESIZE ? MIONE[MIONESIZE-1].Line : Line,MIONESIZE ? MIONE[MIONESIZE-1].Column : Column,DvoUP,DvoSizeUP);
-
+                   MioneObj * MioObj = CMO(Area,AreaSize,&MioObjSize,CapLine,Column,DvoUP,DvoSizeUP);
                    // VariableObj * TbMemory = malloc(0);
                    // int  TbMemorySize = 0;
                    //
@@ -227,12 +226,9 @@ MioneObj *CMO(CaseObj*CASES,int CASESIZE,
                ChildCount--;
                if (ChildCount == 0 && TableCount == 0) //僅包覆最高層的子向
                {
-
                    int MioObjSize = 0;
 
-
-
-                   MioneObj * MioObj = CMO(Area,AreaSize,&MioObjSize,MIONESIZE ? MIONE[MIONESIZE-1].Line : Line,MIONESIZE ? MIONE[MIONESIZE-1].Column : Column,DvoUP,DvoSizeUP);
+                   MioneObj * MioObj = CMO(Area,AreaSize,&MioObjSize,CapLine,Column,DvoUP,DvoSizeUP);
 
 
                    AreaObj eArea = (AreaObj){
@@ -265,7 +261,6 @@ MioneObj *CMO(CaseObj*CASES,int CASESIZE,
                    goEndType = 0;
 
                    Paired = VALUE;
-
                }else
                {
 
@@ -290,6 +285,7 @@ MioneObj *CMO(CaseObj*CASES,int CASESIZE,
                ChildCount++;
                if (ChildCount == 1)
                {
+                   CapLine = Line;
                    goEndType = VALUE_FUNCTION_TYPE;
                    Paired = 5;
                }
@@ -304,6 +300,7 @@ MioneObj *CMO(CaseObj*CASES,int CASESIZE,
                ChildCount++;
                if (ChildCount == 1)
                {
+                   CapLine = Line;
                    goEndType = VALUE_RANGE_TYPE;
                    Paired = 5;
                }
@@ -317,6 +314,7 @@ MioneObj *CMO(CaseObj*CASES,int CASESIZE,
                ChildCount++;
                if (ChildCount == 1)
                {
+                   CapLine = Line;
                    goEndType = VALUE_LIGHTS_TYPE;
                    Paired = 5;
                }
