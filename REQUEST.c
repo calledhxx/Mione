@@ -113,10 +113,10 @@ VariableRequestUPObj REQUEST(MioneObj*Pack,int PackSize)
 
                                     if (Pack[FirstBracketIndex - 1].VarUP->Val.ValueType == VALUE_FUNCTION_TYPE)
                                     {
-                                        ValueReturnObj V = Function(
+                                        ValueReturnObj V ;/*= Function(
                                             Pack[FirstBracketIndex - 1].VarUP->Val.Area.Area,
                                             Pack[FirstBracketIndex - 1].VarUP->Val.Area.Size
-                                            ).Vs;
+                                            ).Vs; */
 
                                         MioneObj* NewPack = malloc(0);
                                         int NewPackSize = 0;
@@ -201,10 +201,10 @@ VariableRequestUPObj REQUEST(MioneObj*Pack,int PackSize)
                                 {
                                     if (Pack[FirstBracketIndex - 1].Val.ValueType == VALUE_FUNCTION_TYPE)
                                     {
-                                        ValueReturnObj V = Function(
+                                        ValueReturnObj V;/* = Function(
                                             Pack[FirstBracketIndex - 1].Val.Area.Area,
                                             Pack[FirstBracketIndex - 1].Val.Area.Size
-                                            ).Vs;
+                                            ).Vs; */
 
                                         MioneObj* NewPack = malloc(0);
                                         int NewPackSize = 0;
@@ -470,7 +470,7 @@ VariableRequestUPObj REQUEST(MioneObj*Pack,int PackSize)
                     int CountedTableSize = 0;
 
                     // MioneReturnObj R =
-                    Table(V.Table.MioneTable,V.Table.MioneTableSize,&CountedTable,&CountedTableSize);
+                    // Table(V.Table.MioneTable,V.Table.MioneTableSize,&CountedTable,&CountedTableSize);
 
 
                     Pack[i].Val.Table.Counted=1;

@@ -74,7 +74,7 @@ HeadReturnObj IF(HeadRequestObj HeadRequest)
         if(then == db || _else != db){
             ValueObj RangeArea = db?CountedThenRange.Value[0]:CountedElseRange.Value[0];
 
-            MioneReturnObj RangeReturn = Range(RangeArea.Area.Area,RangeArea.Area.Size);
+            MioneReturnObj RangeReturn ;//= Range(RangeArea.Area.Area,RangeArea.Area.Size);
 
             const int States[] =  {
                 1

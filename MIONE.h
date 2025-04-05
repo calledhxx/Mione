@@ -4,7 +4,4 @@
 
 #include "OBJECTS.h"
 
-extern  MioneReturnObj Range();
-extern  MioneReturnObj Function();
-extern MioneReturnObj mione();
-extern MioneReturnObj Table();
+extern MioneBuiltObj ToMione();

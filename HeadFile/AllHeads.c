@@ -14,7 +14,7 @@ HeadObj Heads[]  = {
     (HeadObj){
         .Fuc = SET,
         .Name = "set",
-        .CurNumber = 1
+        .CurNumber = 1,
     },
     (HeadObj){
         .Fuc = RETURN,

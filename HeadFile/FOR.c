@@ -150,7 +150,7 @@ HeadReturnObj FOR(HeadRequestObj HeadRequest)
             {
                 Request.VariableUPs[0]->Val.NPNumber =  Request.VariableUPs[0]->Val.NPNumber +( LRofZero > 0 ? 1 : -1);
 
-                MioneReturnObj RangeReturn =  Range(DoCounted.Value[0].Area.Area,DoCounted.Value[0].Area.Size);
+                MioneReturnObj RangeReturn ;//=  Range(DoCounted.Value[0].Area.Area,DoCounted.Value[0].Area.Size);
 
 
                 int States[] =  {
@@ -221,7 +221,7 @@ HeadReturnObj FOR(HeadRequestObj HeadRequest)
                 };
 
 
-                MioneReturnObj RangeReturn =  Range(DoCounted.Value[0].Area.Area,DoCounted.Value[0].Area.Size);
+                MioneReturnObj RangeReturn ;//=  Range(DoCounted.Value[0].Area.Area,DoCounted.Value[0].Area.Size);
 
                 int States[] =  {
                     1

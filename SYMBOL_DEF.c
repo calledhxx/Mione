@@ -133,6 +133,15 @@ SymbolObj Symbols[] =
         .AfterConnect = 1,
     },
 
+    (SymbolObj){
+        .Name = "abreast",
+        .SymbolType = 2,
+        .xIndex = 1,
+        .CurNumber = 15,
+        .CanConnect = 1,
+        .AfterConnect = 1,
+    },
+
     (SymbolObj){ //衛兵值
         .CurNumber = -1
     }

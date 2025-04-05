@@ -16,6 +16,7 @@
 #define VALUE_TABLE_TYPE 6
 #define VALUE_LIGHTS_TYPE 7
 #define VALUE_DB_TYPE 8
+#define VALUE_COROUTINE_TYPE 9
 
 #ifndef OBJECTS_H
 #define OBJECTS_H
@@ -24,7 +25,6 @@ typedef struct _AreaObject
 {
     int Size; //值大小
     struct _MioneObject * Area;//給於函數(function)或者執行式(range)。
-    int Index; //開頭位置
 }AreaObj;
 
 typedef struct _TableObject
@@ -51,6 +51,7 @@ typedef struct _ValueObject
     6:表單
     7:開關
     8:布林值
+    9:mione塊
     */
     struct _AreaObject Area; //給於函數(function),開關(lights)或者執行式(range)。
     char * String; //給予文字(string)。
@@ -208,6 +209,26 @@ typedef struct _HeadRequestObject
     VariableObj * * VariablesUP;
     int * VariablesUPSizeUP;
 } HeadRequestObj;
+
+typedef struct _MioneSectionObject
+{
+    PairObj HeadAction;
+
+    PairObj * Pairs;
+    int PairsSize;
+} MioneSectionObj;
+
+typedef struct _MioneToBuildObject
+{
+    const MioneObj* Objs;
+    const int ObjsSize;
+} MioneToBuildObj;
+
+typedef struct _MioneBuiltObject
+{
+    MioneSectionObj * Sections;
+    int SectionsSize;
+} MioneBuiltObj;
 
 
 

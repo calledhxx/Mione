@@ -114,10 +114,10 @@ CountObj COUNT(MioneObj*Pack,int PackSize)
 
                                     if (Pack[FirstBracketIndex - 1].VarUP->Val.ValueType == VALUE_FUNCTION_TYPE)
                                     {
-                                        ValueReturnObj V = Function(
+                                        ValueReturnObj V ;/*= Function(
                                             Pack[FirstBracketIndex - 1].VarUP->Val.Area.Area,
                                             Pack[FirstBracketIndex - 1].VarUP->Val.Area.Size
-                                            ).Vs;
+                                            ).Vs; */
 
                                         MioneObj* NewPack = malloc(0);
                                         int NewPackSize = 0;
@@ -202,10 +202,10 @@ CountObj COUNT(MioneObj*Pack,int PackSize)
                                 {
                                     if (Pack[FirstBracketIndex - 1].Val.ValueType == VALUE_FUNCTION_TYPE)
                                     {
-                                        ValueReturnObj V = Function(
+                                        ValueReturnObj V;/* = Function(
                                             Pack[FirstBracketIndex - 1].Val.Area.Area,
                                             Pack[FirstBracketIndex - 1].Val.Area.Size
-                                            ).Vs;
+                                            ).Vs; */
 
                                         MioneObj* NewPack = malloc(0);
                                         int NewPackSize = 0;
@@ -471,7 +471,7 @@ CountObj COUNT(MioneObj*Pack,int PackSize)
                     int CountedTableSize = 0;
 
                     // MioneReturnObj R =
-                    Table(V.Table.MioneTable,V.Table.MioneTableSize,&CountedTable,&CountedTableSize);
+                    // Table(V.Table.MioneTable,V.Table.MioneTableSize,&CountedTable,&CountedTableSize);
 
                     Pack[i].Val.Table.Counted=1;
                     Pack[i].Val.Table.MioneTable = NULL;
@@ -1148,6 +1148,17 @@ CountObj COUNT(MioneObj*Pack,int PackSize)
 
                         PastCost = 1;
                         CalculateType = 0;
+                        break;
+                        }
+                case 15:{
+                            ValueObj Target = Pack[i].ObjType == VARIABLE ? Pack[i].VarUP->Val : Pack[i].Val;
+
+                            if (Target.ValueType != VALUE_COROUTINE_TYPE) ErrCall("dsa","da",NULL,Pack[i].Line,Pack[i].Column);
+
+                            // mione(); //todo
+
+                            PastCost = 1;
+                            CalculateType = 0;
                         break;
                         }
 

@@ -77,7 +77,7 @@ MioneObj *CMO(CaseObj*CASES,int CASESIZE,
                      .ObjType= HEAD,
                      .Head = Heads[Ci],
                       .Line = Line,
-                      .Column = Column
+                      .Column = Column,
                  };
 
                  Paired = HEAD;
@@ -234,7 +234,6 @@ MioneObj *CMO(CaseObj*CASES,int CASESIZE,
                    AreaObj eArea = (AreaObj){
                        .Area =MioObj,
                        .Size = MioObjSize,
-                       .Index = MIONESIZE,
                    };
 
                    ValueObj Value = (ValueObj){
@@ -296,6 +295,19 @@ MioneObj *CMO(CaseObj*CASES,int CASESIZE,
 
 
            if (TableCount == 0) if (strcmp(CASES[i].ObjName,"range") == 0)
+           {
+               ChildCount++;
+               if (ChildCount == 1)
+               {
+                   CapLine = Line;
+                   goEndType = VALUE_COROUTINE_TYPE;
+                   Paired = 5;
+               }
+           }
+
+           //Value : coroutine
+
+           if (TableCount == 0) if (strcmp(CASES[i].ObjName,"coroutine") == 0)
            {
                ChildCount++;
                if (ChildCount == 1)

@@ -41,8 +41,12 @@ int main(const int OptionsSize,char **Options)
 
         MioneObj * MioObj = CMO(CASES,CaseObjSize,&MioObjSize,1,0,&Dvo,&DvoSize);
 
-        mione(MioObj,MioObjSize);
+        MioneBuiltObj a =ToMione((MioneToBuildObj){
+            .Objs = MioObj,
+            .ObjsSize = MioObjSize
+        });
 
+        printf("sec size:%d\n",a.SectionsSize);
         printf("\n # Well down. Have a good day.");
 
     }else
