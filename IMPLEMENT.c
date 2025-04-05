@@ -14,7 +14,17 @@ ImplementedObj IMPLEMENT(const ToImplementObj toImplement)
 
     for (int SectionIndex = 0; SectionIndex < SectionsSize; SectionIndex++)
     {
-        printf("address %p %d\n", Sections[SectionIndex].HeadAction.Head.Fuc,Sections[SectionIndex].PairsSize);
+        printf("fuc address %p .", Sections[SectionIndex].HeadAction.Head.Fuc);
+
+        PairObj * Pairs = Sections[SectionIndex].Pairs;
+        int PairsSize = Sections[SectionIndex].PairsSize;
+
+        for (int PairIndex = 0; PairIndex < PairsSize; PairIndex++)
+        {
+            printf("Pair %d ",Pairs[PairIndex].SourceSize);
+        }
+
+        printf("\n");
     }
 
     return Obj;
