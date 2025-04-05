@@ -42,6 +42,8 @@ MioneBuiltObj ToMione(const MioneToBuildObj ToBuildObj)
 
            MioneSectionObj * thisSectionUP =  &(*SectionsUP)[*SectionSizeUP-1];
 
+           thisSectionUP->HeadAction.Head.Fuc = 0;
+
            PairObj ** PairsUP = &(thisSectionUP->Pairs);
            int * PairsSizeUP = &(thisSectionUP->PairsSize);
 
@@ -62,7 +64,7 @@ MioneBuiltObj ToMione(const MioneToBuildObj ToBuildObj)
                     MioneSectionObj ** SectionsUP =  &BuiltObj.Sections;
 
                     MioneSectionObj * thisSectionUP =  &(*SectionsUP)[*SectionSizeUP-1];
-                    thisSectionUP->HeadAction.Prompt = Mio;
+                    thisSectionUP->HeadAction = Mio;
 
                     PairObj ** PairsUP = &(thisSectionUP->Pairs);
                     int * PairsSizeUP = &(thisSectionUP->PairsSize);
@@ -95,7 +97,6 @@ MioneBuiltObj ToMione(const MioneToBuildObj ToBuildObj)
 
             (*PairsSizeUP)++;
             *PairsUP = realloc(*PairsUP, (*PairsSizeUP) * sizeof(PairObj));
-            (*PairsUP)[*PairsSizeUP-1].Prompt.Head.Fuc = SVV;
 
             PairObj * thisPairUP = &((*PairsUP)[*PairsSizeUP-1]);
 
@@ -118,13 +119,12 @@ MioneBuiltObj ToMione(const MioneToBuildObj ToBuildObj)
 
             PairObj * thisPairUP = &((*PairsUP)[*PairsSizeUP-1]);
 
-            if (!thisSectionUP->HeadAction.Prompt.Head.Fuc)
+            if (!thisSectionUP->HeadAction.Head.Fuc)
             {
-                thisSectionUP->HeadAction.Prompt = Mio;
+                thisSectionUP->HeadAction.Head.Fuc = SVV;
 
                 (*PairsSizeUP)++;
                 *PairsUP = realloc(*PairsUP, (*PairsSizeUP) * sizeof(PairObj));
-                (*PairsUP)[*PairsSizeUP-1].Prompt = Mio;
 
                 thisPairUP = &((*PairsUP)[*PairsSizeUP-1]);
 
@@ -163,7 +163,7 @@ MioneBuiltObj ToMione(const MioneToBuildObj ToBuildObj)
             PairObj ** PairsUP = &(thisSectionUP->Pairs);
             int * PairsSizeUP = &(thisSectionUP->PairsSize);
 
-            thisSectionUP->HeadAction.Prompt.Head.Fuc = 0;
+            thisSectionUP->HeadAction.Head.Fuc = 0;
 
             *PairsUP = malloc(0);
             *PairsSizeUP = 0;

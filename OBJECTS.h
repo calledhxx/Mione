@@ -212,7 +212,7 @@ typedef struct _HeadRequestObject
 
 typedef struct _MioneSectionObject
 {
-    PairObj HeadAction;
+    MioneObj HeadAction;
 
     PairObj * Pairs;
     int PairsSize;
@@ -230,6 +230,15 @@ typedef struct _MioneBuiltObject
     int SectionsSize;
 } MioneBuiltObj;
 
+typedef struct _ToImplementObject
+{
+    MioneBuiltObj Built;
+} ToImplementObj;
+
+typedef struct _ImplementedObject
+{
+
+}ImplementedObj;
 
 
 #endif //OBJECTS_H

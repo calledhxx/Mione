@@ -1,1 +1,2 @@
-set a = "Hello, World!" "a"
+set a = "Hello, World!"
+"a"
