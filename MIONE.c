@@ -33,7 +33,7 @@ MioneBuiltObj ToMione(const MioneToBuildObj ToBuildObj)
     {
         MioneObj Mio = Objs[index];
 
-       if (Mio.ObjType == SYMBOL && strcmp(Mio.Symbol.Name, ";") == 0)
+       if (Mio.ObjType == SYMBOL && strcmp(Mio.Symbol.Name, ";") == 0 && index != ObjsSize - 1)
        {
            int * SectionSizeUP = &BuiltObj.SectionsSize;
            MioneSectionObj ** SectionsUP =  &BuiltObj.Sections;
