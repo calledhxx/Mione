@@ -10,8 +10,10 @@
 #include "../MIONE.h"
 #include "../ERR.h"
 
-HeadReturnObj IF(HeadRequestObj HeadRequest)
+HeadReturnObj IF(HeadRequestObj * HeadRequestUP)
 {
+    HeadRequestObj HeadRequest = *HeadRequestUP;
+
     PairObj * Pairs = HeadRequest.Pairs;
     int PairsSize = HeadRequest.PairsSize;
 

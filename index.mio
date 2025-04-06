@@ -1,2 +1,4 @@
-set a = "Hello, World!","a"
-"a"
+set a,b = "Hello, World!","vb"
+a = "a"
+
+a,b

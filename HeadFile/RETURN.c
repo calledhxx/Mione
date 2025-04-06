@@ -10,8 +10,10 @@
 #include "../ERR.h"
 #include <stdio.h>
 
-HeadReturnObj RETURN(HeadRequestObj HeadRequest)
+HeadReturnObj RETURN(HeadRequestObj * HeadRequestUP)
 {
+    HeadRequestObj HeadRequest = *HeadRequestUP;
+
     PairObj * Pairs = HeadRequest.Pairs;
     int PairsSize = HeadRequest.PairsSize;
 

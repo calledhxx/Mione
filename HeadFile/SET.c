@@ -14,8 +14,10 @@
 #include <stdlib.h>
 #include <string.h>
 
-HeadReturnObj SET(HeadRequestObj HeadRequest)
+HeadReturnObj SET(HeadRequestObj * HeadRequestUP)
 {
+    HeadRequestObj HeadRequest = *HeadRequestUP;
+
     PairObj * Pairs = HeadRequest.Pairs;
     int PairsSize = HeadRequest.PairsSize;
 

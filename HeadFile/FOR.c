@@ -13,8 +13,10 @@
 #include <string.h>
 
 
-HeadReturnObj FOR(HeadRequestObj HeadRequest)
+HeadReturnObj FOR(HeadRequestObj * HeadRequestUP)
 {
+    HeadRequestObj HeadRequest = *HeadRequestUP;
+
     PairObj * Pairs = HeadRequest.Pairs;
     int PairsSize = HeadRequest.PairsSize;
 

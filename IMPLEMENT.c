@@ -10,21 +10,20 @@ ImplementedObj IMPLEMENT(const ToImplementObj toImplement)
     int SectionsSize = toImplement.Built.SectionsSize;
     MioneSectionObj * Sections = toImplement.Built.Sections;
 
-    printf("org address %p\n",SVV);
 
     for (int SectionIndex = 0; SectionIndex < SectionsSize; SectionIndex++)
     {
-        printf("fuc address %p .", Sections[SectionIndex].HeadAction.Head.Fuc);
+        MioneSectionObj thisSection = Sections[SectionIndex];
 
-        PairObj * Pairs = Sections[SectionIndex].Pairs;
-        int PairsSize = Sections[SectionIndex].PairsSize;
+        PairObj * Pairs = thisSection.Pairs;
+        int PairsSize = thisSection.PairsSize;
 
-        for (int PairIndex = 0; PairIndex < PairsSize; PairIndex++)
-        {
-            printf("Pair %d ",Pairs[PairIndex].SourceSize);
-        }
+        thisSection.HeadAction.Head.Fuc(
+               &(HeadRequestObj){
+                   .Pairs =Pairs,
+                   .PairsSize = PairsSize,
+               });
 
-        printf("\n");
     }
 
     return Obj;

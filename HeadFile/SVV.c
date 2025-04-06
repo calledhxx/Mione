@@ -8,8 +8,10 @@
 #include "../ERR.h"
 #include "../REQUEST.h"
 
-HeadReturnObj SVV(HeadRequestObj HeadRequest)
+HeadReturnObj SVV(HeadRequestObj * HeadRequestUP)
 {
+    HeadRequestObj HeadRequest = *HeadRequestUP;
+
     PairObj * Pairs = HeadRequest.Pairs;
     int PairsSize = HeadRequest.PairsSize;
 
@@ -70,6 +72,8 @@ HeadReturnObj SVV(HeadRequestObj HeadRequest)
             }
         }else
         {
+        printf("%d\n",Prompt.Prompt.CurNumber);
+
             switch (Prompt.Prompt.CurNumber)
             {
             case 1:
@@ -81,7 +85,7 @@ HeadReturnObj SVV(HeadRequestObj HeadRequest)
                 point = 1;
                 break;
             default:
-                ErrCall("unsupported prompt type","M111",NULL,Prompt.Line,Prompt.Column);
+                ErrCall("aaa unsupported prompt type","M111",NULL,Prompt.Line,Prompt.Column);
                 break;
             }
 

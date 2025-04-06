@@ -93,7 +93,7 @@ typedef struct _HeadObject
 {
     char * Name;
     int CurNumber;
-    struct _HeadReturnObject (*Fuc)(struct _HeadRequestObject);
+    struct _HeadReturnObject (*Fuc)(struct _HeadRequestObject *);
 }HeadObj;
 
 typedef struct _MioneObject

@@ -100,6 +100,8 @@ MioneBuiltObj ToMione(const MioneToBuildObj ToBuildObj)
 
             PairObj * thisPairUP = &((*PairsUP)[*PairsSizeUP-1]);
 
+            thisPairUP->Prompt = Mio;
+
             MioneObj ** SourceUP = &(thisPairUP->Source);
             int * SourceSizeUP = &(thisPairUP->SourceSize);
 
@@ -140,6 +142,7 @@ MioneBuiltObj ToMione(const MioneToBuildObj ToBuildObj)
 
             (*SourceSizeUP)++;
             *SourceUP = realloc( *SourceUP, *SourceSizeUP * sizeof(MioneObj));
+            (*SourceUP)[(*SourceSizeUP)-1] = Mio;
         }
 
         if (
