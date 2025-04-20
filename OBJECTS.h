@@ -23,8 +23,7 @@
 
 typedef struct _AreaObject
 {
-    int Size; //值大小
-    struct _MioneObject * Area;//給於函數(function)或者執行式(range)。
+    struct _MioneBuiltObject * AreaUP;
 }AreaObj;
 
 typedef struct _TableObject
@@ -73,12 +72,10 @@ typedef struct _SymbolObject
     char * Name;
     int SymbolType;
     int CurNumber;
-    int CanConnect; //即本體是否可與前面符號相連
-    int AfterConnect; //後面是否可與VV相連
+    int AfterConnectVV; //後面是否可與VV相連 不會報錯 MIONE
 
     int xIndex;
     int yIndex;
-    int zIndex;
 }SymbolObj;
 
 
@@ -137,33 +134,23 @@ typedef struct _CountObject
     int ValueSize;
 } CountObj;
 
-typedef struct _ValueReturnObject
+typedef struct _ValuesObject
 {
     ValueObj* Value;
     int ValueSize;
-} ValueReturnObj;
+} ValuesObj;
 
-typedef struct _MioneReturnObject
-{
-    int ToState;/*
-        0:正常
-        1:回傳
-    */
-    ValueReturnObj Vs;
-
-} MioneReturnObj;
-
-typedef struct _DefinedVarAndValueObject
+typedef struct _DefinedVariableObject
 {
     ValueObj Value;
     VariableObj* TheDefinedVarUP;
-}DefinedVarAndValueObj;
+}DefinedVariableObj;
 
-typedef struct _DefinedVarsAndValueObject
+typedef struct _DefinedVariablesCaseObject
 {
-    DefinedVarAndValueObj * VAVs;
-    int VAVsSize;
-}DefinedVarsAndValueObj;
+    DefinedVariableObj * DefinedVariables;
+    int DefinedVariablesSize;
+}DefinedVariablesCaseObj;
 
 typedef struct _VariablesObject
 {
@@ -181,8 +168,8 @@ typedef struct _HeadReturnObject
         4:特色變數
     */
 
-    ValueReturnObj Vs;
-    DefinedVarsAndValueObj VAVs;
+    ValuesObj Values;
+    DefinedVariablesCaseObj VAVs;
     VariablesObj Vars;
 
 } HeadReturnObj;
@@ -198,7 +185,6 @@ typedef struct _DefineVariableObject
 {
     VariableObj * * * VariableUPsUP;
     int * VariablesSizeUP;
-
 } DefineVariableObj;
 
 typedef struct _HeadRequestObject
@@ -237,6 +223,13 @@ typedef struct _ToImplementObject
 
 typedef struct _ImplementedObject
 {
+    int ToState; /*
+    0:正常
+    1:回傳 (HEAD回傳的結果)
+    */
+
+    ValuesObj Values;
+
 
 }ImplementedObj;
 

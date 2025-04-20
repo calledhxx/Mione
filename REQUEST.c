@@ -9,6 +9,7 @@
 #include <string.h>
 
 #include "COUNT.h"
+#include "IMPLEMENT.h"
 #include "SYMBOL_DEF.h"
 #include "MIONE.h"
 
@@ -113,10 +114,20 @@ VariableRequestUPObj REQUEST(MioneObj*Pack,int PackSize)
 
                                     if (Pack[FirstBracketIndex - 1].VarUP->Val.ValueType == VALUE_FUNCTION_TYPE)
                                     {
-                                        ValueReturnObj V ;/*= Function(
-                                            Pack[FirstBracketIndex - 1].VarUP->Val.Area.Area,
-                                            Pack[FirstBracketIndex - 1].VarUP->Val.Area.Size
-                                            ).Vs; */
+                                        ImplementedObj Return =  IMPLEMENT((ToImplementObj){
+                                           .Built =  *Pack[FirstBracketIndex - 1].VarUP->Val.Area.AreaUP
+                                       });
+
+                                        if ((Return.ToState&1)!=1) ErrCall(
+                                            "The Function hasn't return any Value.",
+                                            "MG123",
+                                            NULL,
+                                            Pack[FirstBracketIndex - 1].Line,
+                                            Pack[FirstBracketIndex - 1].Column
+                                        );
+
+
+                                        ValuesObj V = Return.Values;
 
                                         MioneObj* NewPack = malloc(0);
                                         int NewPackSize = 0;
@@ -201,11 +212,20 @@ VariableRequestUPObj REQUEST(MioneObj*Pack,int PackSize)
                                 {
                                     if (Pack[FirstBracketIndex - 1].Val.ValueType == VALUE_FUNCTION_TYPE)
                                     {
-                                        ValueReturnObj V;/* = Function(
-                                            Pack[FirstBracketIndex - 1].Val.Area.Area,
-                                            Pack[FirstBracketIndex - 1].Val.Area.Size
-                                            ).Vs; */
+                                        ImplementedObj Return =  IMPLEMENT((ToImplementObj){
+                                            .Built =  *Pack[FirstBracketIndex - 1].Val.Area.AreaUP
+                                        });
 
+                                        if ((Return.ToState&1)!=1) ErrCall(
+                                            "The Function hasn't return any Value.",
+                                            "MG123",
+                                            NULL,
+                                            Pack[FirstBracketIndex - 1].Line,
+                                            Pack[FirstBracketIndex - 1].Column
+                                        );
+
+
+                                        ValuesObj V = Return.Values;
                                         MioneObj* NewPack = malloc(0);
                                         int NewPackSize = 0;
 

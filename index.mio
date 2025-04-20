@@ -1,2 +1,5 @@
-set x = "Hello, World!";
-"x"
+set a = function
+     return 1;
+end;
+
+2 * a();

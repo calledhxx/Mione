@@ -25,8 +25,8 @@ HeadReturnObj SVV(HeadRequestObj * HeadRequestUP)
     Re.ToState = 0;
     Re.Vars.VarsSize = 0;
 
-    Re.VAVs.VAVsSize = 0;
-    Re.VAVs.VAVs = malloc(0);
+    Re.VAVs.DefinedVariablesSize = 0;
+    Re.VAVs.DefinedVariables = malloc(0);
 
 
     CountObj Counted;
@@ -72,7 +72,6 @@ HeadReturnObj SVV(HeadRequestObj * HeadRequestUP)
             }
         }else
         {
-        printf("%d\n",Prompt.Prompt.CurNumber);
 
             switch (Prompt.Prompt.CurNumber)
             {
@@ -126,9 +125,9 @@ HeadReturnObj SVV(HeadRequestObj * HeadRequestUP)
 
     if (point)
     {
-        DefinedVarsAndValueObj VAVs;
-        VAVs.VAVsSize = 0;
-        VAVs.VAVs = malloc(0);
+        DefinedVariablesCaseObj DefinedVariables;
+        DefinedVariables.DefinedVariablesSize = 0;
+        DefinedVariables.DefinedVariables = malloc(0);
 
         CountObj PointNamesCounted = COUNT(Pairs[0].Source,Pairs[0].SourceSize);
         if (PointCounted.ValueSize>PointNamesCounted.ValueSize) ErrCall("dkakakpdkapkdakd","iaijdaisod",NULL,Pairs[1].Source[0].Line,Pairs[1].Source[0].Column);
@@ -152,9 +151,9 @@ HeadReturnObj SVV(HeadRequestObj * HeadRequestUP)
                             VarUPs = realloc(VarUPs, (VarUPsSize) * sizeof(VariableObj*));
                             (VarUPs[VarUPsSize-1]) = (*Dvo[DvoIndex].VariableUPsUP)[VariableIndex];
 
-                            VAVs.VAVsSize++;
-                            VAVs.VAVs = realloc(VAVs.VAVs, (VAVs.VAVsSize) * sizeof(DefinedVarAndValueObj));
-                            VAVs.VAVs[VAVs.VAVsSize-1].Value = (*Dvo[DvoIndex].VariableUPsUP)[VariableIndex]->Val;
+                            DefinedVariables.DefinedVariablesSize++;
+                            DefinedVariables.DefinedVariables = realloc(DefinedVariables.DefinedVariables, (DefinedVariables.DefinedVariablesSize) * sizeof(DefinedVariableObj));
+                            DefinedVariables.DefinedVariables[DefinedVariables.DefinedVariablesSize-1].Value = (*Dvo[DvoIndex].VariableUPsUP)[VariableIndex]->Val;
 
                             (*Dvo[DvoIndex].VariableUPsUP)[VariableIndex]->Val = PointCounted.Value[PNCIndex];
 
@@ -168,7 +167,7 @@ HeadReturnObj SVV(HeadRequestObj * HeadRequestUP)
                                 };
                             }
 
-                            VAVs.VAVs[VAVs.VAVsSize-1].TheDefinedVarUP = (*Dvo[DvoIndex].VariableUPsUP)[VariableIndex];
+                            DefinedVariables.DefinedVariables[DefinedVariables.DefinedVariablesSize-1].TheDefinedVarUP = (*Dvo[DvoIndex].VariableUPsUP)[VariableIndex];
 
 
                             DvoIndex = DvoSize;
@@ -194,10 +193,10 @@ HeadReturnObj SVV(HeadRequestObj * HeadRequestUP)
                     (*Dvo[DvoSize-1].VariableUPsUP) = realloc((*Dvo[DvoSize-1].VariableUPsUP), (*Dvo[DvoSize-1].VariablesSizeUP) * sizeof(VariableObj**));
                     (*Dvo[DvoSize-1].VariableUPsUP)[(*Dvo[DvoSize-1].VariablesSizeUP)-1] = (VarUPs[VarUPsSize-1]);
 
-                    VAVs.VAVsSize++;
-                    VAVs.VAVs = realloc(VAVs.VAVs, (VAVs.VAVsSize) * sizeof(DefinedVarAndValueObj));
-                    VAVs.VAVs[VAVs.VAVsSize-1].TheDefinedVarUP = (VarUPs[VarUPsSize-1]);
-                    VAVs.VAVs[VAVs.VAVsSize-1].Value = (ValueObj){.ValueType = 0};
+                    DefinedVariables.DefinedVariablesSize++;
+                    DefinedVariables.DefinedVariables = realloc(DefinedVariables.DefinedVariables, (DefinedVariables.DefinedVariablesSize) * sizeof(DefinedVariableObj));
+                    DefinedVariables.DefinedVariables[DefinedVariables.DefinedVariablesSize-1].TheDefinedVarUP = (VarUPs[VarUPsSize-1]);
+                    DefinedVariables.DefinedVariables[DefinedVariables.DefinedVariablesSize-1].Value = (ValueObj){.ValueType = 0};
 
                     for (int VariableIndex = Vars.VarsSize; VariableIndex < VarUPsSize; VariableIndex++)
                     {
@@ -221,9 +220,9 @@ HeadReturnObj SVV(HeadRequestObj * HeadRequestUP)
                             VarUPs = realloc(VarUPs, (VarUPsSize) * sizeof(VariableObj*));
                             (VarUPs[VarUPsSize-1]) = (*Dvo[DvoIndex].VariableUPsUP)[VariableIndex];
 
-                            VAVs.VAVsSize++;
-                            VAVs.VAVs = realloc(VAVs.VAVs, (VAVs.VAVsSize) * sizeof(DefinedVarAndValueObj));
-                            VAVs.VAVs[VAVs.VAVsSize-1].Value = (*Dvo[DvoIndex].VariableUPsUP)[VariableIndex]->Val;
+                            DefinedVariables.DefinedVariablesSize++;
+                            DefinedVariables.DefinedVariables = realloc(DefinedVariables.DefinedVariables, (DefinedVariables.DefinedVariablesSize) * sizeof(DefinedVariableObj));
+                            DefinedVariables.DefinedVariables[DefinedVariables.DefinedVariablesSize-1].Value = (*Dvo[DvoIndex].VariableUPsUP)[VariableIndex]->Val;
 
                             (*Dvo[DvoIndex].VariableUPsUP)[VariableIndex]->Val = PointCounted.Value[PNCIndex];
 
@@ -237,7 +236,7 @@ HeadReturnObj SVV(HeadRequestObj * HeadRequestUP)
                                 };
                             }
 
-                            VAVs.VAVs[VAVs.VAVsSize-1].TheDefinedVarUP = (*Dvo[DvoIndex].VariableUPsUP)[VariableIndex];
+                            DefinedVariables.DefinedVariables[DefinedVariables.DefinedVariablesSize-1].TheDefinedVarUP = (*Dvo[DvoIndex].VariableUPsUP)[VariableIndex];
 
 
                             DvoIndex = DvoSize;
@@ -261,10 +260,10 @@ HeadReturnObj SVV(HeadRequestObj * HeadRequestUP)
                     (*Dvo[DvoSize-1].VariableUPsUP) = realloc((*Dvo[DvoSize-1].VariableUPsUP), (*Dvo[DvoSize-1].VariablesSizeUP) * sizeof(VariableObj*));
                     (*Dvo[DvoSize-1].VariableUPsUP)[*Dvo[DvoSize-1].VariablesSizeUP-1] = (VarUPs[VarUPsSize-1]);
 
-                    VAVs.VAVsSize++;
-                    VAVs.VAVs = realloc(VAVs.VAVs, (VAVs.VAVsSize) * sizeof(DefinedVarAndValueObj));
-                    VAVs.VAVs[VAVs.VAVsSize-1].TheDefinedVarUP = (VarUPs[VarUPsSize-1]);
-                    VAVs.VAVs[VAVs.VAVsSize-1].Value = (ValueObj){.ValueType = 0};
+                    DefinedVariables.DefinedVariablesSize++;
+                    DefinedVariables.DefinedVariables = realloc(DefinedVariables.DefinedVariables, (DefinedVariables.DefinedVariablesSize) * sizeof(DefinedVariableObj));
+                    DefinedVariables.DefinedVariables[DefinedVariables.DefinedVariablesSize-1].TheDefinedVarUP = (VarUPs[VarUPsSize-1]);
+                    DefinedVariables.DefinedVariables[DefinedVariables.DefinedVariablesSize-1].Value = (ValueObj){.ValueType = 0};
 
 
                     for (int VariableIndex = Vars.VarsSize; VariableIndex < VarUPsSize; VariableIndex++)
@@ -280,13 +279,13 @@ HeadReturnObj SVV(HeadRequestObj * HeadRequestUP)
             }
         }
 
-        for (int i = 0; i < VAVs.VAVsSize; i++)
+        for (int i = 0; i < DefinedVariables.DefinedVariablesSize; i++)
         {
 
-            *VAVs.VAVs[i].TheDefinedVarUP = (VariableObj){
-                .Name = VAVs.VAVs[i].TheDefinedVarUP->Name,
-                .Place = VAVs.VAVs[i].TheDefinedVarUP->Place,
-                .Val = VAVs.VAVs[i].Value
+            *DefinedVariables.DefinedVariables[i].TheDefinedVarUP = (VariableObj){
+                .Name = DefinedVariables.DefinedVariables[i].TheDefinedVarUP->Name,
+                .Place = DefinedVariables.DefinedVariables[i].TheDefinedVarUP->Place,
+                .Val = DefinedVariables.DefinedVariables[i].Value
             };
 
         }

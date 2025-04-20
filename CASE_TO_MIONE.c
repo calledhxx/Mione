@@ -47,7 +47,6 @@ MioneObj *CMO(CaseObj*CASES,int CASESIZE,
     (*(*DvoUP)[(*DvoSizeUP)-1].VariableUPsUP) = (VariableObj**)malloc(0);
 
 
-
     for (int i = 0; i <CASESIZE; i++)
     {
 
@@ -102,10 +101,7 @@ MioneObj *CMO(CaseObj*CASES,int CASESIZE,
                  };
                  Paired = PROMPT;
              }
-
-
         }
-
 
         //SYMBOL
          if (ChildCount == 0 && TableCount == 0) for (int Ci = 0; 1; Ci++)
@@ -217,9 +213,6 @@ MioneObj *CMO(CaseObj*CASES,int CASESIZE,
                TableCount++;
            }
 
-
-
-
            //Value : lights,function or range END 
            if (TableCount == 0) if (strcmp(CASES[i].ObjName,"end") == 0)
            {
@@ -230,17 +223,20 @@ MioneObj *CMO(CaseObj*CASES,int CASESIZE,
 
                    MioneObj * MioObj = CMO(Area,AreaSize,&MioObjSize,CapLine,Column,DvoUP,DvoSizeUP);
 
+                   MioneBuiltObj Built =  ToMione((MioneToBuildObj){
+                       .Objs = MioObj,
+                       .ObjsSize = MioObjSize,
+                   });
 
-                   AreaObj eArea = (AreaObj){
-                       .Area =MioObj,
-                       .Size = MioObjSize,
-                   };
+
+                   AreaObj eArea;
+                   eArea.AreaUP = malloc(sizeof(AreaObj));
+                   *eArea.AreaUP = Built;
 
                    ValueObj Value = (ValueObj){
                        .ValueType = goEndType,
                        .Area = eArea,
                    };
-
 
                    Column++;
 
@@ -332,36 +328,55 @@ MioneObj *CMO(CaseObj*CASES,int CASESIZE,
                }
            }
 
-           if (ChildCount == 0 && TableCount == 0) if (strcmp(CASES[i].ObjName,"true") == 0)
+           if (ChildCount == 0 && TableCount == 0)
            {
-               Paired = VALUE;
-               ValueObj Value = (ValueObj){.ValueType = VALUE_DB_TYPE, .db = 1};
-               Column++;
 
-               (MIONESIZE)++;
-               (MIONE) = (MioneObj*)realloc( (MIONE) ,(MIONESIZE)*sizeof(MioneObj));
-               (MIONE)[(MIONESIZE)-1] = (MioneObj){
-                   .ObjType= VALUE,
-                   .Val = Value,
-                   .Line = Line,
-                   .Column = Column
-               };
-           }
-           if (ChildCount == 0 && TableCount == 0) if (strcmp(CASES[i].ObjName,"false") == 0)
-           {
-               Paired = VALUE;
-               ValueObj Value = (ValueObj){.ValueType = VALUE_DB_TYPE, .db = 0};
-               Column++;
+               if (strcmp(CASES[i].ObjName,"true") == 0)
+               {
+                   Paired = VALUE;
+                   ValueObj Value = (ValueObj){.ValueType = VALUE_DB_TYPE, .db = 1};
+                   Column++;
 
-               (MIONESIZE)++;
-               (MIONE) = (MioneObj*)realloc( (MIONE) ,(MIONESIZE)*sizeof(MioneObj));
-               (MIONE)[(MIONESIZE)-1] = (MioneObj){
-                   .ObjType= VALUE,
-                   .Val = Value,
-                   .Line = Line,
-                   .Column = Column
-               };
+                   (MIONESIZE)++;
+                   (MIONE) = (MioneObj*)realloc( (MIONE) ,(MIONESIZE)*sizeof(MioneObj));
+                   (MIONE)[(MIONESIZE)-1] = (MioneObj){
+                       .ObjType= VALUE,
+                       .Val = Value,
+                       .Line = Line,
+                       .Column = Column
+                   };
+               }else  if (strcmp(CASES[i].ObjName,"false") == 0)
+               {
+                   Paired = VALUE;
+                   ValueObj Value = (ValueObj){.ValueType = VALUE_DB_TYPE, .db = 0};
+                   Column++;
+
+                   (MIONESIZE)++;
+                   (MIONE) = (MioneObj*)realloc( (MIONE) ,(MIONESIZE)*sizeof(MioneObj));
+                   (MIONE)[(MIONESIZE)-1] = (MioneObj){
+                       .ObjType= VALUE,
+                       .Val = Value,
+                       .Line = Line,
+                       .Column = Column
+                   };
+               }else  if (strcmp(CASES[i].ObjName,"null") == 0)
+               {
+                   Paired = VALUE;
+                   ValueObj Value = (ValueObj){.ValueType = 0};
+                   Column++;
+
+                   (MIONESIZE)++;
+                   (MIONE) = (MioneObj*)realloc( (MIONE) ,(MIONESIZE)*sizeof(MioneObj));
+                   (MIONE)[(MIONESIZE)-1] = (MioneObj){
+                       .ObjType= VALUE,
+                       .Val = Value,
+                       .Line = Line,
+                       .Column = Column
+                   };
+               }
            }
+
+
 
         //Value : NPNumber
             if (ChildCount == 0 && TableCount == 0) if(CASES[i].ObjType == 2)

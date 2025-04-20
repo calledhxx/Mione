@@ -16,6 +16,28 @@
 
 //THIS IS THE UGLIEST CODE I MADE
 
+void newSection(MioneBuiltObj *BuiltObjUP)
+{
+
+    (*BuiltObjUP).SectionsSize++;
+    (*BuiltObjUP).Sections = realloc((*BuiltObjUP).Sections, sizeof(MioneSectionObj) * (*BuiltObjUP).SectionsSize);
+
+    (*BuiltObjUP).Sections[(*BuiltObjUP).SectionsSize-1].HeadAction = (MioneObj){ .Head = (HeadObj){ .Fuc = 0}};
+
+    (*BuiltObjUP).Sections[(*BuiltObjUP).SectionsSize-1].Pairs = malloc(0);
+    (*BuiltObjUP).Sections[(*BuiltObjUP).SectionsSize-1].PairsSize = 0;
+
+    (*BuiltObjUP).Sections[(*BuiltObjUP).SectionsSize-1].PairsSize++;
+    (*BuiltObjUP).Sections[(*BuiltObjUP).SectionsSize-1].Pairs = realloc(
+        (*BuiltObjUP).Sections[(*BuiltObjUP).SectionsSize-1].Pairs,
+        sizeof(PairObj) * (*BuiltObjUP).Sections[(*BuiltObjUP).SectionsSize-1].PairsSize
+        );
+
+    (*BuiltObjUP).Sections[(*BuiltObjUP).SectionsSize-1].Pairs[(*BuiltObjUP).Sections[(*BuiltObjUP).SectionsSize-1].PairsSize-1].Source = malloc(0);
+    (*BuiltObjUP).Sections[(*BuiltObjUP).SectionsSize-1].Pairs[(*BuiltObjUP).Sections[(*BuiltObjUP).SectionsSize-1].PairsSize-1].SourceSize = 0;
+
+}
+
 MioneBuiltObj ToMione(const MioneToBuildObj ToBuildObj)
 {
     const int ObjsSize = ToBuildObj.ObjsSize;
@@ -23,154 +45,78 @@ MioneBuiltObj ToMione(const MioneToBuildObj ToBuildObj)
 
     MioneBuiltObj BuiltObj = {0};
 
-    BuiltObj.SectionsSize = 1;
-    BuiltObj.Sections = malloc(sizeof(MioneSectionObj));
-
-    BuiltObj.Sections[0].PairsSize = 0;
-    BuiltObj.Sections[0].Pairs = malloc(0);
+    BuiltObj.SectionsSize = 0;
+    BuiltObj.Sections = malloc(0);
 
     for (int index = 0;index < ObjsSize;index++)
     {
         MioneObj Mio = Objs[index];
 
-       if (Mio.ObjType == SYMBOL && strcmp(Mio.Symbol.Name, ";") == 0 && index != ObjsSize - 1)
-       {
-           int * SectionSizeUP = &BuiltObj.SectionsSize;
-           MioneSectionObj ** SectionsUP =  &BuiltObj.Sections;
-           (*SectionSizeUP)++;
-           *SectionsUP = realloc(*SectionsUP, (*SectionSizeUP) * sizeof(MioneSectionObj));
-
-           MioneSectionObj * thisSectionUP =  &(*SectionsUP)[*SectionSizeUP-1];
-
-           thisSectionUP->HeadAction.Head.Fuc = 0;
-
-           PairObj ** PairsUP = &(thisSectionUP->Pairs);
-           int * PairsSizeUP = &(thisSectionUP->PairsSize);
-
-           *PairsUP = malloc(0);
-           *PairsSizeUP = 0;
-
-           continue;
-       }
-
-        if (Mio.ObjType == HEAD) // Head
+        if (Mio.ObjType == HEAD)
         {
             for (int i = 0; 1; i++)
             {
                 if (Heads[i].CurNumber == -1) break;
+
                 if (strcmp(Mio.Head.Name, Heads[i].Name) == 0)
                 {
-                    int * SectionSizeUP = &BuiltObj.SectionsSize;
-                    MioneSectionObj ** SectionsUP =  &BuiltObj.Sections;
+                    newSection(&BuiltObj);
+                    BuiltObj.Sections[BuiltObj.SectionsSize-1].HeadAction = (MioneObj){ .Head = (HeadObj){ .Fuc = SVV}};
+                    BuiltObj.Sections[BuiltObj.SectionsSize-1].Pairs[BuiltObj.Sections[BuiltObj.SectionsSize-1].PairsSize-1].Prompt = Mio;
+                    BuiltObj.Sections[BuiltObj.SectionsSize-1].HeadAction = Mio;
 
-                    MioneSectionObj * thisSectionUP =  &(*SectionsUP)[*SectionSizeUP-1];
-                    thisSectionUP->HeadAction = Mio;
 
-                    PairObj ** PairsUP = &(thisSectionUP->Pairs);
-                    int * PairsSizeUP = &(thisSectionUP->PairsSize);
-
-                    (*PairsSizeUP)++;
-                    *PairsUP = realloc(*PairsUP, (*PairsSizeUP) * sizeof(PairObj));
-                    (*PairsUP)[*PairsSizeUP-1].Prompt = Mio;
-
-                    PairObj * thisPairUP = &((*PairsUP)[*PairsSizeUP-1]);
-
-                    MioneObj ** SourceUP = &(thisPairUP->Source);
-                    int * SourceSizeUP = &(thisPairUP->SourceSize);
-
-                    *SourceUP = malloc(0);
-                    *SourceSizeUP = 0;
+                    break;
                 }
             }
 
         }
 
-        if (Mio.ObjType == PROMPT) // PROMPT
+        if (Mio.ObjType == PROMPT)
         {
-            int * SectionSizeUP = &BuiltObj.SectionsSize;
-            MioneSectionObj ** SectionsUP =  &BuiltObj.Sections;
+            if (!BuiltObj.Sections[BuiltObj.SectionsSize-1].HeadAction.Head.Fuc); //err;
 
-            const MioneSectionObj * thisSectionUP =  &(*SectionsUP)[*SectionSizeUP-1];
+            BuiltObj.Sections[BuiltObj.SectionsSize-1].PairsSize++;
+            BuiltObj.Sections[BuiltObj.SectionsSize-1].Pairs = realloc(
+                BuiltObj.Sections[BuiltObj.SectionsSize-1].Pairs,
+                sizeof(PairObj) * BuiltObj.Sections[BuiltObj.SectionsSize-1].PairsSize
+                );
 
-            PairObj ** PairsUP = &(thisSectionUP->Pairs);
-            int * PairsSizeUP = &(thisSectionUP->PairsSize);
+            BuiltObj.Sections[BuiltObj.SectionsSize-1].Pairs[BuiltObj.Sections[BuiltObj.SectionsSize-1].PairsSize-1].Source = malloc(0);
+            BuiltObj.Sections[BuiltObj.SectionsSize-1].Pairs[BuiltObj.Sections[BuiltObj.SectionsSize-1].PairsSize-1].SourceSize = 0;
 
-            (*PairsSizeUP)++;
-            *PairsUP = realloc(*PairsUP, (*PairsSizeUP) * sizeof(PairObj));
-
-            PairObj * thisPairUP = &((*PairsUP)[*PairsSizeUP-1]);
-
-            thisPairUP->Prompt = Mio;
-
-            MioneObj ** SourceUP = &(thisPairUP->Source);
-            int * SourceSizeUP = &(thisPairUP->SourceSize);
-
-            *SourceUP = malloc(0);
-            *SourceSizeUP = 0;
+            BuiltObj.Sections[BuiltObj.SectionsSize-1].Pairs[BuiltObj.Sections[BuiltObj.SectionsSize-1].PairsSize-1].Prompt = Mio;
         }
 
         if (Mio.ObjType == SYMBOL || Mio.ObjType == VARIABLE || Mio.ObjType == VALUE) // SVV
         {
-            int * SectionSizeUP = &BuiltObj.SectionsSize;
-            MioneSectionObj ** SectionsUP =  &BuiltObj.Sections;
 
-            MioneSectionObj * thisSectionUP =  &(*SectionsUP)[*SectionSizeUP-1];
-
-            PairObj ** PairsUP = &(thisSectionUP->Pairs);
-            int * PairsSizeUP = &(thisSectionUP->PairsSize);
-
-            PairObj * thisPairUP = &((*PairsUP)[*PairsSizeUP-1]);
-
-            if (!thisSectionUP->HeadAction.Head.Fuc)
+            if (!BuiltObj.SectionsSize)
             {
-                thisSectionUP->HeadAction.Head.Fuc = SVV;
-
-                (*PairsSizeUP)++;
-                *PairsUP = realloc(*PairsUP, (*PairsSizeUP) * sizeof(PairObj));
-
-                thisPairUP = &((*PairsUP)[*PairsSizeUP-1]);
-
-                MioneObj ** SourceUP = &(thisPairUP->Source);
-                int * SourceSizeUP = &(thisPairUP->SourceSize);
-
-                *SourceUP = malloc(0);
-                *SourceSizeUP = 0;
+                newSection(&BuiltObj);
+                BuiltObj.Sections[BuiltObj.SectionsSize-1].HeadAction = (MioneObj){ .Head = (HeadObj){ .Fuc = SVV}};
             }
 
-            MioneObj ** SourceUP = &(thisPairUP->Source);
-            int * SourceSizeUP = &(thisPairUP->SourceSize);
 
-            (*SourceSizeUP)++;
-            *SourceUP = realloc( *SourceUP, *SourceSizeUP * sizeof(MioneObj));
-            (*SourceUP)[(*SourceSizeUP)-1] = Mio;
+            BuiltObj.Sections[BuiltObj.SectionsSize-1].Pairs[BuiltObj.Sections[BuiltObj.SectionsSize-1].PairsSize-1].SourceSize++;
+            BuiltObj.Sections[BuiltObj.SectionsSize-1].Pairs[BuiltObj.Sections[BuiltObj.SectionsSize-1].PairsSize-1].Source = realloc(
+                    BuiltObj.Sections[BuiltObj.SectionsSize-1].Pairs[BuiltObj.Sections[BuiltObj.SectionsSize-1].PairsSize-1].Source,
+                    BuiltObj.Sections[BuiltObj.SectionsSize-1].Pairs[BuiltObj.Sections[BuiltObj.SectionsSize-1].PairsSize-1].SourceSize * sizeof(MioneObj)
+                    );
+
+            BuiltObj.Sections[BuiltObj.SectionsSize-1].Pairs[BuiltObj.Sections[BuiltObj.SectionsSize-1].PairsSize-1].Source[BuiltObj.Sections[BuiltObj.SectionsSize-1].Pairs[BuiltObj.Sections[BuiltObj.SectionsSize-1].PairsSize-1].SourceSize-1] = Mio;
         }
 
         if (
-        // ObjsSize - 1 == index ||
-       ((index != ObjsSize - 1) &&
-           (Objs[index+1].ObjType == HEAD ||
-           (Mio.ObjType == Objs[index+1].ObjType && (Objs[index+1].ObjType == SYMBOL ? !Objs[index+1].Symbol.CanConnect : 1)) ||
-           (Mio.ObjType == VARIABLE &&  Objs[index+1].ObjType == VALUE) ||  (Mio.ObjType == VALUE &&  Objs[index+1].ObjType == VARIABLE)||
-           (Mio.ObjType == SYMBOL && Mio.Symbol.AfterConnect == 0 && (Objs[index+1].ObjType == VARIABLE || Objs[index+1].ObjType == VALUE))
-               )
-           )&& (Mio.ObjType != PROMPT)
-       )
-         {
-            int * SectionSizeUP = &BuiltObj.SectionsSize;
-            MioneSectionObj ** SectionsUP =  &BuiltObj.Sections;
-            (*SectionSizeUP)++;
-            *SectionsUP = realloc(*SectionsUP, (*SectionSizeUP) * sizeof(MioneSectionObj));
+            (!(Objs[index].ObjType == SYMBOL && strcmp(";", Objs[index].Symbol.Name) == 0) && index+1 < ObjsSize && Objs[index+1].ObjType == SYMBOL && strcmp(";", Objs[index+1].Symbol.Name) == 0)
+            || (Mio.ObjType >= VARIABLE && index+1 < ObjsSize && Objs[index+1].ObjType >= VARIABLE)
+            || (Mio.ObjType == SYMBOL && !Mio.Symbol.AfterConnectVV && index+1 < ObjsSize && Objs[index+1].ObjType >= VARIABLE)
+            )
+        {
+            newSection(&BuiltObj);
+            BuiltObj.Sections[BuiltObj.SectionsSize-1].HeadAction = (MioneObj){ .Head = (HeadObj){ .Fuc = SVV}};
 
-            MioneSectionObj * thisSectionUP =  &(*SectionsUP)[*SectionSizeUP-1];
-
-            PairObj ** PairsUP = &(thisSectionUP->Pairs);
-            int * PairsSizeUP = &(thisSectionUP->PairsSize);
-
-            thisSectionUP->HeadAction.Head.Fuc = 0;
-
-            *PairsUP = malloc(0);
-            *PairsSizeUP = 0;
-         }
+        }
     }
     return BuiltObj;
 }

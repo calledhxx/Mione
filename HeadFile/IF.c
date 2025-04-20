@@ -76,31 +76,8 @@ HeadReturnObj IF(HeadRequestObj * HeadRequestUP)
         if(then == db || _else != db){
             ValueObj RangeArea = db?CountedThenRange.Value[0]:CountedElseRange.Value[0];
 
-            MioneReturnObj RangeReturn ;//= Range(RangeArea.Area.Area,RangeArea.Area.Size);
 
-            const int States[] =  {
-                1
-            };
-
-
-            for (int StateIndex = 0; StateIndex<(sizeof(States)/sizeof(int)); StateIndex++)
-            {
-
-                if (RangeReturn.ToState >= States[StateIndex])
-                {
-                    RangeReturn.ToState = RangeReturn.ToState-States[StateIndex];
-
-                    switch (States[StateIndex])
-                    {
-                    case 1:
-                        {
-                            ToReturn.ToState+=1;
-                            return ToReturn;
-                        }
-                        break;
-                    }
-                }
-            }
+            //todo
         }
     }
     return ToReturn;

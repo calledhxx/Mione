@@ -11,7 +11,7 @@
 #include "Mione.h"
 #include "PROMPT_DEF.h"
 #include "SYMBOL_DEF.h"
-
+#include "IMPLEMENT.h"
 
 
 CountObj COUNT(MioneObj*Pack,int PackSize)
@@ -114,10 +114,23 @@ CountObj COUNT(MioneObj*Pack,int PackSize)
 
                                     if (Pack[FirstBracketIndex - 1].VarUP->Val.ValueType == VALUE_FUNCTION_TYPE)
                                     {
-                                        ValueReturnObj V ;/*= Function(
-                                            Pack[FirstBracketIndex - 1].VarUP->Val.Area.Area,
-                                            Pack[FirstBracketIndex - 1].VarUP->Val.Area.Size
-                                            ).Vs; */
+
+                                        ImplementedObj Return =  IMPLEMENT((ToImplementObj){
+                                            .Built =  *Pack[FirstBracketIndex - 1].VarUP->Val.Area.AreaUP
+                                        });
+
+                                        printf("%d %d\n",Return.ToState,1);
+                                        if ((Return.ToState&1)!=1) ErrCall(
+                                            "The Function hasn't return any Value.",
+                                            "MG123",
+                                            NULL,
+                                            Pack[FirstBracketIndex - 1].Line,
+                                            Pack[FirstBracketIndex - 1].Column
+                                        );
+
+
+                                        ValuesObj V = Return.Values;
+
 
                                         MioneObj* NewPack = malloc(0);
                                         int NewPackSize = 0;
@@ -202,10 +215,20 @@ CountObj COUNT(MioneObj*Pack,int PackSize)
                                 {
                                     if (Pack[FirstBracketIndex - 1].Val.ValueType == VALUE_FUNCTION_TYPE)
                                     {
-                                        ValueReturnObj V;/* = Function(
-                                            Pack[FirstBracketIndex - 1].Val.Area.Area,
-                                            Pack[FirstBracketIndex - 1].Val.Area.Size
-                                            ).Vs; */
+                                        ImplementedObj Return =  IMPLEMENT((ToImplementObj){
+                                            .Built =  *Pack[FirstBracketIndex - 1].Val.Area.AreaUP
+                                        });
+
+                                        if ((Return.ToState&1)!=1) ErrCall(
+                                            "The Function hasn't return any Value.",
+                                            "MG123",
+                                            NULL,
+                                            Pack[FirstBracketIndex - 1].Line,
+                                            Pack[FirstBracketIndex - 1].Column
+                                        );
+
+
+                                        ValuesObj V = Return.Values;
 
                                         MioneObj* NewPack = malloc(0);
                                         int NewPackSize = 0;
@@ -328,11 +351,11 @@ CountObj COUNT(MioneObj*Pack,int PackSize)
             default:
                     {
                         if(!BracketsChild){
-
                             if (CalculateLevel) switch (Pack[i].Symbol.SymbolType)
                             {
                                 case 1:
                                     {
+                                        if (Pack[i].Symbol.xIndex != CalculateLevel) break;
 
                                         if (i == PackSize - 1 || i - 1 <0)
                                         {
@@ -345,66 +368,66 @@ CountObj COUNT(MioneObj*Pack,int PackSize)
                                             );
                                         }
 
+                                        CalculateType = Pack[i].Symbol.CurNumber;
 
-
-                                        // if (Pack[i-1].ObjType == SYMBOL || Pack[i+1].ObjType == SYMBOL)
-                                        // {
-                                        //     ErrCall(
-                                        //       "dkaopkdapskdpsa",
-                                        //       "MG3123i13",
-                                        //       "Maybe you can try `1+1` or anything else.",
-                                        //       Pack[i].Line,
-                                        //       Pack[i].Column
-                                        //   );
-                                        // }
-                                        if (Pack[i].Symbol.xIndex == CalculateLevel) CalculateType = Pack[i].Symbol.CurNumber;
 
                                         break;
                                     }
                                  case 2:
                                      {
-                                        if (i == PackSize - 1 )
-                                        {
-                                            ErrCall(
-                                                "bbbbb",
-                                                "MG007",
-                                                "Maybe you can try `typeof 1` or anything else.",
-                                                Pack[i].Line,
-                                                Pack[i].Column
-                                            );
-                                        }
 
-                                        if (Pack[i+1].ObjType == SYMBOL)
-                                        {
-                                            ErrCall(
-                                                "dmakldmadma",
-                                                "MG03127",
-                                                "Maybe you can try `typeof 1` or anything else.",
-                                                Pack[i].Line,
-                                                Pack[i].Column
-                                            );
-                                        }
+                                        if (Pack[i].Symbol.xIndex != CalculateLevel) break;
 
-                                        if (i)
-                                        {
-                                            if (Pack[i-1].ObjType != SYMBOL)
+                                         CalculateType = Pack[i].Symbol.CurNumber;
+
+                                            if (i == PackSize - 1 )
                                             {
                                                 ErrCall(
-                                                    "[dlsapld[pasd[l",
-                                                    "dasdsadasa",
-                                                    NULL,
+                                                    "bbbbb",
+                                                    "MG007",
+                                                    "Maybe you can try `typeof 1` or anything else.",
                                                     Pack[i].Line,
                                                     Pack[i].Column
                                                 );
                                             }
-                                        }
 
-                                        if (Pack[i].Symbol.xIndex == CalculateLevel) CalculateType = Pack[i].Symbol.CurNumber;
+                                            if (Pack[i+1].ObjType == SYMBOL)
+                                            {
+                                                ErrCall(
+                                                    "dmakldmadma",
+                                                    "MG03127",
+                                                    "Maybe you can try `typeof 1` or anything else.",
+                                                    Pack[i].Line,
+                                                    Pack[i].Column
+                                                );
+                                            }
+
+                                            if (i)
+                                            {
+                                                if (Pack[i-1].ObjType != SYMBOL)
+                                                {
+                                                    ErrCall(
+                                                        "[dlsapld[pasd[l",
+                                                        "dasdsadasa",
+                                                        NULL,
+                                                        Pack[i].Line,
+                                                        Pack[i].Column
+                                                    );
+                                                }
+                                            }
+
 
                                         break;
                                      }
                                 case 3:
                                     {
+                                        if (i-1>=0 && (Pack[i-1].ObjType == VARIABLE || Pack[i-1].ObjType == VALUE))
+                                        {
+                                            if (Pack[i].Symbol.yIndex != CalculateLevel) break;
+                                        }else if (Pack[i].Symbol.xIndex != CalculateLevel) break;
+
+                                        CalculateType = Pack[i].Symbol.CurNumber;
+
                                         if (i == PackSize - 1)
                                         {
                                             ErrCall(
@@ -427,25 +450,6 @@ CountObj COUNT(MioneObj*Pack,int PackSize)
                                            );
                                         }
 
-
-                                        for (int index = 0; 1 ; index++)
-                                        {
-                                            if (Symbols[index].CurNumber == -1) break;
-
-                                            if (strcmp(Symbols[index].Name, Pack[i].Symbol.Name) == 0)
-                                            {
-
-                                                if (i-1>=0 && (Pack[i-1].ObjType == VARIABLE || Pack[i-1].ObjType == VALUE))
-                                                {
-                                                    if (Pack[i].Symbol.yIndex == CalculateLevel) CalculateType = Pack[i].Symbol.CurNumber;
-                                                }else
-                                                {
-                                                    if (Pack[i].Symbol.xIndex == CalculateLevel) CalculateType = Pack[i].Symbol.CurNumber;
-                                                }
-
-                                            }
-
-                                        }
                                         break;
                                     }
                             }
@@ -1025,18 +1029,18 @@ CountObj COUNT(MioneObj*Pack,int PackSize)
                                 if ((Target2.ValueType == 2?Target2.NPNumber:Target2.PNumber)  -  Target1.PNumber == 0) db =1;
                                 break;
                             case 4:
-                                if ((Target2.ValueType == 4 ? Target2.Area.Area : 0) == Target1.Area.Area) db =1;
+                                if ((Target2.ValueType == 4 ? Target2.Area.AreaUP : 0) == Target1.Area.AreaUP) db =1;
                                 break;
 
                             case 5:
-                                if ((Target2.ValueType == 5 ? Target2.Area.Area : 0) == Target1.Area.Area) db =1;
+                                if ((Target2.ValueType == 5 ? Target2.Area.AreaUP : 0) == Target1.Area.AreaUP) db =1;
                                 break;
 
                             case 6:
                                 if ((Target2.ValueType == 6 ? Target2.Table.CountedTable : 0) == Target1.Table.CountedTable) db =1;
                                 break;
                             case 7:
-                                if ((Target2.ValueType == 7 ? Target2.Area.Area : 0) == Target1.Area.Area) db =1;
+                                if ((Target2.ValueType == 7 ? Target2.Area.AreaUP : 0) == Target1.Area.AreaUP) db =1;
                                 break;
                             case 8:
                                 if ((Target2.ValueType == 8 ? Target2.db : 0)  == Target1.db) db =1;

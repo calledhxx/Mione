@@ -35,9 +35,9 @@ HeadReturnObj RETURN(HeadRequestObj * HeadRequestUP)
             CountObj Counted = COUNT(Pairs[i].Source, Pairs[i].SourceSize);
 
             ToReturn.ToState = ToReturn.ToState+1;
-            ToReturn.Vs = (ValueReturnObj){
+            ToReturn.Values = (ValuesObj){
                 .ValueSize = Counted.ValueSize,
-               .Value = Counted.Value,
+                .Value = Counted.Value,
             };
         }
         if (Prompt.ObjType == 2)

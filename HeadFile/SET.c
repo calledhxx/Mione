@@ -24,12 +24,8 @@ HeadReturnObj SET(HeadRequestObj * HeadRequestUP)
     HeadReturnObj ToReturn;
     ToReturn.ToState = 0;
 
-    ToReturn.VAVs.VAVs = malloc(0);
-    ToReturn.VAVs.VAVsSize = 0;
-
-
-    //set x
-    //1   2
+    ToReturn.VAVs.DefinedVariables = malloc(0);
+    ToReturn.VAVs.DefinedVariablesSize = 0;
 
     VariableRequestUPObj Request = {.VariablesSize = 0};
     CountObj Counted = {.ValueSize = 0};
@@ -51,6 +47,8 @@ HeadReturnObj SET(HeadRequestObj * HeadRequestUP)
             {
             case 1:
                 Counted = COUNT(Pairs[i].Source, Pairs[i].SourceSize);
+
+
 
                 if (Counted.ValueSize!=Request.VariablesSize) ErrCall("Variables couldn't be paired with values","M111",NULL,Prompt.Line,Prompt.Column);
 
@@ -96,9 +94,9 @@ HeadReturnObj SET(HeadRequestObj * HeadRequestUP)
                        (*Dvo[DvoIndex].VariableUPsUP)[VariableIndex]->Val = (ValueObj){
                             .ValueType = 0};
 
-                        ToReturn.VAVs.VAVsSize++;
-                        ToReturn.VAVs.VAVs = realloc( ToReturn.VAVs.VAVs, ToReturn.VAVs.VAVsSize * sizeof(DefinedVarAndValueObj));
-                        ToReturn.VAVs.VAVs[ToReturn.VAVs.VAVsSize-1] = (DefinedVarAndValueObj){
+                        ToReturn.VAVs.DefinedVariablesSize++;
+                        ToReturn.VAVs.DefinedVariables = realloc( ToReturn.VAVs.DefinedVariables, ToReturn.VAVs.DefinedVariablesSize * sizeof(DefinedVariableObj));
+                        ToReturn.VAVs.DefinedVariables[ToReturn.VAVs.DefinedVariablesSize-1] = (DefinedVariableObj){
                             .Value = V,
                             .TheDefinedVarUP = (*Dvo[DvoIndex].VariableUPsUP)[VariableIndex]
                         };

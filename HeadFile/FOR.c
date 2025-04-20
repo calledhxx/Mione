@@ -152,31 +152,7 @@ HeadReturnObj FOR(HeadRequestObj * HeadRequestUP)
             {
                 Request.VariableUPs[0]->Val.NPNumber =  Request.VariableUPs[0]->Val.NPNumber +( LRofZero > 0 ? 1 : -1);
 
-                MioneReturnObj RangeReturn ;//=  Range(DoCounted.Value[0].Area.Area,DoCounted.Value[0].Area.Size);
-
-
-                int States[] =  {
-                    1
-                };
-
-
-                for (int StateIndex = 0; StateIndex<(sizeof(States)/sizeof(int)); StateIndex++)
-                {
-                    if (RangeReturn.ToState >= States[StateIndex])
-                    {
-                        RangeReturn.ToState = RangeReturn.ToState-States[StateIndex];
-
-                        switch (States[StateIndex])
-                        {
-                        case 1:
-                            {
-                                ToReturn.ToState+=1;
-                                return ToReturn;
-                            }
-                            break;
-                        }
-                    }
-                }
+                //todo
             }
         }
 
@@ -223,31 +199,8 @@ HeadReturnObj FOR(HeadRequestObj * HeadRequestUP)
                 };
 
 
-                MioneReturnObj RangeReturn ;//=  Range(DoCounted.Value[0].Area.Area,DoCounted.Value[0].Area.Size);
 
-                int States[] =  {
-                    1
-                };
-
-
-                for (int StateIndex = 0; StateIndex<(sizeof(States)/sizeof(int)); StateIndex++)
-                {
-                    if (RangeReturn.ToState >= States[StateIndex])
-                    {
-                        RangeReturn.ToState = RangeReturn.ToState-States[StateIndex];
-
-                        switch (States[StateIndex])
-                        {
-                        case 1:
-                            {
-                                ToReturn.ToState+=1;
-                                return ToReturn;
-                            }
-                            break;
-                        }
-                    }
-                }
-
+               //todo
 
             }
 
