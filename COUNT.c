@@ -474,39 +474,38 @@ CountObj COUNT(MioneObj*Pack,int PackSize)
                     });
 
 
+                    int VarsSize = Return.Vars.VarsSize;
+                    VariableObj * Vars = Return.Vars.Vars;
 
-                    VariableObj * NewTable = malloc(0);
-                    int NewTableSize = 0;
+                    VariablesObj NewTable;
+                    NewTable.VarsSize = 0;
+                    NewTable.Vars = malloc(0);
 
-                    int DefinedVariablesSize = Return.DVs.DefinedVariablesSize;
-                    DefinedVariableObj * DefinedVariables = Return.DVs.DefinedVariables;
 
-                    for (int TableChildIndex = 0; TableChildIndex<DefinedVariablesSize ; TableChildIndex++)
+                    for (int TableChildIndex = 0; TableChildIndex<VarsSize ; TableChildIndex++)
                     {
-                        NewTableSize++;
-                        NewTable = realloc (NewTable, NewTableSize*sizeof(VariableObj));
-                        NewTable[NewTableSize-1] = *DefinedVariables[TableChildIndex].TheDefinedVarUP;
+                        NewTable.VarsSize++;
+                        NewTable.Vars = realloc (NewTable.Vars, NewTable.VarsSize*sizeof(VariableObj));
+                        NewTable.Vars[NewTable.VarsSize-1] = Vars[TableChildIndex];
 
-                        if (DefinedVariables[TableChildIndex].TheDefinedVarUP->Place)
+                        if (Vars[TableChildIndex].Place)
                         {
-                            for (int CTCIndex = 0; CTCIndex<NewTableSize ; CTCIndex++)
+                            for (int CTCIndex = 0; CTCIndex<NewTable.VarsSize ; CTCIndex++)
                             {
-                                if (NewTable[CTCIndex].Place > NewTable[NewTableSize-1].Place &&NewTable[CTCIndex].Place )
+                                if (NewTable.Vars[CTCIndex].Place > NewTable.Vars[NewTable.VarsSize-1].Place &&NewTable.Vars[CTCIndex].Place )
                                 {
-                                    VariableObj Butter = NewTable[CTCIndex];
-                                    NewTable[CTCIndex] = NewTable[NewTableSize-1];
-                                    NewTable[NewTableSize-1] = Butter;
+                                    VariableObj Butter = NewTable.Vars[CTCIndex];
+                                    NewTable.Vars[CTCIndex] = NewTable.Vars[NewTable.VarsSize-1];
+                                    NewTable.Vars[NewTable.VarsSize-1] = Butter;
                                 }
                             }
                         }
                     }
 
                     Pack[i].Val.Table.VariablesUP = malloc(sizeof(struct _VariablesObject));
+                    *Pack[i].Val.Table.VariablesUP = NewTable;
 
-                    Pack[i].Val.Table.VariablesUP->Vars = NewTable;
-                    Pack[i].Val.Table.VariablesUP->VarsSize = NewTableSize;
-
-                    printf("a %d\n", DefinedVariablesSize);
+                    printf("%d\n",NewTable.VarsSize);
 
                     //todo fix
                 }

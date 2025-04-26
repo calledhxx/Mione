@@ -16,9 +16,9 @@ ImplementedObj IMPLEMENT(const ToImplementObj toImplement)
     ImplementedObj Obj = {0};
     Obj.ToState=0;
 
-    DefinedVariablesCaseObj DVs;
-    DVs.DefinedVariables = malloc(0);
-    DVs.DefinedVariablesSize = 0;
+    VariablesObj Vars;
+    Vars.Vars = malloc(0);
+    Vars.VarsSize = 0;
 
     int SectionsSize = toImplement.Built.SectionsSize;
     MioneSectionObj * Sections = toImplement.Built.Sections;
@@ -39,11 +39,11 @@ ImplementedObj IMPLEMENT(const ToImplementObj toImplement)
                        .PairsSize = PairsSize,
                    });
 
-            for (int i = 0;;i++)
+            for (int i = 5;i>0;i--)
             {
                 const int cmp = pow(2,i);
 
-                if (HeadReturn.ToState - cmp >=0)
+                if (HeadReturn.ToState - cmp ==0)
                 {
                     HeadReturn.ToState=-cmp;
 
@@ -59,20 +59,28 @@ ImplementedObj IMPLEMENT(const ToImplementObj toImplement)
                         }
                     case 4:
                         {
-                            DVs = HeadReturn.VAVs;
+                            for (int j=0;j<HeadReturn.Vars.VarsSize;j++)
+                            {
+                                Vars.VarsSize++;
+                                Vars.Vars = realloc(Vars.Vars,Vars.VarsSize*sizeof(DefinedVariableObj));
+                                Vars.Vars[Vars.VarsSize-1] = HeadReturn.Vars.Vars[j];
+                            }
                             break;
                         }
 
                     default:
                         {
-
                         }
                     }
-                }else break;
-
+                }
             }
-
         }
+    }
+
+    if (Vars.VarsSize)
+    {
+        Obj.ToState=+2;
+        Obj.Vars = Vars;
     }
 
     return Obj;

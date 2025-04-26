@@ -29,6 +29,7 @@ typedef struct _AreaObject
 typedef struct _TableObject
 {
     struct _MioneBuiltObject * TableAreaUP;
+
     struct _VariablesObject * VariablesUP;
 }TableObj;
 
@@ -140,7 +141,7 @@ typedef struct _DefinedVariableObject
     VariableObj* TheDefinedVarUP;
 }DefinedVariableObj;
 
-typedef struct _DefinedVariablesCaseObject
+typedef struct _DefinedVariablesCaseObject //常用於 還原變數
 {
     DefinedVariableObj * DefinedVariables;
     int DefinedVariablesSize;
@@ -220,11 +221,11 @@ typedef struct _ImplementedObject
     int ToState; /*
     0:正常
     1:回傳 (HEAD回傳的結果)
+    2:區域性特色變數
     */
 
     ValuesObj Values;
-
-    DefinedVariablesCaseObj DVs;
+    VariablesObj Vars;
 }ImplementedObj;
 
 

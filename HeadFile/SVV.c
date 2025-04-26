@@ -68,7 +68,6 @@ HeadReturnObj SVV(HeadRequestObj * HeadRequestUP)
                     Re.Vars = Vars;
                     Re.ToState = Re.ToState+4;
                 }
-                // else ErrCall("無意義的語句","M111",NULL,Prompt.Line,Prompt.Column);
             }
         }else
         {
