@@ -28,14 +28,8 @@ typedef struct _AreaObject
 
 typedef struct _TableObject
 {
-    int CountedTableSize; //值大小
-    struct _VariableObject * CountedTable; //給予表格(table)。
-
-    int MioneTableSize;
-    struct _MioneObject * MioneTable;
-
-    int Counted; //是否已計算過
-    //Name 為 Null 時，則以順序來排序
+    struct _MioneBuiltObject * TableAreaUP;
+    struct _VariablesObject * VariablesUP;
 }TableObj;
 
 typedef struct _ValueObject
@@ -181,7 +175,7 @@ typedef struct _VariableRequestUPObject
     int VariablesSize;
 } VariableRequestUPObj;
 
-typedef struct _DefineVariableObject
+typedef struct _DefineVariableObject //DVO 註冊表
 {
     VariableObj * * * VariableUPsUP;
     int * VariablesSizeUP;
@@ -230,7 +224,7 @@ typedef struct _ImplementedObject
 
     ValuesObj Values;
 
-
+    DefinedVariablesCaseObj DVs;
 }ImplementedObj;
 
 

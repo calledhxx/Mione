@@ -16,6 +16,10 @@ ImplementedObj IMPLEMENT(const ToImplementObj toImplement)
     ImplementedObj Obj = {0};
     Obj.ToState=0;
 
+    DefinedVariablesCaseObj DVs;
+    DVs.DefinedVariables = malloc(0);
+    DVs.DefinedVariablesSize = 0;
+
     int SectionsSize = toImplement.Built.SectionsSize;
     MioneSectionObj * Sections = toImplement.Built.Sections;
 
@@ -35,10 +39,9 @@ ImplementedObj IMPLEMENT(const ToImplementObj toImplement)
                        .PairsSize = PairsSize,
                    });
 
-            for (int i = 0;i<10;i++)
+            for (int i = 0;;i++)
             {
                 const int cmp = pow(2,i);
-
 
                 if (HeadReturn.ToState - cmp >=0)
                 {
@@ -50,10 +53,13 @@ ImplementedObj IMPLEMENT(const ToImplementObj toImplement)
 
                     case 1:
                         {
-                            printf("adaddasd\n");
                             Obj.ToState=+1;
                             Obj.Values = HeadReturn.Values;
-
+                            break;
+                        }
+                    case 4:
+                        {
+                            DVs = HeadReturn.VAVs;
                             break;
                         }
 

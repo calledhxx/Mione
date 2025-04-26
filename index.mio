@@ -1,5 +1,8 @@
-set a = function
-     return 1;
-end;
+set a = {
+    1: "Hello";
+    2: "World"
+}
 
-2 * a();
+for i in a with key do range
+    i
+end

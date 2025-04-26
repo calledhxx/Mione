@@ -291,13 +291,13 @@ HeadReturnObj SVV(HeadRequestObj * HeadRequestUP)
         }
     }
 
+
+
     if (set || point)
     {
-        Re.ToState = Re.ToState+4;
+        Re.ToState =+4;
         Re.Vars = Vars;
     }
-
-
 
     return Re;
 }

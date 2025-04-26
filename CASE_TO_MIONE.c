@@ -164,20 +164,18 @@ MioneObj *CMO(CaseObj*CASES,int CASESIZE,
                    int MioObjSize = 0;
 
                    MioneObj * MioObj = CMO(Area,AreaSize,&MioObjSize,CapLine,Column,DvoUP,DvoSizeUP);
-                   // VariableObj * TbMemory = malloc(0);
-                   // int  TbMemorySize = 0;
-                   //
-                   // MioneReturnObj Tb = Table(MioObj,MioObjSize,&TbMemory,&TbMemorySize);
+
+                   MioneBuiltObj Built = ToMione((MioneToBuildObj){
+                       .Objs = MioObj,
+                       .ObjsSize = MioObjSize,
+                   });
 
 
                    TableObj eTable = (TableObj){
-                       .MioneTable = MioObj,
-                       .MioneTableSize = MioObjSize,
-                       .CountedTable = NULL,
-                       .CountedTableSize = 0,
-
-                       .Counted = 0
+                       .VariablesUP = 0,
                    };
+                   eTable.TableAreaUP = malloc(sizeof(struct _MioneBuiltObject));
+                   *eTable.TableAreaUP = Built;
 
                    ValueObj Value = (ValueObj){
                        .ValueType = VALUE_TABLE_TYPE,
@@ -296,7 +294,7 @@ MioneObj *CMO(CaseObj*CASES,int CASESIZE,
                if (ChildCount == 1)
                {
                    CapLine = Line;
-                   goEndType = VALUE_COROUTINE_TYPE;
+                   goEndType = VALUE_RANGE_TYPE;
                    Paired = 5;
                }
            }
@@ -309,7 +307,7 @@ MioneObj *CMO(CaseObj*CASES,int CASESIZE,
                if (ChildCount == 1)
                {
                    CapLine = Line;
-                   goEndType = VALUE_RANGE_TYPE;
+                   goEndType = VALUE_COROUTINE_TYPE;
                    Paired = 5;
                }
            }

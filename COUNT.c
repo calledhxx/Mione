@@ -467,30 +467,27 @@ CountObj COUNT(MioneObj*Pack,int PackSize)
             {
             if (!BracketsChild)
             {
-                if (Pack[i].ObjType == VALUE && Pack[i].Val.ValueType == VALUE_TABLE_TYPE && !Pack[i].Val.Table.Counted)
+                if (Pack[i].ObjType == VALUE && Pack[i].Val.ValueType == VALUE_TABLE_TYPE && !Pack[i].Val.Table.VariablesUP)
                 {
-                    ValueObj V = Pack[i].Val;
+                    ImplementedObj Return = IMPLEMENT((ToImplementObj){
+                        .Built = *Pack[i].Val.Table.TableAreaUP
+                    });
 
-                    VariableObj * CountedTable = malloc(0);
-                    int CountedTableSize = 0;
 
-                    // MioneReturnObj R =
-                    // Table(V.Table.MioneTable,V.Table.MioneTableSize,&CountedTable,&CountedTableSize);
-
-                    Pack[i].Val.Table.Counted=1;
-                    Pack[i].Val.Table.MioneTable = NULL;
-                    Pack[i].Val.Table.MioneTableSize = 0;
 
                     VariableObj * NewTable = malloc(0);
                     int NewTableSize = 0;
 
-                    for (int TableChildIndex = 0; TableChildIndex<CountedTableSize ; TableChildIndex++)
+                    int DefinedVariablesSize = Return.DVs.DefinedVariablesSize;
+                    DefinedVariableObj * DefinedVariables = Return.DVs.DefinedVariables;
+
+                    for (int TableChildIndex = 0; TableChildIndex<DefinedVariablesSize ; TableChildIndex++)
                     {
                         NewTableSize++;
                         NewTable = realloc (NewTable, NewTableSize*sizeof(VariableObj));
-                        NewTable[NewTableSize-1] = CountedTable[TableChildIndex];
+                        NewTable[NewTableSize-1] = *DefinedVariables[TableChildIndex].TheDefinedVarUP;
 
-                        if (CountedTable[TableChildIndex].Place)
+                        if (DefinedVariables[TableChildIndex].TheDefinedVarUP->Place)
                         {
                             for (int CTCIndex = 0; CTCIndex<NewTableSize ; CTCIndex++)
                             {
@@ -504,21 +501,14 @@ CountObj COUNT(MioneObj*Pack,int PackSize)
                         }
                     }
 
-                    //printf("size %d\n",CountedTableSize);
+                    Pack[i].Val.Table.VariablesUP = malloc(sizeof(struct _VariablesObject));
 
-                    CountedTable = NewTable;
-                    CountedTableSize = NewTableSize;
+                    Pack[i].Val.Table.VariablesUP->Vars = NewTable;
+                    Pack[i].Val.Table.VariablesUP->VarsSize = NewTableSize;
 
+                    printf("a %d\n", DefinedVariablesSize);
 
-                    // for (int TableChildIndex = 0; TableChildIndex<CountedTableSize ; TableChildIndex++)
-                    // {
-                    //     if (CountedTable[TableChildIndex].Name) printf("aaa %s %d\n", CountedTable[TableChildIndex].Name,CountedTable[TableChildIndex].Val.ValueType);
-                    // }
-
-
-
-                    Pack[i].Val.Table.CountedTable = CountedTable;
-                    Pack[i].Val.Table.CountedTableSize = CountedTableSize;
+                    //todo fix
                 }
 
                 if (CalculateType)
@@ -1037,7 +1027,8 @@ CountObj COUNT(MioneObj*Pack,int PackSize)
                                 break;
 
                             case 6:
-                                if ((Target2.ValueType == 6 ? Target2.Table.CountedTable : 0) == Target1.Table.CountedTable) db =1;
+                                db =1;
+                                printf("jijijii\n");
                                 break;
                             case 7:
                                 if ((Target2.ValueType == 7 ? Target2.Area.AreaUP : 0) == Target1.Area.AreaUP) db =1;

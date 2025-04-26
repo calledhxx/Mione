@@ -482,58 +482,58 @@ VariableRequestUPObj REQUEST(MioneObj*Pack,int PackSize)
             {
             if (!BracketsChild)
             {
-                if (Pack[i].ObjType == VALUE && Pack[i].Val.ValueType == VALUE_TABLE_TYPE && !Pack[i].Val.Table.Counted)
-                {
-                    ValueObj V = Pack[i].Val;
-
-                    VariableObj * CountedTable = malloc(0);
-                    int CountedTableSize = 0;
-
-                    // MioneReturnObj R =
-                    // Table(V.Table.MioneTable,V.Table.MioneTableSize,&CountedTable,&CountedTableSize);
-
-
-                    Pack[i].Val.Table.Counted=1;
-                    Pack[i].Val.Table.MioneTable = NULL;
-                    Pack[i].Val.Table.MioneTableSize = 0;
-
-                    VariableObj * NewTable = malloc(0);
-                    int NewTableSize = 0;
-
-                    for (int TableChildIndex = 0; TableChildIndex<CountedTableSize ; TableChildIndex++)
-                    {
-                        NewTableSize++;
-                        NewTable = realloc (NewTable, NewTableSize*sizeof(VariableObj));
-                        NewTable[NewTableSize-1] = CountedTable[TableChildIndex];
-
-                        if (CountedTable[TableChildIndex].Place)
-                        {
-                            for (int CTCIndex = 0; CTCIndex<NewTableSize ; CTCIndex++)
-                            {
-                                if (NewTable[CTCIndex].Place > NewTable[NewTableSize-1].Place &&NewTable[CTCIndex].Place )
-                                {
-                                    VariableObj Butter = NewTable[CTCIndex];
-                                    NewTable[CTCIndex] = NewTable[NewTableSize-1];
-                                    NewTable[NewTableSize-1] = Butter;
-                                }
-                            }
-                        }
-                    }
-
-
-                    CountedTable = NewTable;
-                    CountedTableSize = NewTableSize;
-
-                    for (int TableChildIndex = 0; TableChildIndex<CountedTableSize ; TableChildIndex++)
-                    {
-                        if (CountedTable[TableChildIndex].Place) printf("bbb %d\n", CountedTable[TableChildIndex].Place);
-                        if (CountedTable[TableChildIndex].Name) printf("aaa %s\n", CountedTable[TableChildIndex].Name);
-                    }
-
-
-                    Pack[i].Val.Table.CountedTable = CountedTable;
-                    Pack[i].Val.Table.CountedTableSize = CountedTableSize;
-                }
+                // if (Pack[i].ObjType == VALUE && Pack[i].Val.ValueType == VALUE_TABLE_TYPE && !Pack[i].Val.Table.Counted)
+                // {
+                //     ValueObj V = Pack[i].Val;
+                //
+                //     VariableObj * CountedTable = malloc(0);
+                //     int CountedTableSize = 0;
+                //
+                //     // MioneReturnObj R =
+                //     // Table(V.Table.MioneTable,V.Table.MioneTableSize,&CountedTable,&CountedTableSize);
+                //
+                //
+                //     Pack[i].Val.Table.Counted=1;
+                //     Pack[i].Val.Table.MioneTable = NULL;
+                //     Pack[i].Val.Table.MioneTableSize = 0;
+                //
+                //     VariableObj * NewTable = malloc(0);
+                //     int NewTableSize = 0;
+                //
+                //     for (int TableChildIndex = 0; TableChildIndex<CountedTableSize ; TableChildIndex++)
+                //     {
+                //         NewTableSize++;
+                //         NewTable = realloc (NewTable, NewTableSize*sizeof(VariableObj));
+                //         NewTable[NewTableSize-1] = CountedTable[TableChildIndex];
+                //
+                //         if (CountedTable[TableChildIndex].Place)
+                //         {
+                //             for (int CTCIndex = 0; CTCIndex<NewTableSize ; CTCIndex++)
+                //             {
+                //                 if (NewTable[CTCIndex].Place > NewTable[NewTableSize-1].Place &&NewTable[CTCIndex].Place )
+                //                 {
+                //                     VariableObj Butter = NewTable[CTCIndex];
+                //                     NewTable[CTCIndex] = NewTable[NewTableSize-1];
+                //                     NewTable[NewTableSize-1] = Butter;
+                //                 }
+                //             }
+                //         }
+                //     }
+                //
+                //
+                //     CountedTable = NewTable;
+                //     CountedTableSize = NewTableSize;
+                //
+                //     for (int TableChildIndex = 0; TableChildIndex<CountedTableSize ; TableChildIndex++)
+                //     {
+                //         if (CountedTable[TableChildIndex].Place) printf("bbb %d\n", CountedTable[TableChildIndex].Place);
+                //         if (CountedTable[TableChildIndex].Name) printf("aaa %s\n", CountedTable[TableChildIndex].Name);
+                //     }
+                //
+                //
+                //     Pack[i].Val.Table.CountedTable = CountedTable;
+                //     Pack[i].Val.Table.CountedTableSize = CountedTableSize;
+                // }
 
                 if (CalculateType)
             {

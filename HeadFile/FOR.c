@@ -157,25 +157,25 @@ HeadReturnObj FOR(HeadRequestObj * HeadRequestUP)
         }
 
         if(in){
-            for (int TableIndex = 0; TableIndex < InCounted.Value[0].Table.CountedTableSize; TableIndex++)
+            for (int TableIndex = 0; TableIndex < InCounted.Value[0].Table.VariablesUP->VarsSize; TableIndex++)
             {
                 if (with)
                 {
-                    if (InCounted.Value[0].Table.CountedTable[TableIndex].Name)
+                    if (InCounted.Value[0].Table.VariablesUP->Vars[TableIndex].Name)
                     {
                         *WithRequest.VariableUPs[0] = (VariableObj){
                             .Val = (ValueObj){
                                 .ValueType = VALUE_STRING_TYPE,
-                                .String = InCounted.Value[0].Table.CountedTable[TableIndex].Name
+                                .String = InCounted.Value[0].Table.VariablesUP->Vars[TableIndex].Name
                             },
 
                         };
-                    }else if (InCounted.Value[0].Table.CountedTable[TableIndex].Place)
+                    }else if (InCounted.Value[0].Table.VariablesUP->Vars[TableIndex].Place)
                     {
                         *WithRequest.VariableUPs[0] = (VariableObj){
                             .Val = (ValueObj){
                                 .ValueType = VALUE_NOPOINTNUMBER_TYPE,
-                                .NPNumber = InCounted.Value[0].Table.CountedTable[TableIndex].Place
+                                .NPNumber = InCounted.Value[0].Table.VariablesUP->Vars[TableIndex].Place
                             },
 
                         };
@@ -193,7 +193,7 @@ HeadReturnObj FOR(HeadRequestObj * HeadRequestUP)
                 }
 
                 *(Request.VariableUPs[0]) = (VariableObj){
-                    .Val = InCounted.Value[0].Table.CountedTable[TableIndex].Val,
+                    .Val = InCounted.Value[0].Table.VariablesUP->Vars[TableIndex].Val,
                     .Name = Request.VariableUPs[0]->Name,
                     .Place = Request.VariableUPs[0]->Place
                 };
