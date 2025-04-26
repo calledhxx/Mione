@@ -28,3 +28,5 @@ set x = "Hello, World"
 ```
 
 上面程式碼的內容是將 `=` 提詞 ( PROMPT ) 後的 `"Hello, World"` 立即值 ( VALUE ) 賦予至 `x`變數 ( VARIABLE ) 內。
+
+#####  <img src="https://raw.githubusercontent.com/calledhxx/Mione/26e7d1561c7421837d1b7ff8e1e1545f3f12eaae/Mione.svg" width="25"/> 
