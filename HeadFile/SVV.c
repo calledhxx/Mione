@@ -274,7 +274,7 @@ HeadReturnObj SVV(HeadRequestObj * HeadRequestUP)
                 }
                 break;
             default:
-                ErrCall("dkakakpdkapkdakd","Invalid value type for point name",NULL,Pairs[0].Source[0].Line,Pairs[0].Source[0].Column);
+                ErrCall("dkakakpdkapkdakd","Invalid value type for point name",NULL,Pairs[1].Source[0].Line,Pairs[1].Source[0].Column);
             }
         }
 

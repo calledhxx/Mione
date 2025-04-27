@@ -16,6 +16,7 @@
 
 CountObj COUNT(MioneObj*Pack,int PackSize)
 {
+
     int FirstBracketIndex = 0;
     int BracketsChild = 0; //括號多寡
 
@@ -42,6 +43,7 @@ CountObj COUNT(MioneObj*Pack,int PackSize)
                 {
                     if (!BracketsChild)
                     {
+
                         BracketCur = 1;
                         FirstBracketIndex = i;
 
@@ -64,7 +66,9 @@ CountObj COUNT(MioneObj*Pack,int PackSize)
                     {
                         BracketCur = 0;
 
+
                         CountObj ChildCount = COUNT(inBracket, inBracketSize);
+
 
                         ValueObj TheValue;
 
@@ -87,6 +91,7 @@ CountObj COUNT(MioneObj*Pack,int PackSize)
                                         }
                                     default: ErrCall("AAAA","DaaaASDASSASDadCVVCS",NULL,NULL,NULL);
                                 }
+
 
                                 if (nearByValue.ValueType == VALUE_TABLE_TYPE)
                                 {
@@ -156,7 +161,7 @@ CountObj COUNT(MioneObj*Pack,int PackSize)
                         int NewPackSize = 0;
 
 
-                        for (int index = 0; index < FirstBracketIndex; index++)
+                        for (int index = 0; index < FirstBracketIndex-1; index++)
                         {
                             NewPackSize++;
                             NewPack = realloc(NewPack, sizeof(MioneObj) * NewPackSize);
@@ -191,7 +196,6 @@ CountObj COUNT(MioneObj*Pack,int PackSize)
                 break;
             case 12:
                 {
-
                     if (!BracketsChild)
                     {
                         BracketCur = 2;
@@ -222,6 +226,7 @@ CountObj COUNT(MioneObj*Pack,int PackSize)
 
                         if (FirstBracketIndex > 0)
                         {
+
                              if (Pack[FirstBracketIndex - 1].ObjType == VARIABLE || Pack[FirstBracketIndex - 1].ObjType == VALUE)
                             {
 
@@ -246,7 +251,6 @@ CountObj COUNT(MioneObj*Pack,int PackSize)
 
                                         ValuesObj V = Return.Values;
 
-                                        printf("%d adsjioajisdoiads \n",Return.Values.ValueSize);
 
                                         MioneObj* NewPack = malloc(0);
                                         int NewPackSize = 0;
@@ -441,6 +445,7 @@ CountObj COUNT(MioneObj*Pack,int PackSize)
                                     .ObjType = VALUE,
                                     .Val = ChildCount.Value[index]
                                 };
+
                             }
 
                             for (int index = i + 1; index < PackSize; index++)
@@ -452,6 +457,7 @@ CountObj COUNT(MioneObj*Pack,int PackSize)
 
                             Pack = NewPack;
                             PackSize = NewPackSize;
+
 
                             i = FirstBracketIndex -1;
                         }
@@ -621,7 +627,6 @@ CountObj COUNT(MioneObj*Pack,int PackSize)
                     Pack[i].Val.Table.VariablesUP = malloc(sizeof(struct _VariablesObject));
                     *Pack[i].Val.Table.VariablesUP = NewTable;
 
-                    printf("%d\n",NewTable.VarsSize);
 
                     //todo fix
                 }
@@ -642,8 +647,12 @@ CountObj COUNT(MioneObj*Pack,int PackSize)
                             ValueObj Target2 ;
 
 
+
                             if (Pack[i - 2].ObjType == VARIABLE) Target1 = Pack[i - 2].VarUP->Val; else Target1 = Pack[i - 2].Val;
                             if (Pack[i].ObjType == VARIABLE) Target2 = Pack[i].VarUP->Val; else Target2 = Pack[i].Val;
+
+                                printf("%d\n",Target2.ValueType);
+
 
                             if (!(Target1.ValueType == VALUE_NOPOINTNUMBER_TYPE || Target1.ValueType == VALUE_POINTNUMBER_TYPE)){ ErrCall("Type Error1","MG0011111","",
                                 Pack[i-2].Line,
@@ -1143,7 +1152,6 @@ CountObj COUNT(MioneObj*Pack,int PackSize)
 
                             case 6:
                                 db =1;
-                                printf("jijijii\n");
                                 break;
                             case 7:
                                 if ((Target2.ValueType == 7 ? Target2.Area.AreaUP : 0) == Target1.Area.AreaUP) db =1;

@@ -54,6 +54,7 @@ MioneObj *CMO(CaseObj*CASES,int CASESIZE,
        {
            int Paired =0; //Head Symbol Prompt Variable Value
 
+
            if (CASES[i].ObjType == 13)
            {
                Line++;
@@ -207,13 +208,16 @@ MioneObj *CMO(CaseObj*CASES,int CASESIZE,
            }
            if (ChildCount == 0) if (strcmp(CASES[i].ObjName,"{") == 0)
            {
-               Paired = VALUE;
+               if (!TableCount)
+               {
+                   CapLine = Line;
+                   Paired = VALUE;
+               }
                TableCount++;
            }
 
            if (ChildCount == 0 && TableCount == 0) if (strcmp(CASES[i].ObjName,";") == 0)
            {
-               printf("helol\n");
                Paired = -1;
                Column++;
 
