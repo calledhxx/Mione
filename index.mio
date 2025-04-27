@@ -1,8 +1,0 @@
-set a = {
-    1 : "Hello";
-    2 : "World"
-}
-
-for i in a with key do range
-    i
-end

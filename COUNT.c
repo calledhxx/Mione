@@ -16,7 +16,6 @@
 
 CountObj COUNT(MioneObj*Pack,int PackSize)
 {
-
     int FirstBracketIndex = 0;
     int BracketsChild = 0; //括號多寡
 
@@ -31,7 +30,7 @@ CountObj COUNT(MioneObj*Pack,int PackSize)
 
     for(int i = 0; i < PackSize; i++)
     {
-        int PastCost = 0;//符號所前扣之值
+        int PastCost = 0;
 
         switch (Pack[i].ObjType)
         {
@@ -64,6 +63,124 @@ CountObj COUNT(MioneObj*Pack,int PackSize)
                     if (!BracketsChild && BracketCur == 1)
                     {
                         BracketCur = 0;
+
+                        CountObj ChildCount = COUNT(inBracket, inBracketSize);
+
+                        ValueObj TheValue;
+
+                        if (ChildCount.ValueSize==1){
+                            if (FirstBracketIndex - 1 >=0)
+                            {
+                                ValueObj nearByValue;
+
+                                switch (Pack[FirstBracketIndex - 1].ObjType)
+                                {
+                                    case VARIABLE:
+                                        {
+                                            nearByValue = Pack[FirstBracketIndex - 1].VarUP->Val;
+                                            break;
+                                        }
+                                    case VALUE:
+                                        {
+                                            nearByValue = Pack[FirstBracketIndex - 1].Val;
+                                            break;
+                                        }
+                                    default: ErrCall("AAAA","DaaaASDASSASDadCVVCS",NULL,NULL,NULL);
+                                }
+
+                                if (nearByValue.ValueType == VALUE_TABLE_TYPE)
+                                {
+                                    for (int index = 0 ;index<nearByValue.Table.VariablesUP->VarsSize;index++)
+                                    {
+                                        switch (ChildCount.Value[0].ValueType)
+                                        {
+                                        case VALUE_STRING_TYPE:
+                                            {
+                                                if (strcmp(nearByValue.Table.VariablesUP->Vars[index].Name,ChildCount.Value[0].String) == 0 )
+                                                    TheValue = nearByValue.Table.VariablesUP->Vars[index].Val;
+                                                break;
+                                            }
+                                        case VALUE_NOPOINTNUMBER_TYPE:
+                                            {
+                                                if (nearByValue.Table.VariablesUP->Vars[index].Name == ChildCount.Value[0].String)
+                                                    TheValue = nearByValue.Table.VariablesUP->Vars[index].Val;
+                                                break;
+                                            }
+                                        default:
+                                            {
+                                                ErrCall("AAAA","DASDASSASDCVVCS",NULL,NULL,NULL);
+                                            }
+                                        }
+                                    }
+                                }else ErrCall("kkopkopkopkopdasp","DASDASSASDadCVVCS",NULL,NULL,NULL);
+
+                            }else
+                            {
+                                extern DefineVariableObj * Dvo;
+                                extern int DvoSize;
+
+                                for (int DvoIndex = 0; DvoIndex < DvoSize; DvoIndex++) for (int index = 0; index<*Dvo[DvoIndex].VariablesSizeUP;index++) {
+                                    switch (ChildCount.Value[0].ValueType)
+                                    {
+                                    case VALUE_STRING_TYPE:
+                                        {
+                                            if (strcmp((*Dvo[DvoIndex].VariableUPsUP)[index]->Name,ChildCount.Value[0].String)==0)
+                                            {
+                                                TheValue = (*Dvo[DvoIndex].VariableUPsUP)[index]->Val;
+                                                break;
+                                            }
+                                            break;
+                                        }
+                                    case VALUE_NOPOINTNUMBER_TYPE:
+                                        {
+                                            if ((*Dvo[DvoIndex].VariableUPsUP)[index]->Place == ChildCount.Value[0].NPNumber)
+                                            {
+                                                TheValue = (*Dvo[DvoIndex].VariableUPsUP)[index]->Val;
+                                                break;
+                                            }
+                                            break;
+                                        }
+                                    default:
+                                        {
+                                            ErrCall("AAAA","DASDASSASDCVVCS",NULL,NULL,NULL);
+                                        }
+                                    }
+                                    break;
+                                }
+
+
+                            }
+                        }else ErrCall("DASDAS","DASDASD",NULL,NULL,NULL);
+
+                        MioneObj* NewPack = malloc(0);
+                        int NewPackSize = 0;
+
+
+                        for (int index = 0; index < FirstBracketIndex; index++)
+                        {
+                            NewPackSize++;
+                            NewPack = realloc(NewPack, sizeof(MioneObj) * NewPackSize);
+                            NewPack[NewPackSize - 1] = Pack[index];
+                        }
+
+                        NewPackSize++;
+                        NewPack = realloc(NewPack, sizeof(MioneObj) * NewPackSize);
+                        NewPack[NewPackSize - 1] = (MioneObj){
+                            .ObjType = VALUE,
+                            .Val = TheValue,
+                        };
+
+                        for (int index = i+1; index < PackSize; index++)
+                        {
+                            NewPackSize++;
+                            NewPack = realloc(NewPack, sizeof(MioneObj) * NewPackSize);
+                            NewPack[NewPackSize - 1] = Pack[index];
+                        }
+
+                        PackSize = NewPackSize;
+                        Pack = NewPack;
+
+                        i = FirstBracketIndex-1;
                     }else
                     {
                         inBracketSize++;
@@ -80,7 +197,6 @@ CountObj COUNT(MioneObj*Pack,int PackSize)
                         BracketCur = 2;
                         FirstBracketIndex = i;
 
-
                         inBracketSize = 0;
                         free(inBracket);
                         inBracket = malloc(0);
@@ -94,7 +210,7 @@ CountObj COUNT(MioneObj*Pack,int PackSize)
                     BracketsChild++;
                 }
                 break;
-                case 13:
+            case 13:
                 {
                     BracketsChild--;
                     if (!BracketsChild && BracketCur == 2)
@@ -119,8 +235,8 @@ CountObj COUNT(MioneObj*Pack,int PackSize)
                                             .Built =  *Pack[FirstBracketIndex - 1].VarUP->Val.Area.AreaUP
                                         });
 
-                                        printf("%d %d\n",Return.ToState,1);
-                                        if ((Return.ToState&1)!=1) ErrCall(
+
+                                        if (!Return.ToState&1) ErrCall(
                                             "The Function hasn't return any Value.",
                                             "MG123",
                                             NULL,
@@ -128,9 +244,9 @@ CountObj COUNT(MioneObj*Pack,int PackSize)
                                             Pack[FirstBracketIndex - 1].Column
                                         );
 
-
                                         ValuesObj V = Return.Values;
 
+                                        printf("%d adsjioajisdoiads \n",Return.Values.ValueSize);
 
                                         MioneObj* NewPack = malloc(0);
                                         int NewPackSize = 0;
@@ -1066,81 +1182,6 @@ CountObj COUNT(MioneObj*Pack,int PackSize)
                                 Pack[i].Column
                             );
                         }
-                        CalculateType = 0;
-                        break;
-                        }
-
-
-                case 14:
-                        {
-                            ValueObj Target = Pack[i].ObjType == VARIABLE ? Pack[i].VarUP->Val : Pack[i].Val;
-
-                            extern DefineVariableObj * Dvo;
-                        extern int DvoSize;
-
-                        VariableObj * FoundVarUP = NULL;
-
-                       for (int DvoIndex = 0; DvoIndex < DvoSize; DvoIndex++)
-                       {
-                           for (int VariableIndex = 0; VariableIndex < *(Dvo[DvoIndex].VariablesSizeUP); VariableIndex++)
-                           {
-                               switch (Target.ValueType)
-                               {
-                               case VALUE_STRING_TYPE:
-                                   {
-                                       if ((*Dvo[DvoIndex].VariableUPsUP)[VariableIndex]->Name)
-                                       if (strcmp((*Dvo[DvoIndex].VariableUPsUP)[VariableIndex]->Name, Target.String) == 0)
-                                       {
-                                           FoundVarUP = (*Dvo[DvoIndex].VariableUPsUP)[VariableIndex];
-                                       }
-                                   }
-                                   break;
-
-                               case VALUE_NOPOINTNUMBER_TYPE:
-                                   {
-                                       if ((*Dvo[DvoIndex].VariableUPsUP)[VariableIndex]->Place, Target.NPNumber)
-                                       {
-                                           FoundVarUP = (*Dvo[DvoIndex].VariableUPsUP)[VariableIndex];
-
-                                       }
-                                   }
-                                   break;
-                                   default:
-                                       {
-                                           ErrCall("dasdaskdoppas","dasjiodjaosjdoias",NULL,Pack[i-1].Line,Pack[i-1].Column);
-                                       }
-                               }
-
-                           }
-                       }
-
-                        if (!FoundVarUP)
-                        {
-                            FoundVarUP = malloc(sizeof(VariableObj));
-
-                            if (Target.ValueType == VALUE_STRING_TYPE)
-                            {
-                                *FoundVarUP = (VariableObj){
-                                    .Name = Target.String
-                                };
-                            }else
-                            {
-                                *FoundVarUP = (VariableObj){
-                                    .Place = Target.NPNumber
-                                };
-                            }
-
-                            (*Dvo[DvoSize-1].VariablesSizeUP)++;
-                            (*Dvo[DvoSize-1].VariableUPsUP) = realloc((*Dvo[DvoSize-1].VariableUPsUP), (*Dvo[DvoSize-1].VariablesSizeUP) * sizeof(VariableObj**));
-                            (*Dvo[DvoSize-1].VariableUPsUP)[(*Dvo[DvoSize-1].VariablesSizeUP)-1] = FoundVarUP;
-                        }
-
-                        Out = (MioneObj){
-                            .ObjType = VALUE,
-                            .Val = FoundVarUP->Val,
-                        };
-
-                        PastCost = 1;
                         CalculateType = 0;
                         break;
                         }

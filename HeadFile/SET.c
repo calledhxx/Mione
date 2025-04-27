@@ -48,8 +48,6 @@ HeadReturnObj SET(HeadRequestObj * HeadRequestUP)
             case 1:
                 Counted = COUNT(Pairs[i].Source, Pairs[i].SourceSize);
 
-
-
                 if (Counted.ValueSize!=Request.VariablesSize) ErrCall("Variables couldn't be paired with values","M111",NULL,Prompt.Line,Prompt.Column);
 
                 set = 1;

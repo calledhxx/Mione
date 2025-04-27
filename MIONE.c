@@ -108,7 +108,7 @@ MioneBuiltObj ToMione(const MioneToBuildObj ToBuildObj)
         }
 
         if (
-            (!(Objs[index].ObjType == SYMBOL && strcmp(";", Objs[index].Symbol.Name) == 0) && index+1 < ObjsSize && Objs[index+1].ObjType == SYMBOL && strcmp(";", Objs[index+1].Symbol.Name) == 0)
+            (index != 0 && Objs[index].ObjType == -1 && index+1<ObjsSize && Objs[index+1].ObjType >= SYMBOL)
             || (Mio.ObjType >= VARIABLE && index+1 < ObjsSize && Objs[index+1].ObjType >= VARIABLE)
             || (Mio.ObjType == SYMBOL && !Mio.Symbol.AfterConnectVV && index+1 < ObjsSize && Objs[index+1].ObjType >= VARIABLE)
             )

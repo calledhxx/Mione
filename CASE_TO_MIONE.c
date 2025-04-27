@@ -211,6 +211,21 @@ MioneObj *CMO(CaseObj*CASES,int CASESIZE,
                TableCount++;
            }
 
+           if (ChildCount == 0 && TableCount == 0) if (strcmp(CASES[i].ObjName,";") == 0)
+           {
+               printf("helol\n");
+               Paired = -1;
+               Column++;
+
+               (MIONESIZE)++;
+               (MIONE) = (MioneObj*)realloc( (MIONE) ,(MIONESIZE)*sizeof(MioneObj));
+               (MIONE)[(MIONESIZE)-1] = (MioneObj){
+                   .ObjType= -1,
+                   .Line = Line,
+                   .Column = Column
+               };
+           }
+
            //Value : lights,function or range END 
            if (TableCount == 0) if (strcmp(CASES[i].ObjName,"end") == 0)
            {

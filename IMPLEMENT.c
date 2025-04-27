@@ -41,9 +41,9 @@ ImplementedObj IMPLEMENT(const ToImplementObj toImplement)
 
             for (int i = 5;i>0;i--)
             {
-                const int cmp = pow(2,i);
+                const int cmp = pow(2,i-1);
 
-                if (HeadReturn.ToState - cmp ==0)
+                if (HeadReturn.ToState - cmp >=0)
                 {
                     HeadReturn.ToState=-cmp;
 
@@ -59,6 +59,7 @@ ImplementedObj IMPLEMENT(const ToImplementObj toImplement)
                         }
                     case 4:
                         {
+
                             for (int j=0;j<HeadReturn.Vars.VarsSize;j++)
                             {
                                 Vars.VarsSize++;
@@ -82,6 +83,8 @@ ImplementedObj IMPLEMENT(const ToImplementObj toImplement)
         Obj.ToState=+2;
         Obj.Vars = Vars;
     }
+
+
 
     return Obj;
 }

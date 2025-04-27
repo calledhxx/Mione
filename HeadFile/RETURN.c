@@ -34,11 +34,14 @@ HeadReturnObj RETURN(HeadRequestObj * HeadRequestUP)
         {
             CountObj Counted = COUNT(Pairs[i].Source, Pairs[i].SourceSize);
 
-            ToReturn.ToState = ToReturn.ToState+1;
+            ToReturn.ToState =+1;
             ToReturn.Values = (ValuesObj){
                 .ValueSize = Counted.ValueSize,
                 .Value = Counted.Value,
             };
+
+
+            printf("szie %d %p\n",Counted.ValueSize,Counted.Value);
         }
         if (Prompt.ObjType == 2)
         {

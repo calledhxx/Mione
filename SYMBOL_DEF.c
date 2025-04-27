@@ -55,15 +55,6 @@ SymbolObj Symbols[] =
     },
 
     (SymbolObj){
-        .Name = ";",
-        .SymbolType = 0,
-        .xIndex = 0,
-        .CurNumber = 0,
-        .AfterConnectVV = 1,
-       
-    },
-
-    (SymbolObj){
         .Name = "-",
         .SymbolType = 3,
         .xIndex = 1,// -1
@@ -129,16 +120,6 @@ SymbolObj Symbols[] =
         .AfterConnectVV = 0,
        
     },
-
- (SymbolObj){
-        .Name = "@",
-        .SymbolType = 2,
-        .xIndex = 1,
-        .CurNumber = 14,
-        .AfterConnectVV = 1,
-       
-    },
-
     (SymbolObj){
         .Name = "abreast",
         .SymbolType = 2,
