@@ -60,6 +60,7 @@ typedef struct _VariableObject
     char* Name; //變數名稱
     int Place; //位置
     ValueObj Val; //值
+
 } VariableObj;
 
 typedef struct _SymbolObject
@@ -102,6 +103,8 @@ typedef struct _MioneObject
 
     int Line; //行號
     int Column; //列號
+
+    struct _ScopeObject* ScopeUP; //作用域
 
 } MioneObj;
 
@@ -223,16 +226,16 @@ typedef struct _ImplementedObject
     VariablesObj Vars;
 }ImplementedObj;
 
-typedef struct _ScopeVariableUPsObject
+typedef struct _ScopeObject
 {
     VariableObj * * VariableUPs;
     int VariableUPsSize;
 
-    struct _ScopeVariableUPsObject * ParentUP;
+    struct _ScopeObject * ParentUP;
 
-    struct _ScopeVariableUPsObject ** ChildUPs;
+    struct _ScopeObject ** ChildUPs;
     int ChildUPsSize;
-} ScopeVariableUPsObj;
+} ScopeObj;
 
 
 #endif //OBJECTS_H

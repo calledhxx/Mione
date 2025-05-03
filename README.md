@@ -23,10 +23,35 @@ Mione程式語言是種**簡易**、**輕量**與**高級**的程式語言。
 
 我們先從簡單的開始：
 
+### 設定變數：
+
 ```
-set x = "Hello, World"
+set x = "Hello, World";
 ```
 
 上面程式碼的內容是將 `=` 提詞 ( PROMPT ) 後的 `"Hello, World"` 立即值 ( VALUE ) 賦予至 `x`變數 ( VARIABLE ) 內。
+
+<hr>
+
+### 使用變數：
+
+
+接著我們使用`input`標頭 ( HEAD ) 來匯入標準 I/O 庫至 `io`變數內。
+再調用I/O庫裏頭的`print`函數，打印出`x`的值。
+```
+input "io" into io;
+
+set x = "Hello, World";
+
+io.print(x);
+```
+ 預計輸出：
+```
+Hello, World
+```
+<hr>
+
+
+
 
 #####  <img src="https://raw.githubusercontent.com/calledhxx/Mione/26e7d1561c7421837d1b7ff8e1e1545f3f12eaae/Mione.svg" width="25"/> 

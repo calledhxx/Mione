@@ -18,7 +18,7 @@
 
 
 
-ScopeVariableUPsObj MainSVU = {0};
+ScopeObj MainSVU = {0};
 
 int main(const int OptionsSize,char **Options)
 {

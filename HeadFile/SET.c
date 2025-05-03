@@ -14,6 +14,8 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include "../PROMPT_DEF.h"
+
 HeadReturnObj SET(HeadRequestObj * HeadRequestUP)
 {
     HeadRequestObj HeadRequest = *HeadRequestUP;
@@ -70,43 +72,35 @@ HeadReturnObj SET(HeadRequestObj * HeadRequestUP)
 
     // `host`
 
-    // if (host)
-    // {
-    //     extern DefineVariableObj * Dvo;
-    //     extern int DvoSize;
-    //
-    //     ValueObj V = (ValueObj){.ValueType = 0};
-    //
-    //     ToReturn.ToState = ToReturn.ToState+2;
-    //
-    //     for (int RequestIndex = 0; RequestIndex < Request.VariablesSize; RequestIndex++)
-    //     {
-    //         for (int DvoIndex = 0; DvoIndex < DvoSize; DvoIndex++)
-    //         {
-    //             for (int VariableIndex = 0; VariableIndex < *(Dvo[DvoIndex].VariablesSizeUP); VariableIndex++)
-    //             {
-    //                 if ((*Dvo[DvoIndex].VariableUPsUP)[VariableIndex]->Name && Request.VariableUPs[RequestIndex]->Name)
-    //                 if (strcmp((*Dvo[DvoIndex].VariableUPsUP)[VariableIndex]->Name, Request.VariableUPs[RequestIndex]->Name) == 0)
-    //                 {
-    //                     V = (*Dvo[DvoIndex].VariableUPsUP)[VariableIndex]->Val;
-    //                    (*Dvo[DvoIndex].VariableUPsUP)[VariableIndex]->Val = (ValueObj){
-    //                         .ValueType = 0};
-    //
-    //                     ToReturn.VAVs.DefinedVariablesSize++;
-    //                     ToReturn.VAVs.DefinedVariables = realloc( ToReturn.VAVs.DefinedVariables, ToReturn.VAVs.DefinedVariablesSize * sizeof(DefinedVariableObj));
-    //                     ToReturn.VAVs.DefinedVariables[ToReturn.VAVs.DefinedVariablesSize-1] = (DefinedVariableObj){
-    //                         .Value = V,
-    //                         .TheDefinedVarUP = (*Dvo[DvoIndex].VariableUPsUP)[VariableIndex]
-    //                     };
-    //
-    //                     break;
-    //                 }
-    //             }
-    //             if (V.ValueType) break;
-    //         }
-    //         if (V.ValueType) break;
-    //     }
-    // }
+    if (host)
+    {
+        extern ScopeObj MainSVU;
+        extern VariableObj * retVarUP(ScopeObj * SVUup,const char* Name,const int Place);
+
+        ToReturn.ToState=+2;
+
+        for (int RequestIndex = 0; RequestIndex < Request.VariablesSize; RequestIndex++)
+        {
+            ValueObj V = (ValueObj){.ValueType = 0};
+
+            VariableObj * ret = retVarUP(Pairs[0].Prompt.ScopeUP,Request.VariableUPs[RequestIndex]->Name,0);
+
+            V = ret->Val;
+
+
+            ret->Val = (ValueObj){
+                .ValueType = 0
+            };
+
+            ToReturn.VAVs.DefinedVariablesSize++;
+            ToReturn.VAVs.DefinedVariables = realloc( ToReturn.VAVs.DefinedVariables, ToReturn.VAVs.DefinedVariablesSize * sizeof(DefinedVariableObj));
+            ToReturn.VAVs.DefinedVariables[ToReturn.VAVs.DefinedVariablesSize-1] = (DefinedVariableObj){
+                .Value = V,
+                .TheDefinedVarUP = ret
+            };
+
+        }
+    }
 
 
     // `=`

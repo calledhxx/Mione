@@ -5,6 +5,7 @@
 #include "HeadFile/SVV.h"
 
 #include "OBJECTS.h"
+#include "PROMPT_DEF.h"
 
 int ClearLocalVariables()
 {
@@ -19,6 +20,10 @@ ImplementedObj IMPLEMENT(const ToImplementObj toImplement)
     VariablesObj Vars;
     Vars.Vars = malloc(0);
     Vars.VarsSize = 0;
+
+    DefinedVariablesCaseObj ImplementVAVs;
+    ImplementVAVs.DefinedVariablesSize = 0;
+    ImplementVAVs.DefinedVariables = malloc(0);
 
     int SectionsSize = toImplement.Built.SectionsSize;
     MioneSectionObj * Sections = toImplement.Built.Sections;
@@ -39,13 +44,18 @@ ImplementedObj IMPLEMENT(const ToImplementObj toImplement)
                        .PairsSize = PairsSize,
                    });
 
+
             for (int i = 5;i>0;i--)
             {
                 const int cmp = pow(2,i-1);
 
+
+
                 if (HeadReturn.ToState - cmp >=0)
                 {
-                    HeadReturn.ToState=-cmp;
+                    HeadReturn.ToState=HeadReturn.ToState-cmp;
+
+
 
                     switch (cmp)
                     {
@@ -57,9 +67,19 @@ ImplementedObj IMPLEMENT(const ToImplementObj toImplement)
                             Obj.Values = HeadReturn.Values;
                             break;
                         }
-                    case 4:
+                    case 2:
                         {
 
+                            for (int j = 0; j < HeadReturn.VAVs.DefinedVariablesSize; j++)
+                            {
+                                ImplementVAVs.DefinedVariablesSize++;
+                                ImplementVAVs.DefinedVariables = realloc(ImplementVAVs.DefinedVariables,ImplementVAVs.DefinedVariablesSize*sizeof(DefinedVariableObj));
+                                ImplementVAVs.DefinedVariables[ImplementVAVs.DefinedVariablesSize-1] = HeadReturn.VAVs.DefinedVariables[j];
+                            }
+                            break;
+                        }
+                    case 4:
+                        {
                             for (int j=0;j<HeadReturn.Vars.VarsSize;j++)
                             {
                                 Vars.VarsSize++;
@@ -77,6 +97,9 @@ ImplementedObj IMPLEMENT(const ToImplementObj toImplement)
             }
         }
     }
+
+    for (int i = 0; i < ImplementVAVs.DefinedVariablesSize; i++)
+        ImplementVAVs.DefinedVariables[i].TheDefinedVarUP->Val = ImplementVAVs.DefinedVariables[i].Value;
 
     if (Vars.VarsSize)
     {

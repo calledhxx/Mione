@@ -1,7 +1,7 @@
 b = 1
 
 a = function
-    b = 4;
+    set b host = "Hello, World!";
     return 0;
 end
 

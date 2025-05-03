@@ -15,20 +15,17 @@
 #include "ERR.h"
 
 
-VariableObj * retVarUP(ScopeVariableUPsObj * SVUup,const char* Name,const int Place)
+VariableObj * retVarUP(ScopeObj * SVUup,const char* Name,const int Place)
 {
     VariableObj * ret = 0;
-    printf("%d\n",SVUup->VariableUPsSize);
 
     for (int VariableUPIndex = 0;VariableUPIndex < SVUup->VariableUPsSize;VariableUPIndex++)
     {
         if (
           (SVUup->VariableUPs[VariableUPIndex]->Name && strcmp(SVUup->VariableUPs[VariableUPIndex]->Name,Name) == 0) ||
-          (SVUup->VariableUPs[VariableUPIndex]->Place == Place)
+          (SVUup->VariableUPs[VariableUPIndex]->Place != 0 && SVUup->VariableUPs[VariableUPIndex]->Place == Place)
           )
             ret =SVUup->VariableUPs[VariableUPIndex];
-
-
     }
 
     if (!ret && SVUup->ParentUP) return retVarUP(SVUup->ParentUP,Name,Place);
@@ -37,7 +34,7 @@ VariableObj * retVarUP(ScopeVariableUPsObj * SVUup,const char* Name,const int Pl
 }
 
 MioneObj *CMO(CaseObj*CASES,int CASESIZE,
-    int * SIZE,int LineADD,int ColumnADD,ScopeVariableUPsObj * SVUup)
+    int * SIZE,int LineADD,int ColumnADD,ScopeObj * SVUup)
 {
     MioneObj *MIONE = 0;
     int MIONESIZE = 0;
@@ -95,6 +92,7 @@ MioneObj *CMO(CaseObj*CASES,int CASESIZE,
                      .Head = Heads[Ci],
                       .Line = Line,
                       .Column = Column,
+                     .ScopeUP = SVUup,
                  };
 
                  Paired = HEAD;
@@ -115,7 +113,8 @@ MioneObj *CMO(CaseObj*CASES,int CASESIZE,
                      .ObjType= PROMPT,
                      .Prompt = Prompts[Ci],
                       .Line = Line,
-                     .Column = Column
+                     .Column = Column,
+                     .ScopeUP = SVUup,
                  };
                  Paired = PROMPT;
              }
@@ -136,7 +135,9 @@ MioneObj *CMO(CaseObj*CASES,int CASESIZE,
                      .ObjType= SYMBOL,
                      .Symbol = Symbols[Ci]
                      ,.Line = Line,
-                     .Column = Column
+                     .Column = Column,
+                     .ScopeUP = SVUup,
+                     
                  };
                  Paired = SYMBOL;
              }
@@ -163,7 +164,8 @@ MioneObj *CMO(CaseObj*CASES,int CASESIZE,
                 .ObjType= VALUE,
                 .Val = Value,
                 .Line = Line,
-                .Column = Column
+                .Column = Column,
+                     .ScopeUP = SVUup,
             };
 
              Paired = VALUE;
@@ -181,12 +183,12 @@ MioneObj *CMO(CaseObj*CASES,int CASESIZE,
 
                    int MioObjSize = 0;
 
-                   ScopeVariableUPsObj * ChildSVUup = malloc(sizeof(ScopeVariableUPsObj));
-                   *ChildSVUup = (ScopeVariableUPsObj){0};
+                   ScopeObj * ChildSVUup = malloc(sizeof(ScopeObj));
+                   *ChildSVUup = (ScopeObj){0};
                    ChildSVUup->ParentUP = SVUup;
 
                    SVUup->ChildUPsSize++;
-                   SVUup->ChildUPs = realloc(SVUup->ChildUPs,SVUup->ChildUPsSize*sizeof(ScopeVariableUPsObj*));
+                   SVUup->ChildUPs = realloc(SVUup->ChildUPs,SVUup->ChildUPsSize*sizeof(ScopeObj*));
                    SVUup->ChildUPs[SVUup->ChildUPsSize-1] = ChildSVUup;
 
                    MioneObj * MioObj = CMO(Area,AreaSize,&MioObjSize,CapLine,Column,ChildSVUup);
@@ -216,7 +218,8 @@ MioneObj *CMO(CaseObj*CASES,int CASESIZE,
                        .ObjType = VALUE,
                        .Val = Value,
                        .Line = Line,
-                       .Column = Column
+                       .Column = Column,
+                     .ScopeUP = SVUup,
                    };
 
                    Area = NULL;
@@ -251,7 +254,8 @@ MioneObj *CMO(CaseObj*CASES,int CASESIZE,
                (MIONE)[(MIONESIZE)-1] = (MioneObj){
                    .ObjType= -1,
                    .Line = Line,
-                   .Column = Column
+                   .Column = Column,
+                     .ScopeUP = SVUup,
                };
            }
 
@@ -263,14 +267,14 @@ MioneObj *CMO(CaseObj*CASES,int CASESIZE,
                {
                    int MioObjSize = 0;
 
-                   ScopeVariableUPsObj * ChildSVUup = malloc(sizeof(ScopeVariableUPsObj));
-                   *ChildSVUup = (ScopeVariableUPsObj){0};
+                   ScopeObj * ChildSVUup = malloc(sizeof(ScopeObj));
+                   *ChildSVUup = (ScopeObj){0};
                    ChildSVUup->ParentUP = SVUup;
 
                    printf("/\n");
 
                    SVUup->ChildUPsSize++;
-                   SVUup->ChildUPs = realloc(SVUup->ChildUPs,SVUup->ChildUPsSize*sizeof(ScopeVariableUPsObj*));
+                   SVUup->ChildUPs = realloc(SVUup->ChildUPs,SVUup->ChildUPsSize*sizeof(ScopeObj*));
                    SVUup->ChildUPs[SVUup->ChildUPsSize-1] = ChildSVUup;
 
                    MioneObj * MioObj = CMO(Area,AreaSize,&MioObjSize,CapLine,Column,ChildSVUup);
@@ -300,7 +304,8 @@ MioneObj *CMO(CaseObj*CASES,int CASESIZE,
                        .ObjType = VALUE,
                        .Val = Value,
                        .Line = Line,
-                       .Column = Column
+                       .Column = Column,
+                     .ScopeUP = SVUup,
                    };
 
                    Area = NULL;
@@ -397,7 +402,8 @@ MioneObj *CMO(CaseObj*CASES,int CASESIZE,
                        .ObjType= VALUE,
                        .Val = Value,
                        .Line = Line,
-                       .Column = Column
+                       .Column = Column,
+                     .ScopeUP = SVUup,
                    };
                }else  if (strcmp(CASES[i].ObjName,"false") == 0)
                {
@@ -411,7 +417,8 @@ MioneObj *CMO(CaseObj*CASES,int CASESIZE,
                        .ObjType= VALUE,
                        .Val = Value,
                        .Line = Line,
-                       .Column = Column
+                       .Column = Column,
+                     .ScopeUP = SVUup,
                    };
                }else  if (strcmp(CASES[i].ObjName,"null") == 0)
                {
@@ -425,7 +432,8 @@ MioneObj *CMO(CaseObj*CASES,int CASESIZE,
                        .ObjType= VALUE,
                        .Val = Value,
                        .Line = Line,
-                       .Column = Column
+                       .Column = Column,
+                     .ScopeUP = SVUup,
                    };
                }
            }
@@ -452,7 +460,8 @@ MioneObj *CMO(CaseObj*CASES,int CASESIZE,
                    .ObjType = VALUE,
                    .Val = Value,
                    .Line = Line,
-                   .Column = Column
+                   .Column = Column,
+                     .ScopeUP = SVUup,
                };
            }
         //Variable
@@ -483,7 +492,8 @@ MioneObj *CMO(CaseObj*CASES,int CASESIZE,
                 .ObjType = VARIABLE,
                 .VarUP = ret,
                 .Line = Line,
-                 .Column = Column
+                .Column = Column,
+                    .ScopeUP = SVUup,
             };
         };
 
