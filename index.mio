@@ -1,0 +1,10 @@
+b = 1
+
+a = function
+    b = 4;
+    return 0;
+end
+
+a();
+
+b

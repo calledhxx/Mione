@@ -121,37 +121,37 @@ CountObj COUNT(MioneObj*Pack,int PackSize)
 
                             }else
                             {
-                                extern DefineVariableObj * Dvo;
-                                extern int DvoSize;
-
-                                for (int DvoIndex = 0; DvoIndex < DvoSize; DvoIndex++) for (int index = 0; index<*Dvo[DvoIndex].VariablesSizeUP;index++) {
-                                    switch (ChildCount.Value[0].ValueType)
-                                    {
-                                    case VALUE_STRING_TYPE:
-                                        {
-                                            if (strcmp((*Dvo[DvoIndex].VariableUPsUP)[index]->Name,ChildCount.Value[0].String)==0)
-                                            {
-                                                TheValue = (*Dvo[DvoIndex].VariableUPsUP)[index]->Val;
-                                                break;
-                                            }
-                                            break;
-                                        }
-                                    case VALUE_NOPOINTNUMBER_TYPE:
-                                        {
-                                            if ((*Dvo[DvoIndex].VariableUPsUP)[index]->Place == ChildCount.Value[0].NPNumber)
-                                            {
-                                                TheValue = (*Dvo[DvoIndex].VariableUPsUP)[index]->Val;
-                                                break;
-                                            }
-                                            break;
-                                        }
-                                    default:
-                                        {
-                                            ErrCall("AAAA","DASDASSASDCVVCS",NULL,NULL,NULL);
-                                        }
-                                    }
-                                    break;
-                                }
+                                // extern DefineVariableObj * Dvo;
+                                // extern int DvoSize;
+                                //
+                                // for (int DvoIndex = 0; DvoIndex < DvoSize; DvoIndex++) for (int index = 0; index<*Dvo[DvoIndex].VariablesSizeUP;index++) {
+                                //     switch (ChildCount.Value[0].ValueType)
+                                //     {
+                                //     case VALUE_STRING_TYPE:
+                                //         {
+                                //             if (strcmp((*Dvo[DvoIndex].VariableUPsUP)[index]->Name,ChildCount.Value[0].String)==0)
+                                //             {
+                                //                 TheValue = (*Dvo[DvoIndex].VariableUPsUP)[index]->Val;
+                                //                 break;
+                                //             }
+                                //             break;
+                                //         }
+                                //     case VALUE_NOPOINTNUMBER_TYPE:
+                                //         {
+                                //             if ((*Dvo[DvoIndex].VariableUPsUP)[index]->Place == ChildCount.Value[0].NPNumber)
+                                //             {
+                                //                 TheValue = (*Dvo[DvoIndex].VariableUPsUP)[index]->Val;
+                                //                 break;
+                                //             }
+                                //             break;
+                                //         }
+                                //     default:
+                                //         {
+                                //             ErrCall("AAAA","DASDASSASDCVVCS",NULL,NULL,NULL);
+                                //         }
+                                //     }
+                                //     break;
+                                // }
 
 
                             }

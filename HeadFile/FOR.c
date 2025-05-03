@@ -106,38 +106,38 @@ HeadReturnObj FOR(HeadRequestObj * HeadRequestUP)
 
 
 
-    if(set){
-      	extern DefineVariableObj * Dvo;
-        extern int DvoSize;
-
-        for (int RequestIndex = 0; RequestIndex < Request.VariablesSize; RequestIndex++)
-        {
-            for (int DvoIndex = 0; DvoIndex < DvoSize; DvoIndex++)
-            {
-                for (int VariableIndex = 0; VariableIndex < *(Dvo[DvoIndex].VariablesSizeUP); VariableIndex++)
-                {
-                    if (strcmp((*Dvo[DvoIndex].VariableUPsUP)[VariableIndex]->Name, Request.VariableUPs[RequestIndex]->Name) == 0)
-                    {
-                        V = (*Dvo[DvoIndex].VariableUPsUP)[VariableIndex]->Val;
-                       (*Dvo[DvoIndex].VariableUPsUP)[VariableIndex]->Val = (ValueObj){
-                            .ValueType = 0};
-                       CountVariableUP = (*Dvo[DvoIndex].VariableUPsUP)[VariableIndex];
-
-                        break;
-                    }
-                }
-                if (V.ValueType) break;
-            }
-            if (V.ValueType) break;
-        }
-
-
-      	*Request.VariableUPs[0] = (VariableObj){
-      	    .Val  = SetCounted.Value[0],
-      	    .Name = Request.VariableUPs[0]->Name,
-      	    .Place = Request.VariableUPs[0]->Place
-      	};
-    }
+    // if(set){
+    //   	extern DefineVariableObj * Dvo;
+    //     extern int DvoSize;
+    //
+    //     for (int RequestIndex = 0; RequestIndex < Request.VariablesSize; RequestIndex++)
+    //     {
+    //         for (int DvoIndex = 0; DvoIndex < DvoSize; DvoIndex++)
+    //         {
+    //             for (int VariableIndex = 0; VariableIndex < *(Dvo[DvoIndex].VariablesSizeUP); VariableIndex++)
+    //             {
+    //                 if (strcmp((*Dvo[DvoIndex].VariableUPsUP)[VariableIndex]->Name, Request.VariableUPs[RequestIndex]->Name) == 0)
+    //                 {
+    //                     V = (*Dvo[DvoIndex].VariableUPsUP)[VariableIndex]->Val;
+    //                    (*Dvo[DvoIndex].VariableUPsUP)[VariableIndex]->Val = (ValueObj){
+    //                         .ValueType = 0};
+    //                    CountVariableUP = (*Dvo[DvoIndex].VariableUPsUP)[VariableIndex];
+    //
+    //                     break;
+    //                 }
+    //             }
+    //             if (V.ValueType) break;
+    //         }
+    //         if (V.ValueType) break;
+    //     }
+    //
+    //
+    //   	*Request.VariableUPs[0] = (VariableObj){
+    //   	    .Val  = SetCounted.Value[0],
+    //   	    .Name = Request.VariableUPs[0]->Name,
+    //   	    .Place = Request.VariableUPs[0]->Place
+    //   	};
+    // }
     if(to&&set){
       toTimes = ToCounted.Value[0].NPNumber - SetCounted.Value[0].NPNumber;
     }

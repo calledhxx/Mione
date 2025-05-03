@@ -15,8 +15,29 @@
 #include "ERR.h"
 
 
+VariableObj * retVarUP(ScopeVariableUPsObj * SVUup,const char* Name,const int Place)
+{
+    VariableObj * ret = 0;
+    printf("%d\n",SVUup->VariableUPsSize);
+
+    for (int VariableUPIndex = 0;VariableUPIndex < SVUup->VariableUPsSize;VariableUPIndex++)
+    {
+        if (
+          (SVUup->VariableUPs[VariableUPIndex]->Name && strcmp(SVUup->VariableUPs[VariableUPIndex]->Name,Name) == 0) ||
+          (SVUup->VariableUPs[VariableUPIndex]->Place == Place)
+          )
+            ret =SVUup->VariableUPs[VariableUPIndex];
+
+
+    }
+
+    if (!ret && SVUup->ParentUP) return retVarUP(SVUup->ParentUP,Name,Place);
+
+    return ret;
+}
+
 MioneObj *CMO(CaseObj*CASES,int CASESIZE,
-    int * SIZE,int LineADD,int ColumnADD,DefineVariableObj * *DvoUP,int * DvoSizeUP)
+    int * SIZE,int LineADD,int ColumnADD,ScopeVariableUPsObj * SVUup)
 {
     MioneObj *MIONE = 0;
     int MIONESIZE = 0;
@@ -36,15 +57,11 @@ MioneObj *CMO(CaseObj*CASES,int CASESIZE,
     int goEndType = 0; //range or function or lights
     int CapLine = 0; //行
 
-    (*DvoSizeUP)++;
-    *DvoUP = realloc(*DvoUP,(*DvoSizeUP)*sizeof(DefineVariableObj));
-    (*DvoUP)[(*DvoSizeUP)-1] = (DefineVariableObj){
-        .VariablesSizeUP = malloc(sizeof(int)),
-        .VariableUPsUP = malloc(sizeof(VariableObj**)),
-    };
+    SVUup->ChildUPsSize = 0;
+    SVUup->ChildUPs = malloc(0);
 
-    (*(*DvoUP)[(*DvoSizeUP)-1].VariablesSizeUP) = 0;
-    (*(*DvoUP)[(*DvoSizeUP)-1].VariableUPsUP) = (VariableObj**)malloc(0);
+    SVUup->VariableUPs = malloc(0);
+    SVUup->VariableUPsSize = 0;
 
 
     for (int i = 0; i <CASESIZE; i++)
@@ -164,7 +181,15 @@ MioneObj *CMO(CaseObj*CASES,int CASESIZE,
 
                    int MioObjSize = 0;
 
-                   MioneObj * MioObj = CMO(Area,AreaSize,&MioObjSize,CapLine,Column,DvoUP,DvoSizeUP);
+                   ScopeVariableUPsObj * ChildSVUup = malloc(sizeof(ScopeVariableUPsObj));
+                   *ChildSVUup = (ScopeVariableUPsObj){0};
+                   ChildSVUup->ParentUP = SVUup;
+
+                   SVUup->ChildUPsSize++;
+                   SVUup->ChildUPs = realloc(SVUup->ChildUPs,SVUup->ChildUPsSize*sizeof(ScopeVariableUPsObj*));
+                   SVUup->ChildUPs[SVUup->ChildUPsSize-1] = ChildSVUup;
+
+                   MioneObj * MioObj = CMO(Area,AreaSize,&MioObjSize,CapLine,Column,ChildSVUup);
 
                    MioneBuiltObj Built = ToMione((MioneToBuildObj){
                        .Objs = MioObj,
@@ -238,7 +263,19 @@ MioneObj *CMO(CaseObj*CASES,int CASESIZE,
                {
                    int MioObjSize = 0;
 
-                   MioneObj * MioObj = CMO(Area,AreaSize,&MioObjSize,CapLine,Column,DvoUP,DvoSizeUP);
+                   ScopeVariableUPsObj * ChildSVUup = malloc(sizeof(ScopeVariableUPsObj));
+                   *ChildSVUup = (ScopeVariableUPsObj){0};
+                   ChildSVUup->ParentUP = SVUup;
+
+                   printf("/\n");
+
+                   SVUup->ChildUPsSize++;
+                   SVUup->ChildUPs = realloc(SVUup->ChildUPs,SVUup->ChildUPsSize*sizeof(ScopeVariableUPsObj*));
+                   SVUup->ChildUPs[SVUup->ChildUPsSize-1] = ChildSVUup;
+
+                   MioneObj * MioObj = CMO(Area,AreaSize,&MioObjSize,CapLine,Column,ChildSVUup);
+
+                   printf("\\\n");
 
                    MioneBuiltObj Built =  ToMione((MioneToBuildObj){
                        .Objs = MioObj,
@@ -423,38 +460,19 @@ MioneObj *CMO(CaseObj*CASES,int CASESIZE,
         {
             Paired = VARIABLE;
 
-            int NewVar = 1;
+             VariableObj* ret = retVarUP(SVUup,CASES[i].ObjName,0);
 
-            VariableObj* VariableUP ;
-
-
-             for (int DvoIndex = 0; DvoIndex < *DvoSizeUP; DvoIndex++)
+             if (!ret)
              {
-                 for (int j = 0; j < *((*DvoUP)[DvoIndex].VariablesSizeUP); j++)
-                 {
-                     if (strcmp((*(*DvoUP)[DvoIndex].VariableUPsUP)[j]->Name ,CASES[i].ObjName)==0)
-                     {
-                         NewVar = 0;
-                         VariableUP = (*(*DvoUP)[DvoIndex].VariableUPsUP)[j];
-                         break;
+                 ret = malloc(sizeof(VariableObj));
+                 ret->Name = CASES[i].ObjName;
 
-                     }
-                 }
+                 SVUup->VariableUPsSize++;
+                 SVUup->VariableUPs = realloc(SVUup->VariableUPs,SVUup->VariableUPsSize*sizeof(VariableObj*));
+                 SVUup->VariableUPs[SVUup->VariableUPsSize-1] = ret;
              }
 
-             if (NewVar)
-             {
-                 VariableUP = malloc(sizeof (VariableObj));
-                 *VariableUP = (VariableObj){
-                     .Name = CASES[i].ObjName,
-                 };
 
-
-                 (*((*DvoUP)[(*DvoSizeUP)-1].VariablesSizeUP))++;
-                 (*((*DvoUP)[(*DvoSizeUP)-1].VariableUPsUP)) = realloc((*((*DvoUP)[(*DvoSizeUP)-1].VariableUPsUP)),(*((*DvoUP)[(*DvoSizeUP)-1].VariablesSizeUP))*sizeof(VariableObj**));
-                 (*((*DvoUP)[(*DvoSizeUP)-1].VariableUPsUP))[(*((*DvoUP)[(*DvoSizeUP)-1].VariablesSizeUP))-1] = VariableUP;
-
-             }
 
 
              Column++;
@@ -463,7 +481,7 @@ MioneObj *CMO(CaseObj*CASES,int CASESIZE,
             (MIONE) = (MioneObj*)realloc( (MIONE) ,(MIONESIZE)*sizeof(MioneObj));
             (MIONE)[(MIONESIZE)-1] = (MioneObj){
                 .ObjType = VARIABLE,
-                .VarUP = VariableUP,
+                .VarUP = ret,
                 .Line = Line,
                  .Column = Column
             };

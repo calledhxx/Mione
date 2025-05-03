@@ -141,7 +141,7 @@ typedef struct _DefinedVariableObject
     VariableObj* TheDefinedVarUP;
 }DefinedVariableObj;
 
-typedef struct _DefinedVariablesCaseObject //常用於 還原變數
+typedef struct _DefinedVariablesCaseObject
 {
     DefinedVariableObj * DefinedVariables;
     int DefinedVariablesSize;
@@ -176,11 +176,6 @@ typedef struct _VariableRequestUPObject
     int VariablesSize;
 } VariableRequestUPObj;
 
-typedef struct _DefineVariableObject //DVO 註冊表
-{
-    VariableObj * * * VariableUPsUP;
-    int * VariablesSizeUP;
-} DefineVariableObj;
 
 typedef struct _HeadRequestObject
 {
@@ -227,6 +222,17 @@ typedef struct _ImplementedObject
     ValuesObj Values;
     VariablesObj Vars;
 }ImplementedObj;
+
+typedef struct _ScopeVariableUPsObject
+{
+    VariableObj * * VariableUPs;
+    int VariableUPsSize;
+
+    struct _ScopeVariableUPsObject * ParentUP;
+
+    struct _ScopeVariableUPsObject ** ChildUPs;
+    int ChildUPsSize;
+} ScopeVariableUPsObj;
 
 
 #endif //OBJECTS_H

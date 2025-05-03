@@ -17,11 +17,8 @@
 #include <unistd.h>
 
 
-//
-    //
 
-DefineVariableObj * Dvo;
-int DvoSize;
+ScopeVariableUPsObj MainSVU = {0};
 
 int main(const int OptionsSize,char **Options)
 {
@@ -37,10 +34,7 @@ int main(const int OptionsSize,char **Options)
 
         int MioObjSize = 0;
 
-        Dvo = malloc(0);
-        DvoSize = 0;
-
-        MioneObj * MioObj = CMO(CASES,CaseObjSize,&MioObjSize,1,0,&Dvo,&DvoSize);
+        MioneObj * MioObj = CMO(CASES,CaseObjSize,&MioObjSize,1,0,&MainSVU);
 
         MioneBuiltObj Built =ToMione((MioneToBuildObj){
             .Objs = MioObj,
