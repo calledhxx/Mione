@@ -13,8 +13,11 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <tgmath.h>
 
 #include "../PROMPT_DEF.h"
+
+extern int ifPromptRegistered(int registeredPrompts,PromptObj prompt);
 
 HeadReturnObj SET(HeadRequestObj * HeadRequestUP)
 {
@@ -32,7 +35,8 @@ HeadReturnObj SET(HeadRequestObj * HeadRequestUP)
     VariableRequestUPObj Request = {.VariablesSize = 0};
     CountObj Counted = {.ValueSize = 0};
 
-    int set = 0,host = 0;
+
+    int registeredPrompts = 0;
 
     for (int i = 0; i < PairsSize; i++)
     {
@@ -45,87 +49,106 @@ HeadReturnObj SET(HeadRequestObj * HeadRequestUP)
         }
         if (Prompt.ObjType == 2)
         {
+
             switch (Prompt.Prompt.CurNumber)
             {
             case 1:
                 Counted = COUNT(Pairs[i].Source, Pairs[i].SourceSize);
-
                 if (Counted.ValueSize!=Request.VariablesSize) ErrCall("Variables couldn't be paired with values","M111",NULL,Prompt.Line,Prompt.Column);
-
-                set = 1;
-
                 break;
             case 2:
                 if (Pairs[i].SourceSize) ErrCall("`host` CAN NOT BE SET TO ANY SOURCE","M123",NULL,Prompt.Line,Prompt.Column);
-
-                host = 1;
-
                 break;
             default:
                 ErrCall("unsupported prompt type","M111",NULL,Prompt.Line,Prompt.Column);
                 break;
             }
+
+            if (!ifPromptRegistered(registeredPrompts,Prompt.Prompt)) ErrCall("same prompt","daioskasd",NULL,Prompt.Line,Prompt.Column);
+            registeredPrompts+=pow(2,Prompt.Prompt.CurNumber-1);
         }
     }
 
     if (!Request.VariablesSize) ErrCall("no REQUEST?","M111",NULL,Pairs[0].Source[0].Line,Pairs[0].Source[0].Column);
 
-    // `host`
 
-    if (host)
+    int max = 0;
+    for (int i = 0;;i++)
+        if (pow(2,i) > registeredPrompts)
+        {
+            max = i-1;
+            break;
+        }
+
+    for (int i = max;;i--)
     {
-        extern ScopeObj MainSVU;
-        extern VariableObj * retVarUP(ScopeObj * SVUup,const char* Name,const int Place);
+        const int cmp = pow(2,i);
 
-        ToReturn.ToState=+2;
+        if (!registeredPrompts) break;
 
-        for (int RequestIndex = 0; RequestIndex < Request.VariablesSize; RequestIndex++)
+        if (registeredPrompts - cmp>=0)
         {
-            ValueObj V = (ValueObj){.ValueType = 0};
+            registeredPrompts -= cmp;
+            switch (cmp)
+            {
+                case 1:
+                    {
+                        for(int CountedIndex = 0; CountedIndex < Counted.ValueSize; CountedIndex++)
+                        {
+                            Request.VariableUPs[CountedIndex]->Val = Counted.Value[CountedIndex];
+                        }
 
-            VariableObj * ret = retVarUP(Pairs[0].Prompt.ScopeUP,Request.VariableUPs[RequestIndex]->Name,0);
+                        ToReturn.ToState = ToReturn.ToState+4;
 
-            V = ret->Val;
+                        VariableObj * Vars = malloc(0);
+                        for (int VariableIndex = 0; VariableIndex < Request.VariablesSize; VariableIndex++)
+                        {
+                            Vars = realloc(Vars, (VariableIndex + 1) * sizeof(VariableObj));
+                            Vars[VariableIndex] = *(Request.VariableUPs[VariableIndex]);
+                        }
+                        ToReturn.Vars = (VariablesObj){
+                            .VarsSize = Request.VariablesSize,
+                            .Vars = Vars
+                        };
+                        break;
+                    }
+                case 2:
+                    {
+                        extern ScopeObj MainSVU;
+                        extern VariableObj * retVarUP(ScopeObj * SVUup,const char* Name,const int Place);
+
+                        ToReturn.ToState=+2;
+
+                        for (int RequestIndex = 0; RequestIndex < Request.VariablesSize; RequestIndex++)
+                        {
+                            ValueObj V = (ValueObj){.ValueType = 0};
+
+                            VariableObj * ret = retVarUP(Pairs[0].Prompt.ScopeUP,Request.VariableUPs[RequestIndex]->Name,0);
+
+                            V = ret->Val;
 
 
-            ret->Val = (ValueObj){
-                .ValueType = 0
-            };
+                            ret->Val = (ValueObj){
+                                .ValueType = 0
+                            };
 
-            ToReturn.VAVs.DefinedVariablesSize++;
-            ToReturn.VAVs.DefinedVariables = realloc( ToReturn.VAVs.DefinedVariables, ToReturn.VAVs.DefinedVariablesSize * sizeof(DefinedVariableObj));
-            ToReturn.VAVs.DefinedVariables[ToReturn.VAVs.DefinedVariablesSize-1] = (DefinedVariableObj){
-                .Value = V,
-                .TheDefinedVarUP = ret
-            };
+                            ToReturn.VAVs.DefinedVariablesSize++;
+                            ToReturn.VAVs.DefinedVariables = realloc( ToReturn.VAVs.DefinedVariables, ToReturn.VAVs.DefinedVariablesSize * sizeof(DefinedVariableObj));
+                            ToReturn.VAVs.DefinedVariables[ToReturn.VAVs.DefinedVariablesSize-1] = (DefinedVariableObj){
+                                .Value = V,
+                                .TheDefinedVarUP = ret
+                            };
+                        }
+                        break;
 
+                    }
+                default:
+                    {
+
+                    }
+            }
         }
+
     }
-
-
-    // `=`
-
-    if (set)
-    {
-        for(int CountedIndex = 0; CountedIndex < Counted.ValueSize; CountedIndex++)
-        {
-            Request.VariableUPs[CountedIndex]->Val = Counted.Value[CountedIndex];
-        }
-
-        ToReturn.ToState = ToReturn.ToState+4;
-
-        VariableObj * Vars = malloc(0);
-        for (int VariableIndex = 0; VariableIndex < Request.VariablesSize; VariableIndex++)
-        {
-            Vars = realloc(Vars, (VariableIndex + 1) * sizeof(VariableObj));
-            Vars[VariableIndex] = *(Request.VariableUPs[VariableIndex]);
-        }
-        ToReturn.Vars = (VariablesObj){
-            .VarsSize = Request.VariablesSize,
-            .Vars = Vars
-        };
-    }
-
-
     return ToReturn;
 }

@@ -193,6 +193,9 @@ MioneObj *CMO(CaseObj*CASES,int CASESIZE,
 
                    MioneObj * MioObj = CMO(Area,AreaSize,&MioObjSize,CapLine,Column,ChildSVUup);
 
+                   //TODO
+                   (ToCMObj){Area,AreaSize,&MioObjSize,CapLine,Column,ChildSVUup};
+
                    MioneBuiltObj Built = ToMione((MioneToBuildObj){
                        .Objs = MioObj,
                        .ObjsSize = MioObjSize,
@@ -271,7 +274,6 @@ MioneObj *CMO(CaseObj*CASES,int CASESIZE,
                    *ChildSVUup = (ScopeObj){0};
                    ChildSVUup->ParentUP = SVUup;
 
-                   printf("/\n");
 
                    SVUup->ChildUPsSize++;
                    SVUup->ChildUPs = realloc(SVUup->ChildUPs,SVUup->ChildUPsSize*sizeof(ScopeObj*));
@@ -279,7 +281,6 @@ MioneObj *CMO(CaseObj*CASES,int CASESIZE,
 
                    MioneObj * MioObj = CMO(Area,AreaSize,&MioObjSize,CapLine,Column,ChildSVUup);
 
-                   printf("\\\n");
 
                    MioneBuiltObj Built =  ToMione((MioneToBuildObj){
                        .Objs = MioObj,

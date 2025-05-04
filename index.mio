@@ -1,3 +1,9 @@
-set heSaid = "Hello ''World"
 
-heSaid
+a = function
+    set b = 100;
+    return 5;
+end
+
+a();
+
+b

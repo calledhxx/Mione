@@ -237,5 +237,17 @@ typedef struct _ScopeObject
     int ChildUPsSize;
 } ScopeObj;
 
+typedef struct _ToCMObject
+{
+    CaseObj*CASE;
+    int CASESIZE;
+    int * SIZE;
+    int LineADD;
+    int ColumnADD;
+    ScopeObj * SVUup;
+} ToCMObj;
+
+
+
 
 #endif //OBJECTS_H
