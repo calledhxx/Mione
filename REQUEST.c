@@ -166,7 +166,6 @@ VariableRequestUPObj REQUEST(MioneObj*Pack,int PackSize)
                         MioneObj* NewPack = malloc(0);
                         int NewPackSize = 0;
 
-                        printf("%s\n",TheVariableUP->Name);
 
                         for (int index = 0; index < FirstBracketIndex-1; index++)
                         {

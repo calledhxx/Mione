@@ -88,7 +88,6 @@ HeadReturnObj SVV(HeadRequestObj * HeadRequestUP)
         }
     }
 
-    printf("kkkk %d\n",registeredPrompts);
 
     VariablesObj Vars;
     Vars.VarsSize = 0;
