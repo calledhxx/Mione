@@ -111,6 +111,7 @@ MioneBuiltObj ToMione(const MioneToBuildObj ToBuildObj)
             (index != 0 && Objs[index].ObjType == -1 && index+1<ObjsSize && Objs[index+1].ObjType >= SYMBOL)
             || (Mio.ObjType >= VARIABLE && index+1 < ObjsSize && Objs[index+1].ObjType >= VARIABLE)
             || (Mio.ObjType == SYMBOL && !Mio.Symbol.AfterConnectVV && index+1 < ObjsSize && Objs[index+1].ObjType >= VARIABLE)
+            || (index+1 < ObjsSize && Mio.ObjType == Objs[index+1].ObjType && Mio.ObjType >= VARIABLE)
             )
         {
             newSection(&BuiltObj);

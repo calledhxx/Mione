@@ -241,11 +241,18 @@ typedef struct _ToCMObject
 {
     CaseObj*CASE;
     int CASESIZE;
-    int * SIZE;
+
     int LineADD;
     int ColumnADD;
-    ScopeObj * SVUup;
 } ToCMObj;
+
+typedef struct _ToReplaceValueForCMOObject
+{
+    ToCMObj a;
+    int ObjIndex;
+    int ValueType ;
+
+} ToReplaceValueForCMOObj;
 
 
 

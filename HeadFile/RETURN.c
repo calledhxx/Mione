@@ -12,6 +12,7 @@
 
 HeadReturnObj RETURN(HeadRequestObj * HeadRequestUP)
 {
+    printf("yes\n");
     HeadRequestObj HeadRequest = *HeadRequestUP;
 
     PairObj * Pairs = HeadRequest.Pairs;

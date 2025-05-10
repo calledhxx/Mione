@@ -17,7 +17,6 @@
 
 #include "../PROMPT_DEF.h"
 
-extern int ifPromptRegistered(int registeredPrompts,PromptObj prompt);
 
 HeadReturnObj SET(HeadRequestObj * HeadRequestUP)
 {
@@ -34,7 +33,6 @@ HeadReturnObj SET(HeadRequestObj * HeadRequestUP)
 
     VariableRequestUPObj Request = {.VariablesSize = 0};
     CountObj Counted = {.ValueSize = 0};
-
 
     int registeredPrompts = 0;
 
@@ -64,8 +62,7 @@ HeadReturnObj SET(HeadRequestObj * HeadRequestUP)
                 break;
             }
 
-            if (!ifPromptRegistered(registeredPrompts,Prompt.Prompt)) ErrCall("same prompt","daioskasd",NULL,Prompt.Line,Prompt.Column);
-            registeredPrompts+=pow(2,Prompt.Prompt.CurNumber-1);
+            registeredPrompts|=(int)pow(2,Prompt.Prompt.CurNumber-1);
         }
     }
 
@@ -74,22 +71,22 @@ HeadReturnObj SET(HeadRequestObj * HeadRequestUP)
 
     int max = 0;
     for (int i = 0;;i++)
-        if (pow(2,i) > registeredPrompts)
+        if (pow(2,i-1) > registeredPrompts)
         {
             max = i-1;
             break;
         }
 
-    for (int i = max;;i--)
+
+    for (int i = 0;max>i;i++)
     {
         const int cmp = pow(2,i);
 
         if (!registeredPrompts) break;
 
-        if (registeredPrompts - cmp>=0)
+        if (registeredPrompts & cmp)
         {
-            registeredPrompts -= cmp;
-            switch (cmp)
+            switch (i+1)
             {
                 case 1:
                     {
@@ -98,7 +95,7 @@ HeadReturnObj SET(HeadRequestObj * HeadRequestUP)
                             Request.VariableUPs[CountedIndex]->Val = Counted.Value[CountedIndex];
                         }
 
-                        ToReturn.ToState = ToReturn.ToState+4;
+                        ToReturn.ToState|=4;
 
                         VariableObj * Vars = malloc(0);
                         for (int VariableIndex = 0; VariableIndex < Request.VariablesSize; VariableIndex++)
@@ -117,7 +114,7 @@ HeadReturnObj SET(HeadRequestObj * HeadRequestUP)
                         extern ScopeObj MainSVU;
                         extern VariableObj * retVarUP(ScopeObj * SVUup,const char* Name,const int Place);
 
-                        ToReturn.ToState=+2;
+                        ToReturn.ToState|=2;
 
                         for (int RequestIndex = 0; RequestIndex < Request.VariablesSize; RequestIndex++)
                         {

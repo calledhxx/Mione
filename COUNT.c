@@ -335,9 +335,10 @@ CountObj COUNT(MioneObj*Pack,int PackSize)
                                 {
                                     if (Pack[FirstBracketIndex - 1].Val.ValueType == VALUE_FUNCTION_TYPE)
                                     {
-                                        ImplementedObj Return =  IMPLEMENT((ToImplementObj){
+                                        ImplementedObj Return = IMPLEMENT((ToImplementObj){
                                             .Built =  *Pack[FirstBracketIndex - 1].Val.Area.AreaUP
                                         });
+
 
                                         if ((Return.ToState&1)!=1) ErrCall(
                                             "The Function hasn't return any Value.",
@@ -651,7 +652,6 @@ CountObj COUNT(MioneObj*Pack,int PackSize)
                             if (Pack[i - 2].ObjType == VARIABLE) Target1 = Pack[i - 2].VarUP->Val; else Target1 = Pack[i - 2].Val;
                             if (Pack[i].ObjType == VARIABLE) Target2 = Pack[i].VarUP->Val; else Target2 = Pack[i].Val;
 
-                                printf("%d\n",Target2.ValueType);
 
 
                             if (!(Target1.ValueType == VALUE_NOPOINTNUMBER_TYPE || Target1.ValueType == VALUE_POINTNUMBER_TYPE)){ ErrCall("Type Error1","MG0011111","",

@@ -1,9 +1,3 @@
+set a = "Hello";
 
-a = function
-    set b = 100;
-    return 5;
-end
-
-a();
-
-b
+a

@@ -12,31 +12,6 @@
 #include "IF.h"
 #include "FOR.h"
 
-int ifPromptRegistered(int registeredPrompts,PromptObj prompt)
-{
-    int max = 0;
-    for (int i = 0;;i++)
-        if (pow(2,i) > registeredPrompts)
-        {
-            max = i-1;
-            break;
-        }
-
-    for (int i = max;;i--)
-    {
-        int cmp = pow(2,i);
-
-        if (!registeredPrompts) break;
-
-        if (registeredPrompts - cmp>=0)
-        {
-            registeredPrompts -= cmp;
-            if (pow(2,prompt.CurNumber-1) == cmp) return 0;
-        }
-
-    }
-    return 1;
-};
 
 HeadObj Heads[]  = {
     (HeadObj){

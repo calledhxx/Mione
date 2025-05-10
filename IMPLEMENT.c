@@ -7,13 +7,9 @@
 #include "OBJECTS.h"
 #include "PROMPT_DEF.h"
 
-int ClearLocalVariables()
-{
-    return 0;
-};
-
 ImplementedObj IMPLEMENT(const ToImplementObj toImplement)
 {
+
     ImplementedObj Obj = {0};
     Obj.ToState=0;
 
@@ -28,6 +24,7 @@ ImplementedObj IMPLEMENT(const ToImplementObj toImplement)
     int SectionsSize = toImplement.Built.SectionsSize;
     MioneSectionObj * Sections = toImplement.Built.Sections;
 
+
     for (int SectionIndex = 0; SectionIndex < SectionsSize; SectionIndex++)
     {
         MioneSectionObj thisSection = Sections[SectionIndex];
@@ -38,25 +35,30 @@ ImplementedObj IMPLEMENT(const ToImplementObj toImplement)
             PairObj * Pairs = thisSection.Pairs;
             int PairsSize = thisSection.PairsSize;
 
+
             HeadReturnObj HeadReturn = thisSection.HeadAction.Head.Fuc(
                    &(HeadRequestObj){
                        .Pairs =Pairs,
                        .PairsSize = PairsSize,
                    });
 
-
-            for (int i = 5;i>0;i--)
-            {
-                const int cmp = pow(2,i-1);
-
-
-
-                if (HeadReturn.ToState - cmp >=0)
+            int max = 0;
+            for (int i = 0;;i++)
+                if (pow(2,i-1) > HeadReturn.ToState)
                 {
-                    HeadReturn.ToState=HeadReturn.ToState-cmp;
+                    max = i-1;
+                    break;
+                }
 
 
+            for (int i = 0;max>i;i++)
+            {
+                const int cmp = pow(2,i);
 
+                if (!HeadReturn.ToState) break;
+
+                if (HeadReturn.ToState & cmp)
+                {
                     switch (cmp)
                     {
                     case 0: break;
@@ -97,7 +99,6 @@ ImplementedObj IMPLEMENT(const ToImplementObj toImplement)
             }
         }
     }
-
     for (int i = 0; i < ImplementVAVs.DefinedVariablesSize; i++)
         ImplementVAVs.DefinedVariables[i].TheDefinedVarUP->Val = ImplementVAVs.DefinedVariables[i].Value;
 
@@ -106,7 +107,6 @@ ImplementedObj IMPLEMENT(const ToImplementObj toImplement)
         Obj.ToState=+2;
         Obj.Vars = Vars;
     }
-
 
 
     return Obj;

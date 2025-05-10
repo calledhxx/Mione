@@ -60,6 +60,10 @@ MioneObj *CMO(CaseObj*CASES,int CASESIZE,
     SVUup->VariableUPs = malloc(0);
     SVUup->VariableUPsSize = 0;
 
+    ToReplaceValueForCMOObj * TRVFC = malloc(0);
+    int TRVFCSize = 0;
+    
+
 
     for (int i = 0; i <CASESIZE; i++)
     {
@@ -180,50 +184,28 @@ MioneObj *CMO(CaseObj*CASES,int CASESIZE,
                if (!TableCount)
                {
                    Paired = 5;
-
-                   int MioObjSize = 0;
-
-                   ScopeObj * ChildSVUup = malloc(sizeof(ScopeObj));
-                   *ChildSVUup = (ScopeObj){0};
-                   ChildSVUup->ParentUP = SVUup;
-
-                   SVUup->ChildUPsSize++;
-                   SVUup->ChildUPs = realloc(SVUup->ChildUPs,SVUup->ChildUPsSize*sizeof(ScopeObj*));
-                   SVUup->ChildUPs[SVUup->ChildUPsSize-1] = ChildSVUup;
-
-                   MioneObj * MioObj = CMO(Area,AreaSize,&MioObjSize,CapLine,Column,ChildSVUup);
-
-                   //TODO
-                   (ToCMObj){Area,AreaSize,&MioObjSize,CapLine,Column,ChildSVUup};
-
-                   MioneBuiltObj Built = ToMione((MioneToBuildObj){
-                       .Objs = MioObj,
-                       .ObjsSize = MioObjSize,
-                   });
-
-
-                   TableObj eTable = (TableObj){
-                       .VariablesUP = 0,
-                   };
-                   eTable.TableAreaUP = malloc(sizeof(struct _MioneBuiltObject));
-                   *eTable.TableAreaUP = Built;
-
-                   ValueObj Value = (ValueObj){
-                       .ValueType = VALUE_TABLE_TYPE,
-                       .Table = eTable,
-                   };
-
+                   
                    Column++;
 
                    (MIONESIZE)++ ;
                    (MIONE) = (MioneObj*)realloc(MIONE, (MIONESIZE)*sizeof(MioneObj));
                    (MIONE)[(MIONESIZE)-1] = (MioneObj){
                        .ObjType = VALUE,
-                       .Val = Value,
+                      
                        .Line = Line,
                        .Column = Column,
                      .ScopeUP = SVUup,
                    };
+
+                   
+                   TRVFCSize++;
+                   TRVFC = realloc(TRVFC,TRVFCSize*sizeof(ToReplaceValueForCMOObj));
+                   TRVFC[TRVFCSize-1] = (ToReplaceValueForCMOObj){
+                       .a = (ToCMObj){Area,AreaSize,CapLine,Column},
+                       .ObjIndex = MIONESIZE-1,
+                       .ValueType = VALUE_TABLE_TYPE
+                   };
+
 
                    Area = NULL;
                    Area = malloc(0);
@@ -268,54 +250,31 @@ MioneObj *CMO(CaseObj*CASES,int CASESIZE,
                ChildCount--;
                if (ChildCount == 0 && TableCount == 0) //僅包覆最高層的子向
                {
-                   int MioObjSize = 0;
-
-                   ScopeObj * ChildSVUup = malloc(sizeof(ScopeObj));
-                   *ChildSVUup = (ScopeObj){0};
-                   ChildSVUup->ParentUP = SVUup;
-
-
-                   SVUup->ChildUPsSize++;
-                   SVUup->ChildUPs = realloc(SVUup->ChildUPs,SVUup->ChildUPsSize*sizeof(ScopeObj*));
-                   SVUup->ChildUPs[SVUup->ChildUPsSize-1] = ChildSVUup;
-
-                   MioneObj * MioObj = CMO(Area,AreaSize,&MioObjSize,CapLine,Column,ChildSVUup);
-
-
-                   MioneBuiltObj Built =  ToMione((MioneToBuildObj){
-                       .Objs = MioObj,
-                       .ObjsSize = MioObjSize,
-                   });
-
-
-                   AreaObj eArea;
-                   eArea.AreaUP = malloc(sizeof(AreaObj));
-                   *eArea.AreaUP = Built;
-
-                   ValueObj Value = (ValueObj){
-                       .ValueType = goEndType,
-                       .Area = eArea,
-                   };
-
+                   Paired = 5;
+                   
                    Column++;
 
                    (MIONESIZE)++ ;
                    (MIONE) = (MioneObj*)realloc(MIONE, (MIONESIZE)*sizeof(MioneObj));
                    (MIONE)[(MIONESIZE)-1] = (MioneObj){
                        .ObjType = VALUE,
-                       .Val = Value,
+                      
                        .Line = Line,
                        .Column = Column,
-                     .ScopeUP = SVUup,
+                       .ScopeUP = SVUup,
                    };
 
+                   
+                   TRVFCSize++;
+                   TRVFC = realloc(TRVFC,TRVFCSize*sizeof(ToReplaceValueForCMOObj));
+                   TRVFC[TRVFCSize-1] = (ToReplaceValueForCMOObj){
+                       .a = (ToCMObj){Area,AreaSize,CapLine,Column},
+                       .ObjIndex = MIONESIZE-1,
+                       .ValueType = goEndType
+                   };
                    Area = NULL;
                    Area = malloc(0);
                    AreaSize = 0;
-
-                   goEndType = 0;
-
-                   Paired = VALUE;
                }else
                {
 
@@ -506,6 +465,65 @@ MioneObj *CMO(CaseObj*CASES,int CASESIZE,
     if (ChildCount) ErrCall("END???","M111",NULL,Line,Column);
     if (TableCount) ErrCall("}???","M111",NULL,Line,Column);
 
+    for (int i = 0;i<TRVFCSize;i++)
+    {
+        int MioObjSize = 0;
+
+        ScopeObj * ChildSVUup = malloc(sizeof(ScopeObj));
+        *ChildSVUup = (ScopeObj){0};
+        ChildSVUup->ParentUP = SVUup;
+
+        SVUup->ChildUPsSize++;
+        SVUup->ChildUPs = realloc(SVUup->ChildUPs,SVUup->ChildUPsSize*sizeof(ScopeObj*));
+        SVUup->ChildUPs[SVUup->ChildUPsSize-1] = ChildSVUup;
+
+        MioneObj * MioObj = CMO(TRVFC[i].a.CASE,TRVFC[i].a.CASESIZE,&MioObjSize,TRVFC[i].a.LineADD,TRVFC[i].a.ColumnADD,ChildSVUup);
+        MioneBuiltObj Built = ToMione((MioneToBuildObj){
+            .Objs = MioObj,
+            .ObjsSize = MioObjSize,
+        });
+
+        printf("%d isze\n",Built.SectionsSize);
+
+
+        ValueObj Value;
+        
+        switch (TRVFC[i].ValueType)
+        {
+        case VALUE_TABLE_TYPE:
+            {
+                TableObj eTable = (TableObj){
+                    .VariablesUP = 0,
+                };
+        
+                eTable.TableAreaUP = malloc(sizeof(struct _MioneBuiltObject));
+                *eTable.TableAreaUP = Built;
+
+                Value = (ValueObj){
+                    .ValueType = VALUE_TABLE_TYPE,
+                    .Table = eTable,
+                };
+
+                break;
+            }
+        default:
+            {
+                AreaObj Area;
+
+                Area.AreaUP = malloc(sizeof(struct _MioneBuiltObject));
+                *Area.AreaUP = Built;
+
+                Value = (ValueObj){
+                    .ValueType = TRVFC[i].ValueType,
+                    .Area = Area,
+                };
+
+                break;
+            }
+        }
+
+        MIONE[TRVFC[i].ObjIndex].Val = Value;
+    }
 
     (*SIZE) = (MIONESIZE);
     return MIONE;
