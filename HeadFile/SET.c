@@ -17,7 +17,6 @@
 
 #include "../PROMPT_DEF.h"
 
-
 HeadReturnObj SET(HeadRequestObj * HeadRequestUP)
 {
     HeadRequestObj HeadRequest = *HeadRequestUP;

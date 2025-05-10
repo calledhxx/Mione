@@ -43,6 +43,7 @@ VariableRequestUPObj REQUEST(MioneObj*Pack,int PackSize)
                 {
                     if (!BracketsChild)
                     {
+
                         BracketCur = 1;
                         FirstBracketIndex = i;
 
@@ -64,6 +65,134 @@ VariableRequestUPObj REQUEST(MioneObj*Pack,int PackSize)
                     if (!BracketsChild && BracketCur == 1)
                     {
                         BracketCur = 0;
+
+
+                        CountObj ChildCount = COUNT(inBracket, inBracketSize);
+
+
+                        VariableObj * TheVariableUP;
+
+                        if (ChildCount.ValueSize==1){
+                            if (FirstBracketIndex - 1 >=0)
+                            {
+                                ValueObj nearByValue;
+
+                                switch (Pack[FirstBracketIndex - 1].ObjType)
+                                {
+                                    case VARIABLE:
+                                        {
+                                            nearByValue = Pack[FirstBracketIndex - 1].VarUP->Val;
+                                            break;
+                                        }
+                                    case VALUE:
+                                        {
+                                            nearByValue = Pack[FirstBracketIndex - 1].Val;
+                                            break;
+                                        }
+                                    default: ErrCall("AAAA","DaaaASDASSASDadCVVCS",NULL,NULL,NULL);
+                                }
+
+
+                                if (nearByValue.ValueType == VALUE_TABLE_TYPE)
+                                {
+                                    for (int index = 0 ;index<nearByValue.Table.VariablesUP->VarsSize;index++)
+                                    {
+                                        switch (ChildCount.Value[0].ValueType)
+                                        {
+                                        case VALUE_STRING_TYPE:
+                                            {
+                                                if (strcmp(nearByValue.Table.VariablesUP->Vars[index].Name,ChildCount.Value[0].String) == 0 )
+                                                    TheVariableUP = &(nearByValue.Table.VariablesUP->Vars[index]);
+
+                                                break;
+                                            }
+                                        case VALUE_NOPOINTNUMBER_TYPE:
+                                            {
+                                                if (nearByValue.Table.VariablesUP->Vars[index].Name == ChildCount.Value[0].String)
+                                                    TheVariableUP = &(nearByValue.Table.VariablesUP->Vars[index]);
+                                                break;
+                                            }
+                                        default:
+                                            {
+                                                ErrCall("AAAA","DASDASSASDCVVCS",NULL,NULL,NULL);
+                                            }
+                                        }
+                                    }
+                                }else ErrCall("kkopkopkopkopdasp","DASDASSASDadCVVCS",NULL,NULL,NULL);
+
+                            }else
+                            {
+                                extern VariableObj * retVarUP(ScopeObj * SVUup,const char* Name,const int Place);
+
+                                switch (ChildCount.Value[0].ValueType)
+                                {
+                                case VALUE_STRING_TYPE:
+                                    {
+                                        TheVariableUP = retVarUP(Pack[0].ScopeUP,ChildCount.Value[0].String,0);
+                                        printf("ad req%p\n",TheVariableUP);
+
+                                        if (!TheVariableUP)
+                                        {
+                                            TheVariableUP = malloc(sizeof(VariableObj));
+                                            *TheVariableUP = (VariableObj){
+                                                .Name = ChildCount.Value[0].String
+                                            };
+                                        }
+                                        break;
+                                    }
+                                case VALUE_NOPOINTNUMBER_TYPE:
+                                    {
+                                        TheVariableUP = retVarUP(Pack[0].ScopeUP,NULL,ChildCount.Value[0].NPNumber);
+
+                                        if (!TheVariableUP)
+                                        {
+                                            TheVariableUP = malloc(sizeof(VariableObj));
+                                            *TheVariableUP = (VariableObj){
+                                                .Place = ChildCount.Value[0].NPNumber
+                                            };
+                                        }
+
+                                        break;
+                                    }
+                                default:
+                                    {
+                                        ErrCall("AAAA","DASDASSASDCVVCS",NULL,NULL,NULL);
+                                    }
+                                }
+
+                            }
+                        }else ErrCall("DASDAS","DASDASD",NULL,NULL,NULL);
+
+                        MioneObj* NewPack = malloc(0);
+                        int NewPackSize = 0;
+
+                        printf("%s\n",TheVariableUP->Name);
+
+                        for (int index = 0; index < FirstBracketIndex-1; index++)
+                        {
+                            NewPackSize++;
+                            NewPack = realloc(NewPack, sizeof(MioneObj) * NewPackSize);
+                            NewPack[NewPackSize - 1] = Pack[index];
+                        }
+
+                        NewPackSize++;
+                        NewPack = realloc(NewPack, sizeof(MioneObj) * NewPackSize);
+                        NewPack[NewPackSize - 1] = (MioneObj){
+                            .ObjType = VARIABLE,
+                            .VarUP = TheVariableUP,
+                        };
+
+                        for (int index = i+1; index < PackSize; index++)
+                        {
+                            NewPackSize++;
+                            NewPack = realloc(NewPack, sizeof(MioneObj) * NewPackSize);
+                            NewPack[NewPackSize - 1] = Pack[index];
+                        }
+
+                        PackSize = NewPackSize;
+                        Pack = NewPack;
+
+                        i = FirstBracketIndex-1;
                     }else
                     {
                         inBracketSize++;
@@ -551,7 +680,6 @@ VariableRequestUPObj REQUEST(MioneObj*Pack,int PackSize)
 
     for (int i = 0; i < PackSize; i++)
     {
-
         if ( Pack[i].ObjType == VALUE)
         {
             ErrCall("dadsad","kopghtkoo",NULL,0,0);

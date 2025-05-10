@@ -32,8 +32,8 @@ HeadReturnObj SVV(HeadRequestObj * HeadRequestUP)
     CountObj Counted;
     VariableRequestUPObj Requested;
 
-    CountObj SetCounted;
-    CountObj PointCounted;
+    CountObj SetCounted = {0};
+    CountObj PointCounted = {0};
 
     int registeredPrompts = 0;
 
@@ -88,7 +88,7 @@ HeadReturnObj SVV(HeadRequestObj * HeadRequestUP)
         }
     }
 
-
+    printf("kkkk %d\n",registeredPrompts);
 
     VariablesObj Vars;
     Vars.VarsSize = 0;
@@ -129,15 +129,18 @@ HeadReturnObj SVV(HeadRequestObj * HeadRequestUP)
                     for (int VariableIndex = 0; VariableIndex < Requested.VariablesSize; VariableIndex++)
                     {
                         Vars.VarsSize++;
-                        Vars.Vars = realloc(Vars.Vars, (VariableIndex + 1) * sizeof(VariableObj));
-                        Vars.Vars[VariableIndex] = *(Requested.VariableUPs[VariableIndex]);
+                        Vars.Vars = realloc(Vars.Vars, Vars.VarsSize * sizeof(VariableObj));
+                        Vars.Vars[Vars.VarsSize-1] = *(Requested.VariableUPs[VariableIndex]);
                     }
 
                     Re.ToState |= 4;
+
+                    break;
                 }
             case 7:
                 {
                     extern ScopeObj MainSVU;
+
 
                     DefinedVariablesCaseObj DefinedVariables;
                     DefinedVariables.DefinedVariablesSize = 0;
@@ -149,22 +152,29 @@ HeadReturnObj SVV(HeadRequestObj * HeadRequestUP)
 
                     for (int PNCIndex = 0; PNCIndex < PointNamesCounted.ValueSize; PNCIndex++)
                     {
+                        VariableObj Var;
+
+                        Var.Val = PointNamesCounted.Value[PNCIndex];
+
                         switch (PointNamesCounted.Value[PNCIndex].ValueType)
                         {
                         case 1://str
-
+                            Var.Name = PointNamesCounted.Value[PNCIndex].String;
                             break;
                         case 2://npn
-
+                            Var.Place = PointNamesCounted.Value[PNCIndex].NPNumber;
                             break;
                         default:
                             ErrCall("dkakakpdkapkdakd","Invalid value type for point name",NULL,Pairs[1].Source[0].Line,Pairs[1].Source[0].Column);
                         }
+
+                        Vars.VarsSize++;
+                        Vars.Vars = realloc(Vars.Vars, Vars.VarsSize * sizeof(VariableObj));
+                        Vars.Vars[Vars.VarsSize-1] = Var;
                     }
 
                     for (int i = 0; i < DefinedVariables.DefinedVariablesSize; i++)
                     {
-
                         *DefinedVariables.DefinedVariables[i].TheDefinedVarUP = (VariableObj){
                             .Name = DefinedVariables.DefinedVariables[i].TheDefinedVarUP->Name,
                             .Place = DefinedVariables.DefinedVariables[i].TheDefinedVarUP->Place,
@@ -174,6 +184,8 @@ HeadReturnObj SVV(HeadRequestObj * HeadRequestUP)
                     }
 
                     Re.ToState |= 4;
+
+                    break;
                 }
             }
         }

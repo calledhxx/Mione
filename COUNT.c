@@ -66,9 +66,7 @@ CountObj COUNT(MioneObj*Pack,int PackSize)
                     {
                         BracketCur = 0;
 
-
                         CountObj ChildCount = COUNT(inBracket, inBracketSize);
-
 
                         ValueObj TheValue;
 
@@ -121,37 +119,32 @@ CountObj COUNT(MioneObj*Pack,int PackSize)
 
                             }else
                             {
-                                // extern DefineVariableObj * Dvo;
-                                // extern int DvoSize;
-                                //
-                                // for (int DvoIndex = 0; DvoIndex < DvoSize; DvoIndex++) for (int index = 0; index<*Dvo[DvoIndex].VariablesSizeUP;index++) {
-                                //     switch (ChildCount.Value[0].ValueType)
-                                //     {
-                                //     case VALUE_STRING_TYPE:
-                                //         {
-                                //             if (strcmp((*Dvo[DvoIndex].VariableUPsUP)[index]->Name,ChildCount.Value[0].String)==0)
-                                //             {
-                                //                 TheValue = (*Dvo[DvoIndex].VariableUPsUP)[index]->Val;
-                                //                 break;
-                                //             }
-                                //             break;
-                                //         }
-                                //     case VALUE_NOPOINTNUMBER_TYPE:
-                                //         {
-                                //             if ((*Dvo[DvoIndex].VariableUPsUP)[index]->Place == ChildCount.Value[0].NPNumber)
-                                //             {
-                                //                 TheValue = (*Dvo[DvoIndex].VariableUPsUP)[index]->Val;
-                                //                 break;
-                                //             }
-                                //             break;
-                                //         }
-                                //     default:
-                                //         {
-                                //             ErrCall("AAAA","DASDASSASDCVVCS",NULL,NULL,NULL);
-                                //         }
-                                //     }
-                                //     break;
-                                // }
+                                extern VariableObj * retVarUP(ScopeObj * SVUup,const char* Name,const int Place);
+
+                                switch (ChildCount.Value[0].ValueType)
+                                {
+                                case VALUE_STRING_TYPE:
+                                    {
+                                        VariableObj * VarUP = retVarUP(Pack[0].ScopeUP,ChildCount.Value[0].String,0);
+
+                                        if (VarUP) TheValue = VarUP->Val; else TheValue = (ValueObj){0};
+
+                                        break;
+                                    }
+                                case VALUE_NOPOINTNUMBER_TYPE:
+                                    {
+                                        VariableObj * VarUP = retVarUP(Pack[0].ScopeUP,NULL,ChildCount.Value[0].NPNumber);
+
+                                        if (VarUP) TheValue = VarUP->Val; else TheValue = (ValueObj){0};
+
+                                        break;
+                                    }
+                                default:
+                                    {
+                                        ErrCall("AAAA","DASDASSASDCVVCS",NULL,NULL,NULL);
+                                    }
+                                }
+
 
 
                             }

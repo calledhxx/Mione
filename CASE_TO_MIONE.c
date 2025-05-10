@@ -442,8 +442,6 @@ MioneObj *CMO(CaseObj*CASES,int CASESIZE,
              }
 
 
-
-
              Column++;
 
             (MIONESIZE)++;

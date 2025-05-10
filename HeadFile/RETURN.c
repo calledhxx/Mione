@@ -12,7 +12,6 @@
 
 HeadReturnObj RETURN(HeadRequestObj * HeadRequestUP)
 {
-    printf("yes\n");
     HeadRequestObj HeadRequest = *HeadRequestUP;
 
     PairObj * Pairs = HeadRequest.Pairs;
@@ -40,9 +39,6 @@ HeadReturnObj RETURN(HeadRequestObj * HeadRequestUP)
                 .ValueSize = Counted.ValueSize,
                 .Value = Counted.Value,
             };
-
-
-            printf("szie %d %p\n",Counted.ValueSize,Counted.Value);
         }
         if (Prompt.ObjType == 2)
         {
