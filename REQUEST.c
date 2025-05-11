@@ -248,7 +248,7 @@ VariableRequestUPObj REQUEST(MioneObj*Pack,int PackSize)
 
                                         if ((Return.ToState&1)!=1) ErrCall(
                                             "The Function hasn't return any Value.",
-                                            "MG123",
+                                            "MGaaa123",
                                             NULL,
                                             Pack[FirstBracketIndex - 1].Line,
                                             Pack[FirstBracketIndex - 1].Column
@@ -346,7 +346,7 @@ VariableRequestUPObj REQUEST(MioneObj*Pack,int PackSize)
 
                                         if ((Return.ToState&1)!=1) ErrCall(
                                             "The Function hasn't return any Value.",
-                                            "MG123",
+                                            "MG1dsa23",
                                             NULL,
                                             Pack[FirstBracketIndex - 1].Line,
                                             Pack[FirstBracketIndex - 1].Column

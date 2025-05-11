@@ -153,7 +153,7 @@ HeadReturnObj SVV(HeadRequestObj * HeadRequestUP)
                     {
                         VariableObj Var;
 
-                        Var.Val = PointNamesCounted.Value[PNCIndex];
+                        Var.Val = PointCounted.Value[PNCIndex];
 
                         switch (PointNamesCounted.Value[PNCIndex].ValueType)
                         {

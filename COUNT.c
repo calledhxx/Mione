@@ -233,10 +233,10 @@ CountObj COUNT(MioneObj*Pack,int PackSize)
                                             .Built =  *Pack[FirstBracketIndex - 1].VarUP->Val.Area.AreaUP
                                         });
 
-
+                                        printf("code %d\n",Return.ToState);
                                         if (!Return.ToState&1) ErrCall(
                                             "The Function hasn't return any Value.",
-                                            "MG123",
+                                            "MGs123",
                                             NULL,
                                             Pack[FirstBracketIndex - 1].Line,
                                             Pack[FirstBracketIndex - 1].Column
@@ -332,10 +332,12 @@ CountObj COUNT(MioneObj*Pack,int PackSize)
                                             .Built =  *Pack[FirstBracketIndex - 1].Val.Area.AreaUP
                                         });
 
+                                        printf("%d\n",Return.ToState);
 
-                                        if ((Return.ToState&1)!=1) ErrCall(
+
+                                        if (!Return.ToState&1) ErrCall(
                                             "The Function hasn't return any Value.",
-                                            "MG123",
+                                            "MGdas123",
                                             NULL,
                                             Pack[FirstBracketIndex - 1].Line,
                                             Pack[FirstBracketIndex - 1].Column

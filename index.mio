@@ -1,9 +1,12 @@
-set a = 0;
-
-if (false) then range
-    a = 100;
-end else range
-    a = 200
+a = function
+    return {
+        "b":function
+            c = 200;
+            return 0;
+        end
+    }
 end;
 
-a
+a()["b"]();
+
+c
