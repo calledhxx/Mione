@@ -5,10 +5,13 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <tgmath.h>
+
 #include "../OBJECTS.h"
 #include "../COUNT.h"
 #include "../MIONE.h"
 #include "../ERR.h"
+#include "../IMPLEMENT.h"
 
 HeadReturnObj IF(HeadRequestObj * HeadRequestUP)
 {
@@ -29,7 +32,7 @@ HeadReturnObj IF(HeadRequestObj * HeadRequestUP)
 
     int db = 0;
 
-    int then = 0,_else = 0;
+    int registeredPrompts = 0;
 
     for (int i = 0; i < PairsSize; i++)
     {
@@ -51,15 +54,12 @@ HeadReturnObj IF(HeadRequestObj * HeadRequestUP)
                   if(CountedThenRange.ValueSize != 1) ErrCall("THEN Error","M9121321",NULL,Prompt.Line,Prompt.Column);
                   if(CountedThenRange.Value[0].ValueType != 5) ErrCall("THEN (RANGE) Error","M9121321",NULL,Prompt.Line,Prompt.Column);
 
-                  then= 1;
-
                   break;
             case 4:
                 CountedElseRange = COUNT(Pairs[i].Source, Pairs[i].SourceSize);
                 if(CountedElseRange.ValueSize != 1) ErrCall("ELSE Error","M9121321",NULL,Prompt.Line,Prompt.Column);
                 if(CountedElseRange.Value[0].ValueType != 5) ErrCall("ELSE (RANGE) Error","M9121321",NULL,Prompt.Line,Prompt.Column);
 
-                _else= 1;
 
                 break;
 
@@ -67,18 +67,53 @@ HeadReturnObj IF(HeadRequestObj * HeadRequestUP)
                 ErrCall("This Prompt is not supported by IF","M111",NULL,Prompt.Line,Prompt.Column);
                 break;
             }
+
+            registeredPrompts|=(int)pow(2,Prompt.Prompt.CurNumber-1);
+
         }
     }
 
-    if(then || _else){
-      if(_else ? _else != then : 0) ErrCall("IF-THEN-ELSE Error","M9121321",NULL,Pairs[0].Prompt.Line,Pairs[0].Prompt.Column);
+    int max = 0;
+    for (int i = 0;;i++)
+        if (pow(2,i-1) > registeredPrompts)
+        {
+            max = i-1;
+            break;
+        }
 
-        if(then == db || _else != db){
-            ValueObj RangeArea = db?CountedThenRange.Value[0]:CountedElseRange.Value[0];
+    ImplementedObj Return;
 
+    for (int i = 0;max>i;i++)
+    {
+        const int cmp = pow(2,i);
 
-            //todo
+        if (!registeredPrompts) break;
+
+        if (registeredPrompts & cmp)
+        {
+            switch (i+1)
+            {
+            case 3:
+                if (db)
+                {
+                    Return = IMPLEMENT((ToImplementObj){
+                        .Built = *CountedThenRange.Value[0].Area.AreaUP
+                    });
+                }
+                break;
+            case 4:
+                if (!db)
+                {
+                    Return = IMPLEMENT((ToImplementObj){
+                        .Built = *CountedElseRange.Value[0].Area.AreaUP
+                    });
+                }
+                break;
+            default:
+                ErrCall("This Prompt is not supported by IF","M111",NULL,-1,-1);
+            }
         }
     }
+
     return ToReturn;
 }

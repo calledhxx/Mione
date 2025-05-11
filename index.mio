@@ -1,1 +1,9 @@
-"\u()"
+set a = 0;
+
+if (false) then range
+    a = 100;
+end else range
+    a = 200
+end;
+
+a
