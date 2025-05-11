@@ -2,9 +2,14 @@
 
 # ⚠️處於實驗及開發階段🚧
 
+###### 暫不開放可執行文件，請期待正式版本
+
+<hr>
+
 ### [ ![](https://raw.githubusercontent.com/calledhxx/Mione/69d1345bbe08240b36d845ccacaa5ce43d2a6be1/Mione.svg)](https://github.com/CalledHxx/Mione)
 
 ###### Mione Programming Laguage
+###### 一款超越傳統架構的高級程式語言
 
 </div>
 
@@ -51,7 +56,8 @@ Hello, World
 ```
 <hr>
 
+更詳細的語法歡迎參閱  [TheMione.MD](./TheMione.md)  文件。
 
 
-
-#####  <img src="https://raw.githubusercontent.com/calledhxx/Mione/26e7d1561c7421837d1b7ff8e1e1545f3f12eaae/Mione.svg" width="25"/> 
+##### Copyright © from 2024 to PRESENT @CalledHxx. All rights reserved.
+#####  <img src="https://raw.githubusercontent.com/calledhxx/Mione/26e7d1561c7421837d1b7ff8e1e1545f3f12eaae/Mione.svg" width="25"/>
