@@ -1,3 +1,8 @@
+set table = {
+};
+
+table["Hello"] = "World";
+
 set af = function
     if (false) then range
         return 100;

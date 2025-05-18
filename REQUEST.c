@@ -70,7 +70,7 @@ VariableRequestUPObj REQUEST(MioneObj*Pack,int PackSize)
                         CountObj ChildCount = COUNT(inBracket, inBracketSize);
 
 
-                        VariableObj * TheVariableUP;
+                        VariableObj * TheVariableUP = 0;
 
                         if (ChildCount.ValueSize==1){
                             if (FirstBracketIndex - 1 >=0)
@@ -95,12 +95,16 @@ VariableRequestUPObj REQUEST(MioneObj*Pack,int PackSize)
 
                                 if (nearByValue.ValueType == VALUE_TABLE_TYPE)
                                 {
+                                    printf("hello world %d \n",nearByValue.Table.VariablesUP->VarsSize);
+
                                     for (int index = 0 ;index<nearByValue.Table.VariablesUP->VarsSize;index++)
                                     {
+
                                         switch (ChildCount.Value[0].ValueType)
                                         {
                                         case VALUE_STRING_TYPE:
                                             {
+
                                                 if (strcmp(nearByValue.Table.VariablesUP->Vars[index].Name,ChildCount.Value[0].String) == 0 )
                                                     TheVariableUP = &(nearByValue.Table.VariablesUP->Vars[index]);
 
@@ -118,6 +122,14 @@ VariableRequestUPObj REQUEST(MioneObj*Pack,int PackSize)
                                             }
                                         }
                                     }
+
+                                    if (!TheVariableUP)
+                                    {
+                                        TheVariableUP = malloc(sizeof(VariableObj));
+
+                                        TheVariableUP->Place = ChildCount.Value[0].NPNumber;
+                                        TheVariableUP->Name = ChildCount.Value[0].String;
+                                    }
                                 }else ErrCall("kkopkopkopkopdasp","DASDASSASDadCVVCS",NULL,NULL,NULL);
 
                             }else
@@ -129,7 +141,6 @@ VariableRequestUPObj REQUEST(MioneObj*Pack,int PackSize)
                                 case VALUE_STRING_TYPE:
                                     {
                                         TheVariableUP = retVarUP(Pack[0].ScopeUP,ChildCount.Value[0].String,0);
-                                        printf("ad req%p\n",TheVariableUP);
 
                                         if (!TheVariableUP)
                                         {

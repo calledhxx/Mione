@@ -68,7 +68,7 @@ CountObj COUNT(MioneObj*Pack,int PackSize)
 
                         CountObj ChildCount = COUNT(inBracket, inBracketSize);
 
-                        ValueObj TheValue;
+                        ValueObj TheValue = {0};
 
                         if (ChildCount.ValueSize==1){
                             if (FirstBracketIndex - 1 >=0)
@@ -116,6 +116,8 @@ CountObj COUNT(MioneObj*Pack,int PackSize)
                                             }
                                         }
                                     }
+
+
                                 }else ErrCall("kkopkopkopkopdasp","DASDASSASDadCVVCS",NULL,NULL,NULL);
 
                             }else
