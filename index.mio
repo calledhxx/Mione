@@ -1,5 +1,9 @@
-a = {
-    "name"
-}
+set af = function
+    if (false) then range
+        return 100;
+    end else range
+        return 50;
+    end
+end;
 
-a[1]
+af();

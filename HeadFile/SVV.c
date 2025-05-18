@@ -94,7 +94,7 @@ HeadReturnObj SVV(HeadRequestObj * HeadRequestUP)
 
     int max = 0;
     for (int i = 0;;i++)
-        if (pow(2,i-1) > registeredPrompts)
+        if (1<<i-1 > registeredPrompts)
         {
             max = i-1;
             break;
@@ -103,7 +103,7 @@ HeadReturnObj SVV(HeadRequestObj * HeadRequestUP)
 
     for (int i = 0;max>i;i++)
     {
-        const int cmp = pow(2,i);
+        const int cmp = 1<<i;
 
         if (!registeredPrompts) break;
 

@@ -74,7 +74,7 @@ HeadReturnObj IF(HeadRequestObj * HeadRequestUP)
 
     int max = 0;
     for (int i = 0;;i++)
-        if (pow(2,i-1) > registeredPrompts)
+        if (1<<i-1 > registeredPrompts)
         {
             max = i-1;
             break;
@@ -84,7 +84,7 @@ HeadReturnObj IF(HeadRequestObj * HeadRequestUP)
 
     for (int i = 0;max>i;i++)
     {
-        const int cmp = pow(2,i);
+        const int cmp = 1<<i;
 
         if (!registeredPrompts) break;
 
@@ -112,6 +112,12 @@ HeadReturnObj IF(HeadRequestObj * HeadRequestUP)
                 ErrCall("This Prompt is not supported by IF","M111",NULL,-1,-1);
             }
         }
+    }
+
+    if (Return.ToState & 1)
+    {
+        ToReturn.ToState |= 1;
+        ToReturn.Values = Return.Values;
     }
 
     return ToReturn;
