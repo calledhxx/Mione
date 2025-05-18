@@ -95,7 +95,6 @@ VariableRequestUPObj REQUEST(MioneObj*Pack,int PackSize)
 
                                 if (nearByValue.ValueType == VALUE_TABLE_TYPE)
                                 {
-                                    printf("hello world %d \n",nearByValue.Table.VariablesUP->VarsSize);
 
                                     for (int index = 0 ;index<nearByValue.Table.VariablesUP->VarsSize;index++)
                                     {
@@ -129,6 +128,11 @@ VariableRequestUPObj REQUEST(MioneObj*Pack,int PackSize)
 
                                         TheVariableUP->Place = ChildCount.Value[0].NPNumber;
                                         TheVariableUP->Name = ChildCount.Value[0].String;
+
+                                        nearByValue.Table.VariablesUP->VarsSize++;
+                                        nearByValue.Table.VariablesUP->Vars = //todo table vars UP化
+                                            realloc(nearByValue.Table.VariablesUP->Vars, sizeof(VariableObj) * (nearByValue.Table.VariablesUP->VarsSize));
+                                        nearByValue.Table.VariablesUP->Vars[nearByValue.Table.VariablesUP->VarsSize - 1] = *TheVariableUP;
                                     }
                                 }else ErrCall("kkopkopkopkopdasp","DASDASSASDadCVVCS",NULL,NULL,NULL);
 
