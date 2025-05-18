@@ -112,6 +112,5 @@ ImplementedObj IMPLEMENT(const ToImplementObj toImplement)
         Obj.Vars = Vars;
     }
 
-    printf("%d end size\n", Vars.VarsSize);
     return Obj;
 }
