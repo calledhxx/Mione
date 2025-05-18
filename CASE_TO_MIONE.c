@@ -481,7 +481,6 @@ MioneObj *CMO(CaseObj*CASES,int CASESIZE,
             .ObjsSize = MioObjSize,
         });
 
-        printf("%d isze\n",Built.SectionsSize);
 
 
         ValueObj Value;

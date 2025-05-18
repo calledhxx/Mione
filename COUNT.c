@@ -90,22 +90,23 @@ CountObj COUNT(MioneObj*Pack,int PackSize)
                                     default: ErrCall("AAAA","DaaaASDASSASDadCVVCS",NULL,NULL,NULL);
                                 }
 
-
                                 if (nearByValue.ValueType == VALUE_TABLE_TYPE)
                                 {
+
                                     for (int index = 0 ;index<nearByValue.Table.VariablesUP->VarsSize;index++)
                                     {
                                         switch (ChildCount.Value[0].ValueType)
                                         {
                                         case VALUE_STRING_TYPE:
                                             {
+
                                                 if (strcmp(nearByValue.Table.VariablesUP->Vars[index].Name,ChildCount.Value[0].String) == 0 )
                                                     TheValue = nearByValue.Table.VariablesUP->Vars[index].Val;
                                                 break;
                                             }
                                         case VALUE_NOPOINTNUMBER_TYPE:
                                             {
-                                                if (nearByValue.Table.VariablesUP->Vars[index].Name == ChildCount.Value[0].String)
+                                                if (nearByValue.Table.VariablesUP->Vars[index].Place == ChildCount.Value[0].NPNumber)
                                                     TheValue = nearByValue.Table.VariablesUP->Vars[index].Val;
                                                 break;
                                             }
@@ -233,7 +234,6 @@ CountObj COUNT(MioneObj*Pack,int PackSize)
                                             .Built =  *Pack[FirstBracketIndex - 1].VarUP->Val.Area.AreaUP
                                         });
 
-                                        printf("code %d\n",Return.ToState);
                                         if (!Return.ToState&1) ErrCall(
                                             "The Function hasn't return any Value.",
                                             "MGs123",
@@ -255,7 +255,6 @@ CountObj COUNT(MioneObj*Pack,int PackSize)
                                             NewPack[NewPackSize - 1] = Pack[index];
                                         }
 
-                                        printf("sizoe of fuc returned : %d\n",V.ValueSize);
 
                                         if (V.ValueSize)
                                         {
@@ -332,7 +331,6 @@ CountObj COUNT(MioneObj*Pack,int PackSize)
                                             .Built =  *Pack[FirstBracketIndex - 1].Val.Area.AreaUP
                                         });
 
-                                        printf("%d\n",Return.ToState);
 
 
                                         if (!Return.ToState&1) ErrCall(
@@ -356,7 +354,6 @@ CountObj COUNT(MioneObj*Pack,int PackSize)
                                             NewPack[NewPackSize - 1] = Pack[index];
                                         }
 
-                                        printf("sizoe of fuc returned : %d\n",V.ValueSize);
 
                                         if (V.ValueSize)
                                         {

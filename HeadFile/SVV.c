@@ -9,8 +9,6 @@
 #include "../ERR.h"
 #include "../REQUEST.h"
 
-
-
 HeadReturnObj SVV(HeadRequestObj * HeadRequestUP)
 {
     HeadRequestObj HeadRequest = *HeadRequestUP;
@@ -37,28 +35,30 @@ HeadReturnObj SVV(HeadRequestObj * HeadRequestUP)
 
     int registeredPrompts = 0;
 
+    VariablesObj Vars;
+    Vars.VarsSize = 0;
+    Vars.Vars = malloc(0);
 
     for (int i = 0; i < PairsSize; i++)
     {
         MioneObj Prompt = Pairs[i].Prompt;
 
-
         if (!i)
         {
+
             if (PairsSize == 1)
             {
                 Counted = COUNT(Pairs[i].Source,Pairs[i].SourceSize);
 
                 if (VariablesUP)
                 {
-                    VariablesObj Vars;
-                    Vars.VarsSize = 0;
-                    Vars.Vars = malloc(Vars.VarsSize);
+
 
                     for (int a = 0; a < Counted.ValueSize; a++)
                     {
                         Vars.VarsSize++;
                         Vars.Vars = realloc(Vars.Vars,Vars.VarsSize*sizeof(VariableObj));
+
                         Vars.Vars[Vars.VarsSize-1].Name = NULL;
                         Vars.Vars[Vars.VarsSize-1].Place = (*VariablesUPSizeUP)+1;
                         Vars.Vars[Vars.VarsSize-1].Val = Counted.Value[a];
@@ -66,7 +66,7 @@ HeadReturnObj SVV(HeadRequestObj * HeadRequestUP)
 
 
                     Re.Vars = Vars;
-                    Re.ToState = Re.ToState+4;
+                    Re.ToState |=4;
                 }
             }
         }else
@@ -84,14 +84,13 @@ HeadReturnObj SVV(HeadRequestObj * HeadRequestUP)
                 break;
             }
 
-            registeredPrompts|=(int)pow(2,Prompt.Prompt.CurNumber-1);
+            registeredPrompts |= 1<<Prompt.Prompt.CurNumber-1;
+
+
         }
     }
 
 
-    VariablesObj Vars;
-    Vars.VarsSize = 0;
-    Vars.Vars = malloc(0);
 
     int max = 0;
     for (int i = 0;;i++)

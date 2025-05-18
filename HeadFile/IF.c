@@ -68,8 +68,7 @@ HeadReturnObj IF(HeadRequestObj * HeadRequestUP)
                 break;
             }
 
-            registeredPrompts|=(int)pow(2,Prompt.Prompt.CurNumber-1);
-
+            registeredPrompts |= 1<<Prompt.Prompt.CurNumber-1;
         }
     }
 

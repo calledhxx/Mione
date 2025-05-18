@@ -1,3 +1,4 @@
+#include <inttypes.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <tgmath.h>
@@ -40,6 +41,9 @@ ImplementedObj IMPLEMENT(const ToImplementObj toImplement)
                    &(HeadRequestObj){
                        .Pairs =Pairs,
                        .PairsSize = PairsSize,
+
+                       .VariablesUP = &Vars.Vars,
+                       .VariablesUPSizeUP = &Vars.VarsSize,
                    });
 
             int max = 0;
@@ -108,6 +112,6 @@ ImplementedObj IMPLEMENT(const ToImplementObj toImplement)
         Obj.Vars = Vars;
     }
 
-
+    printf("%d end size\n", Vars.VarsSize);
     return Obj;
 }

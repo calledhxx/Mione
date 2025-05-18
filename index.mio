@@ -1,12 +1,5 @@
-a = function
-    return {
-        "b":function
-            c = 200;
-            return 0;
-        end
-    }
-end;
+a = {
+    "name"
+}
 
-a()["b"]();
-
-c
+a[1]

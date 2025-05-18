@@ -108,7 +108,7 @@ VariableRequestUPObj REQUEST(MioneObj*Pack,int PackSize)
                                             }
                                         case VALUE_NOPOINTNUMBER_TYPE:
                                             {
-                                                if (nearByValue.Table.VariablesUP->Vars[index].Name == ChildCount.Value[0].String)
+                                                if (nearByValue.Table.VariablesUP->Vars[index].Place == ChildCount.Value[0].NPNumber)
                                                     TheVariableUP = &(nearByValue.Table.VariablesUP->Vars[index]);
                                                 break;
                                             }
