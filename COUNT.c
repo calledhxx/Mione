@@ -1284,7 +1284,7 @@ CountObj COUNT(MioneObj*Pack,int PackSize)
         else if (VPack[index].ValueType == 3) printf("`PN`:`%Lf`\n",VPack[index].PNumber);
         else if (VPack[index].ValueType == 8) printf("`db`:`%d`\n",VPack[index].db);
         else if (VPack[index].ValueType == 0) printf("`NULL`:`NON`\n");
-        else printf("`%d something that i don't wanna put here`\n",VPack[index].ValueType);
+        else printf("(TYPE OF) `%d`\n",VPack[index].ValueType);
     }
 
     if (BracketCur) ErrCall("cadasdas","dasdada",NULL,0,0);
