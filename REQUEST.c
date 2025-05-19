@@ -96,7 +96,7 @@ VariableRequestUPObj REQUEST(MioneObj*Pack,int PackSize)
                                 if (nearByValue.ValueType == VALUE_TABLE_TYPE)
                                 {
 
-                                    for (int index = 0 ;index<nearByValue.Table.VariablesUP->VarsSize;index++)
+                                    for (int index = 0 ;index<nearByValue.Table.VariableUPsUP->VarUPsSize;index++)
                                     {
 
                                         switch (ChildCount.Value[0].ValueType)
@@ -104,15 +104,15 @@ VariableRequestUPObj REQUEST(MioneObj*Pack,int PackSize)
                                         case VALUE_STRING_TYPE:
                                             {
 
-                                                if (strcmp(nearByValue.Table.VariablesUP->Vars[index].Name,ChildCount.Value[0].String) == 0 )
-                                                    TheVariableUP = &(nearByValue.Table.VariablesUP->Vars[index]);
+                                                if (strcmp(nearByValue.Table.VariableUPsUP->VarUPs[index]->Name,ChildCount.Value[0].String) == 0 )
+                                                    TheVariableUP = (nearByValue.Table.VariableUPsUP->VarUPs[index]);
 
                                                 break;
                                             }
                                         case VALUE_NOPOINTNUMBER_TYPE:
                                             {
-                                                if (nearByValue.Table.VariablesUP->Vars[index].Place == ChildCount.Value[0].NPNumber)
-                                                    TheVariableUP = &(nearByValue.Table.VariablesUP->Vars[index]);
+                                                if (nearByValue.Table.VariableUPsUP->VarUPs[index]->Place == ChildCount.Value[0].NPNumber)
+                                                    TheVariableUP = (nearByValue.Table.VariableUPsUP->VarUPs[index]);
                                                 break;
                                             }
                                         default:
@@ -128,11 +128,13 @@ VariableRequestUPObj REQUEST(MioneObj*Pack,int PackSize)
 
                                         TheVariableUP->Place = ChildCount.Value[0].NPNumber;
                                         TheVariableUP->Name = ChildCount.Value[0].String;
+                                        TheVariableUP->Val = (ValueObj){0};
 
-                                        nearByValue.Table.VariablesUP->VarsSize++;
-                                        nearByValue.Table.VariablesUP->Vars = //todo table vars UP化
-                                            realloc(nearByValue.Table.VariablesUP->Vars, sizeof(VariableObj) * (nearByValue.Table.VariablesUP->VarsSize));
-                                        nearByValue.Table.VariablesUP->Vars[nearByValue.Table.VariablesUP->VarsSize - 1] = *TheVariableUP;
+
+                                        nearByValue.Table.VariableUPsUP->VarUPsSize++;
+                                        nearByValue.Table.VariableUPsUP->VarUPs =
+                                            realloc(nearByValue.Table.VariableUPsUP->VarUPs, sizeof(VariableObj *) * (nearByValue.Table.VariableUPsUP->VarUPsSize));
+                                        nearByValue.Table.VariableUPsUP->VarUPs[nearByValue.Table.VariableUPsUP->VarUPsSize - 1] = TheVariableUP;
                                     }
                                 }else ErrCall("kkopkopkopkopdasp","DASDASSASDadCVVCS",NULL,NULL,NULL);
 

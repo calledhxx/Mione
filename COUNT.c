@@ -93,21 +93,21 @@ CountObj COUNT(MioneObj*Pack,int PackSize)
                                 if (nearByValue.ValueType == VALUE_TABLE_TYPE)
                                 {
 
-                                    for (int index = 0 ;index<nearByValue.Table.VariablesUP->VarsSize;index++)
+                                    for (int index = 0 ;index<nearByValue.Table.VariableUPsUP->VarUPsSize;index++)
                                     {
                                         switch (ChildCount.Value[0].ValueType)
                                         {
                                         case VALUE_STRING_TYPE:
                                             {
 
-                                                if (strcmp(nearByValue.Table.VariablesUP->Vars[index].Name,ChildCount.Value[0].String) == 0 )
-                                                    TheValue = nearByValue.Table.VariablesUP->Vars[index].Val;
+                                                if (strcmp(nearByValue.Table.VariableUPsUP->VarUPs[index]->Name,ChildCount.Value[0].String) == 0 )
+                                                    TheValue = nearByValue.Table.VariableUPsUP->VarUPs[index]->Val;
                                                 break;
                                             }
                                         case VALUE_NOPOINTNUMBER_TYPE:
                                             {
-                                                if (nearByValue.Table.VariablesUP->Vars[index].Place == ChildCount.Value[0].NPNumber)
-                                                    TheValue = nearByValue.Table.VariablesUP->Vars[index].Val;
+                                                if (nearByValue.Table.VariableUPsUP->VarUPs[index]->Place == ChildCount.Value[0].NPNumber)
+                                                    TheValue = nearByValue.Table.VariableUPsUP->VarUPs[index]->Val;
                                                 break;
                                             }
                                         default:
@@ -584,7 +584,7 @@ CountObj COUNT(MioneObj*Pack,int PackSize)
             {
             if (!BracketsChild)
             {
-                if (Pack[i].ObjType == VALUE && Pack[i].Val.ValueType == VALUE_TABLE_TYPE && !Pack[i].Val.Table.VariablesUP)
+                if (Pack[i].ObjType == VALUE && Pack[i].Val.ValueType == VALUE_TABLE_TYPE && !Pack[i].Val.Table.VariableUPsUP)
                 {
                     ImplementedObj Return = IMPLEMENT((ToImplementObj){
                         .Built = *Pack[i].Val.Table.TableAreaUP
@@ -594,33 +594,34 @@ CountObj COUNT(MioneObj*Pack,int PackSize)
                     int VarsSize = Return.Vars.VarsSize;
                     VariableObj * Vars = Return.Vars.Vars;
 
-                    VariablesObj NewTable;
-                    NewTable.VarsSize = 0;
-                    NewTable.Vars = malloc(0);
+                    VariableUPsObj NewTable;
+                    NewTable.VarUPs = malloc(0);
+                    NewTable.VarUPsSize = 0;
 
 
                     for (int TableChildIndex = 0; TableChildIndex<VarsSize ; TableChildIndex++)
                     {
-                        NewTable.VarsSize++;
-                        NewTable.Vars = realloc (NewTable.Vars, NewTable.VarsSize*sizeof(VariableObj));
-                        NewTable.Vars[NewTable.VarsSize-1] = Vars[TableChildIndex];
+                        NewTable.VarUPsSize++;
+                        NewTable.VarUPs = realloc ( NewTable.VarUPs, NewTable.VarUPsSize*sizeof(VariableObj *));
+                        NewTable.VarUPs[NewTable.VarUPsSize-1] = &Vars[TableChildIndex];
 
                         if (Vars[TableChildIndex].Place)
                         {
-                            for (int CTCIndex = 0; CTCIndex<NewTable.VarsSize ; CTCIndex++)
+                            for (int CTCIndex = 0; CTCIndex<NewTable.VarUPsSize ; CTCIndex++)
                             {
-                                if (NewTable.Vars[CTCIndex].Place > NewTable.Vars[NewTable.VarsSize-1].Place &&NewTable.Vars[CTCIndex].Place )
+                                if (NewTable.VarUPs[CTCIndex]->Place > NewTable.VarUPs[NewTable.VarUPsSize-1]->Place && NewTable.VarUPs[CTCIndex]->Place )
                                 {
-                                    VariableObj Butter = NewTable.Vars[CTCIndex];
-                                    NewTable.Vars[CTCIndex] = NewTable.Vars[NewTable.VarsSize-1];
-                                    NewTable.Vars[NewTable.VarsSize-1] = Butter;
+                                    VariableObj * Butter = NewTable.VarUPs[CTCIndex];
+                                    NewTable.VarUPs[CTCIndex] = NewTable.VarUPs[NewTable.VarUPsSize-1];
+                                    NewTable.VarUPs[NewTable.VarUPsSize-1] = Butter;
                                 }
                             }
                         }
                     }
 
-                    Pack[i].Val.Table.VariablesUP = malloc(sizeof(struct _VariablesObject));
-                    *Pack[i].Val.Table.VariablesUP = NewTable;
+                    Pack[i].Val.Table.VariableUPsUP = malloc(sizeof(struct _VariablesObject *));
+
+                    *Pack[i].Val.Table.VariableUPsUP = NewTable;
 
 
                     //todo fix
@@ -1283,7 +1284,7 @@ CountObj COUNT(MioneObj*Pack,int PackSize)
         else if (VPack[index].ValueType == 3) printf("`PN`:`%Lf`\n",VPack[index].PNumber);
         else if (VPack[index].ValueType == 8) printf("`db`:`%d`\n",VPack[index].db);
         else if (VPack[index].ValueType == 0) printf("`NULL`:`NON`\n");
-        else printf("`UNDEFINED`\n");
+        else printf("`%d something that i don't wanna put here`\n",VPack[index].ValueType);
     }
 
     if (BracketCur) ErrCall("cadasdas","dasdada",NULL,0,0);

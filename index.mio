@@ -2,16 +2,3 @@ set table = {};
 
 table["Hello"] = "World";
 table["Hello"]
-table[table["Hello"]] = true;
-
-table[table["Hello"]]
-
-set af = function
-    if (table[table["Hello"]]) then range
-        return 100;
-    end else range
-        return 50;
-    end
-end;
-
-af();

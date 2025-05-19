@@ -490,7 +490,7 @@ MioneObj *CMO(CaseObj*CASES,int CASESIZE,
         case VALUE_TABLE_TYPE:
             {
                 TableObj eTable = (TableObj){
-                    .VariablesUP = 0,
+                    .VariableUPsUP = 0,
                 };
         
                 eTable.TableAreaUP = malloc(sizeof(struct _MioneBuiltObject));

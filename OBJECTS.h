@@ -30,7 +30,7 @@ typedef struct _TableObject
 {
     struct _MioneBuiltObject * TableAreaUP;
 
-    struct _VariablesObject * VariablesUP;
+    struct _VariableUPsObject * VariableUPsUP;
 }TableObj;
 
 typedef struct _ValueObject
@@ -155,6 +155,12 @@ typedef struct _VariablesObject
     VariableObj * Vars;
     int VarsSize;
 } VariablesObj;
+
+typedef struct _VariableUPsObject
+{
+    VariableObj * * VarUPs;
+    int VarUPsSize;
+} VariableUPsObj;
 
 
 typedef struct _HeadReturnObject
