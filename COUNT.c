@@ -100,7 +100,7 @@ CountObj COUNT(MioneObj*Pack,int PackSize)
                                         case VALUE_STRING_TYPE:
                                             {
 
-                                                if (strcmp(nearByValue.Table.VariableUPsUP->VarUPs[index]->Name,ChildCount.Value[0].String) == 0 )
+                                                if (wcscmp(nearByValue.Table.VariableUPsUP->VarUPs[index]->Name,ChildCount.Value[0].String) == 0 )
                                                     TheValue = nearByValue.Table.VariableUPsUP->VarUPs[index]->Val;
                                                 break;
                                             }
@@ -122,7 +122,7 @@ CountObj COUNT(MioneObj*Pack,int PackSize)
 
                             }else
                             {
-                                extern VariableObj * retVarUP(ScopeObj * SVUup,const char* Name,const int Place);
+                                extern VariableObj * retVarUP(ScopeObj * SVUup,const wchar_t* Name,const int Place);
 
                                 switch (ChildCount.Value[0].ValueType)
                                 {
@@ -1129,7 +1129,7 @@ CountObj COUNT(MioneObj*Pack,int PackSize)
                             switch (Target1.ValueType)
                             {
                             case 1: //string
-                                if (strcmp(Target2.String,Target1.String)==0) db =1;
+                                if (wcscmp(Target2.String,Target1.String)==0) db =1;
                                 break;
                             case 2:
                                 if ((Target2.ValueType == 2?Target2.NPNumber:Target2.PNumber) - Target1.NPNumber == 0) db =1;
@@ -1280,7 +1280,7 @@ CountObj COUNT(MioneObj*Pack,int PackSize)
     {
         printf("%d/%d ",Pack[index].Line, Pack[index].Column);
         if (VPack[index].ValueType == 2) printf("`NPN`:`%d`\n",VPack[index].NPNumber);
-        else if (VPack[index].ValueType == 1) printf("`STRING`:`%s`\n",VPack[index].String);
+        else if (VPack[index].ValueType == 1) wprintf(L"`STRING`:`%ls`\n",VPack[index].String);
         else if (VPack[index].ValueType == 3) printf("`PN`:`%Lf`\n",VPack[index].PNumber);
         else if (VPack[index].ValueType == 8) printf("`db`:`%d`\n",VPack[index].db);
         else if (VPack[index].ValueType == 0) printf("`NULL`:`NON`\n");

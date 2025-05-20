@@ -111,7 +111,7 @@ HeadReturnObj SET(HeadRequestObj * HeadRequestUP)
                 case 2:
                     {
                         extern ScopeObj MainSVU;
-                        extern VariableObj * retVarUP(ScopeObj * SVUup,const char* Name,const int Place);
+                        extern VariableObj * retVarUP(ScopeObj * SVUup,const wchar_t* Name,const int Place);
 
                         ToReturn.ToState|=2;
 

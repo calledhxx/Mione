@@ -9,22 +9,22 @@
 HeadObj Heads[]  = {
     (HeadObj){
         .Fuc = SET,
-        .Name = "set",
+        .Name = L"set",
         .CurNumber = 1,
     },
     (HeadObj){
         .Fuc = RETURN,
-        .Name = "return",
+        .Name = L"return",
         .CurNumber = 2
     },
     (HeadObj){
         .Fuc = IF,
-        .Name = "if",
+        .Name = L"if",
         .CurNumber = 3
     },
     (HeadObj){
         .Fuc = FOR,
-        .Name = "for",
+        .Name = L"for",
         .CurNumber = 4
     },
 

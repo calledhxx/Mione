@@ -5,39 +5,39 @@
 
 PromptObj Prompts[] = {
     (PromptObj) {
-        .Name = "=",
+        .Name = L"=",
         .CurNumber = 1,
     },
     (PromptObj) {
-        .Name = "host",
+        .Name = L"host",
         .CurNumber = 2,
     },
     (PromptObj) {
-        .Name = "then",
+        .Name = L"then",
         .CurNumber = 3,
     },
     (PromptObj) {
-        .Name = "else",
+        .Name = L"else",
         .CurNumber = 4,
     },
     (PromptObj) {
-        .Name = "do",
+        .Name = L"do",
         .CurNumber = 5,
     },
     (PromptObj) {
-        .Name = "to",
+        .Name = L"to",
         .CurNumber = 6,
     },
     (PromptObj) {
-        .Name = ":",
+        .Name = L":",
         .CurNumber = 7,
     },
     (PromptObj) {
-        .Name = "in",
+        .Name = L"in",
         .CurNumber = 8,
     },
     (PromptObj) {
-        .Name = "with",
+        .Name = L"with",
         .CurNumber = 9,
     },
     (PromptObj) {

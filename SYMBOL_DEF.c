@@ -5,7 +5,7 @@
 SymbolObj Symbols[] =
 {
     (SymbolObj){
-        .Name = "+",
+        .Name = L"+",
         .SymbolType = 1,
         .xIndex = 2,
         .CurNumber = 1,
@@ -15,7 +15,7 @@ SymbolObj Symbols[] =
     },
 
     (SymbolObj){
-        .Name = ",",
+        .Name = L",",
         .SymbolType = 1,
         .xIndex = 0, // 1,2,3,5,8,13
         .CurNumber = 2,
@@ -26,7 +26,7 @@ SymbolObj Symbols[] =
     },
 
     (SymbolObj){
-        .Name = "*",
+        .Name = L"*",
         .SymbolType = 1,
         .xIndex = 1,
         .CurNumber = 3,
@@ -35,7 +35,7 @@ SymbolObj Symbols[] =
     },
 
     (SymbolObj){
-        .Name = "/",
+        .Name = L"/",
         .SymbolType = 1,
         .xIndex = 1,
         .CurNumber = 4,
@@ -46,7 +46,7 @@ SymbolObj Symbols[] =
 
 
     (SymbolObj){
-        .Name = "^",
+        .Name = L"^",
         .SymbolType = 1,
         .xIndex = 0,
         .CurNumber = 5,
@@ -55,7 +55,7 @@ SymbolObj Symbols[] =
     },
 
     (SymbolObj){
-        .Name = "-",
+        .Name = L"-",
         .SymbolType = 3,
         .xIndex = 1,// -1
         .yIndex = 2,// 1-1
@@ -65,7 +65,7 @@ SymbolObj Symbols[] =
     },
 
     (SymbolObj){
-        .Name = ".",
+        .Name = L".",
         .SymbolType = 3,
         .xIndex = 0,// .1
         .yIndex = 0,// 0.1 or <TABLE>.<CHILD>
@@ -74,7 +74,7 @@ SymbolObj Symbols[] =
        
     },
     (SymbolObj){
-        .Name = "==",
+        .Name = L"==",
         .SymbolType = 1,
         .xIndex = 2,
         .CurNumber = 8,
@@ -83,7 +83,7 @@ SymbolObj Symbols[] =
     },
 
     (SymbolObj){
-        .Name = "[",
+        .Name = L"[",
         .SymbolType = 0,
         .xIndex = 0, //這邊的設定有點無效 只是標住他的確與階級0同樣層級執行
         .CurNumber = 10,
@@ -93,7 +93,7 @@ SymbolObj Symbols[] =
     },
 
     (SymbolObj){
-        .Name = "]",
+        .Name = L"]",
         .SymbolType = 0,
         .xIndex = 0, //這邊的設定有點無效 只是標住他的確與階級0同樣層級執行
         .CurNumber = 11,
@@ -102,7 +102,7 @@ SymbolObj Symbols[] =
        
     },
     (SymbolObj){
-        .Name = "(",
+        .Name = L"(",
         .SymbolType = 0,
         .xIndex = 0, //這邊的設定有點無效 只是標住他的確與階級0同樣層級執行
         .CurNumber = 12,
@@ -112,7 +112,7 @@ SymbolObj Symbols[] =
     },
 
     (SymbolObj){
-        .Name = ")",
+        .Name = L")",
         .SymbolType = 0,
         .xIndex = 0, //這邊的設定有點無效 只是標住他的確與階級0同樣層級執行
         .CurNumber = 13,
@@ -121,7 +121,7 @@ SymbolObj Symbols[] =
        
     },
     (SymbolObj){
-        .Name = "abreast",
+        .Name = L"abreast",
         .SymbolType = 2,
         .xIndex = 1,
         .CurNumber = 15,

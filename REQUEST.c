@@ -104,7 +104,7 @@ VariableRequestUPObj REQUEST(MioneObj*Pack,int PackSize)
                                         case VALUE_STRING_TYPE:
                                             {
 
-                                                if (strcmp(nearByValue.Table.VariableUPsUP->VarUPs[index]->Name,ChildCount.Value[0].String) == 0 )
+                                                if (wcscmp(nearByValue.Table.VariableUPsUP->VarUPs[index]->Name,ChildCount.Value[0].String) == 0 )
                                                     TheVariableUP = (nearByValue.Table.VariableUPsUP->VarUPs[index]);
 
                                                 break;
@@ -140,7 +140,7 @@ VariableRequestUPObj REQUEST(MioneObj*Pack,int PackSize)
 
                             }else
                             {
-                                extern VariableObj * retVarUP(ScopeObj * SVUup,const char* Name,const int Place);
+                                extern VariableObj * retVarUP(ScopeObj * SVUup,const wchar_t* Name,const int Place);
 
                                 switch (ChildCount.Value[0].ValueType)
                                 {
@@ -596,7 +596,7 @@ VariableRequestUPObj REQUEST(MioneObj*Pack,int PackSize)
                                         {
                                             if (Symbols[index].CurNumber == -1) break;
 
-                                            if (strcmp(Symbols[index].Name, Pack[i].Symbol.Name) == 0)
+                                            if (wcscmp(Symbols[index].Name, Pack[i].Symbol.Name) == 0)
                                             {
 
                                                 if (i-1>=0 && (Pack[i-1].ObjType == VARIABLE || Pack[i-1].ObjType == VALUE))

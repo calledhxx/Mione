@@ -2,6 +2,8 @@
 // Created by chenn on 24-8-3.
 //
 
+#include <wchar.h>
+
 #define HEAD 1
 #define PROMPT 2
 #define SYMBOL 3
@@ -48,7 +50,7 @@ typedef struct _ValueObject
     9:mione塊
     */
     struct _AreaObject Area; //給於函數(function),開關(lights)或者執行式(range)。
-    char * String; //給予文字(string)。
+    wchar_t * String; //給予文字(string)。
     long int NPNumber; //給予無小數點數字(no point number)。
     long double PNumber; //給予小數點數字(point number)。
     struct _TableObject Table; //給予表格(table)。
@@ -57,7 +59,7 @@ typedef struct _ValueObject
 
 typedef struct _VariableObject
 {
-    char* Name; //變數名稱
+    wchar_t* Name; //變數名稱
     int Place; //位置
     ValueObj Val; //值
 
@@ -65,7 +67,7 @@ typedef struct _VariableObject
 
 typedef struct _SymbolObject
 {
-    char * Name;
+    wchar_t * Name;
     int SymbolType;
     int CurNumber;
     int AfterConnectVV; //後面是否可與VV相連 不會報錯 MIONE
@@ -77,14 +79,14 @@ typedef struct _SymbolObject
 
 typedef struct _PromptObject
 {
-    char * Name;
+    wchar_t * Name;
     int CurNumber;
 
 }PromptObj;
 
 typedef struct _HeadObject
 {
-    char * Name;
+    wchar_t * Name;
     int CurNumber;
     struct _HeadReturnObject (*Fuc)(struct _HeadRequestObject *);
 }HeadObj;
@@ -95,7 +97,6 @@ typedef struct _MioneObject
 
     VariableObj * VarUP; //當ObjType為VAR時，會用到此變數。
     ValueObj Val;  //當ObjType為VALUE宏時，會用到此值。
-    //char* _Text;
 
     SymbolObj Symbol; //當ObjType為SYMBOL時，會用到此符號。
     PromptObj Prompt; //當ObjType為PROMPT時，會用到此提示。
@@ -113,7 +114,7 @@ typedef struct _CaseObject
     int ObjType; /*
     CharType...
     */
-    char * ObjName;
+    wchar_t * ObjName;
 } CaseObj;
 
 typedef struct _PairObject

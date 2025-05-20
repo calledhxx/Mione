@@ -28,6 +28,7 @@ ImplementedObj IMPLEMENT(const ToImplementObj toImplement)
     {
         MioneSectionObj thisSection = Sections[SectionIndex];
 
+
         if (thisSection.HeadAction.Head.Fuc)
         {
 
