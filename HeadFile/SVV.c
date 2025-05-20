@@ -2,7 +2,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <tgmath.h>
 
 #include "../OBJECTS.h"
 #include "../COUNT.h"
@@ -116,7 +115,6 @@ HeadReturnObj SVV(HeadRequestObj * HeadRequestUP)
                     Requested = REQUEST(Pairs[0].Source,Pairs[0].SourceSize);
                     if (SetCounted.ValueSize>Requested.VariablesSize) ErrCall("dkakakpdkapkdakd","kkkk",NULL,Pairs[1].Prompt.Line,Pairs[1].Prompt.Column);
 
-                    printf("%p\n",Requested.VariableUPs[0]);
                     for(int CountedIndex = 0; CountedIndex < SetCounted.ValueSize; CountedIndex++)
                     {
                         *Requested.VariableUPs[CountedIndex] = (VariableObj){

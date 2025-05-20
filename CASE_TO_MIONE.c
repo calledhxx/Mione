@@ -169,7 +169,7 @@ MioneObj *CMO(CaseObj*CASES,int CASESIZE,
                 .Val = Value,
                 .Line = Line,
                 .Column = Column,
-                     .ScopeUP = SVUup,
+                .ScopeUP = SVUup,
             };
 
              Paired = VALUE;

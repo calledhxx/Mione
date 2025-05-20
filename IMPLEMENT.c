@@ -5,8 +5,6 @@
 
 #include "HeadFile/SVV.h"
 
-#include "OBJECTS.h"
-#include "PROMPT_DEF.h"
 
 ImplementedObj IMPLEMENT(const ToImplementObj toImplement)
 {
@@ -48,7 +46,7 @@ ImplementedObj IMPLEMENT(const ToImplementObj toImplement)
 
             int max = 0;
             for (int i = 0;;i++)
-                if (pow(2,i-1) > HeadReturn.ToState)
+                if (1<<i-1 > HeadReturn.ToState)
                 {
                     max = i-1;
                     break;
@@ -57,7 +55,7 @@ ImplementedObj IMPLEMENT(const ToImplementObj toImplement)
 
             for (int i = 0;max>i;i++)
             {
-                const int cmp = pow(2,i);
+                const int cmp = 1<<i;
 
                 if (!HeadReturn.ToState) break;
 
@@ -65,11 +63,12 @@ ImplementedObj IMPLEMENT(const ToImplementObj toImplement)
                 {
                     switch (cmp)
                     {
+
                     case 0: break;
 
                     case 1:
                         {
-                            Obj.ToState=+1;
+                            Obj.ToState|=1;
                             Obj.Values = HeadReturn.Values;
                             break;
                         }
@@ -108,7 +107,7 @@ ImplementedObj IMPLEMENT(const ToImplementObj toImplement)
 
     if (Vars.VarsSize)
     {
-        Obj.ToState=+2;
+        Obj.ToState|=2;
         Obj.Vars = Vars;
     }
 
