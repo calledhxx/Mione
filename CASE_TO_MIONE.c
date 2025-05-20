@@ -414,7 +414,7 @@ MioneObj *CMO(CaseObj*CASES,int CASESIZE,
                Paired = VALUE;
 
                long int V = 0;
-               V=V+atoi(CASES[i].ObjName);
+               V+=_wtoi(CASES[i].ObjName);
 
                ValueObj Value = (ValueObj){
                    .ValueType = VALUE_NOPOINTNUMBER_TYPE,

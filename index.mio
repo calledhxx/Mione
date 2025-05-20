@@ -12,4 +12,4 @@ set af = function
     end
 end;
 
-af() == 50;
+af();
