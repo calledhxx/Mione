@@ -233,7 +233,11 @@ CountObj COUNT(MioneObj*Pack,int PackSize)
                                     {
 
                                         ImplementedObj Return =  IMPLEMENT((ToImplementObj){
-                                            .Built =  *Pack[FirstBracketIndex - 1].VarUP->Val.Area.AreaUP
+                                            .Built =  *Pack[FirstBracketIndex - 1].VarUP->Val.Area.AreaUP,
+                                            .FunRequest = (ValuesObj){
+                                                .Value = ChildCount.Value,
+                                                .ValueSize = ChildCount.ValueSize,
+                                            }
                                         });
 
                                         if (!Return.ToState&1) ErrCall(
@@ -330,7 +334,11 @@ CountObj COUNT(MioneObj*Pack,int PackSize)
                                     if (Pack[FirstBracketIndex - 1].Val.ValueType == VALUE_FUNCTION_TYPE)
                                     {
                                         ImplementedObj Return = IMPLEMENT((ToImplementObj){
-                                            .Built =  *Pack[FirstBracketIndex - 1].Val.Area.AreaUP
+                                            .Built =  *Pack[FirstBracketIndex - 1].Val.Area.AreaUP,
+                                            .FunRequest = (ValuesObj){
+                                                .Value = ChildCount.Value,
+                                                .ValueSize = ChildCount.ValueSize,
+                                            }
                                         });
 
 
@@ -1276,16 +1284,16 @@ CountObj COUNT(MioneObj*Pack,int PackSize)
 
 
 
-    for (int index = 0; index < VPackSize; index++)
-    {
-        printf("%d/%d ",Pack[index].Line, Pack[index].Column);
-        if (VPack[index].ValueType == 2) printf("`NPN`:`%d`\n",VPack[index].NPNumber);
-        else if (VPack[index].ValueType == 1) wprintf(L"`STRING`:`%ls`\n",VPack[index].String);
-        else if (VPack[index].ValueType == 3) printf("`PN`:`%Lf`\n",VPack[index].PNumber);
-        else if (VPack[index].ValueType == 8) printf("`db`:`%d`\n",VPack[index].db);
-        else if (VPack[index].ValueType == 0) printf("`NULL`:`NON`\n");
-        else printf("(TYPE OF) `%d`\n",VPack[index].ValueType);
-    }
+    // for (int index = 0; index < VPackSize; index++)
+    // {
+    //     printf("%d/%d ",Pack[index].Line, Pack[index].Column);
+    //     if (VPack[index].ValueType == 2) printf("`NPN`:`%d`\n",VPack[index].NPNumber);
+    //     else if (VPack[index].ValueType == 1) wprintf(L"`STRING`:`%ls`\n",VPack[index].String);
+    //     else if (VPack[index].ValueType == 3) printf("`PN`:`%Lf`\n",VPack[index].PNumber);
+    //     else if (VPack[index].ValueType == 8) printf("`db`:`%d`\n",VPack[index].db);
+    //     else if (VPack[index].ValueType == 0) printf("`NULL`:`NON`\n");
+    //     else printf("(TYPE OF) `%d`\n",VPack[index].ValueType);
+    // }
 
     if (BracketCur) ErrCall("cadasdas","dasdada",NULL,0,0);
 

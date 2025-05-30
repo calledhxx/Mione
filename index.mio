@@ -1,15 +1,5 @@
-set table = {};
-
-table["Hello"] = "World";
-table[table["Hello"]] = false;
-
-
-set af = function
-    if (table[table["Hello"]]) then range
-        return 100;
-    end else range
-        return 50;
-    end
-end;
-
-af();
+function
+get x;
+sys 1 put x
+return 0
+end("Hello, World!")

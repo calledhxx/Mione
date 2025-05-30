@@ -260,7 +260,11 @@ VariableRequestUPObj REQUEST(MioneObj*Pack,int PackSize)
                                     if (Pack[FirstBracketIndex - 1].VarUP->Val.ValueType == VALUE_FUNCTION_TYPE)
                                     {
                                         ImplementedObj Return =  IMPLEMENT((ToImplementObj){
-                                           .Built =  *Pack[FirstBracketIndex - 1].VarUP->Val.Area.AreaUP
+                                            .Built =  *Pack[FirstBracketIndex - 1].VarUP->Val.Area.AreaUP,
+                                             .FunRequest = (ValuesObj){
+                                                 .Value = ChildCount.Value,
+                                                 .ValueSize = ChildCount.ValueSize,
+                                             }
                                        });
 
                                         if ((Return.ToState&1)!=1) ErrCall(
@@ -358,7 +362,11 @@ VariableRequestUPObj REQUEST(MioneObj*Pack,int PackSize)
                                     if (Pack[FirstBracketIndex - 1].Val.ValueType == VALUE_FUNCTION_TYPE)
                                     {
                                         ImplementedObj Return =  IMPLEMENT((ToImplementObj){
-                                            .Built =  *Pack[FirstBracketIndex - 1].Val.Area.AreaUP
+                                            .Built =  *Pack[FirstBracketIndex - 1].Val.Area.AreaUP,
+                                            .FunRequest = (ValuesObj){
+                                                .Value = ChildCount.Value,
+                                                .ValueSize = ChildCount.ValueSize,
+                                            }
                                         });
 
                                         if ((Return.ToState&1)!=1) ErrCall(

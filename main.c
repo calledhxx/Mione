@@ -34,7 +34,6 @@ int main(const int OptionsSize,char **Options)
         int CaseObjSize = 0;
         CaseObj * CASES = FCO(f,&CaseObjSize);
 
-
         int MioObjSize = 0;
 
         MioneObj * MioObj = CMO(CASES,CaseObjSize,&MioObjSize,1,0,&MainSVU);

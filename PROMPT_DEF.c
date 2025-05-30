@@ -41,6 +41,14 @@ PromptObj Prompts[] = {
         .CurNumber = 9,
     },
     (PromptObj) {
+        .Name = L"put",
+        .CurNumber = 10,
+    },
+    (PromptObj) {
+        .Name = L"model",
+        .CurNumber = 11,
+    },
+    (PromptObj) {
         .CurNumber = -1,
     },
 };

@@ -23,7 +23,6 @@ ImplementedObj IMPLEMENT(const ToImplementObj toImplement)
     int SectionsSize = toImplement.Built.SectionsSize;
     MioneSectionObj * Sections = toImplement.Built.Sections;
 
-
     for (int SectionIndex = 0; SectionIndex < SectionsSize; SectionIndex++)
     {
         MioneSectionObj thisSection = Sections[SectionIndex];
@@ -31,7 +30,6 @@ ImplementedObj IMPLEMENT(const ToImplementObj toImplement)
 
         if (thisSection.HeadAction.Head.Fuc)
         {
-
             PairObj * Pairs = thisSection.Pairs;
             int PairsSize = thisSection.PairsSize;
 
@@ -43,6 +41,8 @@ ImplementedObj IMPLEMENT(const ToImplementObj toImplement)
 
                        .VariablesUP = &Vars.Vars,
                        .VariablesUPSizeUP = &Vars.VarsSize,
+
+                       .FucRequest = toImplement.FunRequest,
                    });
 
             int max = 0;

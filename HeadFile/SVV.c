@@ -51,8 +51,6 @@ HeadReturnObj SVV(HeadRequestObj * HeadRequestUP)
 
                 if (VariablesUP)
                 {
-
-
                     for (int a = 0; a < Counted.ValueSize; a++)
                     {
                         Vars.VarsSize++;
@@ -79,6 +77,7 @@ HeadReturnObj SVV(HeadRequestObj * HeadRequestUP)
                 PointCounted = COUNT(Pairs[i].Source,Pairs[i].SourceSize);
                 break;
             default:
+           printf("%d\n", Prompt.Prompt.CurNumber);
                 ErrCall("aaa unsupported prompt type","M111",NULL,Prompt.Line,Prompt.Column);
                 break;
             }

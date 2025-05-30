@@ -86,12 +86,16 @@ MioneObj *CMO(CaseObj*CASES,int CASESIZE,
             // printf("`%s`\n",CASES[i].ObjName);
 
         //HEAD
+
+
          if (ChildCount == 0 && TableCount == 0) for (int Ci = 0;1; Ci++)
          {
+
              if (Heads[Ci].CurNumber == -1) break;
 
              if (wcscmp(CASES[i].ObjName,Heads[Ci].Name) == 0)  {
                  Column++;
+
 
                  (MIONESIZE)++;
                  (MIONE) = (MioneObj*)realloc( (MIONE) ,(MIONESIZE)*sizeof(MioneObj));

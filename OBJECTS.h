@@ -192,8 +192,11 @@ typedef struct _HeadRequestObject
     PairObj * Pairs;
     int PairsSize;
 
-    VariableObj * * VariablesUP;
+    ValuesObj FucRequest;
+
+    VariableObj ** VariablesUP;
     int * VariablesUPSizeUP;
+
 } HeadRequestObj;
 
 typedef struct _MioneSectionObject
@@ -219,6 +222,7 @@ typedef struct _MioneBuiltObject
 typedef struct _ToImplementObject
 {
     MioneBuiltObj Built;
+    ValuesObj FunRequest;
 } ToImplementObj;
 
 typedef struct _ImplementedObject

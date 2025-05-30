@@ -21,4 +21,8 @@ add_executable(Mione
         REQUEST.c
         PROMPT_DEF.c
         IMPLEMENT.c
+        HeadFile/GET.c
+        HeadFile/GET.h
+        HeadFile/SYS.c
+        HeadFile/SYS.h
 )
