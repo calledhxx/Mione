@@ -49,7 +49,7 @@ int main(const int OptionsSize,char **Options)
         });
 
 
-        printf("\n # Well down. Have a good day.");
+        printf("\n # Well done. Have a good day.");
 
     }else
     {
