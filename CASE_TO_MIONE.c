@@ -464,7 +464,7 @@ MioneObj *CMO(CaseObj*CASES,int CASESIZE,
                 .Line = Line,
                 .Column = Column,
                 .ScopeUP = SVUup,
-                .Val = (ValueObj){.ValueType = 0},
+                .Val = (ValueObj){0},
             };
         };
 

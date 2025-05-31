@@ -4,6 +4,8 @@
 
 #include <io.h>
 #include <stdio.h>
+#include <stdlib.h>
+
 #include "../OBJECTS.h"
 #include "../REQUEST.h"
 #include "../COUNT.h"
@@ -56,6 +58,34 @@ HeadReturnObj GET(HeadRequestObj * HeadRequestUP)
 
     if (registeredPrompts & (1<<11-1))
     {
+        if (Container.VariablesSize != 1) ErrCall("ijoaijoadsijo",NULL,NULL,0,0);
+
+        VariableUPsObj VariableUPs;
+        VariableUPs.VarUPs = malloc(0);
+        VariableUPs.VarUPsSize = 0;
+
+        ValueObj Value = (ValueObj){
+            .ValueType = VALUE_TABLE_TYPE,
+            .Table = (TableObj){
+                .VariableUPsUP = malloc(sizeof(VariableUPsObj))
+            }
+        };
+
+        for (int i = 0; i < HeadRequest.FucRequest.ValueSize; i++)
+        {
+            VariableUPs.VarUPsSize++;
+            VariableUPs.VarUPs = realloc(VariableUPs.VarUPs, VariableUPs.VarUPsSize * sizeof(VariableObj*));
+
+            VariableUPs.VarUPs[VariableUPs.VarUPsSize-1] = malloc(sizeof(VariableObj));
+            *VariableUPs.VarUPs[VariableUPs.VarUPsSize-1] = (VariableObj){
+                .Place = i+1,
+                .Val = HeadRequest.FucRequest.Value[i]
+            };
+        }
+
+        *Value.Table.VariableUPsUP = VariableUPs;
+
+        Container.VariableUPs[0]->Val = Value;
 
     }else
         for (int i = 0; i < Container.VariablesSize; i++)
