@@ -1,9 +1,3 @@
-set print = function
-    get x model;
+set x,y = 100,500;
 
-    sys 1 put x[1],"\u(160A)",x[2];
-
-    return 0
-end
-
-print("Hello, World!","How's going?");
+sys 1 put x,y

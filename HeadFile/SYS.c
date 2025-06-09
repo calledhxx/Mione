@@ -20,8 +20,8 @@ HeadReturnObj SYS(HeadRequestObj * HeadRequestUP)
 
     int registeredPrompts = 0;
 
-    CountObj CountedSYSName = {.ValueSize = 0};
-    CountObj CountedInputValue = {.ValueSize = 0};
+    CountObj CountedSuffixOfHead = {.ValueSize = 0};
+    CountObj CountedSuffixOfPutPrompt = {.ValueSize = 0};
 
 
     for (int i = 0; i < PairsSize; i++)
@@ -30,10 +30,10 @@ HeadReturnObj SYS(HeadRequestObj * HeadRequestUP)
 
         if (Prompt.ObjType == 1)
         {
-            CountedSYSName = COUNT(Pairs[i].Source, Pairs[i].SourceSize);
+            CountedSuffixOfHead = COUNT(Pairs[i].Source, Pairs[i].SourceSize);
 
-            if (CountedSYSName.ValueSize != 1) ErrCall("no", "M11176", NULL, Prompt.Line, Prompt.Column);
-            if (CountedSYSName.Value[0].ValueType != VALUE_NOPOINTNUMBER_TYPE) ErrCall("no", "M11176", NULL, Prompt.Line, Prompt.Column);
+            if (CountedSuffixOfHead.ValueSize != 1) ErrCall("no", "M11176", NULL, Prompt.Line, Prompt.Column);
+            if (CountedSuffixOfHead.Value[0].ValueType != VALUE_NOPOINTNUMBER_TYPE) ErrCall("no", "M11176", NULL, Prompt.Line, Prompt.Column);
 
         }
         if (Prompt.ObjType == 2)
@@ -42,14 +42,15 @@ HeadReturnObj SYS(HeadRequestObj * HeadRequestUP)
             switch (Prompt.Prompt.CurNumber)
             {
             case 10:
-                CountedInputValue = COUNT(Pairs[i].Source, Pairs[i].SourceSize);
-                if (CountedInputValue.ValueSize == 0) ErrCall("no", "M11176", NULL, Prompt.Line, Prompt.Column);
+                CountedSuffixOfPutPrompt = COUNT(Pairs[i].Source, Pairs[i].SourceSize);
+                if (CountedSuffixOfPutPrompt.ValueSize == 0) ErrCall("no", "M11176", NULL, Prompt.Line, Prompt.Column);
                 break;
             default:
                 ErrCall("unsupported prompt type","M111",NULL,Prompt.Line,Prompt.Column);
                 break;
             }
 
+            if (registeredPrompts&1<<Prompt.Prompt.CurNumber-1) ErrCall("This Prompt has been registered before.","M017",NULL,Prompt.Line,Prompt.Column);
             registeredPrompts |= 1<<Prompt.Prompt.CurNumber-1;
         }
     }
@@ -59,16 +60,24 @@ HeadReturnObj SYS(HeadRequestObj * HeadRequestUP)
 
     //
 
-    switch (CountedSYSName.Value[0].NPNumber)
+    switch (CountedSuffixOfHead.Value[0].NPNumber)
     {
         case 1:
             {
-                for (int i = 0; i < CountedInputValue.ValueSize; i++)
-                    if (CountedInputValue.Value[i].String)
+                for (int i = 0; i < CountedSuffixOfPutPrompt.ValueSize; i++)
+                    if (CountedSuffixOfPutPrompt.Value[i].String)
                         _write(
                             1,
-                            CountedInputValue.Value[i].String,
-                            (wcslen(CountedInputValue.Value[i].String)+1) * sizeof(wchar_t)
+                            CountedSuffixOfPutPrompt.Value[i].String,
+                            (wcslen(CountedSuffixOfPutPrompt.Value[i].String)+1) * sizeof(wchar_t)
+                            );
+                    else
+                        ErrCall(
+                            "Suffix of put prompt wasn't STRING Value",
+                            "M1009",
+                            NULL,
+                            -1,
+                            -1
                             );
 
 

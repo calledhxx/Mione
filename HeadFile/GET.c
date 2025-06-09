@@ -21,12 +21,9 @@ HeadReturnObj GET(HeadRequestObj * HeadRequestUP)
     PairObj * Pairs = HeadRequest.Pairs;
     int PairsSize = HeadRequest.PairsSize;
 
-
-
-
     int registeredPrompts = 0;
 
-    VariableRequestUPObj Container;
+    VariableRequestUPObj RequestedSuffixOfHead = {0};
 
     for (int i = 0; i < PairsSize; i++)
     {
@@ -34,8 +31,8 @@ HeadReturnObj GET(HeadRequestObj * HeadRequestUP)
 
         if (Prompt.ObjType == 1)
         {
-            Container = REQUEST(Pairs[i].Source, Pairs[i].SourceSize);
-            if (Container.VariablesSize == 0) ErrCall("no variables found",NULL,NULL,0,0);
+            RequestedSuffixOfHead = REQUEST(Pairs[i].Source, Pairs[i].SourceSize);
+            if (RequestedSuffixOfHead.VariablesSize == 0) ErrCall("no variables found",NULL,NULL,0,0);
         }
         if (Prompt.ObjType == 2)
         {
@@ -58,7 +55,7 @@ HeadReturnObj GET(HeadRequestObj * HeadRequestUP)
 
     if (registeredPrompts & (1<<11-1))
     {
-        if (Container.VariablesSize != 1) ErrCall("ijoaijoadsijo",NULL,NULL,0,0);
+        if (RequestedSuffixOfHead.VariablesSize != 1) ErrCall("ijoaijoadsijo",NULL,NULL,0,0);
 
         VariableUPsObj VariableUPs;
         VariableUPs.VarUPs = malloc(0);
@@ -85,14 +82,14 @@ HeadReturnObj GET(HeadRequestObj * HeadRequestUP)
 
         *Value.Table.VariableUPsUP = VariableUPs;
 
-        Container.VariableUPs[0]->Val = Value;
+        RequestedSuffixOfHead.VariableUPs[0]->Val = Value;
 
     }else
-        for (int i = 0; i < Container.VariablesSize; i++)
+        for (int i = 0; i < RequestedSuffixOfHead.VariablesSize; i++)
         {
             if (HeadRequest.FucRequest.ValueSize <= i) break;
 
-            Container.VariableUPs[i]->Val = HeadRequest.FucRequest.Value[i];
+            RequestedSuffixOfHead.VariableUPs[i]->Val = HeadRequest.FucRequest.Value[i];
         }
 
 

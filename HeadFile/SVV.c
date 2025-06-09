@@ -18,7 +18,7 @@ HeadReturnObj SVV(HeadRequestObj * HeadRequestUP)
     VariableObj ** VariablesUP = HeadRequest.VariablesUP;
     int * VariablesUPSizeUP = HeadRequest.VariablesUPSizeUP;
 
-    HeadReturnObj Re;
+    HeadReturnObj Re = {0};
     Re.ToState = 0;
     Re.Vars.VarsSize = 0;
 
@@ -26,11 +26,11 @@ HeadReturnObj SVV(HeadRequestObj * HeadRequestUP)
     Re.VAVs.DefinedVariables = malloc(0);
 
 
-    CountObj Counted;
-    VariableRequestUPObj Requested;
+    CountObj CountedSuffixOfHead;
+    VariableRequestUPObj RequestedSuffixOfHead;
 
-    CountObj SetCounted = {0};
-    CountObj PointCounted = {0};
+    CountObj CountedSuffixOfSetPrompt = {0};
+    CountObj CountedSuffixOfPointPrompt = {0};
 
     int registeredPrompts = 0;
 
@@ -47,18 +47,18 @@ HeadReturnObj SVV(HeadRequestObj * HeadRequestUP)
 
             if (PairsSize == 1)
             {
-                Counted = COUNT(Pairs[i].Source,Pairs[i].SourceSize);
+                CountedSuffixOfHead = COUNT(Pairs[i].Source,Pairs[i].SourceSize);
 
                 if (VariablesUP)
                 {
-                    for (int a = 0; a < Counted.ValueSize; a++)
+                    for (int a = 0; a < CountedSuffixOfHead.ValueSize; a++)
                     {
                         Vars.VarsSize++;
                         Vars.Vars = realloc(Vars.Vars,Vars.VarsSize*sizeof(VariableObj));
 
                         Vars.Vars[Vars.VarsSize-1].Name = NULL;
                         Vars.Vars[Vars.VarsSize-1].Place = (*VariablesUPSizeUP)+1;
-                        Vars.Vars[Vars.VarsSize-1].Val = Counted.Value[a];
+                        Vars.Vars[Vars.VarsSize-1].Val = CountedSuffixOfHead.Value[a];
                     }
 
 
@@ -71,17 +71,17 @@ HeadReturnObj SVV(HeadRequestObj * HeadRequestUP)
             switch (Prompt.Prompt.CurNumber)
             {
             case 1:
-                SetCounted = COUNT(Pairs[i].Source,Pairs[i].SourceSize);
+                CountedSuffixOfSetPrompt = COUNT(Pairs[i].Source,Pairs[i].SourceSize);
                 break;
             case 7:
-                PointCounted = COUNT(Pairs[i].Source,Pairs[i].SourceSize);
+                CountedSuffixOfPointPrompt = COUNT(Pairs[i].Source,Pairs[i].SourceSize);
                 break;
             default:
-           printf("%d\n", Prompt.Prompt.CurNumber);
                 ErrCall("aaa unsupported prompt type","M111",NULL,Prompt.Line,Prompt.Column);
                 break;
             }
 
+            if (registeredPrompts&1<<Prompt.Prompt.CurNumber-1) ErrCall("This Prompt has been registered before.","M017",NULL,Prompt.Line,Prompt.Column);
             registeredPrompts |= 1<<Prompt.Prompt.CurNumber-1;
 
 
@@ -111,22 +111,22 @@ HeadReturnObj SVV(HeadRequestObj * HeadRequestUP)
             {
             case 1:
                 {
-                    Requested = REQUEST(Pairs[0].Source,Pairs[0].SourceSize);
-                    if (SetCounted.ValueSize>Requested.VariablesSize) ErrCall("dkakakpdkapkdakd","kkkk",NULL,Pairs[1].Prompt.Line,Pairs[1].Prompt.Column);
+                    RequestedSuffixOfHead = REQUEST(Pairs[0].Source,Pairs[0].SourceSize);
+                    if (CountedSuffixOfSetPrompt.ValueSize>RequestedSuffixOfHead.VariablesSize) ErrCall("dkakakpdkapkdakd","kkkk",NULL,Pairs[1].Prompt.Line,Pairs[1].Prompt.Column);
 
-                    for(int CountedIndex = 0; CountedIndex < SetCounted.ValueSize; CountedIndex++)
+                    for(int CountedIndex = 0; CountedIndex < CountedSuffixOfSetPrompt.ValueSize; CountedIndex++)
                     {
-                        *Requested.VariableUPs[CountedIndex] = (VariableObj){
-                            .Name = Requested.VariableUPs[CountedIndex]->Name,
-                            .Val = SetCounted.Value[CountedIndex]
+                        *RequestedSuffixOfHead.VariableUPs[CountedIndex] = (VariableObj){
+                            .Name = RequestedSuffixOfHead.VariableUPs[CountedIndex]->Name,
+                            .Val = CountedSuffixOfSetPrompt.Value[CountedIndex]
                         };
                     }
 
-                    for (int VariableIndex = 0; VariableIndex < Requested.VariablesSize; VariableIndex++)
+                    for (int VariableIndex = 0; VariableIndex < RequestedSuffixOfHead.VariablesSize; VariableIndex++)
                     {
                         Vars.VarsSize++;
                         Vars.Vars = realloc(Vars.Vars, Vars.VarsSize * sizeof(VariableObj));
-                        Vars.Vars[Vars.VarsSize-1] = *(Requested.VariableUPs[VariableIndex]);
+                        Vars.Vars[Vars.VarsSize-1] = *(RequestedSuffixOfHead.VariableUPs[VariableIndex]);
                     }
 
                     Re.ToState |= 4;
@@ -137,20 +137,15 @@ HeadReturnObj SVV(HeadRequestObj * HeadRequestUP)
                 {
                     extern ScopeObj MainSVU;
 
-
-                    DefinedVariablesCaseObj DefinedVariables;
-                    DefinedVariables.DefinedVariablesSize = 0;
-                    DefinedVariables.DefinedVariables = malloc(0);
-
                     CountObj PointNamesCounted = COUNT(Pairs[0].Source,Pairs[0].SourceSize);
-                    if (PointCounted.ValueSize>PointNamesCounted.ValueSize) ErrCall("dkakakpdkapkdakd","iaijdaisod",NULL,Pairs[1].Source[0].Line,Pairs[1].Source[0].Column);
+                    if (CountedSuffixOfPointPrompt.ValueSize>PointNamesCounted.ValueSize) ErrCall("dkakakpdkapkdakd","iaijdaisod",NULL,Pairs[1].Source[0].Line,Pairs[1].Source[0].Column);
 
 
                     for (int PNCIndex = 0; PNCIndex < PointNamesCounted.ValueSize; PNCIndex++)
                     {
                         VariableObj Var;
 
-                        Var.Val = PointCounted.Value[PNCIndex];
+                        Var.Val = CountedSuffixOfPointPrompt.Value[PNCIndex];
 
                         switch (PointNamesCounted.Value[PNCIndex].ValueType)
                         {
@@ -167,15 +162,6 @@ HeadReturnObj SVV(HeadRequestObj * HeadRequestUP)
                         Vars.VarsSize++;
                         Vars.Vars = realloc(Vars.Vars, Vars.VarsSize * sizeof(VariableObj));
                         Vars.Vars[Vars.VarsSize-1] = Var;
-                    }
-
-                    for (int i = 0; i < DefinedVariables.DefinedVariablesSize; i++)
-                    {
-                        *DefinedVariables.DefinedVariables[i].TheDefinedVarUP = (VariableObj){
-                            .Name = DefinedVariables.DefinedVariables[i].TheDefinedVarUP->Name,
-                            .Place = DefinedVariables.DefinedVariables[i].TheDefinedVarUP->Place,
-                            .Val = DefinedVariables.DefinedVariables[i].Value
-                        };
 
                     }
 

@@ -23,14 +23,12 @@ HeadReturnObj IF(HeadRequestObj * HeadRequestUP)
     HeadReturnObj ToReturn;
     ToReturn.ToState = 0;
 
+    
+    CountObj CountedSuffixOfHead = {.ValueSize = 0};
+    CountObj CountedSuffixOfThenPrompt = {.ValueSize = 0};
+    CountObj CountedSuffixOfElsePrompt = {.ValueSize = 0};
 
-    VariableRequestUPObj Request = {.VariablesSize = 0};
-
-    CountObj CountedDB = {.ValueSize = 0};
-    CountObj CountedThenRange = {.ValueSize = 0};
-    CountObj CountedElseRange = {.ValueSize = 0};
-
-    int db = 0;
+    char IfValueIsTure = 0;
 
     int registeredPrompts = 0;
 
@@ -40,25 +38,25 @@ HeadReturnObj IF(HeadRequestObj * HeadRequestUP)
 
         if (Prompt.ObjType == 1) //Head代替Prompt
         {
-            CountedDB = COUNT(Pairs[i].Source, Pairs[i].SourceSize);
-            if(CountedDB.ValueSize != 1) ErrCall("After `if` HEAD should be only a SOURCE","M020",NULL,Prompt.Line,Prompt.Column);
+            CountedSuffixOfHead = COUNT(Pairs[i].Source, Pairs[i].SourceSize);
+            if(CountedSuffixOfHead.ValueSize != 1) ErrCall("After `if` HEAD should be only a SOURCE","M020",NULL,Prompt.Line,Prompt.Column);
 
-            db = (CountedDB.Value[0].ValueType) ? ((CountedDB.Value[0].ValueType != 8) ? 1 : CountedDB.Value[0].db) :0;
+            IfValueIsTure = (char)(CountedSuffixOfHead.Value[0].ValueType) ? ((CountedSuffixOfHead.Value[0].ValueType != 8) ? 1 : CountedSuffixOfHead.Value[0].db) :0;
         }
         if (Prompt.ObjType == 2)
         {
             switch (Prompt.Prompt.CurNumber)
             {
               case 3:
-                  CountedThenRange = COUNT(Pairs[i].Source, Pairs[i].SourceSize);
-                  if(CountedThenRange.ValueSize != 1) ErrCall("THEN Error","M9121321",NULL,Prompt.Line,Prompt.Column);
-                  if(CountedThenRange.Value[0].ValueType != 5) ErrCall("THEN (RANGE) Error","M9121321",NULL,Prompt.Line,Prompt.Column);
+                  CountedSuffixOfThenPrompt = COUNT(Pairs[i].Source, Pairs[i].SourceSize);
+                  if(CountedSuffixOfThenPrompt.ValueSize != 1) ErrCall("THEN Error","M9121321",NULL,Prompt.Line,Prompt.Column);
+                  if(CountedSuffixOfThenPrompt.Value[0].ValueType != 5) ErrCall("THEN (RANGE) Error","M9121321",NULL,Prompt.Line,Prompt.Column);
 
                   break;
             case 4:
-                CountedElseRange = COUNT(Pairs[i].Source, Pairs[i].SourceSize);
-                if(CountedElseRange.ValueSize != 1) ErrCall("ELSE Error","M9121321",NULL,Prompt.Line,Prompt.Column);
-                if(CountedElseRange.Value[0].ValueType != 5) ErrCall("ELSE (RANGE) Error","M9121321",NULL,Prompt.Line,Prompt.Column);
+                CountedSuffixOfElsePrompt = COUNT(Pairs[i].Source, Pairs[i].SourceSize);
+                if(CountedSuffixOfElsePrompt.ValueSize != 1) ErrCall("ELSE Error","M9121321",NULL,Prompt.Line,Prompt.Column);
+                if(CountedSuffixOfElsePrompt.Value[0].ValueType != 5) ErrCall("ELSE (RANGE) Error","M9121321",NULL,Prompt.Line,Prompt.Column);
 
 
                 break;
@@ -68,6 +66,7 @@ HeadReturnObj IF(HeadRequestObj * HeadRequestUP)
                 break;
             }
 
+            if (registeredPrompts&1<<Prompt.Prompt.CurNumber-1) ErrCall("This Prompt has been registered before.","M017",NULL,Prompt.Line,Prompt.Column);
             registeredPrompts |= 1<<Prompt.Prompt.CurNumber-1;
         }
     }
@@ -93,18 +92,18 @@ HeadReturnObj IF(HeadRequestObj * HeadRequestUP)
             switch (i+1)
             {
             case 3:
-                if (db)
+                if (IfValueIsTure)
                 {
                     Return = IMPLEMENT((ToImplementObj){
-                        .Built = *CountedThenRange.Value[0].Area.AreaUP
+                        .Built = *CountedSuffixOfThenPrompt.Value[0].Area.AreaUP
                     });
                 }
                 break;
             case 4:
-                if (!db)
+                if (!IfValueIsTure)
                 {
                     Return = IMPLEMENT((ToImplementObj){
-                        .Built = *CountedElseRange.Value[0].Area.AreaUP
+                        .Built = *CountedSuffixOfElsePrompt.Value[0].Area.AreaUP
                     });
                 }
                 break;
