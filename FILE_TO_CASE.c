@@ -529,7 +529,7 @@ CaseObj* FCO(FILE* F,int*CASESIZE)
                     {
                         // printf("*[SUPER CHAR START]* ");
                         superCharSize++;
-                        backslashOption = realloc(backslashOption, superCharSize);
+                        backslashOption = realloc(backslashOption, superCharSize * sizeof(wchar_t));
                         backslashOption[superCharSize - 1] = c;
                     }
                 }else
