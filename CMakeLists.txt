@@ -25,4 +25,7 @@ add_executable(Mione
         HeadFile/GET.h
         HeadFile/SYS.c
         HeadFile/SYS.h
+        NUMBER.h
+        NUMBER.c
+        main.c
 )

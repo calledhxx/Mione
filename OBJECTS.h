@@ -2,6 +2,7 @@
 // Created by chenn on 24-8-3.
 //
 
+#include <stdint.h>
 #include <wchar.h>
 
 #define HEAD 1
@@ -11,14 +12,13 @@
 #define VALUE 5
 
 #define VALUE_STRING_TYPE 1
-#define VALUE_NOPOINTNUMBER_TYPE 2
-#define VALUE_POINTNUMBER_TYPE 3
 #define VALUE_FUNCTION_TYPE 4
 #define VALUE_RANGE_TYPE 5
 #define VALUE_TABLE_TYPE 6
 #define VALUE_LIGHTS_TYPE 7
 #define VALUE_DB_TYPE 8
-#define VALUE_COROUTINE_TYPE 9
+
+#define VALUE_NUMBER_TYPE 9
 
 #ifndef OBJECTS_H
 #define OBJECTS_H
@@ -35,24 +35,37 @@ typedef struct _TableObject
     struct _VariableUPsObject * VariableUPsUP;
 }TableObj;
 
+typedef struct _IntegerObject
+{
+
+    uint8_t * Carrier;
+    unsigned int CarrierLength;
+} IntegerObj;
+
+typedef struct _NumberObject
+{
+    IntegerObj Integer; //採整數個位最前
+    IntegerObj Decimal; //採小數個位最前
+} NumberObj;
+
 typedef struct _ValueObject
 {
     int ValueType; //值類型
     /*
     1:字串
-    2:整數
-    3:浮點數
     4:函數
     5:執行式
     6:表單
     7:開關
     8:布林值
-    9:mione塊
+    9:數
     */
     struct _AreaObject Area; //給於函數(function),開關(lights)或者執行式(range)。
     wchar_t * String; //給予文字(string)。
-    long int NPNumber; //給予無小數點數字(no point number)。
-    long double PNumber; //給予小數點數字(point number)。
+
+
+
+    NumberObj Number; //給予數字。
     struct _TableObject Table; //給予表格(table)。
     int db;//布林
 } ValueObj;
@@ -68,12 +81,8 @@ typedef struct _VariableObject
 typedef struct _SymbolObject
 {
     wchar_t * Name;
-    int SymbolType;
-    int CurNumber;
+    int Identification; //識別符號
     int AfterConnectVV; //後面是否可與VV相連 不會報錯 MIONE
-
-    int xIndex;
-    int yIndex;
 }SymbolObj;
 
 
