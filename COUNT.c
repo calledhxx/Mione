@@ -191,27 +191,28 @@ CountObj COUNT(MioneObj*Pack,int PackSize)
                 }
                 break;
                 case 12:
-                {
-                    if (!BracketsChild)
                     {
-                        BracketCur = 2;
-                        FirstBracketIndex = i;
+                        if (!BracketsChild)
+                        {
+                            BracketCur = 2;
+                            FirstBracketIndex = i;
 
-                        inBracketSize = 0;
-                        free(inBracket);
-                        inBracket = malloc(0);
-                    }else
-                    {
-                        inBracketSize++;
-                        inBracket = realloc(inBracket, sizeof(MioneObj) * (inBracketSize));
-                        inBracket[inBracketSize - 1] = Pack[i];
+                            inBracketSize = 0;
+                            free(inBracket);
+                            inBracket = malloc(0);
+                        }else
+                        {
+                            inBracketSize++;
+                            inBracket = realloc(inBracket, sizeof(MioneObj) * (inBracketSize));
+                            inBracket[inBracketSize - 1] = Pack[i];
+                        }
+
+                        BracketsChild++;
+
+                        break;
                     }
-
-                    BracketsChild++;
-                }
-                break;
                 case 13:
-                {
+                    {
                     BracketsChild--;
                     if (!BracketsChild && BracketCur == 2)
                     {
@@ -462,7 +463,6 @@ CountObj COUNT(MioneObj*Pack,int PackSize)
                                     ValueObj Value1 = Pack[i-1].ObjType == VALUE ? Pack[i-1].Val : Pack[i-1].VarUP->Val;
                                     ValueObj Value2 = Pack[i+1].ObjType == VALUE ? Pack[i+1].Val : Pack[i+1].VarUP->Val;;
 
-
                                     break;
                                 }
 
@@ -479,9 +479,9 @@ CountObj COUNT(MioneObj*Pack,int PackSize)
                         }
                     }
                 }
+                break;
             }
-            break;
-            default:{
+        default:{
             if (!BracketsChild)
             {
                 if (Pack[i].ObjType == VALUE && Pack[i].Val.ValueType == VALUE_TABLE_TYPE && !Pack[i].Val.Table.VariableUPsUP)
@@ -489,7 +489,6 @@ CountObj COUNT(MioneObj*Pack,int PackSize)
                     ImplementedObj Return = IMPLEMENT((ToImplementObj){
                         .Built = *Pack[i].Val.Table.TableAreaUP
                     });
-
 
                     int VarsSize = Return.Vars.VarsSize;
                     VariableObj * Vars = Return.Vars.Vars;
@@ -522,8 +521,6 @@ CountObj COUNT(MioneObj*Pack,int PackSize)
                     Pack[i].Val.Table.VariableUPsUP = malloc(sizeof(struct _VariablesObject *));
 
                     *Pack[i].Val.Table.VariableUPsUP = NewTable;
-
-
                 }
             }else
             {
@@ -533,8 +530,6 @@ CountObj COUNT(MioneObj*Pack,int PackSize)
             }
         }
         }
-
-
     }
 
     ValueObj * VPack = malloc(0);
