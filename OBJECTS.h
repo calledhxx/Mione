@@ -38,7 +38,7 @@ typedef struct _TableObject
 typedef struct _IntegerObject
 {
 
-    uint8_t * Carrier;
+    uint32_t * Carrier;
     unsigned int CarrierLength;
 } IntegerObj;
 

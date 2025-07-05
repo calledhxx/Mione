@@ -41,12 +41,13 @@ IntegerObj INTEGERAdd(const IntegerObj a,const IntegerObj b)
     return result;
 }
 
-extern inline uint8_t CharNumberToUint8(const wchar_t * input,const unsigned int inputSize)
+extern inline uint32_t CharNumberToInteger(const wchar_t * input,const unsigned int inputSize)
 {
-    uint8_t res = 0;
+    uint32_t res = 0;
 
     for (int i = 0;i < inputSize ;i++)
         res += (input[inputSize - i - 1]-0x30) * pow(10,inputSize - i - 1);
+
 
     return res;
 }
@@ -63,16 +64,13 @@ NumberObj wcharToNumber(const wchar_t* input)
     wchar_t * loader = malloc(0);
     unsigned int loaderSize = 0;
 
-
-
     for (int charIndex = 0; charIndex < wcslen(input);charIndex++)
     {
         loaderSize++;
         loader = realloc(loader, loaderSize * sizeof(wchar_t));
         loader[loaderSize-1] = input[wcslen(input)-charIndex-1];
 
-
-        if (charIndex & 1 || charIndex == wcslen(input)-1)
+        if ((charIndex % 9 == 0 && charIndex) || charIndex == wcslen(input)-1)
         {
             const uint8_t a = CharNumberToUint8(loader,loaderSize);
 
