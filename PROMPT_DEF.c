@@ -6,49 +6,49 @@
 PromptObj Prompts[] = {
     (PromptObj) {
         .Name = L"=",
-        .CurNumber = 1,
+        .Identification = 1,
     },
     (PromptObj) {
         .Name = L"host",
-        .CurNumber = 2,
+        .Identification = 2,
     },
     (PromptObj) {
         .Name = L"then",
-        .CurNumber = 3,
+        .Identification = 3,
     },
     (PromptObj) {
         .Name = L"else",
-        .CurNumber = 4,
+        .Identification = 4,
     },
     (PromptObj) {
         .Name = L"do",
-        .CurNumber = 5,
+        .Identification = 5,
     },
     (PromptObj) {
         .Name = L"to",
-        .CurNumber = 6,
+        .Identification = 6,
     },
     (PromptObj) {
         .Name = L":",
-        .CurNumber = 7,
+        .Identification = 7,
     },
     (PromptObj) {
         .Name = L"in",
-        .CurNumber = 8,
+        .Identification = 8,
     },
     (PromptObj) {
         .Name = L"with",
-        .CurNumber = 9,
+        .Identification = 9,
     },
     (PromptObj) {
         .Name = L"put",
-        .CurNumber = 10,
+        .Identification = 10,
     },
     (PromptObj) {
         .Name = L"model",
-        .CurNumber = 11,
+        .Identification = 11,
     },
     (PromptObj) {
-        .CurNumber = -1,
+        .Identification = -1,
     },
 };

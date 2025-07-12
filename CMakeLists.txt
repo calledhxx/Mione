@@ -9,22 +9,15 @@ add_executable(Mione
         main.c
         FILE_TO_CASE.c
         CASE_TO_MIONE.c
-        HeadFile/RETURN.c
         HeadFile/SET.c
         HeadFile/SVV.c
-        HeadFile/IF.c
         COUNT.c MIONE.c
         ERR.c
         SYMBOL_DEF.c
         HeadFile/AllHeads.c
-        HeadFile/FOR.c
         REQUEST.c
         PROMPT_DEF.c
         IMPLEMENT.c
-        HeadFile/GET.c
-        HeadFile/GET.h
-        HeadFile/SYS.c
-        HeadFile/SYS.h
         NUMBER.h
         NUMBER.c
         main.c
