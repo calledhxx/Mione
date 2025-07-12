@@ -8,33 +8,32 @@
 
 ImplementedObj IMPLEMENT(const ToImplementObj toImplement)
 {
-
     ImplementedObj Obj = {0};
     Obj.ToState=0;
-
-    VariableObjCarrier VariableCarrier;
-    VariableCarrier.Carrier = NULL;
-    VariableCarrier.CarrierLen = 0;
+    Obj.VariableCarrier.Carrier = NULL;
+    Obj.VariableCarrier.CarrierLen = 0;
 
     ValueAndVariableObjCarrier VAVCarrier;
     VAVCarrier.CarrierLen = 0;
     VAVCarrier.Carrier = NULL;
 
-    unsigned int SectionsSize = toImplement.Built.CarrierLen;
-    MioneSectionObj * Sections = toImplement.Built.Carrier;
+    const unsigned int SectionsSize = toImplement.Built.CarrierLen;
+    const MioneSectionObj * Sections = toImplement.Built.Carrier;
 
-    for (int SectionIndex = 0; SectionIndex < SectionsSize; SectionIndex++)
+    for (unsigned int SectionIndex = 0; SectionIndex < SectionsSize; SectionIndex++)
     {
-        MioneSectionObj thisSection = Sections[SectionIndex];
+        uint8_t breakSectionCycle = 0;
+
+        const MioneSectionObj thisSection = Sections[SectionIndex];
 
         if (thisSection.HeadAction.Head.Fuc)
         {
-            PairObjCarrier PairCarrier = {
+            const PairObjCarrier PairCarrier = {
                 .Carrier = thisSection.Pairs,
                 .CarrierLen = thisSection.PairsSize
             };
 
-            HeadReturnObj HeadReturn = thisSection.HeadAction.Head.Fuc(
+            const HeadReturnObj HeadReturn = thisSection.HeadAction.Head.Fuc(
                    &(HeadCallObj){
                        .PairCarrier = (PairObjCarrier){
                            .Carrier = PairCarrier.Carrier,
@@ -42,19 +41,18 @@ ImplementedObj IMPLEMENT(const ToImplementObj toImplement)
                        },
 
                        .VariablePtrCarrier = (VariableObjPtrCarrier){
-                           .Carrier = &VariableCarrier.Carrier,
-                           .CarrierLen = VariableCarrier.CarrierLen
+                           .Carrier = &Obj.VariableCarrier.Carrier,
+                           .CarrierLen = Obj.VariableCarrier.CarrierLen
                        },
 
                        .CallByValueCarrier = toImplement.CallByValueCarrier,
                    });
 
 
-            for (int i = 0;HeadReturn.ToState > 1<<i;i++)
+            for (int i = 0; HeadReturn.ToState - 1<<i > 1<<i ;i++)
             {
+                uint8_t breakStateCycle = 0;
                 const int cmp = 1<<i;
-
-                if (!HeadReturn.ToState) break;
 
                 if (HeadReturn.ToState & cmp)
                 {
@@ -64,8 +62,19 @@ ImplementedObj IMPLEMENT(const ToImplementObj toImplement)
 
                     case 1:
                         {
-                            Obj.ToState|=1;
-                            Obj.ValueCarrier = HeadReturn.ValueCarrier;
+                            Obj.ToState |= 1;
+
+                            Obj.ValueCarrier.Carrier = memcpy(
+                                Obj.ValueCarrier.Carrier + Obj.ValueCarrier.CarrierLen,
+                                HeadReturn.ValueCarrier.Carrier,
+                                HeadReturn.ValueCarrier.CarrierLen * sizeof(ValueObj)
+                                );
+
+                            Obj.ValueCarrier.CarrierLen += HeadReturn.ValueCarrier.CarrierLen;
+
+                            breakStateCycle = 1;
+
+                            //its doesnt need to be memories copy,AH whatever
                             break;
                         }
                     case 2:
@@ -82,35 +91,43 @@ ImplementedObj IMPLEMENT(const ToImplementObj toImplement)
                         }
                     case 4:
                         {
-                            VariableCarrier.Carrier =
+                            Obj.ToState |= 2;
+
+                            Obj.VariableCarrier.Carrier =
                                 memcpy(
-                                    VariableCarrier.Carrier + VariableCarrier.CarrierLen,
+                                    Obj.VariableCarrier.Carrier + Obj.VariableCarrier.CarrierLen,
                                     HeadReturn.VariableCarrier.Carrier,
                                     HeadReturn.VariableCarrier.CarrierLen * sizeof(VariableObj)
                                     );
 
-                            VariableCarrier.CarrierLen += HeadReturn.VariableCarrier.CarrierLen;
+                            Obj.VariableCarrier.CarrierLen += HeadReturn.VariableCarrier.CarrierLen;
 
                             break;
                         }
 
                     default:
                         {
+                            exit(-3);
                         }
                     }
                 }
+
+                if (breakStateCycle)
+                {
+                    breakSectionCycle = 1;
+                    break;
+                }
+
             }
         }
+
+        if (breakSectionCycle)
+            break;
     }
 
     for (int i = 0; i < VAVCarrier.CarrierLen; i++)
         VAVCarrier.Carrier[i].VariablePointer->Value = VAVCarrier.Carrier[i].Value;
 
-    if (VariableCarrier.CarrierLen)
-    {
-        Obj.ToState |= 2;
-        Obj.VariableCarrier = VariableCarrier;
-    }
 
     return Obj;
 }
