@@ -3,33 +3,32 @@
 //
 
 #include "OBJECTS.h"
-#include "ERR.h"
-#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
-#include "COUNT.h"
-#include "IMPLEMENT.h"
-#include "SYMBOL_DEF.h"
-#include "MIONE.h"
 
-
-VariableRequestUPObj REQUEST(MioneObj*Pack,int PackSize)
+VariableObjPtrCarrier REQUEST(const MioneObjCarrier input)
 {
+    const MioneObj * Pack = input.Carrier;
+    const unsigned int PackSize = input.CarrierLen;
 
-    //todo
-    VariableRequestUPObj Returns;
-
-    Returns.VariablesSize = 0;
-    Returns.VariableUPs = malloc(0);
-
+    VariableObj ** VariablePointerCarrier = NULL;
+    int VariablePointerCarrierLen = 0;
 
     for (int i = 0; i < PackSize; i++)
-    {
-        Returns.VariablesSize++;
-        Returns.VariableUPs = realloc(Returns.VariableUPs,sizeof(VariableObj*));
-        Returns.VariableUPs[Returns.VariablesSize - 1] = Pack[i].VarUP;
-    }
+        if ( Pack[i].ObjType == VALUE)
+        {
+            exit(-2);
+        }else if (Pack[i].ObjType == VARIABLE)
+        {
+            VariablePointerCarrierLen ++;
+            VariablePointerCarrier = realloc(VariablePointerCarrier, sizeof(ValueObj) * (VariablePointerCarrierLen));
+            VariablePointerCarrier[VariablePointerCarrierLen-1] = Pack[i].VarUP;
+        }
 
-    return Returns;
+
+    return (VariableObjPtrCarrier){
+        .Carrier = VariablePointerCarrier,
+        .CarrierLen= VariablePointerCarrierLen
+    };
 }

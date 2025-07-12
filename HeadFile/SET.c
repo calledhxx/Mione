@@ -17,20 +17,21 @@
 
 #include "../PROMPT_DEF.h"
 
-HeadReturnObj SET(HeadRequestObj * HeadRequestUP)
+HeadReturnObj SET(HeadCallObj * HeadCallObjectPointer)
 {
-    HeadRequestObj HeadRequest = *HeadRequestUP;
+    HeadCallObj HeadCall = *HeadCallObjectPointer;
 
-    PairObj * Pairs = HeadRequest.Pairs;
-    int PairsSize = HeadRequest.PairsSize;
+    PairObj * Pairs = HeadCall.PairCarrier.Carrier;
+    unsigned int PairsSize = HeadCall.PairCarrier.CarrierLen;
 
     HeadReturnObj ToReturn = {0};
     ToReturn.ToState = 0;
-    ToReturn.VAVs.DefinedVariables = malloc(0);
-    ToReturn.VAVs.DefinedVariablesSize = 0;
 
-    VariableRequestUPObj RequestedSuffixOfHead = {.VariablesSize = 0};
-    CountObj CountedSuffixOfSetPrompt = {.ValueSize = 0};
+    ToReturn.ValueAndVariableCarrier.Carrier = NULL;
+    ToReturn.ValueAndVariableCarrier.CarrierLen = 0;
+
+    VariableObjPtrCarrier RequestedSuffixOfHead = {.CarrierLen = 0, .Carrier = NULL};
+    ValueObjCarrier CountedSuffixOfSetPrompt = {.CarrierLen = 0, .Carrier = NULL};
 
     int registeredPrompts = 0;
 

@@ -23,23 +23,19 @@
 #ifndef OBJECTS_H
 #define OBJECTS_H
 
-typedef struct _AreaObject
-{
-    struct _MioneBuiltObject * AreaUP;
-}AreaObj;
 
-typedef struct _TableObject
-{
-    struct _MioneBuiltObject * TableAreaUP;
 
-    struct _VariableUPsObject * VariableUPsUP;
-}TableObj;
-
+//
+//
+//數組
+//
+//
 typedef struct _IntegerObject
 {
+    uint32_t * Units;
+    unsigned int UnitsLen;
 
-    uint32_t * Carrier;
-    unsigned int CarrierLength;
+    unsigned int Digits;
 } IntegerObj;
 
 typedef struct _NumberObject
@@ -47,6 +43,72 @@ typedef struct _NumberObject
     IntegerObj Integer; //採整數個位最前
     IntegerObj Decimal; //採小數個位最前
 } NumberObj;
+//
+//
+//
+//
+//
+
+//HEAD
+
+typedef struct _HeadObject
+{
+    wchar_t * Name;
+    int Identification;
+    struct _HeadReturnObject (*Fuc)(struct _HeadCallObject *);
+}HeadObj;
+
+//
+
+
+//PROMPT
+
+typedef struct _PromptObject
+{
+    wchar_t * Name;
+    int Identification; //識別符號
+}PromptObj;
+//
+
+
+//SYMBOL
+
+typedef struct _SymbolObject
+{
+    wchar_t * Name;
+    int Identification; //識別符號
+    int AfterConnectVV; //後面是否可與VV相連 不會報錯 MIONE
+}SymbolObj;
+//
+
+//
+//
+// Area and Table物件 GROUP
+//
+//
+typedef struct _AreaObject
+{
+    struct _MioneSectionObjectsCarrier * SectionCarrierPointer;
+}AreaObj;
+
+typedef struct _TableObject
+{
+    struct _MioneSectionObjectsCarrier * SectionCarrierPointer;
+
+    struct _VariableObjectPointersCarrier * VariableObjPointerCarrierPointer;
+}TableObj;
+//
+//
+//
+//
+//
+//
+
+//
+//
+//VALUE GROUP
+//
+//
 
 typedef struct _ValueObject
 {
@@ -70,36 +132,53 @@ typedef struct _ValueObject
     int db;//布林
 } ValueObj;
 
+typedef struct _ValueObjectCarrier
+{
+    ValueObj* Carrier;
+    int CarrierLen;
+} ValueObjCarrier;
+
+//
+//
+//
+//
+//
+
+
+
+
+//
+//
+//VARIABLE GROUP
+//
+//
+
+
 typedef struct _VariableObject
 {
-    wchar_t* Name; //變數名稱
-    int Place; //位置
-    ValueObj Val; //值
+    wchar_t* VariableName; //變數名稱
+    int VariablePlace; //變數位置
 
+    ValueObj Value; //值
 } VariableObj;
 
-typedef struct _SymbolObject
+typedef struct _VariableObjectsCarrier
 {
-    wchar_t * Name;
-    int Identification; //識別符號
-    int AfterConnectVV; //後面是否可與VV相連 不會報錯 MIONE
-}SymbolObj;
+    VariableObj * Carrier;
+    unsigned int CarrierLen;
+} VariableObjCarrier;
 
+//
+//
+//
+//
+//
 
-typedef struct _PromptObject
-{
-    wchar_t * Name;
-    int CurNumber;
-
-}PromptObj;
-
-typedef struct _HeadObject
-{
-    wchar_t * Name;
-    int CurNumber;
-    struct _HeadReturnObject (*Fuc)(struct _HeadRequestObject *);
-}HeadObj;
-
+//
+//
+//Mione物件 GROUP
+//
+//
 typedef struct _MioneObject
 {
     int ObjType; //HPSVV宏 1H 2P 3S 4VAR 5VAL 0換行
@@ -115,9 +194,25 @@ typedef struct _MioneObject
     int Column; //列號
 
     struct _ScopeObject* ScopeUP; //作用域
-
 } MioneObj;
 
+typedef struct _MioneObjectsCarrier
+{
+    MioneObj * Carrier;
+    unsigned int CarrierLen;
+} MioneObjCarrier;
+
+//
+//
+//
+//
+//
+
+//
+//
+//CASE物件 GROUP
+//
+//
 typedef struct _CaseObject
 {
     int ObjType; /*
@@ -126,87 +221,37 @@ typedef struct _CaseObject
     wchar_t * ObjName;
 } CaseObj;
 
+typedef struct _CaseObjectsCarrier
+{
+    CaseObj * Carrier;
+    int CarrierLen;
+} CaseObjCarrier;
+//
+//
+//
+//
+//
+
+
 typedef struct _PairObject
 {
-    MioneObj Prompt;
+    MioneObj Prompt; //若是開頭組合，則此物件為HEAD本身，反之PROMPT本身。
 
     MioneObj* Source;
-
     int SourceSize;
-
 }PairObj;
 
-typedef struct _CountObject
+typedef struct _PairObjectsCarrier
 {
-    ValueObj* Value;
-    int ValueSize;
-} CountObj;
+    unsigned int CarrierLen;
+    PairObj * Carrier;
+} PairObjCarrier;
 
-typedef struct _ValuesObject
-{
-    ValueObj* Value;
-    int ValueSize;
-} ValuesObj;
-
-typedef struct _DefinedVariableObject
-{
-    ValueObj Value;
-    VariableObj* TheDefinedVarUP;
-}DefinedVariableObj;
-
-typedef struct _DefinedVariablesCaseObject
-{
-    DefinedVariableObj * DefinedVariables;
-    int DefinedVariablesSize;
-}DefinedVariablesCaseObj;
-
-typedef struct _VariablesObject
-{
-    VariableObj * Vars;
-    int VarsSize;
-} VariablesObj;
-
-typedef struct _VariableUPsObject
-{
-    VariableObj * * VarUPs;
-    int VarUPsSize;
-} VariableUPsObj;
-
-
-typedef struct _HeadReturnObject
-{
-    int ToState;/*
-        0:正常
-        1:回傳
-        2:重設 Variable
-        4:特色變數
-    */
-
-    ValuesObj Values;
-    DefinedVariablesCaseObj VAVs;
-    VariablesObj Vars;
-
-} HeadReturnObj;
-
-
-typedef struct _VariableRequestUPObject
-{
-    VariableObj * * VariableUPs;
-    int VariablesSize;
-} VariableRequestUPObj;
-
-
-typedef struct _HeadRequestObject
-{
-    PairObj * Pairs;
-    int PairsSize;
-
-    ValuesObj FucRequest;
-
-    VariableObj ** VariablesUP;
-    int * VariablesUPSizeUP;
-
-} HeadRequestObj;
+//
+//
+// Mione Section Group
+//
+//
 
 typedef struct _MioneSectionObject
 {
@@ -216,35 +261,113 @@ typedef struct _MioneSectionObject
     int PairsSize;
 } MioneSectionObj;
 
-typedef struct _MioneToBuildObject
+typedef struct _MioneSectionObjectsCarrier
 {
-    const MioneObj* Objs;
-    const int ObjsSize;
-} MioneToBuildObj;
+    MioneSectionObj * Carrier;
+    int CarrierLen;
+} MioneSectionObjCarrier;
 
-typedef struct _MioneBuiltObject
+//
+//
+//
+//
+//
+
+
+
+
+//
+//
+// Value and Variable物件 GROUP
+//
+//
+
+typedef struct _ValueAndVariableObject
 {
-    MioneSectionObj * Sections;
-    int SectionsSize;
-} MioneBuiltObj;
+    ValueObj Value;
+    VariableObj* VariablePointer;
+}ValueAndVariableObj;
 
+typedef struct _ValueAndVariableObjectsCarrier
+{
+    ValueAndVariableObj * Carrier;
+    int CarrierLen;
+}ValueAndVariableObjCarrier;
+
+//
+//
+//
+//
+//
+
+
+typedef struct _VariableObjectPointersCarrier
+{
+    VariableObj ** Carrier;
+    unsigned int CarrierLen;
+} VariableObjPtrCarrier;
+
+
+//
+// HEAD 函數交換物件
+//
+
+typedef struct _HeadReturnObject
+{
+    int ToState;/*
+        0b00000000:無行動
+
+        0b00000001:回傳值
+        0b00000010:重設Variable
+        0b00000100:特色變數
+    */
+
+    ValueObjCarrier ValueCarrier;
+    ValueAndVariableObjCarrier ValueAndVariableCarrier;
+    VariableObjCarrier VariableCarrier;
+
+} HeadReturnObj;
+
+typedef struct _HeadCallObject
+{
+    PairObjCarrier PairCarrier;
+
+    ValueObjCarrier CallByValueCarrier;
+
+    VariableObjPtrCarrier VariablePtrCarrier;
+} HeadCallObj;
+
+//
+//
+//
+
+
+
+//
+//Mione 運行交換物件
+//
 typedef struct _ToImplementObject
 {
-    MioneBuiltObj Built;
-    ValuesObj FunRequest;
+    MioneSectionObjCarrier Built;
+    ValueObjCarrier CallByValueCarrier;
 } ToImplementObj;
 
 typedef struct _ImplementedObject
 {
     int ToState; /*
-    0:正常
-    1:回傳 (HEAD回傳的結果)
-    2:區域性特色變數
+        0b00000000:無行動
+
+        0b00000001:回傳值
+        0b00000010:區域性特色變數
     */
 
-    ValuesObj Values;
-    VariablesObj Vars;
+    ValueObjCarrier ValueCarrier;
+    VariableObjCarrier VariableCarrier;
 }ImplementedObj;
+//
+//
+//
+
 
 typedef struct _ScopeObject
 {
@@ -257,10 +380,13 @@ typedef struct _ScopeObject
     int ChildUPsSize;
 } ScopeObj;
 
+
+//
+// CMO函數特殊物件
+//
 typedef struct _ToCMObject
 {
-    CaseObj*CASE;
-    int CASESIZE;
+    CaseObjCarrier CaseCarrier;
 
     int LineADD;
     int ColumnADD;
@@ -271,8 +397,10 @@ typedef struct _ToReplaceValueForCMOObject
     ToCMObj a;
     int ObjIndex;
     int ValueType ;
-
 } ToReplaceValueForCMOObj;
+//
+//
+//
 
 
 

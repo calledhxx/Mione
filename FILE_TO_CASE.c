@@ -77,9 +77,9 @@ int CheckCharType(const wchar_t Char)
 
 
 
-CaseObj* FCO(FILE* F,int*CASESIZE)
+CaseObjCarrier FCO(FILE* F)
 {
-    CaseObj *CaseObjects = NULL;
+    CaseObj *CaseObjects = malloc(0);
     int CaseObjectsSize = 0;
 
     int inLockinType = 0; // 是否在限制別類裡，如果是則此項表示限制別類的類型。例如：字串=1
@@ -593,6 +593,9 @@ CaseObj* FCO(FILE* F,int*CASESIZE)
         ErrCall("no end FILE TO CASE","M245",NULL,Line,Colum);
     }
 
-    *CASESIZE = CaseObjectsSize;
-    return CaseObjects;
+
+    return (CaseObjCarrier){
+        .Carrier = CaseObjects,
+        .CarrierLen = CASESize,
+    };
 }

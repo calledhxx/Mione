@@ -1,4 +1,5 @@
 #include <stdint.h>
+#include <stdlib.h>
 #include <wchar.h>
 
 #include "OBJECTS.h"
@@ -16,23 +17,17 @@ int main(const int OptionsSize,char **Options)
 
     f = _wfopen(L"D:\\Mione\\index.mio",L"r");
 
-    if (f != NULL)
-    {
-        int CaseObjSize = 0;
-        CaseObj * CASES = FCO(f,&CaseObjSize);
+    if (f == NULL) exit(-1);
 
-        int MioObjSize = 0;
-        MioneObj * MioObj = CMO(CASES,CaseObjSize,&MioObjSize,1,0,&MainSVU);
+    CaseObjCarrier CaseCarrier = FCO(f);
 
-        MioneBuiltObj Built =ToMione((MioneToBuildObj){
-            .Objs = MioObj,
-            .ObjsSize = MioObjSize
-        });
+    MioneObjCarrier MioneCarrier = CMO(CaseCarrier,1,0,&MainSVU);
 
-        IMPLEMENT((ToImplementObj){
-            .Built = Built
-        });
+    MioneSectionObjCarrier Built =ToMione(MioneCarrier);
 
-    }
+    IMPLEMENT((ToImplementObj){
+        .Built = Built
+    });
+
     return 0;
 }

@@ -24,13 +24,11 @@ VariableObj * retVarUP(ScopeObj * SVUup,const wchar_t* Name,const int Place)
     VariableObj * ret = 0;
 
     for (int VariableUPIndex = 0;VariableUPIndex < SVUup->VariableUPsSize;VariableUPIndex++)
-    {
         if (
-          (SVUup->VariableUPs[VariableUPIndex]->Name && wcscmp(SVUup->VariableUPs[VariableUPIndex]->Name,Name) == 0) ||
-          (SVUup->VariableUPs[VariableUPIndex]->Place != 0 && SVUup->VariableUPs[VariableUPIndex]->Place == Place)
+          (SVUup->VariableUPs[VariableUPIndex]->VariableName && wcscmp(SVUup->VariableUPs[VariableUPIndex]->VariableName,Name) == 0) ||
+          (SVUup->VariableUPs[VariableUPIndex]->VariablePlace != 0 && SVUup->VariableUPs[VariableUPIndex]->VariablePlace == Place)
           )
             ret =SVUup->VariableUPs[VariableUPIndex];
-    }
 
     if (!ret && SVUup->ParentUP) return retVarUP(SVUup->ParentUP,Name,Place);
 
@@ -39,9 +37,16 @@ VariableObj * retVarUP(ScopeObj * SVUup,const wchar_t* Name,const int Place)
 
 
 
-MioneObj *CMO(CaseObj*CASES,int CASESIZE,
-    int * SIZE,int LineADD,int ColumnADD,ScopeObj * SVUup)
+MioneObjCarrier CMO(
+    CaseObjCarrier Carrier,
+    int LineADD,
+    int ColumnADD,
+    ScopeObj * SVUup)
 {
+
+    unsigned int CASESIZE = Carrier.CarrierLen;
+    CaseObj * CASES = Carrier.Carrier;
+
     MioneObj *MIONE = 0;
     int MIONESIZE = 0;
 
@@ -49,7 +54,7 @@ MioneObj *CMO(CaseObj*CASES,int CASESIZE,
 
     int TableCount = 0; //表單子項數量
 
-    CaseObj* Area = malloc(0);
+    CaseObj* Area = NULL;
     int AreaSize = 0;
 
     int Line = 0+LineADD;
@@ -59,12 +64,12 @@ MioneObj *CMO(CaseObj*CASES,int CASESIZE,
     int CapLine = 0; //行
 
     SVUup->ChildUPsSize = 0;
-    SVUup->ChildUPs = malloc(0);
+    SVUup->ChildUPs = NULL;
 
-    SVUup->VariableUPs = malloc(0);
+    SVUup->VariableUPs = NULL;
     SVUup->VariableUPsSize = 0;
 
-    ToReplaceValueForCMOObj * TRVFC = malloc(0);
+    ToReplaceValueForCMOObj * TRVFC = NULL;
     int TRVFCSize = 0;
 
     for (int i = 0; i <CASESIZE; i++)
@@ -87,7 +92,7 @@ MioneObj *CMO(CaseObj*CASES,int CASESIZE,
          if (ChildCount == 0 && TableCount == 0) for (int Ci = 0;1; Ci++)
          {
 
-             if (Heads[Ci].CurNumber == -1) break;
+             if (Heads[Ci].Identification == -1) break;
 
              if (wcscmp(CASES[i].ObjName,Heads[Ci].Name) == 0)  {
                  Column++;
@@ -110,7 +115,7 @@ MioneObj *CMO(CaseObj*CASES,int CASESIZE,
         //PROMPT
          if (ChildCount == 0 && TableCount == 0) for (int Ci = 0;1; Ci++)
         {
-             if (Prompts[Ci].CurNumber == -1) break;
+             if (Prompts[Ci].Identification == -1) break;
 
              if (wcscmp(CASES[i].ObjName,Prompts[Ci].Name) == 0)
              {
@@ -155,7 +160,7 @@ MioneObj *CMO(CaseObj*CASES,int CASESIZE,
          if (ChildCount == 0 && TableCount == 0) if (CASES[i].ObjType == SYMBOL|| CASES[i].ObjType == VARIABLE)
         {
 
-             wchar_t*str=malloc(0);
+             wchar_t*str=NULL;
 
              for (int s = 1; s<wcslen(CASES[i].ObjName); s++)
              {
@@ -211,7 +216,7 @@ MioneObj *CMO(CaseObj*CASES,int CASESIZE,
 
 
                    Area = NULL;
-                   Area = malloc(0);
+                   Area = NULL;
                    AreaSize = 0;
 
                }
@@ -277,7 +282,7 @@ MioneObj *CMO(CaseObj*CASES,int CASESIZE,
                        .ValueType = goEndType
                    };
                    Area = NULL;
-                   Area = malloc(0);
+                   Area = NULL;
                    AreaSize = 0;
                }else
                {
@@ -429,7 +434,7 @@ MioneObj *CMO(CaseObj*CASES,int CASESIZE,
              if (!ret)
              {
                  ret = malloc(sizeof(VariableObj));
-                 ret->Name = CASES[i].ObjName;
+                 ret->VariableName = CASES[i].ObjName;
 
                  SVUup->VariableUPsSize++;
                  SVUup->VariableUPs = realloc(SVUup->VariableUPs,SVUup->VariableUPsSize*sizeof(VariableObj*));
@@ -458,7 +463,6 @@ MioneObj *CMO(CaseObj*CASES,int CASESIZE,
 
     for (int i = 0;i<TRVFCSize;i++)
     {
-        int MioObjSize = 0;
 
         ScopeObj * ChildSVUup = malloc(sizeof(ScopeObj));
         *ChildSVUup = (ScopeObj){0};
@@ -468,11 +472,14 @@ MioneObj *CMO(CaseObj*CASES,int CASESIZE,
         SVUup->ChildUPs = realloc(SVUup->ChildUPs,SVUup->ChildUPsSize*sizeof(ScopeObj*));
         SVUup->ChildUPs[SVUup->ChildUPsSize-1] = ChildSVUup;
 
-        MioneObj * MioObj = CMO(TRVFC[i].a.CASE,TRVFC[i].a.CASESIZE,&MioObjSize,TRVFC[i].a.LineADD,TRVFC[i].a.ColumnADD,ChildSVUup);
-        MioneBuiltObj Built = ToMione((MioneToBuildObj){
-            .Objs = MioObj,
-            .ObjsSize = MioObjSize,
-        });
+        MioneObjCarrier MioCarrier = CMO(
+            TRVFC[i].a.CaseCarrier,
+            TRVFC[i].a.LineADD,
+            TRVFC[i].a.ColumnADD,
+            ChildSVUup
+            );
+
+        MioneSectionObjCarrier Built = ToMione(MioCarrier);
 
 
 
@@ -482,30 +489,30 @@ MioneObj *CMO(CaseObj*CASES,int CASESIZE,
         {
         case VALUE_TABLE_TYPE:
             {
-                TableObj eTable = (TableObj){
-                    .VariableUPsUP = 0,
+                TableObj TableObject = (TableObj){
+                    .VariableObjPointerCarrierPointer = 0,
                 };
         
-                eTable.TableAreaUP = malloc(sizeof(struct _MioneBuiltObject));
-                *eTable.TableAreaUP = Built;
+                TableObject.SectionCarrierPointer = malloc(sizeof(MioneSectionObjCarrier));
+                *TableObject.SectionCarrierPointer = Built;
 
                 Value = (ValueObj){
                     .ValueType = VALUE_TABLE_TYPE,
-                    .Table = eTable,
+                    .Table = TableObject,
                 };
 
                 break;
             }
         default:
             {
-                AreaObj Area;
+                AreaObj AreaObject = {0};
 
-                Area.AreaUP = malloc(sizeof(struct _MioneBuiltObject));
-                *Area.AreaUP = Built;
+                AreaObject.SectionCarrierPointer = malloc(sizeof(MioneSectionObjCarrier));
+                *AreaObject.SectionCarrierPointer = Built;
 
                 Value = (ValueObj){
                     .ValueType = TRVFC[i].ValueType,
-                    .Area = Area,
+                    .Area = AreaObject,
                 };
 
                 break;
@@ -516,6 +523,8 @@ MioneObj *CMO(CaseObj*CASES,int CASESIZE,
 
     }
 
-    (*SIZE) = (MIONESIZE);
-    return MIONE;
+    return (MioneObjCarrier){
+        .Carrier = MIONE,
+        .CarrierLen = MIONESIZE
+    };
 }

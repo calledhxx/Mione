@@ -28,4 +28,6 @@ add_executable(Mione
         NUMBER.h
         NUMBER.c
         main.c
+        COMPUTATION.h
+        COMPUTATION.c
 )

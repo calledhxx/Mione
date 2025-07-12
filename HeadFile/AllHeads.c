@@ -12,35 +12,35 @@ HeadObj Heads[]  = {
     (HeadObj){
         .Fuc = SET,
         .Name = L"set",
-        .CurNumber = 1,
+        .Identification = 1,
     },
     (HeadObj){
         .Fuc = RETURN,
         .Name = L"return",
-        .CurNumber = 2
+        .Identification = 2
     },
     (HeadObj){
         .Fuc = IF,
         .Name = L"if",
-        .CurNumber = 3
+        .Identification = 3
     },
     (HeadObj){
         .Fuc = FOR,
         .Name = L"for",
-        .CurNumber = 4
+        .Identification = 4
     },
     (HeadObj){
         .Fuc = SYS,
         .Name = L"sys",
-        .CurNumber = 5
+        .Identification = 5
     },
     (HeadObj){
         .Fuc = GET,
         .Name = L"get",
-        .CurNumber = 6
+        .Identification = 6
     },
 
     (HeadObj){
-        .CurNumber = -1
+        .Identification = -1
     }
 };
