@@ -94,6 +94,7 @@ MioneObjCarrier COMPUTATION(MioneObjCarrier input)
                                     {
                                         switch (ChildCount.Carrier[0].ValueType)
                                         {
+                                            //todo
                                         // case VALUE_STRING_TYPE:
                                         //     {
                                         //
@@ -123,6 +124,8 @@ MioneObjCarrier COMPUTATION(MioneObjCarrier input)
 
                                 switch (ChildCount.Carrier[0].ValueType)
                                 {
+                                    //todo
+
                                 // case VALUE_STRING_TYPE:
                                 //     {
                                 //         VariableObj * VarUP = retVarUP(Pack[0].ScopeUP,ChildCount.Value[0].String,0);
