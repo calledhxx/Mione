@@ -29,12 +29,15 @@ int main(const int OptionsSize,char **Options)
     });
 
     /*
+
      11110000 00001111
      11111111 00001111
      11111111 11110000
      00001111 11110000
-     A <=> B
-     */
+
+     A <=> B //nvm its 8bytes
+
+    */
 
     printf("Hello, Mione!\n");
 
