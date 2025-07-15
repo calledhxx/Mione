@@ -33,7 +33,7 @@ int main(const int OptionsSize,char **Options)
      11111111 00001111
      11111111 11110000
      00001111 11110000
-     A <-> B
+     A <=> B
      */
 
     printf("Hello, Mione!\n");
