@@ -65,12 +65,6 @@ MioneObjCarrier CMO(
     int goEndType = 0; //range or function or lights
     int CapLine = 0; //行
 
-    SVUup->ChildUPsSize = 0;
-    SVUup->ChildUPs = NULL;
-
-    SVUup->VariablePtrCarrier.Carrier = NULL;
-    SVUup->VariablePtrCarrier.CarrierLen = 0;
-
     ToReplaceValueForCMOObj * TRVFC = NULL;
     int TRVFCSize = 0;
 

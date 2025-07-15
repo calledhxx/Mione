@@ -77,7 +77,7 @@ int CheckCharType(const wchar_t Char)
 
 
 
-CaseObjCarrier FCO(FILE* F)
+CaseObjCarrier FCO(FILE* F,const uint8_t LineBreak)
 {
     CaseObj *CaseObjects = malloc(0);
     int CaseObjectsSize = 0;
@@ -121,11 +121,11 @@ CaseObjCarrier FCO(FILE* F)
 
         int CharType = CheckCharType(c);
 
-
-
         if (c == L'\r')
             continue;
 
+        if (LineBreak && c == 10)
+            break;
 
         Colum++;
 

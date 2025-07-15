@@ -1,1 +1,1 @@
-extern CaseObjCarrier FCO(FILE* F);
+extern CaseObjCarrier FCO();

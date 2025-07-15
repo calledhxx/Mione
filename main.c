@@ -1,6 +1,7 @@
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <wchar.h>
 
 #include "OBJECTS.h"
@@ -14,30 +15,48 @@ ScopeObj MainSVU = {0};
 
 int main(const int OptionsSize,char **Options)
 {
-    FILE *f = _wfopen(L"D:\\Mione\\index.mio",L"r");
+    FILE *f = 0;
 
-    if (f == NULL) exit(-1);
 
-    CaseObjCarrier CaseCarrier = FCO(f);
 
-    MioneObjCarrier MioneCarrier = CMO(CaseCarrier,1,0,&MainSVU);
+    if (OptionsSize == 2 && strcmp(Options[1],"line")==0)
+    {
+        f = stdin;
 
-    MioneSectionObjCarrier Built =ToMione(MioneCarrier);
+        if (f == NULL) exit(-1);
 
-    ImplementedObj Implement = IMPLEMENT((ToImplementObj){
-        .Built = Built
-    });
+        while (1)
+        {
+            fwrite(">> ",1,3,stdout);
 
-    /*
+            CaseObjCarrier CaseCarrier = FCO(f,1);
 
-     11110000 00001111
-     11111111 00001111
-     11111111 11110000
-     00001111 11110000
+            MioneObjCarrier MioneCarrier = CMO(CaseCarrier,1,0,&MainSVU);
 
-     A <=> B //nvm its 8bytes
+            MioneSectionObjCarrier Built = ToMione(MioneCarrier);
 
-    */
+            ImplementedObj Implement = IMPLEMENT((ToImplementObj){
+                .Built = Built
+            });
+        }
+    }
+    else
+    {
+        f = _wfopen(L"D:\\Mione\\index.mio", L"r");
+
+        if (f == NULL) exit(-1);
+
+        CaseObjCarrier CaseCarrier = FCO(f,0);
+
+        MioneObjCarrier MioneCarrier = CMO(CaseCarrier,1,0,&MainSVU);
+
+        MioneSectionObjCarrier Built =ToMione(MioneCarrier);
+
+        ImplementedObj Implement = IMPLEMENT((ToImplementObj){
+            .Built = Built
+        });
+    }
+
 
     printf("Hello, Mione!\n");
 
