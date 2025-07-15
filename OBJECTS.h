@@ -389,12 +389,11 @@ typedef struct _ImplementedObject
 
 typedef struct _ScopeObject
 {
-    VariableObj * * VariableUPs;
-    int VariableUPsSize;
+    VariableObjPtrCarrier VariablePtrCarrier;
 
     struct _ScopeObject * ParentUP;
-
     struct _ScopeObject ** ChildUPs;
+
     int ChildUPsSize;
 } ScopeObj;
 

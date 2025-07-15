@@ -17,7 +17,7 @@
 
 #include "../PROMPT_DEF.h"
 
-HeadReturnObj SET(HeadCallObj * HeadCallObjectPointer)
+HeadReturnObj SET(const HeadCallObj * HeadCallObjectPointer)
 {
     HeadReturnObj Result = {0};
 
@@ -76,7 +76,6 @@ HeadReturnObj SET(HeadCallObj * HeadCallObjectPointer)
         case 1<<(PROMPT_SET-1):
             {
                 for (unsigned int HeadSuffixIndex = 0; HeadSuffixIndex < HeadSuffix.CarrierLen ; HeadSuffixIndex++)
-                {
                     *HeadSuffix.Carrier[HeadSuffixIndex] = (VariableObj){
                         .Value = HeadSuffixIndex < SetPromptSuffix.CarrierLen
                             ? SetPromptSuffix.Carrier[HeadSuffixIndex]
@@ -84,9 +83,6 @@ HeadReturnObj SET(HeadCallObj * HeadCallObjectPointer)
                                 .ValueType = 0
                             }
                     };
-
-                    printf("set\n");
-                }
 
                 break;
             }

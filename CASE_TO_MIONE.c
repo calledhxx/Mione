@@ -23,12 +23,14 @@ VariableObj * retVarUP(ScopeObj * SVUup,const wchar_t* Name,const int Place)
 {
     VariableObj * ret = 0;
 
-    for (int VariableUPIndex = 0;VariableUPIndex < SVUup->VariableUPsSize;VariableUPIndex++)
+    if (!SVUup->VariablePtrCarrier.Carrier) return ret;
+
+    for (int VariableUPIndex = 0;VariableUPIndex < SVUup->VariablePtrCarrier.CarrierLen;VariableUPIndex++)
         if (
-          (SVUup->VariableUPs[VariableUPIndex]->VariableName && wcscmp(SVUup->VariableUPs[VariableUPIndex]->VariableName,Name) == 0) ||
-          (SVUup->VariableUPs[VariableUPIndex]->VariablePlace != 0 && SVUup->VariableUPs[VariableUPIndex]->VariablePlace == Place)
+          (SVUup->VariablePtrCarrier.Carrier[VariableUPIndex]->VariableName && wcscmp(SVUup->VariablePtrCarrier.Carrier[VariableUPIndex]->VariableName,Name) == 0) ||
+          (SVUup->VariablePtrCarrier.Carrier[VariableUPIndex]->VariablePlace != 0 && SVUup->VariablePtrCarrier.Carrier[VariableUPIndex]->VariablePlace == Place)
           )
-            ret =SVUup->VariableUPs[VariableUPIndex];
+            ret =SVUup->VariablePtrCarrier.Carrier[VariableUPIndex];
 
     if (!ret && SVUup->ParentUP) return retVarUP(SVUup->ParentUP,Name,Place);
 
@@ -44,8 +46,8 @@ MioneObjCarrier CMO(
     ScopeObj * SVUup)
 {
 
-    unsigned int CASESIZE = Carrier.CarrierLen;
-    CaseObj * CASES = Carrier.Carrier;
+    const unsigned int CASESIZE = Carrier.CarrierLen;
+    const CaseObj * CASES = Carrier.Carrier;
 
     MioneObj *MIONE = 0;
     int MIONESIZE = 0;
@@ -66,8 +68,8 @@ MioneObjCarrier CMO(
     SVUup->ChildUPsSize = 0;
     SVUup->ChildUPs = NULL;
 
-    SVUup->VariableUPs = NULL;
-    SVUup->VariableUPsSize = 0;
+    SVUup->VariablePtrCarrier.Carrier = NULL;
+    SVUup->VariablePtrCarrier.CarrierLen = 0;
 
     ToReplaceValueForCMOObj * TRVFC = NULL;
     int TRVFCSize = 0;
@@ -76,101 +78,100 @@ MioneObjCarrier CMO(
     for (int i = 0; i <CASESIZE; i++)
     {
 
-           int Paired =0; //Head Symbol Prompt Variable Value
+        int Paired =0; //Head Symbol Prompt Variable Value
 
 
-           if (CASES[i].ObjType == 13)
-           {
-               Line++;
-               Column = 0;
+        if (CASES[i].ObjType == 13)
+        {
+            Line++;
+            Column = 0;
 
-               continue;
-           };
+            continue;
+        };
 
         //HEAD
 
 
-         if (ChildCount == 0 && TableCount == 0) for (int Ci = 0;1; Ci++)
-         {
-
-             if (Heads[Ci].Identification == -1) break;
-
-             if (wcscmp(CASES[i].ObjName,Heads[Ci].Name) == 0)  {
-                 Column++;
-
-
-                 (MIONESIZE)++;
-                 (MIONE) = (MioneObj*)realloc( (MIONE) ,(MIONESIZE)*sizeof(MioneObj));
-                 (MIONE)[(MIONESIZE)-1] = (MioneObj){
-                     .ObjType= HEAD,
-                     .Head = Heads[Ci],
-                      .Line = Line,
-                      .Column = Column,
-                     .ScopeUP = SVUup,
-                 };
-
-                 Paired = HEAD;
-
-             }
-         }
-        //PROMPT
-         if (ChildCount == 0 && TableCount == 0) for (int Ci = 0;1; Ci++)
+        if (ChildCount == 0 && TableCount == 0) for (int Ci = 0;1; Ci++)
         {
-             if (Prompts[Ci].Identification == -1) break;
+            if (Heads[Ci].Identification == -1) break;
 
-             if (wcscmp(CASES[i].ObjName,Prompts[Ci].Name) == 0)
-             {
-                 Column++;
-                 (MIONESIZE)++;
-                 (MIONE) = (MioneObj*)realloc( (MIONE) ,(MIONESIZE)*sizeof(MioneObj));
-                 (MIONE)[(MIONESIZE)-1] = (MioneObj){
-                     .ObjType= PROMPT,
-                     .Prompt = Prompts[Ci],
-                      .Line = Line,
-                     .Column = Column,
-                     .ScopeUP = SVUup,
-                 };
-                 Paired = PROMPT;
+            if (wcscmp(CASES[i].ObjName,Heads[Ci].Name) == 0)  {
+                Column++;
+
+
+                (MIONESIZE)++;
+                (MIONE) = (MioneObj*)realloc( (MIONE) ,(MIONESIZE)*sizeof(MioneObj));
+                (MIONE)[(MIONESIZE)-1] = (MioneObj){
+                    .ObjType= HEAD,
+                    .Head = Heads[Ci],
+                    .Line = Line,
+                    .Column = Column,
+                    .ScopeUP = SVUup,
+                };
+
+                Paired = HEAD;
+
+            }
+        }
+        //PROMPT
+        if (ChildCount == 0 && TableCount == 0) for (int Ci = 0;1; Ci++)
+        {
+            if (Prompts[Ci].Identification == -1) break;
+
+            if (wcscmp(CASES[i].ObjName,Prompts[Ci].Name) == 0)
+            {
+                Column++;
+                (MIONESIZE)++;
+                (MIONE) = (MioneObj*)realloc( (MIONE) ,(MIONESIZE)*sizeof(MioneObj));
+                (MIONE)[(MIONESIZE)-1] = (MioneObj){
+                    .ObjType= PROMPT,
+                    .Prompt = Prompts[Ci],
+                    .Line = Line,
+                    .Column = Column,
+                    .ScopeUP = SVUup,
+                };
+
+                Paired = PROMPT;
              }
         }
 
         //SYMBOL
-         if (ChildCount == 0 && TableCount == 0) for (int Ci = 0; 1; Ci++)
+        if (ChildCount == 0 && TableCount == 0) for (int Ci = 0; 1; Ci++)
         {
-             if (Symbols[Ci].Identification == -1)  break;
+            if (Symbols[Ci].Identification == -1)  break;
 
-             if (wcscmp(CASES[i].ObjName,Symbols[Ci].Name) == 0)
-             {
-                 Column++;
+            if (wcscmp(CASES[i].ObjName,Symbols[Ci].Name) == 0)
+            {
+                Column++;
 
-                 (MIONESIZE)++;
-                 (MIONE) = (MioneObj*)realloc( (MIONE) ,(MIONESIZE)*sizeof(MioneObj));
-                 (MIONE)[(MIONESIZE)-1] = (MioneObj){
-                     .ObjType= SYMBOL,
-                     .Symbol = Symbols[Ci]
-                     ,.Line = Line,
-                     .Column = Column,
-                     .ScopeUP = SVUup,
+                (MIONESIZE)++;
+                (MIONE) = (MioneObj*)realloc( (MIONE) ,(MIONESIZE)*sizeof(MioneObj));
+                (MIONE)[(MIONESIZE)-1] = (MioneObj){
+                    .ObjType= SYMBOL,
+                    .Symbol = Symbols[Ci],
+                    .Line = Line,
+                    .Column = Column,
+                    .ScopeUP = SVUup,
+                };
 
-                 };
-                 Paired = SYMBOL;
-             }
+                Paired = SYMBOL;
+            }
         }
 
         //Value : String
-         if (ChildCount == 0 && TableCount == 0) if (CASES[i].ObjType == SYMBOL|| CASES[i].ObjType == VARIABLE)
+        if (ChildCount == 0 && TableCount == 0) if (CASES[i].ObjType == SYMBOL|| CASES[i].ObjType == VARIABLE)
         {
+            wchar_t*str=NULL;
 
-             wchar_t*str=NULL;
+            for (int s = 1; s<wcslen(CASES[i].ObjName); s++)
+            {
+                str=realloc(str,(s+1)*sizeof(wchar_t));
+                str[s-1] = s == wcslen(CASES[i].ObjName)-1 ? L'\0' :  CASES[i].ObjName[s];
+            }
 
-             for (int s = 1; s<wcslen(CASES[i].ObjName); s++)
-             {
-                 str=realloc(str,(s+1)*sizeof(wchar_t));
-                 str[s-1] = s == wcslen(CASES[i].ObjName)-1 ? L'\0' :  CASES[i].ObjName[s];
-             }
-
-             ValueObj Value = (ValueObj){.ValueType = VALUE_STRING_TYPE, .String = str};
-             Column++;
+            ValueObj Value = (ValueObj){.ValueType = VALUE_STRING_TYPE, .String = str};
+            Column++;
 
             (MIONESIZE)++;
             (MIONE) = (MioneObj*)realloc( (MIONE) ,(MIONESIZE)*sizeof(MioneObj));
@@ -182,43 +183,41 @@ MioneObjCarrier CMO(
                 .ScopeUP = SVUup,
             };
 
-             Paired = VALUE;
+            Paired = VALUE;
         }
 
            //Value : Table
 
-           if (ChildCount == 0) if (wcscmp(CASES[i].ObjName,L"}") == 0)
-           {
-               TableCount--;
-               if (!TableCount)
-               {
-                   Paired = VALUE;
+        if (ChildCount == 0) if (wcscmp(CASES[i].ObjName,L"}") == 0)
+        {
+            TableCount--;
+            if (!TableCount)
+            {
+                Paired = VALUE;
 
-                   Column++;
-
-                   (MIONESIZE)++ ;
-                   (MIONE) = (MioneObj*)realloc(MIONE, (MIONESIZE)*sizeof(MioneObj));
-                   (MIONE)[(MIONESIZE)-1] = (MioneObj){
-                       .ObjType = VALUE,
-
-                       .Line = Line,
-                       .Column = Column,
-                     .ScopeUP = SVUup,
-                   };
+                Column++;
+                (MIONESIZE)++ ;
+                (MIONE) = (MioneObj*)realloc(MIONE, (MIONESIZE)*sizeof(MioneObj));
+                (MIONE)[(MIONESIZE)-1] = (MioneObj){
+                    .ObjType = VALUE,
+                    .Line = Line,
+                    .Column = Column,
+                    .ScopeUP = SVUup,
+                };
 
 
-                   TRVFCSize++;
-                   TRVFC = realloc(TRVFC,TRVFCSize*sizeof(ToReplaceValueForCMOObj));
-                   TRVFC[TRVFCSize-1] = (ToReplaceValueForCMOObj){
-                       .a = (ToCMObj){Area,AreaSize,CapLine,Column},
-                       .ObjIndex = MIONESIZE-1,
-                       .ValueType = VALUE_TABLE_TYPE
-                   };
+                TRVFCSize++;
+                TRVFC = realloc(TRVFC,TRVFCSize*sizeof(ToReplaceValueForCMOObj));
+                TRVFC[TRVFCSize-1] = (ToReplaceValueForCMOObj){
+                    .a = (ToCMObj){Area,AreaSize,CapLine,Column},
+                    .ObjIndex = MIONESIZE-1,
+                    .ValueType = VALUE_TABLE_TYPE
+                };
 
 
-                   Area = NULL;
-                   Area = NULL;
-                   AreaSize = 0;
+                Area = NULL;
+                Area = NULL;
+                AreaSize = 0;
 
                }
            }
@@ -240,7 +239,6 @@ MioneObjCarrier CMO(
 
            if (ChildCount == 0 && TableCount == 0) if (wcscmp(CASES[i].ObjName,L";") == 0)
            {
-
                Paired = -1;
                Column++;
 
@@ -250,7 +248,7 @@ MioneObjCarrier CMO(
                    .ObjType= -1,
                    .Line = Line,
                    .Column = Column,
-                     .ScopeUP = SVUup,
+                   .ScopeUP = SVUup,
                };
            }
 
@@ -389,11 +387,11 @@ MioneObjCarrier CMO(
                    (MIONESIZE)++;
                    (MIONE) = (MioneObj*)realloc( (MIONE) ,(MIONESIZE)*sizeof(MioneObj));
                    (MIONE)[(MIONESIZE)-1] = (MioneObj){
-                       .ObjType = VALUE,
-                       .Val = Value,
-                       .Line = Line,
-                       .Column = Column,
-                     .ScopeUP = SVUup,
+                        .ObjType = VALUE,
+                        .Val = Value,
+                        .Line = Line,
+                        .Column = Column,
+                        .ScopeUP = SVUup,
                    };
                }
            }
@@ -401,32 +399,33 @@ MioneObjCarrier CMO(
 
 
         //Value : Number
-            if (ChildCount == 0 && TableCount == 0) if(CASES[i].ObjType == 2)
-           {
-               Paired = VALUE;
+        if (ChildCount == 0 && TableCount == 0) if(CASES[i].ObjType == 2)
+        {
+            Paired = VALUE;
 
-                NumberObj Number = wcharToNumber(CASES[i].ObjName);
+            NumberObj Number = wcharToNumber(CASES[i].ObjName);
 
-               ValueObj Value = (ValueObj){
-                   .ValueType = VALUE_NUMBER_TYPE,
-                   .Number = Number
-               };
+            ValueObj Value = (ValueObj){
+                .ValueType = VALUE_NUMBER_TYPE,
+                .Number = Number
+            };
 
 
-                Column++;
+            Column++;
 
-               (MIONESIZE)++;
-               (MIONE) = (MioneObj*)realloc( (MIONE) ,(MIONESIZE)*sizeof(MioneObj));
-               (MIONE)[(MIONESIZE)-1] = (MioneObj){
-                   .ObjType = VALUE,
-                   .Val = Value,
-                   .Line = Line,
-                   .Column = Column,
-                     .ScopeUP = SVUup,
-               };
-           }
+            (MIONESIZE)++;
+            (MIONE) = (MioneObj*)realloc( (MIONE) ,(MIONESIZE)*sizeof(MioneObj));
+            (MIONE)[(MIONESIZE)-1] = (MioneObj){
+                .ObjType = VALUE,
+                .Val = Value,
+                .Line = Line,
+                .Column = Column,
+                .ScopeUP = SVUup,
+            };
+        }
+
         //Variable
-         if (ChildCount == 0 && TableCount == 0) if (Paired == 0 && (CASES[i].ObjType != 13))
+        if (ChildCount == 0 && TableCount == 0) if (Paired == 0 && (CASES[i].ObjType != 13))
         {
             Paired = VARIABLE;
 
@@ -437,11 +436,10 @@ MioneObjCarrier CMO(
                  ret = malloc(sizeof(VariableObj));
                  ret->VariableName = CASES[i].ObjName;
 
-                 SVUup->VariableUPsSize++;
-                 SVUup->VariableUPs = realloc(SVUup->VariableUPs,SVUup->VariableUPsSize*sizeof(VariableObj*));
-                 SVUup->VariableUPs[SVUup->VariableUPsSize-1] = ret;
+                 SVUup->VariablePtrCarrier.CarrierLen++;
+                 SVUup->VariablePtrCarrier.Carrier = realloc(SVUup->VariablePtrCarrier.Carrier,SVUup->VariablePtrCarrier.CarrierLen*sizeof(VariableObj*));
+                 SVUup->VariablePtrCarrier.Carrier[SVUup->VariablePtrCarrier.CarrierLen-1] = ret;
              }
-
 
              Column++;
 
@@ -485,7 +483,7 @@ MioneObjCarrier CMO(
 
 
         ValueObj Value;
-        
+
         switch (TRVFC[i].ValueType)
         {
         case VALUE_TABLE_TYPE:
@@ -493,7 +491,7 @@ MioneObjCarrier CMO(
                 TableObj TableObject = (TableObj){
                     .VariableObjPointerCarrierPointer = 0,
                 };
-        
+
                 TableObject.SectionCarrierPointer = malloc(sizeof(MioneSectionObjCarrier));
                 *TableObject.SectionCarrierPointer = Built;
 
@@ -521,7 +519,6 @@ MioneObjCarrier CMO(
         }
 
         MIONE[TRVFC[i].ObjIndex].Val = Value;
-
     }
 
     return (MioneObjCarrier){
