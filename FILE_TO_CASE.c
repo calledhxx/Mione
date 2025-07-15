@@ -116,7 +116,6 @@ CaseObjCarrier FCO(FILE* F)
 
     do
     {
-
         c = fgetwc(F);
         cIndex++;
 
@@ -596,6 +595,6 @@ CaseObjCarrier FCO(FILE* F)
 
     return (CaseObjCarrier){
         .Carrier = CaseObjects,
-        .CarrierLen = CASESize,
+        .CarrierLen = CaseObjectsSize,
     };
 }

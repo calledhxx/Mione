@@ -4,4 +4,4 @@
 
 
 
-extern  ValueObjCarrier COUNT(MioneObj*Pack,int PackSize);
+extern  ValueObjCarrier COUNT();

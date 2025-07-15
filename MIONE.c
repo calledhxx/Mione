@@ -22,19 +22,19 @@ void newSection(MioneSectionObjCarrier *BuiltObjPointer)
     (*BuiltObjPointer).CarrierLen++;
     (*BuiltObjPointer).Carrier = realloc((*BuiltObjPointer).Carrier, sizeof(MioneSectionObj) * (*BuiltObjPointer).CarrierLen);
 
-    (*BuiltObjPointer).Carrier[(*BuiltObjPointer).CarrierLen-1].HeadAction = (MioneObj){ .Head = (HeadObj){ .Fuc = 0}};
+    (*BuiltObjPointer).Carrier[(*BuiltObjPointer).CarrierLen-1].Head = (MioneObj){ .Head = (HeadObj){ .Fuc = 0}};
 
-    (*BuiltObjPointer).Carrier[(*BuiltObjPointer).CarrierLen-1].Pairs = malloc(0);
-    (*BuiltObjPointer).Carrier[(*BuiltObjPointer).CarrierLen-1].PairsSize = 0;
+    (*BuiltObjPointer).Carrier[(*BuiltObjPointer).CarrierLen-1].PairCarrier.Carrier = malloc(0);
+    (*BuiltObjPointer).Carrier[(*BuiltObjPointer).CarrierLen-1].PairCarrier.CarrierLen = 0;
 
-    (*BuiltObjPointer).Carrier[(*BuiltObjPointer).CarrierLen-1].PairsSize++;
-    (*BuiltObjPointer).Carrier[(*BuiltObjPointer).CarrierLen-1].Pairs = realloc(
-        (*BuiltObjPointer).Carrier[(*BuiltObjPointer).CarrierLen-1].Pairs,
-        sizeof(PairObj) * (*BuiltObjPointer).Carrier[(*BuiltObjPointer).CarrierLen-1].PairsSize
+    (*BuiltObjPointer).Carrier[(*BuiltObjPointer).CarrierLen-1].PairCarrier.CarrierLen++;
+    (*BuiltObjPointer).Carrier[(*BuiltObjPointer).CarrierLen-1].PairCarrier.Carrier = realloc(
+        (*BuiltObjPointer).Carrier[(*BuiltObjPointer).CarrierLen-1].PairCarrier.Carrier,
+        sizeof(PairObj) * (*BuiltObjPointer).Carrier[(*BuiltObjPointer).CarrierLen-1].PairCarrier.CarrierLen
         );
 
-    (*BuiltObjPointer).Carrier[(*BuiltObjPointer).CarrierLen-1].Pairs[(*BuiltObjPointer).Carrier[(*BuiltObjPointer).CarrierLen-1].PairsSize-1].Source = malloc(0);
-    (*BuiltObjPointer).Carrier[(*BuiltObjPointer).CarrierLen-1].Pairs[(*BuiltObjPointer).Carrier[(*BuiltObjPointer).CarrierLen-1].PairsSize-1].SourceSize = 0;
+    (*BuiltObjPointer).Carrier[(*BuiltObjPointer).CarrierLen-1].PairCarrier.Carrier[(*BuiltObjPointer).Carrier[(*BuiltObjPointer).CarrierLen-1].PairCarrier.CarrierLen-1].SourceCarrier.Carrier = malloc(0);
+    (*BuiltObjPointer).Carrier[(*BuiltObjPointer).CarrierLen-1].PairCarrier.Carrier[(*BuiltObjPointer).Carrier[(*BuiltObjPointer).CarrierLen-1].PairCarrier.CarrierLen-1].SourceCarrier.CarrierLen = 0;
 
 }
 
@@ -48,9 +48,12 @@ MioneSectionObjCarrier ToMione(const MioneObjCarrier ToBuildObj)
     BuiltObj.CarrierLen = 0;
     BuiltObj.Carrier = NULL;
 
+
+
     for (int index = 0;index < ObjsSize;index++)
     {
-        MioneObj Mio = Objs[index];
+        const MioneObj Mio = Objs[index];
+
 
         if (Mio.ObjType == HEAD)
         {
@@ -61,9 +64,9 @@ MioneSectionObjCarrier ToMione(const MioneObjCarrier ToBuildObj)
                 if (wcscmp(Mio.Head.Name, Heads[i].Name) == 0)
                 {
                     newSection(&BuiltObj);
-                    BuiltObj.Carrier[BuiltObj.CarrierLen-1].HeadAction = (MioneObj){ .Head = (HeadObj){ .Fuc = SVV}};
-                    BuiltObj.Carrier[BuiltObj.CarrierLen-1].Pairs[BuiltObj.Carrier[BuiltObj.CarrierLen-1].PairsSize-1].Prompt = Mio;
-                    BuiltObj.Carrier[BuiltObj.CarrierLen-1].HeadAction = Mio;
+                    BuiltObj.Carrier[BuiltObj.CarrierLen-1].Head = (MioneObj){ .Head = (HeadObj){ .Fuc = SVV}};
+                    BuiltObj.Carrier[BuiltObj.CarrierLen-1].PairCarrier.Carrier[BuiltObj.Carrier[BuiltObj.CarrierLen-1].PairCarrier.CarrierLen-1].Host = Mio;
+                    BuiltObj.Carrier[BuiltObj.CarrierLen-1].Head = Mio;
 
 
                     break;
@@ -74,18 +77,18 @@ MioneSectionObjCarrier ToMione(const MioneObjCarrier ToBuildObj)
 
         if (Mio.ObjType == PROMPT)
         {
-            if (!BuiltObj.Carrier[BuiltObj.CarrierLen-1].HeadAction.Head.Fuc); //err;
+            if (!BuiltObj.Carrier[BuiltObj.CarrierLen-1].Head.Head.Fuc); //err;
 
-            BuiltObj.Carrier[BuiltObj.CarrierLen-1].PairsSize++;
-            BuiltObj.Carrier[BuiltObj.CarrierLen-1].Pairs = realloc(
-                BuiltObj.Carrier[BuiltObj.CarrierLen-1].Pairs,
-                sizeof(PairObj) * BuiltObj.Carrier[BuiltObj.CarrierLen-1].PairsSize
+            BuiltObj.Carrier[BuiltObj.CarrierLen-1].PairCarrier.CarrierLen++;
+            BuiltObj.Carrier[BuiltObj.CarrierLen-1].PairCarrier.Carrier = realloc(
+                BuiltObj.Carrier[BuiltObj.CarrierLen-1].PairCarrier.Carrier,
+                sizeof(PairObj) * BuiltObj.Carrier[BuiltObj.CarrierLen-1].PairCarrier.CarrierLen
                 );
 
-            BuiltObj.Carrier[BuiltObj.CarrierLen-1].Pairs[BuiltObj.Carrier[BuiltObj.CarrierLen-1].PairsSize-1].Source = malloc(0);
-            BuiltObj.Carrier[BuiltObj.CarrierLen-1].Pairs[BuiltObj.Carrier[BuiltObj.CarrierLen-1].PairsSize-1].SourceSize = 0;
+            BuiltObj.Carrier[BuiltObj.CarrierLen-1].PairCarrier.Carrier[BuiltObj.Carrier[BuiltObj.CarrierLen-1].PairCarrier.CarrierLen-1].SourceCarrier.Carrier = malloc(0);
+            BuiltObj.Carrier[BuiltObj.CarrierLen-1].PairCarrier.Carrier[BuiltObj.Carrier[BuiltObj.CarrierLen-1].PairCarrier.CarrierLen-1].SourceCarrier.CarrierLen = 0;
 
-            BuiltObj.Carrier[BuiltObj.CarrierLen-1].Pairs[BuiltObj.Carrier[BuiltObj.CarrierLen-1].PairsSize-1].Prompt = Mio;
+            BuiltObj.Carrier[BuiltObj.CarrierLen-1].PairCarrier.Carrier[BuiltObj.Carrier[BuiltObj.CarrierLen-1].PairCarrier.CarrierLen-1].Host = Mio;
         }
 
         if (Mio.ObjType == SYMBOL || Mio.ObjType == VARIABLE || Mio.ObjType == VALUE) // SVV
@@ -94,17 +97,17 @@ MioneSectionObjCarrier ToMione(const MioneObjCarrier ToBuildObj)
             if (!BuiltObj.CarrierLen)
             {
                 newSection(&BuiltObj);
-                BuiltObj.Carrier[BuiltObj.CarrierLen-1].HeadAction = (MioneObj){ .Head = (HeadObj){ .Fuc = SVV}};
+                BuiltObj.Carrier[BuiltObj.CarrierLen-1].Head = (MioneObj){ .Head = (HeadObj){ .Fuc = SVV}};
             }
 
 
-            BuiltObj.Carrier[BuiltObj.CarrierLen-1].Pairs[BuiltObj.Carrier[BuiltObj.CarrierLen-1].PairsSize-1].SourceSize++;
-            BuiltObj.Carrier[BuiltObj.CarrierLen-1].Pairs[BuiltObj.Carrier[BuiltObj.CarrierLen-1].PairsSize-1].Source = realloc(
-                    BuiltObj.Carrier[BuiltObj.CarrierLen-1].Pairs[BuiltObj.Carrier[BuiltObj.CarrierLen-1].PairsSize-1].Source,
-                    BuiltObj.Carrier[BuiltObj.CarrierLen-1].Pairs[BuiltObj.Carrier[BuiltObj.CarrierLen-1].PairsSize-1].SourceSize * sizeof(MioneObj)
+            BuiltObj.Carrier[BuiltObj.CarrierLen-1].PairCarrier.Carrier[BuiltObj.Carrier[BuiltObj.CarrierLen-1].PairCarrier.CarrierLen-1].SourceCarrier.CarrierLen++;
+            BuiltObj.Carrier[BuiltObj.CarrierLen-1].PairCarrier.Carrier[BuiltObj.Carrier[BuiltObj.CarrierLen-1].PairCarrier.CarrierLen-1].SourceCarrier.Carrier = realloc(
+                    BuiltObj.Carrier[BuiltObj.CarrierLen-1].PairCarrier.Carrier[BuiltObj.Carrier[BuiltObj.CarrierLen-1].PairCarrier.CarrierLen-1].SourceCarrier.Carrier,
+                    BuiltObj.Carrier[BuiltObj.CarrierLen-1].PairCarrier.Carrier[BuiltObj.Carrier[BuiltObj.CarrierLen-1].PairCarrier.CarrierLen-1].SourceCarrier.CarrierLen * sizeof(MioneObj)
                     );
 
-            BuiltObj.Carrier[BuiltObj.CarrierLen-1].Pairs[BuiltObj.Carrier[BuiltObj.CarrierLen-1].PairsSize-1].Source[BuiltObj.Carrier[BuiltObj.CarrierLen-1].Pairs[BuiltObj.Carrier[BuiltObj.CarrierLen-1].PairsSize-1].SourceSize-1] = Mio;
+            BuiltObj.Carrier[BuiltObj.CarrierLen-1].PairCarrier.Carrier[BuiltObj.Carrier[BuiltObj.CarrierLen-1].PairCarrier.CarrierLen-1].SourceCarrier.Carrier[BuiltObj.Carrier[BuiltObj.CarrierLen-1].PairCarrier.Carrier[BuiltObj.Carrier[BuiltObj.CarrierLen-1].PairCarrier.CarrierLen-1].SourceCarrier.CarrierLen-1] = Mio;
         }
 
         if (
@@ -115,7 +118,7 @@ MioneSectionObjCarrier ToMione(const MioneObjCarrier ToBuildObj)
             )
         {
             newSection(&BuiltObj);
-            BuiltObj.Carrier[BuiltObj.CarrierLen-1].HeadAction = (MioneObj){ .Head = (HeadObj){ .Fuc = SVV}};
+            BuiltObj.Carrier[BuiltObj.CarrierLen-1].Head = (MioneObj){ .Head = (HeadObj){ .Fuc = SVV}};
 
         }
     }

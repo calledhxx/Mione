@@ -4,4 +4,7 @@
 
 #include "OBJECTS.h"
 
+#define PROMPT_SET 1
+
+
 extern PromptObj Prompts[];

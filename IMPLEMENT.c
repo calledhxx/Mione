@@ -13,6 +13,9 @@ ImplementedObj IMPLEMENT(const ToImplementObj toImplement)
     Obj.VariableCarrier.Carrier = NULL;
     Obj.VariableCarrier.CarrierLen = 0;
 
+    Obj.ValueCarrier.Carrier = NULL;
+    Obj.ValueCarrier.CarrierLen = 0;
+
     ValueAndVariableObjCarrier VAVCarrier;
     VAVCarrier.CarrierLen = 0;
     VAVCarrier.Carrier = NULL;
@@ -20,20 +23,19 @@ ImplementedObj IMPLEMENT(const ToImplementObj toImplement)
     const unsigned int SectionsSize = toImplement.Built.CarrierLen;
     const MioneSectionObj * Sections = toImplement.Built.Carrier;
 
+
+
     for (unsigned int SectionIndex = 0; SectionIndex < SectionsSize; SectionIndex++)
     {
         uint8_t breakSectionCycle = 0;
 
         const MioneSectionObj thisSection = Sections[SectionIndex];
 
-        if (thisSection.HeadAction.Head.Fuc)
+        if (thisSection.Head.Head.Fuc)
         {
-            const PairObjCarrier PairCarrier = {
-                .Carrier = thisSection.Pairs,
-                .CarrierLen = thisSection.PairsSize
-            };
+            const PairObjCarrier PairCarrier = thisSection.PairCarrier;
 
-            const HeadReturnObj HeadReturn = thisSection.HeadAction.Head.Fuc(
+            const HeadReturnObj HeadReturn = thisSection.Head.Head.Fuc(
                    &(HeadCallObj){
                        .PairCarrier = (PairObjCarrier){
                            .Carrier = PairCarrier.Carrier,
@@ -64,6 +66,11 @@ ImplementedObj IMPLEMENT(const ToImplementObj toImplement)
                         {
                             Obj.ToState |= 1;
 
+                            Obj.ValueCarrier.Carrier = realloc(
+                                Obj.ValueCarrier.Carrier,
+                                (Obj.ValueCarrier.CarrierLen + HeadReturn.ValueCarrier.CarrierLen) * sizeof(ValueObj)
+                                );
+
                             Obj.ValueCarrier.Carrier = memcpy(
                                 Obj.ValueCarrier.Carrier + Obj.ValueCarrier.CarrierLen,
                                 HeadReturn.ValueCarrier.Carrier,
@@ -72,6 +79,7 @@ ImplementedObj IMPLEMENT(const ToImplementObj toImplement)
 
                             Obj.ValueCarrier.CarrierLen += HeadReturn.ValueCarrier.CarrierLen;
 
+
                             breakStateCycle = 1;
 
                             //its doesnt need to be memories copy,AH whatever
@@ -79,6 +87,11 @@ ImplementedObj IMPLEMENT(const ToImplementObj toImplement)
                         }
                     case 2:
                         {
+                             VAVCarrier.Carrier = realloc(
+                                 VAVCarrier.Carrier,
+                             (VAVCarrier.CarrierLen + HeadReturn.ValueAndVariableCarrier.CarrierLen) * sizeof(ValueAndVariableObj)
+                             );
+
                             VAVCarrier.Carrier =
                                 memcpy(VAVCarrier.Carrier + VAVCarrier.CarrierLen,
                                        HeadReturn.ValueAndVariableCarrier.Carrier,
@@ -92,6 +105,11 @@ ImplementedObj IMPLEMENT(const ToImplementObj toImplement)
                     case 4:
                         {
                             Obj.ToState |= 2;
+
+                             Obj.VariableCarrier.Carrier = realloc(
+                                 Obj.VariableCarrier.Carrier,
+                                 Obj.VariableCarrier.CarrierLen + HeadReturn.VariableCarrier.CarrierLen
+                            );
 
                             Obj.VariableCarrier.Carrier =
                                 memcpy(

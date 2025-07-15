@@ -72,6 +72,7 @@ MioneObjCarrier CMO(
     ToReplaceValueForCMOObj * TRVFC = NULL;
     int TRVFCSize = 0;
 
+
     for (int i = 0; i <CASESIZE; i++)
     {
 

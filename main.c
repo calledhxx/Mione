@@ -1,4 +1,5 @@
 #include <stdint.h>
+#include <stdio.h>
 #include <stdlib.h>
 #include <wchar.h>
 
@@ -13,21 +14,23 @@ ScopeObj MainSVU = {0};
 
 int main(const int OptionsSize,char **Options)
 {
-    FILE *f = NULL;
+    FILE *f = _wfopen(L"D:\\Mione\\index.mio",L"r");
 
-    f = _wfopen(L"D:\\Mione\\index.mio",L"r");
 
     if (f == NULL) exit(-1);
 
     CaseObjCarrier CaseCarrier = FCO(f);
 
+
     MioneObjCarrier MioneCarrier = CMO(CaseCarrier,1,0,&MainSVU);
 
     MioneSectionObjCarrier Built =ToMione(MioneCarrier);
 
-    IMPLEMENT((ToImplementObj){
+    ImplementedObj Implement = IMPLEMENT((ToImplementObj){
         .Built = Built
     });
+
+    printf("Hello, Mione!\n");
 
     return 0;
 }

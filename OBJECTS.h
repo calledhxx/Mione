@@ -23,8 +23,6 @@
 #ifndef OBJECTS_H
 #define OBJECTS_H
 
-
-
 //
 //
 //數組
@@ -235,10 +233,9 @@ typedef struct _CaseObjectsCarrier
 
 typedef struct _PairObject
 {
-    MioneObj Prompt; //若是開頭組合，則此物件為HEAD本身，反之PROMPT本身。
+    MioneObj Host; //若是開頭組合，則此物件為HEAD本身，反之PROMPT本身。
 
-    MioneObj* Source;
-    int SourceSize;
+    MioneObjCarrier SourceCarrier;
 }PairObj;
 
 typedef struct _PairObjectsCarrier
@@ -255,10 +252,9 @@ typedef struct _PairObjectsCarrier
 
 typedef struct _MioneSectionObject
 {
-    MioneObj HeadAction;
+    MioneObj Head;
 
-    PairObj * Pairs;
-    int PairsSize;
+    PairObjCarrier PairCarrier;
 } MioneSectionObj;
 
 typedef struct _MioneSectionObjectsCarrier
@@ -330,11 +326,11 @@ typedef struct _HeadReturnObject
 
 typedef struct _HeadCallObject
 {
-    PairObjCarrier PairCarrier;
+    PairObjCarrier PairCarrier; //程式句二大組合
 
-    ValueObjCarrier CallByValueCarrier;
+    ValueObjCarrier CallByValueCarrier; //傳入的值
 
-    VariableObjPtrCarrier VariablePtrCarrier;
+    VariableObjPtrCarrier VariablePtrCarrier; //以上本作用域特色變數
 } HeadCallObj;
 
 //
@@ -342,6 +338,25 @@ typedef struct _HeadCallObject
 //
 
 
+typedef struct _ErrorObject
+{
+    wchar_t * Message;
+    wchar_t * Code;
+
+    MioneObjCarrier ErrorObjectCarrier;
+} ErrorObj;
+
+typedef struct _EventObject
+{
+    int ToState; /*
+        0b00000000:執行回報
+
+        0b00000001:錯誤
+    */
+
+    ErrorObj Error;
+
+} EventObj;
 
 //
 //Mione 運行交換物件
@@ -359,14 +374,17 @@ typedef struct _ImplementedObject
 
         0b00000001:回傳值
         0b00000010:區域性特色變數
+        0b00000100:事件回傳
     */
 
     ValueObjCarrier ValueCarrier;
     VariableObjCarrier VariableCarrier;
+    EventObj Event;
 }ImplementedObj;
 //
 //
 //
+
 
 
 typedef struct _ScopeObject
