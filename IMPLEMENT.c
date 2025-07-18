@@ -108,7 +108,7 @@ ImplementedObj IMPLEMENT(const ToImplementObj toImplement)
 
                              Obj.VariableCarrier.Carrier = realloc(
                                  Obj.VariableCarrier.Carrier,
-                                 Obj.VariableCarrier.CarrierLen + HeadReturn.VariableCarrier.CarrierLen
+                                 sizeof(VariableObj)*(Obj.VariableCarrier.CarrierLen + HeadReturn.VariableCarrier.CarrierLen)
                             );
 
                             Obj.VariableCarrier.Carrier =

@@ -21,6 +21,9 @@ HeadReturnObj SET(const HeadCallObj * HeadCallObjectPointer)
 {
     HeadReturnObj Result = {0};
 
+    Result.VariableCarrier.CarrierLen = 0;
+    Result.VariableCarrier.Carrier = NULL;
+
     const HeadCallObj HeadCallObject = *HeadCallObjectPointer;
 
     const unsigned int PairsSize = HeadCallObject.PairCarrier.CarrierLen;
@@ -75,14 +78,25 @@ HeadReturnObj SET(const HeadCallObj * HeadCallObjectPointer)
         case 0: continue;
         case 1<<(PROMPT_SET-1):
             {
+                Result.ToState |= 0b00000100;
+
+                Result.VariableCarrier.Carrier = realloc(
+                    Result.VariableCarrier.Carrier,
+                    (Result.VariableCarrier.CarrierLen + HeadSuffix.CarrierLen)*sizeof(VariableObj)
+                    );
+
                 for (unsigned int HeadSuffixIndex = 0; HeadSuffixIndex < HeadSuffix.CarrierLen ; HeadSuffixIndex++)
-                    *HeadSuffix.Carrier[HeadSuffixIndex] = (VariableObj){
+                {
+                    Result.VariableCarrier.CarrierLen++;
+                    Result.VariableCarrier.Carrier[Result.VariableCarrier.CarrierLen-1] =  *HeadSuffix.Carrier[HeadSuffixIndex] = (VariableObj){
                         .Value = HeadSuffixIndex < SetPromptSuffix.CarrierLen
-                            ? SetPromptSuffix.Carrier[HeadSuffixIndex]
-                            : (ValueObj){
-                                .ValueType = 0
-                            }
+                                     ? SetPromptSuffix.Carrier[HeadSuffixIndex]
+                                     : (ValueObj){
+                                         .ValueType = 0
+                                     }
                     };
+                    printf("added\n");
+                }
 
                 break;
             }

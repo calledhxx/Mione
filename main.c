@@ -17,8 +17,6 @@ int main(const int OptionsSize,char **Options)
 {
     FILE *f = 0;
 
-
-
     if (OptionsSize == 2 && strcmp(Options[1],"line")==0)
     {
         f = stdin;
@@ -27,7 +25,7 @@ int main(const int OptionsSize,char **Options)
 
         while (1)
         {
-            fwrite(">> ",1,3,stdout);
+            fwrite(">>  ",1,3,stdout);
 
             CaseObjCarrier CaseCarrier = FCO(f,1);
 
