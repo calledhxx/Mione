@@ -32,7 +32,7 @@ VariableObj * retVarUP(ScopeObj * SVUup,const wchar_t* Name,const int Place)
           )
             ret =SVUup->VariablePtrCarrier.Carrier[VariableUPIndex];
 
-    if (!ret && SVUup->ParentUP) return retVarUP(SVUup->ParentUP,Name,Place);
+    if (!ret && SVUup->ParentScopePointer) return retVarUP(SVUup->ParentScopePointer,Name,Place);
 
     return ret;
 }
@@ -457,20 +457,21 @@ MioneObjCarrier CMO(
     for (int i = 0;i<TRVFCSize;i++)
     {
 
-        ScopeObj * ChildSVUup = malloc(sizeof(ScopeObj));
-        *ChildSVUup = (ScopeObj){0};
-        ChildSVUup->ParentUP = SVUup;
+        ScopeObj ChildSVU = (ScopeObj){0};
+        ChildSVU.ParentScopePointer = SVUup;
 
-        SVUup->ChildUPsSize++;
-        SVUup->ChildUPs = realloc(SVUup->ChildUPs,SVUup->ChildUPsSize*sizeof(ScopeObj*));
-        SVUup->ChildUPs[SVUup->ChildUPsSize-1] = ChildSVUup;
 
         MioneObjCarrier MioCarrier = CMO(
             TRVFC[i].a.CaseCarrier,
             TRVFC[i].a.LineADD,
             TRVFC[i].a.ColumnADD,
-            ChildSVUup
+            &ChildSVU
             );
+
+        SVUup->ChildrenScopeCarrierPointer->CarrierLen++;
+        SVUup->ChildrenScopeCarrierPointer->Carrier = realloc(SVUup->ChildrenScopeCarrierPointer->Carrier,SVUup->ChildrenScopeCarrierPointer->CarrierLen*sizeof(ScopeObj*));
+        SVUup->ChildrenScopeCarrierPointer->Carrier[SVUup->ChildrenScopeCarrierPointer->CarrierLen-1] = ChildSVU;
+
 
         MioneSectionObjCarrier Built = ToMione(MioCarrier);
 

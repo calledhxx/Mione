@@ -34,8 +34,7 @@ HeadReturnObj SET(const HeadCallObj * HeadCallObjectPointer)
 
     ValueObjCarrier SetPromptSuffix = {0};
 
-    int Registration = 0;
-
+    unsigned int Registration = 0;
 
     for (unsigned int PairIndex = 0; PairIndex < PairsSize; PairIndex++)
     {
@@ -95,7 +94,6 @@ HeadReturnObj SET(const HeadCallObj * HeadCallObjectPointer)
                                          .ValueType = 0
                                      }
                     };
-                    printf("added\n");
                 }
 
                 break;

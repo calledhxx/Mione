@@ -32,7 +32,7 @@ int CheckCharType(const wchar_t Char)
 
     //Symbols
 
-    wchar_t CanConnectWithAnotherSymbol[] = {
+    static wchar_t CanConnectWithAnotherSymbol[] = { //why am i using static here? i dont know
         L'*',
         L'/',
         L'+',
@@ -40,7 +40,7 @@ int CheckCharType(const wchar_t Char)
         L'^'
     };
 
-    wchar_t CanNotConnectWithAnotherSymbol[] = {
+    static wchar_t CanNotConnectWithAnotherSymbol[] = {
         L'(',
         L')',
         L'[',
@@ -56,13 +56,11 @@ int CheckCharType(const wchar_t Char)
     };
 
     for (int i = 0; i < sizeof(CanConnectWithAnotherSymbol)/sizeof(CanConnectWithAnotherSymbol[0]); i++)
-    {
         if (CanConnectWithAnotherSymbol[i] == Char)  return 9;
-    }
+
     for (int i = 0; i < sizeof(CanNotConnectWithAnotherSymbol)/sizeof(CanNotConnectWithAnotherSymbol[0]); i++)
-    {
         if (CanNotConnectWithAnotherSymbol[i] == Char) return 10;
-    }
+
 
     //space
     if (Char == L' ') return 11;
@@ -79,7 +77,7 @@ int CheckCharType(const wchar_t Char)
 
 CaseObjCarrier FCO(FILE* F,const uint8_t LineBreak)
 {
-    CaseObj *CaseObjects = malloc(0);
+    CaseObj *CaseObjects = NULL;
     int CaseObjectsSize = 0;
 
     int inLockinType = 0; // 是否在限制別類裡，如果是則此項表示限制別類的類型。例如：字串=1
@@ -109,7 +107,7 @@ CaseObjCarrier FCO(FILE* F,const uint8_t LineBreak)
     int CASESize = 0;
 
     wchar_t c = 0;
-    int cIndex = -1;
+    int cIndex = -1; //it is not Index :skull:
 
     int Line=1;
     int Colum = 0;
@@ -129,130 +127,155 @@ CaseObjCarrier FCO(FILE* F,const uint8_t LineBreak)
 
         Colum++;
 
-
         switch (inLockinType)
         {
         case 1:
-            if (superCharSize)
             {
-                superCharSize++;
-                backslashOption = realloc(backslashOption, superCharSize * sizeof(wchar_t));
-                backslashOption[superCharSize - 1] = c;
-                //printf("*[SUPER CHAR ADD]* ");
-
-
-                if (superCharSize > 2)
+                if (superCharSize)
                 {
-                    if (c == L'(')
+                    superCharSize++;
+                    backslashOption = realloc(backslashOption, superCharSize * sizeof(wchar_t));
+                    backslashOption[superCharSize - 1] = c;
+
+                    if (superCharSize > 2)
                     {
-                        hasBracket = 1;
-                    }
-                    else if (c == L')')
-                    {
-                        if (hasBracket == 1)
+                        if (c == L'(')
                         {
-                            hasBracket = 2;
+                            hasBracket = 1;
+                        }
+                        else if (c == L')')
+                        {
+                            if (hasBracket == 1)
+                            {
+                                hasBracket = 2;
+                            }
                         }
                     }
-                }
 
 
-                if (superCharSize == 2)
-                {
-                    switch (c)
+                    if (superCharSize == 2)
                     {
-                    case L'n':
-                        superCharMode = 1;
-                        break;
-                    case L'u':
-                        superCharMode = 2;
-                        break;
-                    case L'\'':
-                        superCharMode = 3;
-                        break;
-                    case L'"':
-                        superCharMode = 4;
-                        break;
-                    }
-                }
-
-
-                switch (superCharMode)
-                {
-                case 1:
-                    {
-                        CASESize++;
-                        CASE = realloc(CASE, CASESize * sizeof(wchar_t));
-                        CASE[CASESize - 1] = 10;
-
-                        superCharMode = 0;
-
-                        backslashOption = 0;
-                        superCharSize = 0;
-
-                        continue;
-
-                    }
-                case 2:
-                    {
-                        if (hasBracket == 2) //end
+                        switch (c)
                         {
-                            //int unStart = cIndex -superCharSize + 1 /* '/' */ +  1 /* Opt符號 */  + 1 /* '(' */ + (1);
-                            //int unEnd = cIndex-(1);
+                        case L'n':
+                            superCharMode = 1;
+                            break;
+                        case L'u':
+                            superCharMode = 2;
+                            break;
+                        case L'\'':
+                            superCharMode = 3;
+                            break;
+                        case L'"':
+                            superCharMode = 4;
+                            break;
+                        }
+                    }
 
-                            superCharOpt = realloc(superCharOpt, superCharOptSize * sizeof(wchar_t));
-                            superCharOpt[superCharOptSize] = 0;
-
-                            int isHex = 0;
-                            for (int i = 1/* 不要 '(' */ ; i < superCharOptSize; i = i + 2)
-                            {
-                                if (isHex) if ((superCharOptSize - 1/* '(' */) % 2 == 1) break;
-                                if (i == 1)
-                                {
-                                    if (superCharOpt[i] == L'1' && superCharOpt[i + 1] == L'6') isHex = 1;
-                                }
-                                else
-                                {
-                                    const wchar_t A[] = {
-                                        L'0', L'1', L'2', L'3', L'4', L'5', L'6', L'7', L'8', L'9', L'A', L'B', L'C', L'D', L'E', L'F'
-                                    };
-
-                                    int indexA = 0; //個位
-                                    int indexB = 0; //十位
-
-
-                                    for (int index = 0; index < 16; index++)
-                                    {
-                                        if (A[index] == superCharOpt[i + 1])
-                                        {
-                                            indexA = index;
-                                        };
-                                        if (A[index] == superCharOpt[i])
-                                        {
-                                            indexB = index;
-                                        };
-                                    }
-
-                                    superCharOutSize++;
-                                    superCharOut = realloc(superCharOut, superCharOutSize * sizeof(wchar_t));
-                                    superCharOut[superCharOutSize - 1] = indexB * 16 + indexA;
-                                };
-                            }
-
-
-                            //for (int i =0;i<superCharOutSize;i++) {printf("A:%d %d\n",superCharOut[i],superCharOutSize);}
-
-
-                            //for (int i =0;i<CASESize;i++) {printf("B:%d\n",CASE[i]);}
-
-                            CASESize = CASESize + superCharOutSize;
+                    switch (superCharMode){ //i really wanna fuck this layout
+                    case 1:{
+                            CASESize++;
                             CASE = realloc(CASE, CASESize * sizeof(wchar_t));
+                            CASE[CASESize - 1] = 10;
 
+                            superCharMode = 0;
 
-                            for (int i = 0; i < superCharOutSize; i++)
+                            backslashOption = 0;
+                            superCharSize = 0;
+
+                            continue;
+
+                        }
+                    case 2:
+                        {
+                            if (hasBracket == 2) //end
                             {
-                                CASE[i + CASESize - superCharOutSize] = superCharOut[i];
+                                superCharOpt = realloc(superCharOpt, superCharOptSize * sizeof(wchar_t));
+                                superCharOpt[superCharOptSize] = 0;
+
+                                int isHex = 0;
+                                for (int i = 1/* 不要 '(' */ ; i < superCharOptSize; i = i + 2)
+                                {
+                                    if (isHex) if ((superCharOptSize - 1/* '(' */) % 2 == 1) break;
+                                    if (i == 1)
+                                    {
+                                        if (superCharOpt[i] == L'1' && superCharOpt[i + 1] == L'6') isHex = 1;
+                                    }
+                                    else
+                                    {
+                                        const wchar_t A[] = {
+                                            L'0', L'1', L'2', L'3', L'4', L'5', L'6', L'7', L'8', L'9', L'A', L'B', L'C', L'D', L'E', L'F'
+                                        };
+
+                                        int indexA = 0; //個位
+                                        int indexB = 0; //十位
+
+
+                                        for (int index = 0; index < 16; index++)
+                                        {
+                                            if (A[index] == superCharOpt[i + 1])
+                                            {
+                                                indexA = index;
+                                            };
+                                            if (A[index] == superCharOpt[i])
+                                            {
+                                                indexB = index;
+                                            };
+                                        }
+
+                                        superCharOutSize++;
+                                        superCharOut = realloc(superCharOut, superCharOutSize * sizeof(wchar_t));
+                                        superCharOut[superCharOutSize - 1] = indexB * 16 + indexA;
+                                    };
+                                }
+
+
+
+
+
+                                CASESize = CASESize + superCharOutSize;
+                                CASE = realloc(CASE, CASESize * sizeof(wchar_t));
+
+
+                                for (int i = 0; i < superCharOutSize; i++)
+                                    CASE[i + CASESize - superCharOutSize] = superCharOut[i];
+
+
+                                superCharMode = 0;
+
+                                backslashOption = 0;
+                                superCharSize = 0;
+
+                                continue;
+                            }else if (hasBracket == 1) //還在紀錄
+                            {
+                                superCharOptSize++;
+                                superCharOpt = realloc(superCharOpt, superCharOptSize* sizeof(wchar_t));
+                                superCharOpt[superCharOptSize - 1] = c;
                             }
+
+                            break;
+                        }
+                    case 3:
+                        {
+                            CASESize++;
+                            CASE = realloc(CASE, CASESize* sizeof(wchar_t));
+                            CASE[CASESize - 1] = L'\'';
+
+
+                            superCharMode = 0;
+
+                            backslashOption = 0;
+                            superCharSize = 0;
+
+                            continue;
+
+                        }
+                    case 4:
+                        {
+                            CASESize++;
+                            CASE = realloc(CASE, CASESize * sizeof(wchar_t));
+                            CASE[CASESize - 1] = L'"';
 
                             superCharMode = 0;
 
@@ -261,63 +284,29 @@ CaseObjCarrier FCO(FILE* F,const uint8_t LineBreak)
 
                             continue;
                         }
-                        else if (hasBracket == 1) //還在紀錄
-                        {
-                            superCharOptSize++;
-                            superCharOpt = realloc(superCharOpt, superCharOptSize* sizeof(wchar_t));
-                            superCharOpt[superCharOptSize - 1] = c;
-                        }
-
-                        break;
-                    }
-                case 3:
-                    {
-                        CASESize++;
-                        CASE = realloc(CASE, CASESize* sizeof(wchar_t));
-                        CASE[CASESize - 1] = L'\'';
-
-
-                        superCharMode = 0;
-
-                        backslashOption = 0;
-                        superCharSize = 0;
-
-                        continue;
-
-                    }
-                case 4:
-                    {
-                        CASESize++;
-                        CASE = realloc(CASE, CASESize * sizeof(wchar_t));
-                        CASE[CASESize - 1] = L'"';
-
-                        superCharMode = 0;
-
-                        backslashOption = 0;
-                        superCharSize = 0;
-
-                        continue;
-
                     }
                 }
-            }
             break;
+            }
         case 2:
-            if (c == L'\n')
             {
-                inLockinType = 0;
-                ThisInLockinLast = 1;
+                if (c == L'\n')
+                {
+                    inLockinType = 0;
+                    ThisInLockinLast = 1;
+                }
+                break;
             }
-            break;
         case 3:
-            if (LastCharType == CharType)  if (LastChar == L'*' || c == L'/')
             {
-                inLockinType = 0;
-                ThisInLockinLast = 1;
+                if (LastCharType == CharType)  if (LastChar == L'*' || c == L'/')
+                {
+                    inLockinType = 0;
+                    ThisInLockinLast = 1;
+                }
+                break;
             }
-            break;
         }
-
 
         if (!inLockinType)
         {
@@ -339,20 +328,13 @@ CaseObjCarrier FCO(FILE* F,const uint8_t LineBreak)
             }
             else //一般結束 沒有被限制的情況下
             {
-
-
                 if (CASESize) //第一個會有0的差異
                 {
-                    if ((LastCharType == 1 && CharType == 2) )
+                    if (!(LastCharType == 1 && CharType == 2))
                     {
-
-                    }else
-                    {
-
                         CASESize++;
                         CASE = realloc(CASE, CASESize * sizeof(wchar_t));
                         CASE[CASESize - 1] = 0;
-
 
                         CaseObjectsSize++;
                         CaseObjects = realloc(CaseObjects, CaseObjectsSize*sizeof(CaseObj));
@@ -362,7 +344,6 @@ CaseObjCarrier FCO(FILE* F,const uint8_t LineBreak)
                         };
 
                         CASE = NULL;
-                        CASE = malloc(0);
                         CASESize = 0;
                     }
 
@@ -376,189 +357,156 @@ CaseObjCarrier FCO(FILE* F,const uint8_t LineBreak)
             switch (CharType)
             {
             case 1:
-                if (inLockinType)
                 {
-                }
-                else
-                {
-                    //printf("yess  %d\n",inLockinType);
-                    CASESize++;
-                    CASE = realloc(CASE, CASESize * sizeof(wchar_t));
-                    CASE[CASESize - 1] = c;
-                }
-
-                break;
-            case 2:
-                if (inLockinType){}else
-                {
-                    //printf("hahaha %d\n",inLockinType);
-                    CASESize++;
-                    CASE = realloc(CASE, CASESize * sizeof(wchar_t));
-                    CASE[CASESize - 1] = c;
-                    if (LastCharType == 1) CharType = 1;
-                }
-                break;
-            case 3:
-                if (inLockinType == 1 && StringHostingBy == (char)c)
-                {
-                    CASESize++;
-                    CASE = realloc(CASE, CASESize * sizeof(wchar_t));
-                    CASE[CASESize - 1] = c;
-
-                    //printf("huh %d\n",c);
-
-                    CASESize++;
-                    CASE = realloc(CASE, CASESize * sizeof(wchar_t));
-                    CASE[CASESize - 1] = 0;
-                    //printf("my track~ '%s'\n", CASE);
-
-
-
-                    CaseObjectsSize++;
-                    CaseObjects = realloc(CaseObjects, CaseObjectsSize*sizeof(CaseObj));
-                    CaseObjects[CaseObjectsSize - 1] = (CaseObj){
-                        .ObjType = 3,
-                        .ObjName = CASE,
-                    };
-                   // printf("*[CASE END]* \n");
-
-                    inLockinType = 0;
-
-                    CASE = NULL;
-                    CASE = malloc(0);
-                    CASESize = 0;
-                }
-                else if (inLockinType == 0)
-                {
-                    StringHostingBy = (int)c;
-                    inLockinType = 1;
-                }
-
-                break;
-            case 4:
-
-        if (inLockinType == 1 && StringHostingBy == (char)c)
-        {
-            CASESize++;
-            CASE = realloc(CASE, CASESize * sizeof(wchar_t));
-            CASE[CASESize - 1] = c;
-
-            //printf("huh %d\n",c);
-
-            CASESize++;
-            CASE = realloc(CASE, CASESize * sizeof(wchar_t));
-            CASE[CASESize - 1] = 0;
-            //printf("my track~ '%s'\n", CASE);
-
-
-
-            CaseObjectsSize++;
-            CaseObjects = realloc(CaseObjects, CaseObjectsSize*sizeof(CaseObj));
-            CaseObjects[CaseObjectsSize - 1] = (CaseObj){
-                .ObjType = 3,
-                .ObjName = CASE,
-            };
-            // printf("*[CASE END]* \n");
-
-            inLockinType = 0;
-
-            CASE = NULL;
-            CASE = malloc(0);
-            CASESize = 0;
-        }
-        else if (inLockinType == 0)
-        {
-            StringHostingBy = (int)c;
-            inLockinType = 1;
-        }
-
-                break;
-            case 9:
-                if (!inLockinType && !ThisInLockinLast)
-                {
-                    CASESize++;
-                    CASE = realloc(CASE, CASESize * sizeof(wchar_t));
-                    CASE[CASESize - 1] = c;
-
-
-                }
-
-                break;
-            case 10:
-                if (!inLockinType)
-                {
-                    if (LastCharType == 10)
+                    if (!inLockinType)
                     {
                         CASESize++;
-                        CASE = realloc(CASE, CASESize* sizeof(wchar_t));
+                        CASE = realloc(CASE, CASESize * sizeof(wchar_t));
+                        CASE[CASESize - 1] = c;
+                    }
+
+                    break;
+                }
+            case 2:
+                {
+                    if (!inLockinType)
+                    {
+                        CASESize++;
+                        CASE = realloc(CASE, CASESize * sizeof(wchar_t));
+                        CASE[CASESize - 1] = c;
+                        if (LastCharType == 1) CharType = 1;
+                    }
+                    break;
+                }
+
+            case 3:
+            case 4:
+                {
+                    if (inLockinType == 1 && StringHostingBy == (char)c)
+                    {
+                        CASESize++;
+                        CASE = realloc(CASE, CASESize * sizeof(wchar_t));
+                        CASE[CASESize - 1] = c;
+
+
+                        CASESize++;
+                        CASE = realloc(CASE, CASESize * sizeof(wchar_t));
                         CASE[CASESize - 1] = 0;
 
-                        //printf("bdfr '%s'\n", CASE);
 
 
                         CaseObjectsSize++;
                         CaseObjects = realloc(CaseObjects, CaseObjectsSize*sizeof(CaseObj));
                         CaseObjects[CaseObjectsSize - 1] = (CaseObj){
-                            .ObjType = 10,
+                            .ObjType = 3,
                             .ObjName = CASE,
                         };
+
+                        inLockinType = 0;
+
                         CASE = NULL;
-                        CASE = malloc(0);
                         CASESize = 0;
-
-                        CASESize++;
-                        CASE = realloc(CASE, CASESize* sizeof(wchar_t));
-                        CASE[CASESize - 1] = c;
                     }
-                    else
+                    else if (inLockinType == 0)
+                    {
+                        StringHostingBy = (int)c;
+                        inLockinType = 1;
+                    }
+
+                    break;
+                }
+            case 9:
+                {
+                    if (!inLockinType && !ThisInLockinLast)
                     {
                         CASESize++;
-                        CASE = realloc(CASE, CASESize* sizeof(wchar_t));
+                        CASE = realloc(CASE, CASESize * sizeof(wchar_t));
                         CASE[CASESize - 1] = c;
                     }
+
+                    break;
                 }
-                break;
+            case 10:
+                {
+                    if (!inLockinType)
+                    {
+                        if (LastCharType == 10)
+                        {
+                            CASESize++;
+                            CASE = realloc(CASE, CASESize* sizeof(wchar_t));
+                            CASE[CASESize - 1] = 0;
+
+                            //printf("bdfr '%s'\n", CASE);
+
+
+                            CaseObjectsSize++;
+                            CaseObjects = realloc(CaseObjects, CaseObjectsSize*sizeof(CaseObj));
+                            CaseObjects[CaseObjectsSize - 1] = (CaseObj){
+                                .ObjType = 10,
+                                .ObjName = CASE,
+                            };
+                            CASE = NULL;
+                            CASE = malloc(0);
+                            CASESize = 0;
+
+                            CASESize++;
+                            CASE = realloc(CASE, CASESize* sizeof(wchar_t));
+                            CASE[CASESize - 1] = c;
+                        }
+                        else
+                        {
+                            CASESize++;
+                            CASE = realloc(CASE, CASESize* sizeof(wchar_t));
+                            CASE[CASESize - 1] = c;
+                        }
+                    }
+                    break;
+                }
             case 12:
-                if (inLockinType == 1)
                 {
-                    if (superCharSize) //防止上方的結構有加了
+                    if (inLockinType == 1)
                     {
-                    }
-                    else
+                        if (superCharSize) //防止上方的結構有加了
+                        {
+                        }
+                        else
+                        {
+                            // printf("*[SUPER CHAR START]* ");
+                            superCharSize++;
+                            backslashOption = realloc(backslashOption, superCharSize * sizeof(wchar_t));
+                            backslashOption[superCharSize - 1] = c;
+                        }
+                    }else
                     {
-                        // printf("*[SUPER CHAR START]* ");
-                        superCharSize++;
-                        backslashOption = realloc(backslashOption, superCharSize * sizeof(wchar_t));
-                        backslashOption[superCharSize - 1] = c;
+                        ErrCall("borken","M000",NULL,Line,Colum);
                     }
-                }else
-                {
-                    ErrCall("borken","M000",NULL,Line,Colum);
+
+
+                    break;
                 }
-
-
-                break;
             case 13:
-                Line++;
-                Colum = 0;
-
-                if (inLockinType)
                 {
+                    Line++;
+                    Colum = 0;
 
-                }else
-                {
-                    CaseObjectsSize++;
-                    CaseObjects = realloc(CaseObjects, CaseObjectsSize*sizeof(CaseObj));
-                    CaseObjects[CaseObjectsSize - 1] = (CaseObj){
-                        .ObjType = 13,
-                        .ObjName = L"\n",
-                    };
+                    if (inLockinType)
+                    {
+
+                    }else
+                    {
+                        CaseObjectsSize++;
+                        CaseObjects = realloc(CaseObjects, CaseObjectsSize*sizeof(CaseObj));
+                        CaseObjects[CaseObjectsSize - 1] = (CaseObj){
+                            .ObjType = 13,
+                            .ObjName = L"\n",
+                        };
+                    }
+                    break;
                 }
-                break;
             }
         }
 
-        if (!superCharSize) //Lockin 【內】專屬
+        if (!superCharSize)
         {
             switch (inLockinType)
             {
@@ -574,24 +522,19 @@ CaseObjCarrier FCO(FILE* F,const uint8_t LineBreak)
         }
 
 
-        //printf("'%c' '%d' '%d'\n",c,CharType,ThislastSuperChar);
         LastCharType = CharType;
         LastChar = c;
         ThisInLockinLast = 0;
         ThisInLockinLast = 0;
-        // ThislastSuperChar = 0;1
 
         if (c == WEOF) break;
     }
     while (1);
 
-
-
     if (inLockinType)
     {
         ErrCall("no end FILE TO CASE","M245",NULL,Line,Colum);
     }
-
 
     return (CaseObjCarrier){
         .Carrier = CaseObjects,
