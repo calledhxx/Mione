@@ -45,6 +45,8 @@ int CheckCharType(const wchar_t Char)
         L';',
         L':',
         L'@',
+        L'<',
+        L'>',
     };
 
     for (int i = 0; i < sizeof(CanConnectWithAnotherSymbol)/sizeof(CanConnectWithAnotherSymbol[0]); i++)
@@ -68,6 +70,8 @@ int CheckCharType(const wchar_t Char)
 
 CaseObjCarrier FCO(FILE* F,const uint8_t LineBreak)
 {
+    printf(">>FCO Function is called\n");
+
     CaseObjCarrier CaseCarriers = {0};
 
     wchar_t * CaseName = NULL;
@@ -81,10 +85,27 @@ CaseObjCarrier FCO(FILE* F,const uint8_t LineBreak)
     uint8_t ThisCharType = 0; //目前字元類型 包括被覆蓋的類型
     uint8_t LastCharType = 0; //上個字元類型 包括被覆蓋的類型
 
-
     uint8_t HandleType = 0; //處理類型
 
     uint8_t StringHandleChar = 0; //字串類型 `'`與 `"`的編碼
+
+    // Super Character 處理
+    unsigned int SuperCharHandlerIndex = 0; //Super Character 控制字元(即 `\` )的位置
+
+    wchar_t * SuperCharParentName = NULL;
+    unsigned int SuperCharParentNameLen = 0;
+
+    uint8_t SuperCharParentType = 0; //Super Character Parent 的類型
+
+    wchar_t * SuperCharChildName = NULL;
+    unsigned int SuperCharChildNameLen = 0;
+
+    uint8_t SuperCharCollect = 0; //Super Character 的收集狀態。1 : 已收集完Parent ; 2 : 已收集完Child
+
+    wchar_t * toCMPChar = 0; //Super Character Parent名稱判斷
+
+    // !
+
 
     do
     {
@@ -106,45 +127,30 @@ CaseObjCarrier FCO(FILE* F,const uint8_t LineBreak)
                         (LastCharType == 5 && ThisCharType == 2) //防止 "#1"拆解
 
                         ))
-                        if (LastCharType != ThisCharType)
-                            switch (LastCharType)
-                            {
-                                case 0: //阻止空白成為物件
-                                case 11: //阻止空格成為物件
-                                case 13: //阻止換行成為物件
-                                case 14: //阻止回車成為物件
+                        if (LastCharType != ThisCharType && CaseNameLen)
+                        {
+                            CaseNameLen++;
+                            CaseName = realloc(
+                                CaseName,
+                                CaseNameLen*sizeof(wchar_t)
+                                );
+                            CaseName[CaseNameLen-1] = 0;
 
-                                    {
-                                        CaseName = NULL;
-                                        CaseNameLen = 0;
-                                        break;
-                                    };
+                            CaseCarriers.CarrierLen++;
+                            CaseCarriers.Carrier = realloc(
+                                CaseCarriers.Carrier,
+                                CaseCarriers.CarrierLen*sizeof(CaseObj)
+                            );
+                            CaseCarriers.Carrier[CaseCarriers.CarrierLen-1] = (CaseObj){
+                                .ObjType = LastCharType,
+                                .ObjName = CaseName
+                            };
 
-                                default:
-                                    {
-                                        CaseNameLen++;
-                                        CaseName = realloc(
-                                            CaseName,
-                                            CaseNameLen*sizeof(wchar_t)
-                                            );
-                                        CaseName[CaseNameLen-1] = 0;
+                            wprintf(L"added Name : `%ls` Type : `%d`\n", CaseName,LastCharType);
 
-                                        CaseCarriers.CarrierLen++;
-                                        CaseCarriers.Carrier = realloc(
-                                            CaseCarriers.Carrier,
-                                            CaseCarriers.CarrierLen*sizeof(CaseObj)
-                                        );
-                                        CaseCarriers.Carrier[CaseCarriers.CarrierLen-1] = (CaseObj){
-                                            .ObjType = ThisCharType,
-                                            .ObjName = CaseName
-                                        };
-
-                                        wprintf(L"added %ls\n", CaseName);
-
-                                        CaseName = NULL;
-                                        CaseNameLen = 0;
-                                    }
-                            }
+                            CaseName = NULL;
+                            CaseNameLen = 0;
+                        }
 
                 //單字元處裡
                 switch (ThisCharType)
@@ -154,6 +160,13 @@ CaseObjCarrier FCO(FILE* F,const uint8_t LineBreak)
                     {
                         if (LastCharType == 5)
                             ThisCharType = 5;
+
+                        CaseNameLen++;
+                        CaseName = realloc(
+                            CaseName,
+                            CaseNameLen*sizeof(wchar_t)
+                            );
+                        CaseName[CaseNameLen-1] = ThisChar;
 
                         break;
                     }
@@ -165,19 +178,92 @@ CaseObjCarrier FCO(FILE* F,const uint8_t LineBreak)
                         if (LastCharType == 5)
                             ThisCharType = 5;
 
+                        CaseNameLen++;
+                        CaseName = realloc(
+                            CaseName,
+                            CaseNameLen*sizeof(wchar_t)
+                            );
+                        CaseName[CaseNameLen-1] = ThisChar;
+
                         break;
                     }
 
+                case 5:
+                    {
+                        CaseNameLen++;
+                        CaseName = realloc(
+                            CaseName,
+                            CaseNameLen*sizeof(wchar_t)
+                            );
+                        CaseName[CaseNameLen-1] = ThisChar;
+
+                        break;
+                    }
+
+                case 9:
+                    {
+                        if (LastCharType == 9)
+                        {
+                            CaseNameLen++;
+                            CaseName = realloc(
+                                CaseName,
+                                CaseNameLen*sizeof(wchar_t)
+                                );
+                            CaseName[CaseNameLen-1] = 0;
+
+                            CaseCarriers.CarrierLen++;
+                            CaseCarriers.Carrier = realloc(
+                                CaseCarriers.Carrier,
+                                CaseCarriers.CarrierLen*sizeof(CaseObj)
+                            );
+                            CaseCarriers.Carrier[CaseCarriers.CarrierLen-1] = (CaseObj){
+                                .ObjType = LastCharType,
+                                .ObjName = CaseName
+                            };
+
+                            wprintf(L"(BY CCS) added Name : `%ls` Type : `%d`\n", CaseName,LastCharType);
+
+                            CaseName = NULL;
+                            CaseNameLen = 0;
+                        }
+
+                        CaseNameLen++;
+                        CaseName = realloc(
+                            CaseName,
+                            CaseNameLen*sizeof(wchar_t)
+                            );
+                        CaseName[CaseNameLen-1] = ThisChar;
+
+                        break;
+                    }
+
+                case 10:
+                    {
+                        CaseNameLen++;
+                        CaseName = realloc(
+                            CaseName,
+                            CaseNameLen*sizeof(wchar_t)
+                            );
+                        CaseName[CaseNameLen-1] = ThisChar;
+
+                        break;
+                    }
+
+
+                //字串Handler
                 case 3:
                 case 4:
                     {
                         HandleType = 1; //開始處理字串
                         StringHandleChar = ThisChar;
+
+
+
                         break;
                     }
-
                 default:break;
                 }
+
 
                 break;
             }
@@ -186,6 +272,19 @@ CaseObjCarrier FCO(FILE* F,const uint8_t LineBreak)
                 //單字元處裡
                 switch (ThisCharType)
                 {
+                case 1:
+                case 2:
+                    {
+                        CaseNameLen++;
+                        CaseName = realloc(
+                            CaseName,
+                            CaseNameLen*sizeof(wchar_t)
+                            );
+                        CaseName[CaseNameLen-1] = ThisChar;
+
+                        break;
+                    }
+
                 case 3:
                 case 4:
                     {
@@ -194,23 +293,170 @@ CaseObjCarrier FCO(FILE* F,const uint8_t LineBreak)
                             HandleType = 0;
                             StringHandleChar = 0;
                         }
+
+                        CaseNameLen++;
+                        CaseName = realloc(
+                            CaseName,
+                            CaseNameLen*sizeof(wchar_t)
+                            );
+                        CaseName[CaseNameLen-1] = ThisChar;
+                        break;
+                    }
+                case 12:
+                    {
+                        HandleType = 2;
+                        SuperCharHandlerIndex = CharIndex;
+
                         break;
                     }
                 default:break;
                 }
 
+
+
                 break;
             }
+        case 2: //Super Character
+            {
+
+                if (SuperCharCollect == 0)
+                {
+                    switch (ThisCharType)
+                    {
+                    case 1:
+                        {
+                            SuperCharParentNameLen++;
+                            SuperCharParentName = realloc(
+                                SuperCharParentName,
+                                SuperCharParentNameLen*sizeof(wchar_t)
+                                );
+                            SuperCharParentName[SuperCharParentNameLen-1] = ThisChar;
+
+                            break;
+                        }
+                    case 10:
+                        {
+                            if (ThisChar == '<')
+                            {
+                                SuperCharCollect = 1;
+                                break;
+                            }
+                        }
+
+                    default:
+                        {
+                            //不收集Child了 :<
+                            SuperCharCollect = 2;
+                            break;
+                        }
+                    }
+
+                    toCMPChar = malloc(
+                        (SuperCharParentNameLen+1)*sizeof(wchar_t)
+                        );
+                    toCMPChar = memcpy(
+                        toCMPChar,
+                        SuperCharParentName,
+                        SuperCharParentNameLen*sizeof(wchar_t)
+                        );
+                    toCMPChar[SuperCharParentNameLen] = 0;
+
+                    if (wcscmp(toCMPChar,L"n") == 0)
+                    {
+                        SuperCharParentType = 1;
+                        SuperCharCollect = 2;
+                    }else if (wcscmp(toCMPChar,L"a") == 0)
+                    {
+                        SuperCharParentType = 2;
+                        SuperCharCollect = 1;
+
+                        break;
+                    }
+                }
+
+                if (SuperCharCollect == 1){
+                    switch (ThisCharType)
+                    {
+                    case 1:
+                    case 2:
+                        {
+                            SuperCharChildNameLen++;
+                            SuperCharChildName = realloc(
+                                SuperCharChildName,
+                                SuperCharChildNameLen*sizeof(wchar_t)
+                                );
+                            SuperCharChildName[SuperCharChildNameLen-1] = ThisChar;
+
+                            break;
+                        }
+
+                    case 10:
+                        {
+                            if (ThisChar == '>')
+                                SuperCharCollect = 2;
+
+                            break;
+                        }
+
+                    default:exit(123);
+                    }
+                }
+
+                if (SuperCharCollect == 2)
+                {
+                    if (SuperCharParentNameLen)
+                    {
+                        switch (SuperCharParentType)
+                        {
+                        case 1:
+                            {
+                                CaseNameLen++;
+                                CaseName = realloc(
+                                    CaseName,
+                                    CaseNameLen*sizeof(wchar_t)
+                                    );
+                                CaseName[CaseNameLen-1] = '\n';
+
+                                break;
+                            }
+                        case 2:
+                            {
+                                CaseNameLen++;
+                                CaseName = realloc(
+                                    CaseName,
+                                    CaseNameLen*sizeof(wchar_t)
+                                    );
+                                CaseName[CaseNameLen-1] = SuperCharChildName[0];
+
+                                break;
+                            }
+                        default: exit(2);
+                        }
+                    }
+
+                    if (SuperCharChildNameLen)
+                    {
+
+                    }
+
+                    HandleType = 1;
+
+                    SuperCharHandlerIndex =
+                       SuperCharParentName =
+                           SuperCharParentNameLen =
+                               SuperCharParentType =
+                                   SuperCharChildName =
+                                       SuperCharChildNameLen =
+                                           SuperCharCollect =
+                                               toCMPChar = 0;
+
+                }
+                break;
+            }
+
         default: exit(2);
         }
 
-
-        CaseNameLen++;
-        CaseName = realloc(
-            CaseName,
-            CaseNameLen*sizeof(wchar_t)
-            );
-        CaseName[CaseNameLen-1] = ThisChar;
 
 
         if (ThisChar == WEOF)
@@ -220,6 +466,8 @@ CaseObjCarrier FCO(FILE* F,const uint8_t LineBreak)
         LastChar = ThisChar;
         LastCharType = ThisCharType;
     }while (1);
+
+    printf("<<FCO Function is ending\n");
 
     return CaseCarriers;
 }
