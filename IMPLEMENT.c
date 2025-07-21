@@ -125,7 +125,7 @@ ImplementedObj IMPLEMENT(const ToImplementObj toImplement)
 
                     default:
                         {
-                            exit(-3);
+                            exit(-5);
                         }
                     }
                 }

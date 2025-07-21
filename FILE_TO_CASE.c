@@ -58,7 +58,8 @@ int CheckCharType(const wchar_t Char)
 
     if (Char == L'\\') return 12;
 
-    if (Char == L'\n' || Char == 10) return 13;
+    if (Char == L'\n') return 13;
+    if (Char == L'\r') return 14;
 
     return 1;
 }
@@ -77,8 +78,9 @@ CaseObjCarrier FCO(FILE* F,const uint8_t LineBreak)
     wchar_t ThisChar = 0; //目前字元
     wchar_t LastChar = 0; //上個字元
 
-    uint8_t ThisCharType = 0; //目前字元類型
-    uint8_t LastCharType = 0; //上個字元類型
+    uint8_t ThisCharType = 0; //目前字元類型 包括被覆蓋的類型
+    uint8_t LastCharType = 0; //上個字元類型 包括被覆蓋的類型
+
 
     uint8_t HandleType = 0; //處理類型
 
@@ -94,28 +96,55 @@ CaseObjCarrier FCO(FILE* F,const uint8_t LineBreak)
         case 0: //一般
             {
                 //自元分節
-                if (CharIndex) if (LastCharType != ThisCharType)
-                {
-                    CaseNameLen++;
-                    CaseName = realloc(
-                        CaseName,
-                        CaseNameLen*sizeof(wchar_t)
-                        );
-                    CaseName[CaseNameLen-1] = 0;
+                if (CharIndex)
+                    if (!(
 
-                    CaseCarriers.CarrierLen++;
-                    CaseCarriers.Carrier = realloc(
-                        CaseCarriers.Carrier,
-                        CaseCarriers.CarrierLen*sizeof(CaseObj)
-                    );
-                    CaseCarriers.Carrier[CaseCarriers.CarrierLen-1] = (CaseObj){
-                        .ObjType = ThisCharType,
-                        .ObjName = CaseName
-                    };
+                        (LastCharType == 1 && ThisCharType == 2) // 防止 "a123" 拆解
+                        ||
+                        (LastCharType == 5 && ThisCharType == 1) //防止 "#a"拆解
+                        ||
+                        (LastCharType == 5 && ThisCharType == 2) //防止 "#1"拆解
 
-                    CaseName = NULL;
-                    CaseNameLen = 0;
-                }
+                        ))
+                        if (LastCharType != ThisCharType)
+                            switch (LastCharType)
+                            {
+                                case 0: //阻止空白成為物件
+                                case 11: //阻止空格成為物件
+                                case 13: //阻止換行成為物件
+                                case 14: //阻止回車成為物件
+
+                                    {
+                                        CaseName = NULL;
+                                        CaseNameLen = 0;
+                                        break;
+                                    };
+
+                                default:
+                                    {
+                                        CaseNameLen++;
+                                        CaseName = realloc(
+                                            CaseName,
+                                            CaseNameLen*sizeof(wchar_t)
+                                            );
+                                        CaseName[CaseNameLen-1] = 0;
+
+                                        CaseCarriers.CarrierLen++;
+                                        CaseCarriers.Carrier = realloc(
+                                            CaseCarriers.Carrier,
+                                            CaseCarriers.CarrierLen*sizeof(CaseObj)
+                                        );
+                                        CaseCarriers.Carrier[CaseCarriers.CarrierLen-1] = (CaseObj){
+                                            .ObjType = ThisCharType,
+                                            .ObjName = CaseName
+                                        };
+
+                                        wprintf(L"added %ls\n", CaseName);
+
+                                        CaseName = NULL;
+                                        CaseNameLen = 0;
+                                    }
+                            }
 
                 //單字元處裡
                 switch (ThisCharType)
@@ -123,10 +152,19 @@ CaseObjCarrier FCO(FILE* F,const uint8_t LineBreak)
                 case 0: break;
                 case 1:
                     {
+                        if (LastCharType == 5)
+                            ThisCharType = 5;
+
                         break;
                     }
                 case 2:
                     {
+                        if (LastCharType == 1)
+                            ThisCharType = 1;
+
+                        if (LastCharType == 5)
+                            ThisCharType = 5;
+
                         break;
                     }
 
