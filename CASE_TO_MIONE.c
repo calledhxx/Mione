@@ -74,6 +74,10 @@ MioneObjCarrier CMO(
 
         int Paired =0; //Head Symbol Prompt Variable Value
 
+        if (CASES[i].ObjType == 5)
+        {
+            printf("len %lld\n",wcslen(CASES[i].ObjName));
+        }
 
         if (CASES[i].ObjType == 13)
         {
