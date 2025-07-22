@@ -5,23 +5,46 @@
 #include <stdint.h>
 #include <wchar.h>
 
-#define HEAD 1
-#define PROMPT 2
-#define SYMBOL 3
-#define VARIABLE  4
-#define VALUE 5
-
-#define VALUE_STRING_TYPE 1
-#define VALUE_FUNCTION_TYPE 4
-#define VALUE_RANGE_TYPE 5
-#define VALUE_TABLE_TYPE 6
-#define VALUE_LIGHTS_TYPE 7
-#define VALUE_DB_TYPE 8
-
-#define VALUE_NUMBER_TYPE 9
-
 #ifndef OBJECTS_H
 #define OBJECTS_H
+
+
+
+enum
+{
+    HEAD = 1,
+    PROMPT = 2,
+    SYMBOL = 3,
+    VARIABLE = 4,
+    VALUE = 5,
+};
+
+enum
+{
+    CT_NULL = 0,
+    CT_NORMAL = 1,
+    CT_NUMBER = 2,
+    CT_DQ = 3,
+    CT_SQ = 4,
+    CT_SHARP = 5,
+    CT_CONNECTABLE = 9,
+    CT_UNCONNECTABLE = 10,
+    CT_SPACE = 11,
+    CT_BS = 12,
+    CT_NEWLINE = 13,
+    CT_SEMICOLON = 14
+};
+
+enum
+{
+    VALUE_STRING_TYPE = 1,
+    VALUE_FUNCTION_TYPE = 4,
+    VALUE_RANGE_TYPE = 5,
+    VALUE_TABLE_TYPE = 6,
+    VALUE_LIGHTS_TYPE = 7,
+    VALUE_DB_TYPE = 8,
+    VALUE_NUMBER_TYPE = 9,
+};
 
 //
 //
@@ -188,8 +211,11 @@ typedef struct _MioneObject
     PromptObj Prompt; //當ObjType為PROMPT時，會用到此提示。
     HeadObj Head; //當ObjType為HEAD時，會用到此標題。
 
-    int Line; //行號
-    int Column; //列號
+    unsigned int StartLine; //開始行號
+    unsigned int StartColumn; //開始行號
+
+    unsigned int EndLine; //結束行號
+    unsigned int EndColumn; //結束行號
 
     struct _ScopeObject* ScopeUP; //作用域
 } MioneObj;
@@ -405,28 +431,6 @@ typedef struct _ScopeObjectCarrier
     ScopeObj * Carrier;
     unsigned int CarrierLen;
 } ScopeObjCarrier;
-
-
-//
-// CMO函數特殊物件
-//
-typedef struct _ToCMObject
-{
-    CaseObjCarrier CaseCarrier;
-
-    int LineADD;
-    int ColumnADD;
-} ToCMObj;
-
-typedef struct _ToReplaceValueForCMOObject
-{
-    ToCMObj a;
-    int ObjIndex;
-    int ValueType ;
-} ToReplaceValueForCMOObj;
-//
-//
-//
 
 
 

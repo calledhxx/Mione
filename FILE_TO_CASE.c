@@ -12,17 +12,17 @@
 
 int CheckCharType(const wchar_t Char)
 {
-    if (Char == WEOF) return 0;
+    if (Char == WEOF) return CT_NULL;
 
-    if ((Char >= L'a' && Char <= L'z') || (Char >= L'A' && Char <= L'Z')) return 1;
+    if ((Char >= L'a' && Char <= L'z') || (Char >= L'A' && Char <= L'Z')) return CT_NORMAL;
 
-    if (Char >= L'0' && Char <= L'9') return 2;
+    if (Char >= L'0' && Char <= L'9') return CT_NUMBER;
 
-    if (Char == L'"') return 3;
+    if (Char == L'"') return CT_DQ;
 
-    if (Char == L'\'') return 4;
+    if (Char == L'\'') return CT_SQ;
 
-    if (Char == L'#') return 5;
+    if (Char == L'#') return CT_SHARP;
 
     static wchar_t CanConnectWithAnotherSymbol[] = {
         L'*',
@@ -49,19 +49,19 @@ int CheckCharType(const wchar_t Char)
     };
 
     for (int i = 0; i < sizeof(CanConnectWithAnotherSymbol)/sizeof(CanConnectWithAnotherSymbol[0]); i++)
-        if (CanConnectWithAnotherSymbol[i] == Char)  return 9;
+        if (CanConnectWithAnotherSymbol[i] == Char)  return CT_CONNECTABLE;
 
     for (int i = 0; i < sizeof(CanNotConnectWithAnotherSymbol)/sizeof(CanNotConnectWithAnotherSymbol[0]); i++)
-        if (CanNotConnectWithAnotherSymbol[i] == Char) return 10;
+        if (CanNotConnectWithAnotherSymbol[i] == Char) return CT_UNCONNECTABLE;
 
 
-    if (Char == L' ') return 11;
+    if (Char == L' ') return CT_SPACE;
 
-    if (Char == L'\\') return 12;
+    if (Char == L'\\') return CT_BS;
 
-    if (Char == L'\n') return 13;
+    if (Char == L'\n') return CT_NEWLINE;
 
-    if (Char == L';') return 14;
+    if (Char == L';') return CT_SEMICOLON;
 
     return 1;
 }
@@ -123,11 +123,11 @@ CaseObjCarrier FCO(FILE* F,const uint8_t LineBreak)
                 //自元分節
                 if (CharIndex)
                     if (!(
-                        (LastCharType == 1 && ThisCharType == 2)
+                        (LastCharType == CT_NORMAL && ThisCharType == CT_NUMBER)
                         ||
-                        (LastCharType == 5 && ThisCharType == 1)
+                        (LastCharType == CT_SHARP && ThisCharType == CT_NORMAL)
                         ||
-                        (LastCharType == 5 && ThisCharType == 2)
+                        (LastCharType == CT_SHARP && ThisCharType == CT_NUMBER)
                     ))
                         if (CaseNameLen && LastCharType != ThisCharType){
                             CaseNameLen++;
@@ -162,8 +162,8 @@ CaseObjCarrier FCO(FILE* F,const uint8_t LineBreak)
                 //單字元處裡
                 switch (ThisCharType)
                 {
-                case 0: break;
-                case 1:
+                case CT_NULL: break;
+                case CT_NORMAL:
                     {
                         if (!CaseNameLen)
                         {
@@ -183,7 +183,7 @@ CaseObjCarrier FCO(FILE* F,const uint8_t LineBreak)
 
                         break;
                     }
-                case 2:
+                case CT_NUMBER:
                     {
                         if (!CaseNameLen)
                         {
@@ -207,7 +207,7 @@ CaseObjCarrier FCO(FILE* F,const uint8_t LineBreak)
                         break;
                     }
 
-                case 5:
+                case CT_SHARP:
                     {
                         if (!CaseNameLen)
                         {
@@ -224,7 +224,7 @@ CaseObjCarrier FCO(FILE* F,const uint8_t LineBreak)
 
                         break;
                     }
-                case 9:
+                case CT_CONNECTABLE:
                     {
                         if (!CaseNameLen)
                         {
@@ -242,7 +242,7 @@ CaseObjCarrier FCO(FILE* F,const uint8_t LineBreak)
                         break;
                     }
 
-                case 10:
+                case CT_UNCONNECTABLE:
                     {
                         CaseStartColumn = ProcessingColumn;
                         CaseStartLine = ProcessingLine;
@@ -262,7 +262,7 @@ CaseObjCarrier FCO(FILE* F,const uint8_t LineBreak)
                             CaseCarriers.CarrierLen*sizeof(CaseObj)
                         );
                         CaseCarriers.Carrier[CaseCarriers.CarrierLen-1] = (CaseObj){
-                            .ObjType = LastCharType,
+                            .ObjType = ThisCharType,
                             .ObjName = CaseName,
 
                             .CaseStartLine = CaseStartLine,
@@ -281,8 +281,8 @@ CaseObjCarrier FCO(FILE* F,const uint8_t LineBreak)
                     }
 
                 //字串Handler
-                case 3:
-                case 4:
+                case CT_DQ:
+                case CT_SQ:
                     {
                         HandleType = 1; //開始處理字串
                         StringHandleChar = ThisChar;
@@ -300,8 +300,8 @@ CaseObjCarrier FCO(FILE* F,const uint8_t LineBreak)
                 //單字元處裡
                 switch (ThisCharType)
                 {
-                case 3:
-                case 4:
+                case CT_DQ:
+                case CT_SQ:
                     {
 
                         if (StringHandleChar == ThisChar)
@@ -340,12 +340,12 @@ CaseObjCarrier FCO(FILE* F,const uint8_t LineBreak)
                             break;
                         }
                     }
-                case 1:
-                case 2:
-                case 5:
-                case 9:
-                case 10:
-                case 11:
+                case CT_NORMAL:
+                case CT_NUMBER:
+                case CT_SHARP:
+                case CT_CONNECTABLE:
+                case CT_UNCONNECTABLE:
+                case CT_SPACE:
                     {
                         if (!CaseNameLen)
                         {
@@ -364,7 +364,7 @@ CaseObjCarrier FCO(FILE* F,const uint8_t LineBreak)
                     }
 
 
-                case 12:
+                case CT_BS:
                     {
                         HandleType = 2;
                         SuperCharHandlerIndex = CharIndex;
@@ -386,7 +386,7 @@ CaseObjCarrier FCO(FILE* F,const uint8_t LineBreak)
                 {
                     switch (ThisCharType)
                     {
-                    case 1:
+                    case CT_NORMAL:
                         {
                             SuperCharParentNameLen++;
                             SuperCharParentName = realloc(
@@ -397,7 +397,7 @@ CaseObjCarrier FCO(FILE* F,const uint8_t LineBreak)
 
                             break;
                         }
-                    case 10:
+                    case CT_UNCONNECTABLE:
                         {
                             if (ThisChar == '<')
                             {
@@ -440,8 +440,8 @@ CaseObjCarrier FCO(FILE* F,const uint8_t LineBreak)
                 if (SuperCharCollect == 1){
                     switch (ThisCharType)
                     {
-                    case 1:
-                    case 2:
+                    case CT_NORMAL:
+                    case CT_NUMBER:
                         {
                             SuperCharChildNameLen++;
                             SuperCharChildName = realloc(
@@ -453,7 +453,7 @@ CaseObjCarrier FCO(FILE* F,const uint8_t LineBreak)
                             break;
                         }
 
-                    case 10:
+                    case CT_UNCONNECTABLE:
                         {
                             if (ThisChar == '>')
                                 SuperCharCollect = 2;
@@ -532,7 +532,7 @@ CaseObjCarrier FCO(FILE* F,const uint8_t LineBreak)
         }
 
 
-        if (ThisCharType == 13)
+        if (ThisCharType == CT_NEWLINE)
         {
             ProcessingLine++;
             ProcessingColumn=1;
