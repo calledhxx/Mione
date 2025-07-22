@@ -10,7 +10,7 @@
 #include "ERR.h"
 #include "OBJECTS.h"
 
-extern inline  int CheckCharType(const wchar_t Char)
+int CheckCharType(const wchar_t Char)
 {
     if (Char == WEOF) return 0;
 
@@ -24,7 +24,7 @@ extern inline  int CheckCharType(const wchar_t Char)
 
     if (Char == L'#') return 5;
 
-    static wchar_t CanConnectWithAnotherSymbol[] = { //why am i using static here? i dont know
+    static wchar_t CanConnectWithAnotherSymbol[] = {
         L'*',
         L'/',
         L'+',
@@ -553,4 +553,3 @@ CaseObjCarrier FCO(FILE* F,const uint8_t LineBreak)
 
     return CaseCarriers;
 }
-
