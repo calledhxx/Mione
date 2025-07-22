@@ -211,11 +211,18 @@ typedef struct _MioneObjectsCarrier
 //CASE物件 GROUP
 //
 //
+
+
+
 typedef struct _CaseObject
 {
-    int ObjType; /*
-    CharType...
-    */
+    unsigned int CaseStartLine; //Case開始行號
+    unsigned int CaseStartColumn; //Case開始列號
+
+    unsigned int CaseEndLine; //Case結束行號
+    unsigned int CaseEndColumn; //Case結束列號
+
+    uint8_t ObjType; //Case被處裡的HandleType
     wchar_t * ObjName;
 } CaseObj;
 

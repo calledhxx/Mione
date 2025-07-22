@@ -158,7 +158,7 @@ MioneObjCarrier CMO(
         }
 
         //Value : String
-        if (ChildCount == 0 && TableCount == 0) if (CASES[i].ObjType == SYMBOL|| CASES[i].ObjType == VARIABLE)
+        if (ChildCount == 0 && TableCount == 0) if (CASES[i].ObjType == SYMBOL|| CASES[i].ObjType == VARIABLE) //todo 邏輯錯誤
         {
             wchar_t*str=NULL;
 
