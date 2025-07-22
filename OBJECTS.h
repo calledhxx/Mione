@@ -222,7 +222,7 @@ typedef struct _CaseObject
     unsigned int CaseEndLine; //Case結束行號
     unsigned int CaseEndColumn; //Case結束列號
 
-    uint8_t ObjType; //Case被處裡的HandleType
+    uint8_t ObjType;
     wchar_t * ObjName;
 } CaseObj;
 

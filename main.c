@@ -40,7 +40,7 @@ int main(const int OptionsSize,char **Options)
     }
     else
     {
-        f = _wfopen(L"D:\\Mione\\index.mio", L"r");
+        f = _wfopen(L"D:\\Mione\\index.mio", L"r"); //never read binary again...
 
         if (f == NULL) exit(-1);
 
