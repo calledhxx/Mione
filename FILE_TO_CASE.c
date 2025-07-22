@@ -42,7 +42,6 @@ extern inline  int CheckCharType(const wchar_t Char)
         L'-',
         L'.',
         L',',
-        L';',
         L':',
         L'@',
         L'<',
@@ -61,6 +60,8 @@ extern inline  int CheckCharType(const wchar_t Char)
     if (Char == L'\\') return 12;
 
     if (Char == L'\n') return 13;
+
+    if (Char == L';') return 14;
 
     return 1;
 }
@@ -86,11 +87,11 @@ CaseObjCarrier FCO(FILE* F,const uint8_t LineBreak)
 
     uint8_t StringHandleChar = 0; //字串類型 `'`與 `"`的編碼
 
-    unsigned int CaseStartLine = 1; //Case開始行號
+    unsigned int CaseStartLine = 0; //Case開始行號
     unsigned int CaseStartColumn = 0; //Case開始列號
 
     unsigned int ProcessingLine = 1;
-    unsigned int ProcessingColumn = 0;
+    unsigned int ProcessingColumn = 1;
     
     // Super Character 處理
     unsigned int SuperCharHandlerIndex = 0; //Super Character 控制字元(即 `\` )的位置
@@ -114,7 +115,6 @@ CaseObjCarrier FCO(FILE* F,const uint8_t LineBreak)
         ThisChar = fgetwc(F);
         ThisCharType = CheckCharType(ThisChar);
 
-        printf("aaa %d\n",ThisChar);
 
         switch (HandleType)
         {
@@ -244,6 +244,9 @@ CaseObjCarrier FCO(FILE* F,const uint8_t LineBreak)
 
                 case 10:
                     {
+                        CaseStartColumn = ProcessingColumn;
+                        CaseStartLine = ProcessingLine;
+
                         CaseNameLen+=2;
                         CaseName = realloc(
                             CaseName,
@@ -263,13 +266,13 @@ CaseObjCarrier FCO(FILE* F,const uint8_t LineBreak)
                             .ObjName = CaseName,
 
                             .CaseStartLine = CaseStartLine,
-                            .CaseEndLine = ProcessingLine,
+                            .CaseEndLine = CaseStartLine+1,
 
                             .CaseStartColumn = CaseStartColumn,
-                            .CaseEndColumn = ProcessingColumn,
+                            .CaseEndColumn = CaseStartColumn+1,
                         };
 
-                        wprintf(L"(BY CCS) added Name : `%ls` LC:(%d/%d)(%d/%d) Type %d\n", CaseName,CaseStartLine,CaseStartColumn,ProcessingLine,ProcessingColumn,LastCharType);
+                        wprintf(L"(BY CCS) added Name : `%ls` LC:(%d/%d)(%d/%d) Type %d\n", CaseName,CaseStartLine,CaseStartColumn,ProcessingLine+1,ProcessingColumn+1,LastCharType);
 
                         CaseNameLen = 0;
                         CaseName = NULL;
@@ -368,6 +371,7 @@ CaseObjCarrier FCO(FILE* F,const uint8_t LineBreak)
 
                         break;
                     }
+
                 default:break;
                 }
 
@@ -531,7 +535,7 @@ CaseObjCarrier FCO(FILE* F,const uint8_t LineBreak)
         if (ThisCharType == 13)
         {
             ProcessingLine++;
-            ProcessingColumn=0;
+            ProcessingColumn=1;
             continue;
         }
 
