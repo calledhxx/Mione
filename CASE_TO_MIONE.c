@@ -43,6 +43,18 @@ MioneObjCarrier CMO(
     CaseObjCarrier Carrier,
     ScopeObj * SVUup)
 {
+    const CaseObj * CaseCarrier = Carrier.Carrier;
+    const unsigned int CaseCarrierLen = Carrier.CarrierLen;
 
+    for (
+        unsigned int CaseCarrierIndex = 0;
+        CaseCarrierIndex < CaseCarrierLen;
+        CaseCarrierIndex++
+        )
+    {
+        const CaseObj ThisCase = CaseCarrier[CaseCarrierIndex];
+
+
+    }
     //todo 重寫
 }

@@ -110,6 +110,10 @@ CaseObjCarrier FCO(FILE* F,const uint8_t LineBreak)
 
     // !
 
+    // Number 特殊處理
+    uint8_t RecordingNumber = 0; //正在紀錄數字 0表無或者一般數字; 1表二進制; 2表十六進制
+    //
+
     do
     {
         ThisChar = fgetwc(F);
@@ -128,6 +132,10 @@ CaseObjCarrier FCO(FILE* F,const uint8_t LineBreak)
                         (LastCharType == CT_SHARP && ThisCharType == CT_NORMAL)
                         ||
                         (LastCharType == CT_SHARP && ThisCharType == CT_NUMBER)
+                        ||
+                        (LastCharType == CT_NUMBER && LastChar == '0' && CaseNameLen == 1 && ThisCharType == CT_NORMAL && (ThisChar == 'x' || ThisChar == 'b'))
+                        ||
+                        (RecordingNumber == 2 && ThisCharType == CT_NORMAL)
                     ))
                         if (CaseNameLen && LastCharType != ThisCharType){
                             CaseNameLen++;
@@ -155,6 +163,8 @@ CaseObjCarrier FCO(FILE* F,const uint8_t LineBreak)
 
                             wprintf(L"added Name : `%ls` LC:(%d/%d)(%d/%d) Type %d\n", CaseName,CaseStartLine,CaseStartColumn,ProcessingLine,ProcessingColumn,LastCharType);
 
+                            RecordingNumber = 0; //重置數字紀錄
+
                             CaseName = NULL;
                             CaseNameLen = 0;
                         }
@@ -171,8 +181,19 @@ CaseObjCarrier FCO(FILE* F,const uint8_t LineBreak)
                             CaseStartLine = ProcessingLine;
                         }
 
-                        if (LastCharType == 5)
-                            ThisCharType = 5;
+                        if (LastCharType == CT_SHARP)
+                            ThisCharType = CT_SHARP;
+
+                        if (LastCharType == CT_NUMBER && LastChar == '0' && CaseNameLen == 1)
+                            if (ThisChar == 'x' || ThisChar == 'b')
+                            {
+                                RecordingNumber = ThisChar == 'x' ? 2 : 1;
+                                ThisCharType = CT_NUMBER;
+                            }
+
+
+                        if (RecordingNumber == 2)
+                            ThisCharType = CT_NUMBER;
 
                         CaseNameLen++;
                         CaseName = realloc(
@@ -191,11 +212,11 @@ CaseObjCarrier FCO(FILE* F,const uint8_t LineBreak)
                             CaseStartLine = ProcessingLine;
                         }
 
-                        if (LastCharType == 1)
-                            ThisCharType = 1;
+                        if (LastCharType == CT_NORMAL)
+                            ThisCharType = CT_NORMAL;
 
-                        if (LastCharType == 5)
-                            ThisCharType = 5;
+                        if (LastCharType == CT_SHARP)
+                            ThisCharType = CT_SHARP;
 
                         CaseNameLen++;
                         CaseName = realloc(
