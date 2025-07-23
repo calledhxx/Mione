@@ -120,7 +120,7 @@ CaseObjCarrier FCO(FILE* F,const uint8_t LineBreak)
         ThisCharType = CheckCharType(ThisChar);
 
 
-        switch (HandleType)
+        switch (HandleType) //串一定要有休止符 才能使用Handle處裡 如："Hello World"
         {
         case 0: //一般
             {
