@@ -38,12 +38,10 @@ VariableObj * retVarUP(ScopeObj * SVUup,const wchar_t* Name,const int Place)
 }
 
 
-
 MioneObjCarrier CMO(
     const CaseObjCarrier Carrier
     )
 {
-
     const CaseObj * CaseCarrier = Carrier.Carrier;
     const unsigned int CaseCarrierLen = Carrier.CarrierLen;
 
@@ -59,6 +57,12 @@ MioneObjCarrier CMO(
 
         switch (ThisCase.ObjType)
         {
+            case CASE_BREAKER:
+            {
+                printf("dam\n");
+
+                break;
+            }
         case CASE_NORMAL:
             {
                 for (
@@ -107,7 +111,6 @@ MioneObjCarrier CMO(
                             .Prompt = Prompts[PromptDetectIndex]
                         };
 
-
                         break;
                     }
                 }
@@ -130,7 +133,6 @@ MioneObjCarrier CMO(
                             .MioneObjectPosition = ThisCase.CasePosition,
                             .Symbol = Symbols[SymbolDetectIndex]
                         };
-
 
                         break;
                     }

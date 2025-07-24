@@ -12,7 +12,7 @@
 
 int CheckCharType(const char Char)
 {
-    if (Char == WEOF) return CT_NULL;
+    if (Char == EOF) return CT_NULL;
 
     if ((Char >= 'a' && Char <= 'z') || (Char >= 'A' && Char <= 'Z')) return CT_NORMAL;
 
@@ -120,6 +120,7 @@ CaseObjCarrier FCO(FILE* F,const uint8_t LineBreak)
         ThisCharType = CheckCharType(ThisChar);
 
 
+
         switch (HandleType) //串一定要有休止符 才能使用Handle處裡 如：`"Hello World"`的尾端 `"`
         {
         case 0: //一般
@@ -153,14 +154,21 @@ CaseObjCarrier FCO(FILE* F,const uint8_t LineBreak)
 
                                     break;
                                 }
-                            case 9:
+                            case CT_CONNECTABLE:
                                 {
                                     CaseType = CASE_CONNECTABLE;
 
                                     break;
                                 }
+                            case CT_SEMICOLON:
+                                {
+                                    CaseType = CASE_BREAKER;
 
-                            case 5:
+
+                                    break;
+                                }
+
+                            case CT_SHARP:
                                 {
                                     CaseType = CASE_PHRASE;
 
@@ -374,6 +382,19 @@ CaseObjCarrier FCO(FILE* F,const uint8_t LineBreak)
 
                         break;
                     }
+
+                case CT_SEMICOLON:
+                    {
+                        CaseNameLen++;
+                        CaseName = realloc(
+                            CaseName,
+                            CaseNameLen*sizeof(char)
+                            );
+                        CaseName[CaseNameLen-1] = ThisChar;
+
+                        break;
+                    }
+
 
                 //字串Handler
                 case CT_DQ:
