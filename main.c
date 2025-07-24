@@ -2,7 +2,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <wchar.h>
+#include <unistd.h>
 
 #include "OBJECTS.h"
 #include "FILE_TO_CASE.h"
@@ -13,48 +13,23 @@
 
 ScopeObj MainSVU = {0};
 
+
 int main(const int OptionsSize,char **Options)
 {
-    FILE *f = 0;
+    FILE *f = fopen("D:\\Mione\\index.mio", "r"); //never read binary again...
 
-    if (OptionsSize == 2 && strcmp(Options[1],"line")==0)
-    {
-        f = stdin;
 
-        if (f == NULL) exit(-1);
+    if (f == NULL) exit(-1);
 
-        while (1)
-        {
-            fwrite(">>  ",1,3,stdout);
+    CaseObjCarrier CaseCarrier = FCO(f,0);
 
-            CaseObjCarrier CaseCarrier = FCO(f,1);
+    MioneObjCarrier MioneCarrier = CMO(CaseCarrier,1,0,&MainSVU);
 
-            MioneObjCarrier MioneCarrier = CMO(CaseCarrier,1,0,&MainSVU);
+    MioneSectionObjCarrier Built =ToMione(MioneCarrier);
 
-            MioneSectionObjCarrier Built = ToMione(MioneCarrier);
-
-            ImplementedObj Implement = IMPLEMENT((ToImplementObj){
-                .Built = Built
-            });
-        }
-    }
-    else
-    {
-        f = _wfopen(L"D:\\Mione\\index.mio", L"r"); //never read binary again...
-
-        if (f == NULL) exit(-1);
-
-        CaseObjCarrier CaseCarrier = FCO(f,0);
-
-        MioneObjCarrier MioneCarrier = CMO(CaseCarrier,1,0,&MainSVU);
-
-        MioneSectionObjCarrier Built =ToMione(MioneCarrier);
-
-        ImplementedObj Implement = IMPLEMENT((ToImplementObj){
-            .Built = Built
-        });
-    }
-
+    ImplementedObj Implement = IMPLEMENT((ToImplementObj){
+        .Built = Built
+    });
 
     printf("Hello, Mione!\n");
 

@@ -5,28 +5,28 @@
 SymbolObj Symbols[] =
 {
     (SymbolObj){
-        .Name = L"+",
+        .Name = "+",
         .Identification = 1,
         
         .AfterConnectVV = 1,
     },
 
     (SymbolObj){
-        .Name = L",",
+        .Name = ",",
         .Identification = 2,
         
         .AfterConnectVV = 1,
     },
 
     (SymbolObj){
-        .Name = L"*",
+        .Name = "*",
         .Identification = 3,
         .AfterConnectVV = 1,
        
     },
 
     (SymbolObj){
-        .Name = L"/",
+        .Name = "/",
         .Identification = 4,
         .AfterConnectVV = 1,
        
@@ -35,34 +35,34 @@ SymbolObj Symbols[] =
 
 
     (SymbolObj){
-        .Name = L"^",
+        .Name = "^",
         .Identification = 5,
         .AfterConnectVV = 1,
        
     },
 
     (SymbolObj){
-        .Name = L"-",
+        .Name = "-",
         .Identification = 6,
         .AfterConnectVV = 1,
        
     },
 
     (SymbolObj){
-        .Name = L".",
+        .Name = ".",
         .Identification = 7,
         .AfterConnectVV = 1,
        
     },
     (SymbolObj){
-        .Name = L"==",
+        .Name = "==",
         .Identification = 8,
         .AfterConnectVV = 1,
        
     },
 
     (SymbolObj){
-        .Name = L"[",
+        .Name = "[",
         .Identification = 10,
 
         .AfterConnectVV = 1,
@@ -70,14 +70,14 @@ SymbolObj Symbols[] =
     },
 
     (SymbolObj){
-        .Name = L"]",
+        .Name = "]",
         .Identification = 11,
 
         .AfterConnectVV = 0,
        
     },
     (SymbolObj){
-        .Name = L"(",
+        .Name = "(",
         .Identification = 12,
 
         .AfterConnectVV = 1,
@@ -85,13 +85,13 @@ SymbolObj Symbols[] =
     },
 
     (SymbolObj){
-        .Name = L")",
+        .Name = ")",
         .Identification = 13,
 
         .AfterConnectVV = 0,
        
     },
     (SymbolObj){ //衛兵值
-        .Identification = -1
+        .Identification = 0
     }
 };

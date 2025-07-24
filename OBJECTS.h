@@ -37,6 +37,20 @@ enum
 
 enum
 {
+    CASE_NORMAL,
+    CASE_SINGLE_STRING,
+    CASE_DOUBLE_STRING,
+    CASE_DECNUMBER,
+    CASE_HEXNUMBER,
+    CASE_BINNUMBER,
+    CASE_CONNECTABLE,
+    CASE_UNCONNECTABLE,
+    CASE_PHRASE,
+    CASE_BREAKER,
+};
+
+enum
+{
     VALUE_STRING_TYPE = 1,
     VALUE_FUNCTION_TYPE = 4,
     VALUE_RANGE_TYPE = 5,
@@ -48,9 +62,44 @@ enum
 
 //
 //
+//CASE物件 GROUP
+//
+//
+
+typedef struct _CasePositionObject
+{
+    unsigned int CaseStartLine; //Case開始行號
+    unsigned int CaseStartColumn; //Case開始列號
+
+    unsigned int CaseEndLine; //Case結束行號
+    unsigned int CaseEndColumn; //Case結束列號
+} CasePositionObj;
+
+typedef struct _CaseObject
+{
+    CasePositionObj CasePosition;
+
+    uint8_t ObjType;
+    char * ObjName;
+} CaseObj;
+
+typedef struct _CaseObjectsCarrier
+{
+    CaseObj * Carrier;
+    int CarrierLen;
+} CaseObjCarrier;
+//
+//
+//
+//
+//
+
+//
+//
 //數組
 //
 //
+
 typedef struct _IntegerObject
 {
     uint32_t * Units;
@@ -74,7 +123,7 @@ typedef struct _NumberObject
 
 typedef struct _HeadObject
 {
-    wchar_t * Name;
+    char * Name;
     int Identification;
     struct _HeadReturnObject (*Fuc)(struct _HeadCallObject *);
 }HeadObj;
@@ -86,7 +135,7 @@ typedef struct _HeadObject
 
 typedef struct _PromptObject
 {
-    wchar_t * Name;
+    char * Name;
     int Identification; //識別符號
 }PromptObj;
 //
@@ -96,7 +145,7 @@ typedef struct _PromptObject
 
 typedef struct _SymbolObject
 {
-    wchar_t * Name;
+    char * Name;
     int Identification; //識別符號
     int AfterConnectVV; //後面是否可與VV相連 不會報錯 MIONE
 }SymbolObj;
@@ -144,7 +193,7 @@ typedef struct _ValueObject
     9:數
     */
     struct _AreaObject Area; //給於函數(function),開關(lights)或者執行式(range)。
-    wchar_t * String; //給予文字(string)。
+    char * String; //給予文字(string)。
 
 
 
@@ -177,7 +226,7 @@ typedef struct _ValueObjectCarrier
 
 typedef struct _VariableObject
 {
-    wchar_t* VariableName; //變數名稱
+    char* VariableName; //變數名稱
     int VariablePlace; //變數位置
 
     ValueObj Value; //值
@@ -202,7 +251,7 @@ typedef struct _VariableObjectsCarrier
 //
 typedef struct _MioneObject
 {
-    int ObjType; //HPSVV宏 1H 2P 3S 4VAR 5VAL 0換行
+    int ObjType; //HPSVV 1H 2P 3S 4VAR 5VAL 0換行
 
     VariableObj * VarUP; //當ObjType為VAR時，會用到此變數。
     ValueObj Val;  //當ObjType為VALUE宏時，會用到此值。
@@ -211,13 +260,7 @@ typedef struct _MioneObject
     PromptObj Prompt; //當ObjType為PROMPT時，會用到此提示。
     HeadObj Head; //當ObjType為HEAD時，會用到此標題。
 
-    unsigned int StartLine; //開始行號
-    unsigned int StartColumn; //開始行號
-
-    unsigned int EndLine; //結束行號
-    unsigned int EndColumn; //結束行號
-
-    struct _ScopeObject* ScopeUP; //作用域
+    CasePositionObj MioneObjectPosition;
 } MioneObj;
 
 typedef struct _MioneObjectsCarrier
@@ -232,36 +275,9 @@ typedef struct _MioneObjectsCarrier
 //
 //
 
-//
-//
-//CASE物件 GROUP
-//
-//
 
 
 
-typedef struct _CaseObject
-{
-    unsigned int CaseStartLine; //Case開始行號
-    unsigned int CaseStartColumn; //Case開始列號
-
-    unsigned int CaseEndLine; //Case結束行號
-    unsigned int CaseEndColumn; //Case結束列號
-
-    uint8_t ObjType;
-    wchar_t * ObjName;
-} CaseObj;
-
-typedef struct _CaseObjectsCarrier
-{
-    CaseObj * Carrier;
-    int CarrierLen;
-} CaseObjCarrier;
-//
-//
-//
-//
-//
 
 
 typedef struct _PairObject
@@ -373,8 +389,8 @@ typedef struct _HeadCallObject
 
 typedef struct _ErrorObject
 {
-    wchar_t * Message;
-    wchar_t * Code;
+    char * Message;
+    char * Code;
 
     MioneObjCarrier ErrorObjectCarrier;
 } ErrorObj;

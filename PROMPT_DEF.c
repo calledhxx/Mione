@@ -5,11 +5,11 @@
 
 PromptObj Prompts[] = {
     (PromptObj) {
-        .Name = L"=",
+        .Name = "=",
         .Identification = 1,
     },
 
     (PromptObj) {
-        .Identification = -1,
+        .Identification = 0,
     },
 };

@@ -6,12 +6,12 @@
 HeadObj Heads[]  = {
     (HeadObj){
         .Fuc = SET,
-        .Name = L"set",
+        .Name = "set",
         .Identification = 1,
     },
 
 
     (HeadObj){
-        .Identification = -1
+        .Identification = 0
     }
 };
