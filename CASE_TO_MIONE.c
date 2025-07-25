@@ -59,8 +59,7 @@ MioneObjCarrier CMO(
         {
             case CASE_BREAKER:
             {
-                printf("dam\n");
-
+              //todo 我又要去台北了
                 break;
             }
         case CASE_NORMAL:
