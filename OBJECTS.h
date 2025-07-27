@@ -253,8 +253,8 @@ typedef struct _MioneObject
 {
     int ObjType; //HPSVV 1H 2P 3S 4VAR 5VAL 0換行
 
-    VariableObj * VarUP; //當ObjType為VAR時，會用到此變數。
-    ValueObj Val;  //當ObjType為VALUE宏時，會用到此值。
+    VariableObj * VariablePointer; //當ObjType為VAR時，會用到此變數。
+    ValueObj Value;  //當ObjType為VALUE宏時，會用到此值。
 
     SymbolObj Symbol; //當ObjType為SYMBOL時，會用到此符號。
     PromptObj Prompt; //當ObjType為PROMPT時，會用到此提示。

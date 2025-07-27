@@ -27,12 +27,12 @@ ValueObjCarrier COUNT(const MioneObjCarrier input)
         {
             ValueCarrierLen ++;
             ValueCarrier = realloc(ValueCarrier, sizeof(ValueObj) * (ValueCarrierLen));
-            ValueCarrier[ValueCarrierLen-1] = Pack[i].Val;
+            ValueCarrier[ValueCarrierLen-1] = Pack[i].Value;
         }else if (Pack[i].ObjType == VARIABLE)
         {
             ValueCarrierLen ++;
             ValueCarrier = realloc(ValueCarrier, sizeof(ValueObj) * (ValueCarrierLen));
-            ValueCarrier[ValueCarrierLen-1] = Pack[i].VarUP->Value;
+            ValueCarrier[ValueCarrierLen-1] = Pack[i].VariablePointer->Value;
         }
 
 

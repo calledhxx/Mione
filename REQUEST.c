@@ -23,7 +23,7 @@ VariableObjPtrCarrier REQUEST(const MioneObjCarrier input)
         {
             VariablePointerCarrierLen ++;
             VariablePointerCarrier = realloc(VariablePointerCarrier, sizeof(ValueObj) * (VariablePointerCarrierLen));
-            VariablePointerCarrier[VariablePointerCarrierLen-1] = Pack[i].VarUP;
+            VariablePointerCarrier[VariablePointerCarrierLen-1] = Pack[i].VariablePointer;
         }
 
 

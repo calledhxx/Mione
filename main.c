@@ -10,8 +10,9 @@
 #include "IMPLEMENT.h"
 #include "MIONE.h"
 
+/// 每個EXIT函數對應著那個地方需做錯誤回傳，其呼叫者須做ERROR HANDLE。
 
-ScopeObj MainSVU = {0};
+ScopeObj MainScope = {0};
 
 
 int main(const int OptionsSize,char **Options)
@@ -23,7 +24,7 @@ int main(const int OptionsSize,char **Options)
 
     CaseObjCarrier CaseCarrier = FCO(f,0);
 
-    MioneObjCarrier MioneCarrier = CMO(CaseCarrier,1,0,&MainSVU);
+    MioneObjCarrier MioneCarrier = CMO(CaseCarrier,&MainScope);
 
     MioneSectionObjCarrier Built =ToMione(MioneCarrier);
 

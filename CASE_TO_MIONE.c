@@ -19,27 +19,9 @@
 #include "NUMBER.h"
 
 
-VariableObj * retVarUP(ScopeObj * SVUup,const wchar_t* Name,const int Place)
-{
-    VariableObj * ret = 0;
-
-    if (!SVUup->VariablePtrCarrier.Carrier) return ret;
-
-    for (int VariableUPIndex = 0;VariableUPIndex < SVUup->VariablePtrCarrier.CarrierLen;VariableUPIndex++)
-        if (
-          (SVUup->VariablePtrCarrier.Carrier[VariableUPIndex]->VariableName && wcscmp(SVUup->VariablePtrCarrier.Carrier[VariableUPIndex]->VariableName,Name) == 0) ||
-          (SVUup->VariablePtrCarrier.Carrier[VariableUPIndex]->VariablePlace != 0 && SVUup->VariablePtrCarrier.Carrier[VariableUPIndex]->VariablePlace == Place)
-          )
-            ret =SVUup->VariablePtrCarrier.Carrier[VariableUPIndex];
-
-    if (!ret && SVUup->ParentScopePointer) return retVarUP(SVUup->ParentScopePointer,Name,Place);
-
-    return ret;
-}
-
-
 MioneObjCarrier CMO(
-    const CaseObjCarrier Carrier
+    const CaseObjCarrier Carrier,
+    const ScopeObj Scope
     )
 {
     const CaseObj * CaseCarrier = Carrier.Carrier;
@@ -53,6 +35,7 @@ MioneObjCarrier CMO(
         CaseCarrierIndex++
         )
     {
+
         const CaseObj ThisCase = CaseCarrier[CaseCarrierIndex];
 
         switch (ThisCase.ObjType) // 檢查是否匹配 BREAKER, HEAD ,PROMPT與SYMBOL，否則進行第二處理。
@@ -70,6 +53,7 @@ MioneObjCarrier CMO(
             }
         case CASE_NORMAL: //一般，該藍處裡 Head
             {
+
                 for (
                     unsigned int HeadDetectIndex = 0;
                     Heads[HeadDetectIndex].Identification;
@@ -92,6 +76,7 @@ MioneObjCarrier CMO(
                         break;
                     }
                 }
+
             }
         case CASE_CONNECTABLE: //搭配著尚未分配的Normal Case。該藍處理Prompt 及 Symbol
         case CASE_UNCONNECTABLE:
@@ -142,10 +127,10 @@ MioneObjCarrier CMO(
                     }
                 }
 
-                break;
             }
         default: //二次處理
             {
+
                 switch (ThisCase.ObjType)
                 {
                 case CASE_NORMAL: //配對成Variable
@@ -173,9 +158,9 @@ MioneObjCarrier CMO(
                         );
                         ResultMioneObjCarrier.Carrier[ResultMioneObjCarrier.CarrierLen - 1] = (MioneObj){
                             .ObjType = VALUE,
-                            .Val = (ValueObj){
+                            .Value = (ValueObj){
                                 .String = ThisCase.ObjName,
-                                .ValueType = VALUE_STRING_TYPE
+                                .ValueType = VALUE_STRING_TYPE,
                             },
                             .MioneObjectPosition = ThisCase.CasePosition,
                         };
@@ -193,7 +178,6 @@ MioneObjCarrier CMO(
             };
         }
     }
-
 
     return ResultMioneObjCarrier;
 }
