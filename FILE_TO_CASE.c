@@ -84,7 +84,7 @@ CaseObjCarrier FCO(FILE* F,const uint8_t LineBreak)
 
     uint8_t HandleType = 0; //處理類型
 
-    uint8_t StringHandleChar = 0; //字串類型 `'`與 `"`的編碼
+    uint8_t StringHandleChar = 0; //字串類型 `'` 與 `"` 的編碼
 
     unsigned int CaseStartLine = 0; //Case開始行號
     unsigned int CaseStartColumn = 0; //Case開始列號
@@ -118,7 +118,6 @@ CaseObjCarrier FCO(FILE* F,const uint8_t LineBreak)
     {
         ThisChar = fgetwc(F);
         ThisCharType = CheckCharType(ThisChar);
-
 
         switch (HandleType) //串一定要有休止符 才能使用Handle處裡 如：`"Hello World"`的尾端 `"`
         {

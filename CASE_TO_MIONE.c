@@ -55,18 +55,24 @@ MioneObjCarrier CMO(
     {
         const CaseObj ThisCase = CaseCarrier[CaseCarrierIndex];
 
-        switch (ThisCase.ObjType)
+        switch (ThisCase.ObjType) // 檢查是否匹配 BREAKER, HEAD ,PROMPT與SYMBOL，否則進行第二處理。
         {
-            case CASE_BREAKER:
+        case CASE_BREAKER: //新增Breaker
             {
-              //todo 我又要去台北了
+                ResultMioneObjCarrier.CarrierLen++;
+                ResultMioneObjCarrier.Carrier = realloc(
+                    ResultMioneObjCarrier.Carrier,
+                    ResultMioneObjCarrier.CarrierLen * sizeof(MioneObj)
+                );
+                ResultMioneObjCarrier.Carrier[ResultMioneObjCarrier.CarrierLen - 1] = (MioneObj){0};
+
                 break;
             }
-        case CASE_NORMAL:
+        case CASE_NORMAL: //一般，該藍處裡 Head
             {
                 for (
-                    unsigned int HeadDetectIndex = 0
-                    ; Heads[HeadDetectIndex].Identification;
+                    unsigned int HeadDetectIndex = 0;
+                    Heads[HeadDetectIndex].Identification;
                     HeadDetectIndex++
                     )
                 {
@@ -83,17 +89,16 @@ MioneObjCarrier CMO(
                             .Head = Heads[HeadDetectIndex]
                         };
 
-
                         break;
                     }
                 }
             }
-        case CASE_CONNECTABLE:
+        case CASE_CONNECTABLE: //搭配著尚未分配的Normal Case。該藍處理Prompt 及 Symbol
         case CASE_UNCONNECTABLE:
             {
                 for (
-                    unsigned int PromptDetectIndex = 0
-                    ; Prompts[PromptDetectIndex].Identification;
+                    unsigned int PromptDetectIndex = 0;
+                    Prompts[PromptDetectIndex].Identification;
                     PromptDetectIndex++
                     )
                 {
@@ -115,8 +120,8 @@ MioneObjCarrier CMO(
                 }
 
                 for (
-                    unsigned int SymbolDetectIndex = 0
-                    ; Symbols[SymbolDetectIndex].Identification;
+                    unsigned int SymbolDetectIndex = 0;
+                    Symbols[SymbolDetectIndex].Identification;
                     SymbolDetectIndex++
                     )
                 {
@@ -139,8 +144,53 @@ MioneObjCarrier CMO(
 
                 break;
             }
+        default: //二次處理
+            {
+                switch (ThisCase.ObjType)
+                {
+                case CASE_NORMAL: //配對成Variable
+                    {
+                        ResultMioneObjCarrier.CarrierLen++;
+                        ResultMioneObjCarrier.Carrier = realloc(
+                            ResultMioneObjCarrier.Carrier,
+                            ResultMioneObjCarrier.CarrierLen * sizeof(MioneObj)
+                        );
+                        ResultMioneObjCarrier.Carrier[ResultMioneObjCarrier.CarrierLen - 1] = (MioneObj){
+                            .ObjType = VARIABLE,
+                            .MioneObjectPosition = ThisCase.CasePosition,
+                        };
 
-            default:break;
+                        break;
+                    }
+
+                case CASE_DOUBLE_STRING: //配對成 Value 的String
+                case CASE_SINGLE_STRING:
+                    {
+                        ResultMioneObjCarrier.CarrierLen++;
+                        ResultMioneObjCarrier.Carrier = realloc(
+                            ResultMioneObjCarrier.Carrier,
+                            ResultMioneObjCarrier.CarrierLen * sizeof(MioneObj)
+                        );
+                        ResultMioneObjCarrier.Carrier[ResultMioneObjCarrier.CarrierLen - 1] = (MioneObj){
+                            .ObjType = VALUE,
+                            .Val = (ValueObj){
+                                .String = ThisCase.ObjName,
+                                .ValueType = VALUE_STRING_TYPE
+                            },
+                            .MioneObjectPosition = ThisCase.CasePosition,
+                        };
+
+                        break;
+                    }
+                case CASE_CONNECTABLE: //跳出 之後Error Handle 嘻嘻
+                case CASE_UNCONNECTABLE:
+                    {
+                        exit(-1);
+                    }
+                default:break;
+                }
+
+            };
         }
     }
 
