@@ -26,8 +26,8 @@ HeadReturnObj SET(const HeadCallObj * HeadCallObjectPointer)
 
     const HeadCallObj HeadCallObject = *HeadCallObjectPointer;
 
-    const unsigned int PairsSize = HeadCallObject.PairCarrier.CarrierLen;
-    const PairObj * Pairs = HeadCallObject.PairCarrier.Carrier;
+    const unsigned int PairsSize = HeadCallObject.Train.CarriageLen;
+    const CarriageObj * Pairs = HeadCallObject.Train.Carriages;
 
 
     VariableObjPtrCarrier HeadSuffix = {0};
@@ -38,29 +38,29 @@ HeadReturnObj SET(const HeadCallObj * HeadCallObjectPointer)
 
     for (unsigned int PairIndex = 0; PairIndex < PairsSize; PairIndex++)
     {
-        const PairObj Pair = Pairs[PairIndex];
+        const CarriageObj Pair = Pairs[PairIndex];
 
-        switch (Pair.Host.ObjType)
+        switch (Pair.CarriageManager.ObjType)
         {
         case HEAD:
             {
-                HeadSuffix = REQUEST(Pair.SourceCarrier);
+                HeadSuffix = REQUEST(Pair.CarriagePassengers);
                 break;
             }
         case PROMPT:
             {
-                switch (Pair.Host.Prompt.Identification)
+                switch (Pair.CarriageManager.Prompt.Identification)
                 {
                 case 1:
                     {
-                        SetPromptSuffix = COUNT(Pair.SourceCarrier);
+                        SetPromptSuffix = COUNT(Pair.CarriagePassengers);
                         break;
                     }
                 default: exit(-1);
 
                 }
 
-                Registration |= 1<<(Pair.Host.Prompt.Identification-1);
+                Registration |= 1<<(Pair.CarriageManager.Prompt.Identification-1);
 
                 break;
             }
@@ -84,11 +84,16 @@ HeadReturnObj SET(const HeadCallObj * HeadCallObjectPointer)
                     (Result.VariableCarrier.CarrierLen + HeadSuffix.CarrierLen)*sizeof(VariableObj)
                     );
 
-                for (unsigned int HeadSuffixIndex = 0; HeadSuffixIndex < HeadSuffix.CarrierLen ; HeadSuffixIndex++)
+                for (
+                    unsigned int HeadSuffixIndex = 0;
+                    HeadSuffixIndex < HeadSuffix.CarrierLen ;
+                    HeadSuffixIndex++
+                    )
                 {
                     Result.VariableCarrier.CarrierLen++;
-                    Result.VariableCarrier.Carrier[Result.VariableCarrier.CarrierLen-1] =  *HeadSuffix.Carrier[HeadSuffixIndex] = (VariableObj){
-                        .Value = HeadSuffixIndex < SetPromptSuffix.CarrierLen
+                    Result.VariableCarrier.Carrier[Result.VariableCarrier.CarrierLen-1] =
+                        *HeadSuffix.Carrier[HeadSuffixIndex] = (VariableObj){
+                            .Value = HeadSuffixIndex < SetPromptSuffix.CarrierLen
                                      ? SetPromptSuffix.Carrier[HeadSuffixIndex]
                                      : (ValueObj){
                                          .ValueType = 0

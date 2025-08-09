@@ -4,4 +4,4 @@
 
 #include "OBJECTS.h"
 
-extern MioneSectionObjCarrier ToMione();
+extern TrainObjCarrier ToMione();

@@ -12,15 +12,20 @@
 #include "PROMPT_DEF.h"
 #include "SYMBOL_DEF.h"
 #include "IMPLEMENT.h"
+#include "COMPUTATION.h"
 
 
 ValueObjCarrier COUNT(const MioneObjCarrier input)
 {
-    const MioneObj * Pack = input.Carrier;
-    const unsigned int PackSize = input.CarrierLen;
 
     ValueObj * ValueCarrier = NULL;
     int ValueCarrierLen = 0;
+
+    const MioneObjCarrier Computed = COMPUTATION(input);
+
+    const MioneObj * Pack = Computed.Carrier;
+    const unsigned int PackSize = Computed.CarrierLen;
+
 
     for (int i = 0; i < PackSize; i++)
         if ( Pack[i].ObjType == VALUE)
@@ -34,7 +39,6 @@ ValueObjCarrier COUNT(const MioneObjCarrier input)
             ValueCarrier = realloc(ValueCarrier, sizeof(ValueObj) * (ValueCarrierLen));
             ValueCarrier[ValueCarrierLen-1] = Pack[i].VariablePointer->Value;
         }
-
 
     return (ValueObjCarrier){
         .Carrier = ValueCarrier,

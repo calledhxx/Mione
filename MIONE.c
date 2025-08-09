@@ -14,114 +14,128 @@
 #include "ERR.h"
 #include "PROMPT_DEF.h"
 
-//THIS IS THE UGLIEST CODE I MADE
-
-void newSection(MioneSectionObjCarrier *BuiltObjPointer)
+static void ResetCarriage(CarriageObj* CarriagePointer)
 {
-
-    (*BuiltObjPointer).CarrierLen++;
-    (*BuiltObjPointer).Carrier = realloc((*BuiltObjPointer).Carrier, sizeof(MioneSectionObj) * (*BuiltObjPointer).CarrierLen);
-
-    (*BuiltObjPointer).Carrier[(*BuiltObjPointer).CarrierLen-1].Head = (MioneObj){ .Head = (HeadObj){ .Fuc = 0}};
-
-    (*BuiltObjPointer).Carrier[(*BuiltObjPointer).CarrierLen-1].PairCarrier.Carrier = malloc(0);
-    (*BuiltObjPointer).Carrier[(*BuiltObjPointer).CarrierLen-1].PairCarrier.CarrierLen = 0;
-
-    (*BuiltObjPointer).Carrier[(*BuiltObjPointer).CarrierLen-1].PairCarrier.CarrierLen++;
-    (*BuiltObjPointer).Carrier[(*BuiltObjPointer).CarrierLen-1].PairCarrier.Carrier = realloc(
-        (*BuiltObjPointer).Carrier[(*BuiltObjPointer).CarrierLen-1].PairCarrier.Carrier,
-        sizeof(PairObj) * (*BuiltObjPointer).Carrier[(*BuiltObjPointer).CarrierLen-1].PairCarrier.CarrierLen
-        );
-
-    (*BuiltObjPointer).Carrier[(*BuiltObjPointer).CarrierLen-1].PairCarrier.Carrier[(*BuiltObjPointer).Carrier[(*BuiltObjPointer).CarrierLen-1].PairCarrier.CarrierLen-1].SourceCarrier.Carrier = malloc(0);
-    (*BuiltObjPointer).Carrier[(*BuiltObjPointer).CarrierLen-1].PairCarrier.Carrier[(*BuiltObjPointer).Carrier[(*BuiltObjPointer).CarrierLen-1].PairCarrier.CarrierLen-1].SourceCarrier.CarrierLen = 0;
-
+    CarriagePointer->CarriageManager.ObjType = 0;
+    CarriagePointer->CarriagePassengers.Carrier = NULL;
+    CarriagePointer->CarriagePassengers.CarrierLen = 0;
 }
 
-MioneSectionObjCarrier ToMione(const MioneObjCarrier ToBuildObj)
+
+static void ResetTrain(TrainObj* TrainPointer)
+{
+    TrainPointer->CarriageLen = 0;
+    TrainPointer->Carriages = NULL;
+}
+
+static void SaveCarriageIntoTrain(
+    TrainObj*TrainPointer,
+    const CarriageObj Carriage
+    )
+{
+    if (Carriage.CarriageManager.ObjType == 0 && Carriage.CarriagePassengers.CarrierLen == 0) return;
+
+    TrainPointer->CarriageLen++;
+    TrainPointer->Carriages = realloc(
+        TrainPointer->Carriages,
+        sizeof(CarriageObj) * TrainPointer->CarriageLen
+        );
+    TrainPointer->Carriages[TrainPointer->CarriageLen - 1] =
+        Carriage;
+}
+
+static void SaveTrainIntoCarrier(
+    TrainObjCarrier*CarrierPointer,
+    const TrainObj Train
+    )
+{
+    if (Train.CarriageLen == 0) return;
+
+    CarrierPointer->CarrierLen++;
+    CarrierPointer->Carrier = realloc(
+        CarrierPointer->Carrier,
+        sizeof(TrainObj) * CarrierPointer->CarrierLen
+        );
+    CarrierPointer->Carrier[CarrierPointer->CarrierLen - 1] =
+        Train;
+}
+
+static void SavePassengerIntoCarriage(
+    CarriageObj* CarriagePointer,
+    const MioneObj Passenger
+    )
+{
+    CarriagePointer->CarriagePassengers.CarrierLen++;
+    CarriagePointer->CarriagePassengers.Carrier = realloc(
+        CarriagePointer->CarriagePassengers.Carrier,
+        sizeof(MioneObj) * CarriagePointer->CarriagePassengers.CarrierLen
+    );
+    CarriagePointer->CarriagePassengers.Carrier[CarriagePointer->CarriagePassengers.CarrierLen - 1] =
+        Passenger;
+}
+
+TrainObjCarrier ToMione(const MioneObjCarrier ToBuildObj)
 {
     const unsigned int ObjsSize = ToBuildObj.CarrierLen;
     const MioneObj* Objs = ToBuildObj.Carrier;
 
-    MioneSectionObjCarrier BuiltObj = {0};
+    TrainObjCarrier BuiltObj = {0};
 
     BuiltObj.CarrierLen = 0;
     BuiltObj.Carrier = NULL;
 
+    TrainObj Train;
+    ResetTrain(&Train);
 
+    CarriageObj Carriage;
+    ResetCarriage(&Carriage);
 
     for (int index = 0;index < ObjsSize;index++)
     {
         const MioneObj Mio = Objs[index];
 
-
-        if (Mio.ObjType == HEAD)
+        switch (Mio.ObjType)
         {
-            for (int i = 0; 1; i++)
+        case HEAD:
             {
-                if (Heads[i].Identification == -1) break;
+                SaveCarriageIntoTrain(&Train,Carriage);
+                SaveTrainIntoCarrier(&BuiltObj,Train);
+                ResetCarriage(&Carriage);
+                ResetTrain(&Train);
 
-                if (wcscmp(Mio.Head.Name, Heads[i].Name) == 0)
-                {
-                    newSection(&BuiltObj);
-                    BuiltObj.Carrier[BuiltObj.CarrierLen-1].Head = (MioneObj){ .Head = (HeadObj){ .Fuc = SVV}};
-                    BuiltObj.Carrier[BuiltObj.CarrierLen-1].PairCarrier.Carrier[BuiltObj.Carrier[BuiltObj.CarrierLen-1].PairCarrier.CarrierLen-1].Host = Mio;
-                    BuiltObj.Carrier[BuiltObj.CarrierLen-1].Head = Mio;
+                Carriage.CarriageManager = Mio;
 
-
-                    break;
-                }
+                break;
             }
-
-        }
-
-        if (Mio.ObjType == PROMPT)
-        {
-            if (!BuiltObj.Carrier[BuiltObj.CarrierLen-1].Head.Head.Fuc); //err;
-
-            BuiltObj.Carrier[BuiltObj.CarrierLen-1].PairCarrier.CarrierLen++;
-            BuiltObj.Carrier[BuiltObj.CarrierLen-1].PairCarrier.Carrier = realloc(
-                BuiltObj.Carrier[BuiltObj.CarrierLen-1].PairCarrier.Carrier,
-                sizeof(PairObj) * BuiltObj.Carrier[BuiltObj.CarrierLen-1].PairCarrier.CarrierLen
-                );
-
-            BuiltObj.Carrier[BuiltObj.CarrierLen-1].PairCarrier.Carrier[BuiltObj.Carrier[BuiltObj.CarrierLen-1].PairCarrier.CarrierLen-1].SourceCarrier.Carrier = malloc(0);
-            BuiltObj.Carrier[BuiltObj.CarrierLen-1].PairCarrier.Carrier[BuiltObj.Carrier[BuiltObj.CarrierLen-1].PairCarrier.CarrierLen-1].SourceCarrier.CarrierLen = 0;
-
-            BuiltObj.Carrier[BuiltObj.CarrierLen-1].PairCarrier.Carrier[BuiltObj.Carrier[BuiltObj.CarrierLen-1].PairCarrier.CarrierLen-1].Host = Mio;
-        }
-
-        if (Mio.ObjType == SYMBOL || Mio.ObjType == VARIABLE || Mio.ObjType == VALUE) // SVV
-        {
-
-            if (!BuiltObj.CarrierLen)
+        case PROMPT:
             {
-                newSection(&BuiltObj);
-                BuiltObj.Carrier[BuiltObj.CarrierLen-1].Head = (MioneObj){ .Head = (HeadObj){ .Fuc = SVV}};
+                SaveCarriageIntoTrain(&Train,Carriage);
+                ResetCarriage(&Carriage);
+
+                Carriage.CarriageManager = Mio;
+
+                break;
             }
+        case SYMBOL:
+        case VARIABLE:
+        case VALUE:
+            {
+                SavePassengerIntoCarriage(&Carriage,Mio);
 
-
-            BuiltObj.Carrier[BuiltObj.CarrierLen-1].PairCarrier.Carrier[BuiltObj.Carrier[BuiltObj.CarrierLen-1].PairCarrier.CarrierLen-1].SourceCarrier.CarrierLen++;
-            BuiltObj.Carrier[BuiltObj.CarrierLen-1].PairCarrier.Carrier[BuiltObj.Carrier[BuiltObj.CarrierLen-1].PairCarrier.CarrierLen-1].SourceCarrier.Carrier = realloc(
-                    BuiltObj.Carrier[BuiltObj.CarrierLen-1].PairCarrier.Carrier[BuiltObj.Carrier[BuiltObj.CarrierLen-1].PairCarrier.CarrierLen-1].SourceCarrier.Carrier,
-                    BuiltObj.Carrier[BuiltObj.CarrierLen-1].PairCarrier.Carrier[BuiltObj.Carrier[BuiltObj.CarrierLen-1].PairCarrier.CarrierLen-1].SourceCarrier.CarrierLen * sizeof(MioneObj)
-                    );
-
-            BuiltObj.Carrier[BuiltObj.CarrierLen-1].PairCarrier.Carrier[BuiltObj.Carrier[BuiltObj.CarrierLen-1].PairCarrier.CarrierLen-1].SourceCarrier.Carrier[BuiltObj.Carrier[BuiltObj.CarrierLen-1].PairCarrier.Carrier[BuiltObj.Carrier[BuiltObj.CarrierLen-1].PairCarrier.CarrierLen-1].SourceCarrier.CarrierLen-1] = Mio;
-        }
-
-        if (
-            (index != 0 && Objs[index].ObjType == -1 && index+1<ObjsSize && Objs[index+1].ObjType >= SYMBOL)
-            || (Mio.ObjType >= VARIABLE && index+1 < ObjsSize && Objs[index+1].ObjType >= VARIABLE)
-            || (Mio.ObjType == SYMBOL && !Mio.Symbol.AfterConnectVV && index+1 < ObjsSize && Objs[index+1].ObjType >= VARIABLE)
-            || (index+1 < ObjsSize && Mio.ObjType == Objs[index+1].ObjType && Mio.ObjType >= VARIABLE)
-            )
-        {
-            newSection(&BuiltObj);
-            BuiltObj.Carrier[BuiltObj.CarrierLen-1].Head = (MioneObj){ .Head = (HeadObj){ .Fuc = SVV}};
-
+                break;
+            }
+        default:
+            {
+                SaveCarriageIntoTrain(&Train,Carriage);
+                SaveTrainIntoCarrier(&BuiltObj,Train);
+                ResetCarriage(&Carriage);
+                ResetTrain(&Train);
+            };
         }
     }
+
+    SaveCarriageIntoTrain(&Train,Carriage);
+    SaveTrainIntoCarrier(&BuiltObj,Train);
 
     return BuiltObj;
 }

@@ -1,1 +1,1 @@
-extern int a ;
+extern MioneObjCarrier COMPUTATION();

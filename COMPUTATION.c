@@ -1,3 +1,5 @@
+#include <stdio.h>
+
 #include "OBJECTS.h"
 #include "ERR.h"
 #include "COUNT.h"
@@ -77,12 +79,12 @@ MioneObjCarrier COMPUTATION(MioneObjCarrier input)
                                 {
                                     case VARIABLE:
                                         {
-                                            nearByValue = Pack[FirstBracketIndex - 1].VarUP->Value;
+                                            nearByValue = Pack[FirstBracketIndex - 1].VariablePointer->Value;
                                             break;
                                         }
                                     case VALUE:
                                         {
-                                            nearByValue = Pack[FirstBracketIndex - 1].Val;
+                                            nearByValue = Pack[FirstBracketIndex - 1].Value;
                                             break;
                                         }
                                     default: ErrCall("AAAA","DaaaASDASSASDadCVVCS",NULL,NULL,NULL);
@@ -168,7 +170,7 @@ MioneObjCarrier COMPUTATION(MioneObjCarrier input)
                         NewPack = realloc(NewPack, sizeof(MioneObj) * NewPackSize);
                         NewPack[NewPackSize - 1] = (MioneObj){
                             .ObjType = VALUE,
-                            .Val = TheValue,
+                            .Value = TheValue,
                         };
 
                         for (int index = i+1; index < PackSize; index++)
@@ -229,21 +231,15 @@ MioneObjCarrier COMPUTATION(MioneObjCarrier input)
                                 if (Pack[FirstBracketIndex - 1].ObjType == VARIABLE)
                                 {
 
-                                    if (Pack[FirstBracketIndex - 1].VarUP->Value.ValueType == VALUE_FUNCTION_TYPE)
+                                    if (Pack[FirstBracketIndex - 1].VariablePointer->Value.ValueType == VALUE_FUNCTION_TYPE)
                                     {
 
                                         ImplementedObj Return =  IMPLEMENT((ToImplementObj){
-                                            .Built =  *Pack[FirstBracketIndex - 1].VarUP->Value.Area.SectionCarrierPointer,
+                                            .Built =  *Pack[FirstBracketIndex - 1].VariablePointer->Value.Area.TrainObjCarrierPointer,
                                             .CallByValueCarrier = ChildCount
                                         });
 
-                                        if (!Return.ToState&1) ErrCall(
-                                            "The Function hasn't return any Value.",
-                                            "MGs123",
-                                            NULL,
-                                            Pack[FirstBracketIndex - 1].Line,
-                                            Pack[FirstBracketIndex - 1].Column
-                                        );
+                                        if (!Return.ToState&1) exit(1);
 
                                         ValueObjCarrier V = Return.ValueCarrier;
 
@@ -265,9 +261,9 @@ MioneObjCarrier COMPUTATION(MioneObjCarrier input)
                                             NewPack = realloc(NewPack, sizeof(MioneObj) * (NewPackSize));
                                             NewPack[NewPackSize - 1] = (MioneObj){
                                                 .ObjType = VALUE,
-                                                .Val = V.Carrier[index],
-                                                .Line = Pack[i-1].Line,
-                                                .Column = Pack[i-1].Column
+                                                .Value = V.Carrier[index],
+                                                // todo .Line = Pack[i-1].Line,
+                                                // .Column = Pack[i-1].Column
                                             };
                                         }
 
@@ -291,45 +287,21 @@ MioneObjCarrier COMPUTATION(MioneObjCarrier input)
                                         FunctionCalled = 1;
                                     }
                                     else
-                                    {
-
-                                        char *str1 = "The Type of `";
-                                        char *str2 = "` isn't a FUNCTION";
-                                        char *VName = Pack[FirstBracketIndex - 1].VarUP->VariableName;
-
-                                        char *REASON = malloc(sizeof(char) * (int)(strlen(str1) + strlen(str2) + strlen(VName) + 1));
-                                        strcpy(REASON, str1);
-                                        strcat(REASON, VName);
-                                        strcat(REASON, str2);
-
-                                        ErrCall(
-                                            REASON,
-                                                "MG001",
-                                            "Maybe you can change the Variable Type to FUNCTION.",
-                                            Pack[FirstBracketIndex - 1].Line,
-                                            Pack[FirstBracketIndex - 1].Column
-
-                                        );
-                                    }
+                                        exit(1);
                                 }
                                 else
                                 {
-                                    if (Pack[FirstBracketIndex - 1].Val.ValueType == VALUE_FUNCTION_TYPE)
+                                    if (Pack[FirstBracketIndex - 1].Value.ValueType == VALUE_FUNCTION_TYPE)
                                     {
                                         ImplementedObj Return = IMPLEMENT((ToImplementObj){
-                                            .Built =  *Pack[FirstBracketIndex - 1].Val.Area.SectionCarrierPointer,
+                                            .Built =  *Pack[FirstBracketIndex - 1].Value.Area.TrainObjCarrierPointer,
                                             .CallByValueCarrier = ChildCount
                                         });
 
 
 
-                                        if (!Return.ToState&1) ErrCall(
-                                            "The Function hasn't return any Value.",
-                                            "MGdas123",
-                                            NULL,
-                                            Pack[FirstBracketIndex - 1].Line,
-                                            Pack[FirstBracketIndex - 1].Column
-                                        );
+                                        if (!Return.ToState&1)
+                                            exit(1);
 
 
                                         ValueObjCarrier V = Return.ValueCarrier;
@@ -351,9 +323,9 @@ MioneObjCarrier COMPUTATION(MioneObjCarrier input)
                                             NewPack = realloc(NewPack, sizeof(MioneObj) * (NewPackSize));
                                             NewPack[NewPackSize - 1] = (MioneObj){
                                                 .ObjType = VALUE,
-                                                .Val = V.Carrier[index],
-                                                .Line = Pack[i-1].Line,
-                                                .Column = Pack[i-1].Column
+                                                .Value = V.Carrier[index],
+                                                //TODO .Line = Pack[i-1].Line,
+                                                // .Column = Pack[i-1].Column
                                             };
 
                                         }
@@ -376,15 +348,7 @@ MioneObjCarrier COMPUTATION(MioneObjCarrier input)
                                         FunctionCalled = 1;
                                     }
                                     else
-                                    {
-                                        ErrCall(
-                                            "The Value before `()` Isn't a Function",
-                                            "MG002",
-                                            "Maybe you can try `function() <...:Mione> end()`.",
-                                            Pack[FirstBracketIndex - 1].Line,
-                                            Pack[FirstBracketIndex - 1].Column
-                                        );
-                                    }
+                                        exit(1);
                                 }
                             }
                         }
@@ -409,7 +373,7 @@ MioneObjCarrier COMPUTATION(MioneObjCarrier input)
                                 NewPack = realloc(NewPack, NewPackSize * sizeof(MioneObj));
                                 NewPack[NewPackSize - 1] = (MioneObj){
                                     .ObjType = VALUE,
-                                    .Val = ChildCount.Carrier[index]
+                                    .Value = ChildCount.Carrier[index]
                                 };
 
                             }
@@ -454,8 +418,8 @@ MioneObjCarrier COMPUTATION(MioneObjCarrier input)
                                     if (i)
                                         exit(0xFF09);
 
-                                    ValueObj Value1 = Pack[i-1].ObjType == VALUE ? Pack[i-1].Val : Pack[i-1].VarUP->Value;
-                                    ValueObj Value2 = Pack[i+1].ObjType == VALUE ? Pack[i+1].Val : Pack[i+1].VarUP->Value;;
+                                    ValueObj Value1 = Pack[i-1].ObjType == VALUE ? Pack[i-1].Value : Pack[i-1].VariablePointer->Value;
+                                    ValueObj Value2 = Pack[i+1].ObjType == VALUE ? Pack[i+1].Value : Pack[i+1].VariablePointer->Value;;
 
                                     break;
                                 }
@@ -478,10 +442,10 @@ MioneObjCarrier COMPUTATION(MioneObjCarrier input)
         default:{
             if (!BracketsChild)
             {
-                if (Pack[i].ObjType == VALUE && Pack[i].Val.ValueType == VALUE_TABLE_TYPE && !Pack[i].Val.Table.VariableObjPointerCarrierPointer)
+                if (Pack[i].ObjType == VALUE && Pack[i].Value.ValueType == VALUE_TABLE_TYPE && !Pack[i].Value.Table.VariableObjPointerCarrierPointer)
                 {
                     ImplementedObj Return = IMPLEMENT((ToImplementObj){
-                        .Built = *Pack[i].Val.Table.SectionCarrierPointer
+                        .Built = *Pack[i].Value.Table.TrainObjCarrierPointer
                     });
 
                     int VarsSize = Return.VariableCarrier.CarrierLen;
@@ -512,9 +476,9 @@ MioneObjCarrier COMPUTATION(MioneObjCarrier input)
                         }
                     }
 
-                    Pack[i].Val.Table.VariableObjPointerCarrierPointer = malloc(sizeof(struct _VariablesObject *));
+                    Pack[i].Value.Table.VariableObjPointerCarrierPointer = malloc(sizeof(struct _VariablesObject *));
 
-                    *Pack[i].Val.Table.VariableObjPointerCarrierPointer = NewTable;
+                    *Pack[i].Value.Table.VariableObjPointerCarrierPointer = NewTable;
                 }
             }else
             {

@@ -2,18 +2,26 @@
 // Created by calle on 25-1-3.
 //
 
+#include <stdio.h>
+
 #include "OBJECTS.h"
+#include "COMPUTATION.h"
+
 #include <stdlib.h>
 #include <string.h>
 
 
 VariableObjPtrCarrier REQUEST(const MioneObjCarrier input)
 {
-    const MioneObj * Pack = input.Carrier;
-    const unsigned int PackSize = input.CarrierLen;
 
     VariableObj ** VariablePointerCarrier = NULL;
     int VariablePointerCarrierLen = 0;
+
+    const MioneObjCarrier Computed = COMPUTATION(input);
+
+    const MioneObj * Pack = Computed.Carrier;
+    const unsigned int PackSize = Computed.CarrierLen;
+
 
     for (int i = 0; i < PackSize; i++)
         if ( Pack[i].ObjType == VALUE)
@@ -24,6 +32,8 @@ VariableObjPtrCarrier REQUEST(const MioneObjCarrier input)
             VariablePointerCarrierLen ++;
             VariablePointerCarrier = realloc(VariablePointerCarrier, sizeof(ValueObj) * (VariablePointerCarrierLen));
             VariablePointerCarrier[VariablePointerCarrierLen-1] = Pack[i].VariablePointer;
+
+            printf("added %p\n",Pack[i].VariablePointer);
         }
 
 

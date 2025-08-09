@@ -86,7 +86,7 @@ typedef struct _CaseObject
 typedef struct _CaseObjectsCarrier
 {
     CaseObj * Carrier;
-    int CarrierLen;
+    unsigned int CarrierLen;
 } CaseObjCarrier;
 //
 //
@@ -158,12 +158,12 @@ typedef struct _SymbolObject
 //
 typedef struct _AreaObject
 {
-    struct _MioneSectionObjectsCarrier * SectionCarrierPointer;
+    struct _TrainObjectsCarrier * TrainObjCarrierPointer;
 }AreaObj;
 
 typedef struct _TableObject
 {
-    struct _MioneSectionObjectsCarrier * SectionCarrierPointer;
+    struct _TrainObjectsCarrier * TrainObjCarrierPointer;
 
     struct _VariableObjectPointersCarrier * VariableObjPointerCarrierPointer;
 }TableObj;
@@ -280,44 +280,23 @@ typedef struct _MioneObjectsCarrier
 
 
 
-typedef struct _PairObject
+typedef struct _CarriageObject
 {
-    MioneObj Host; //若是開頭組合，則此物件為HEAD本身，反之PROMPT本身。
+    MioneObj CarriageManager;
+    MioneObjCarrier CarriagePassengers;
+}CarriageObj;
 
-    MioneObjCarrier SourceCarrier;
-}PairObj;
+typedef struct _TrainObject
+{
+    unsigned int CarriageLen;
+    CarriageObj * Carriages;
+} TrainObj;
 
-typedef struct _PairObjectsCarrier
+typedef struct _TrainObjectsCarrier
 {
     unsigned int CarrierLen;
-    PairObj * Carrier;
-} PairObjCarrier;
-
-//
-//
-// Mione Section Group
-//
-//
-
-typedef struct _MioneSectionObject
-{
-    MioneObj Head;
-
-    PairObjCarrier PairCarrier;
-} MioneSectionObj;
-
-typedef struct _MioneSectionObjectsCarrier
-{
-    MioneSectionObj * Carrier;
-    int CarrierLen;
-} MioneSectionObjCarrier;
-
-//
-//
-//
-//
-//
-
+    TrainObj * Carrier;
+} TrainObjCarrier;
 
 
 
@@ -375,7 +354,7 @@ typedef struct _HeadReturnObject
 
 typedef struct _HeadCallObject
 {
-    PairObjCarrier PairCarrier; //程式句二大組合
+    TrainObj Train;
 
     ValueObjCarrier CallByValueCarrier; //傳入的值
 
@@ -412,7 +391,7 @@ typedef struct _EventObject
 //
 typedef struct _ToImplementObject
 {
-    MioneSectionObjCarrier Built;
+    TrainObjCarrier Built;
     ValueObjCarrier CallByValueCarrier;
 } ToImplementObj;
 
@@ -447,6 +426,7 @@ typedef struct _ScopeObjectCarrier
     ScopeObj * Carrier;
     unsigned int CarrierLen;
 } ScopeObjCarrier;
+
 
 
 
