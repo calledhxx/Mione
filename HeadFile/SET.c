@@ -4,18 +4,12 @@
 
 #include <inttypes.h>
 
-#include "../OBJECTS.h"
-#include "../REQUEST.h"
-#include "../COUNT.h"
-
-#include "../ERR.h"
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <tgmath.h>
 
-#include "../PROMPT_DEF.h"
+#include "../STDMIO.h"
 
 HeadReturnObj SET(const HeadCallObj * HeadCallObjectPointer)
 {

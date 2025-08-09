@@ -3,10 +3,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "../OBJECTS.h"
-#include "../COUNT.h"
-#include "../ERR.h"
-#include "../REQUEST.h"
+#include "../STDMIO.h"
 
 HeadReturnObj SVV(HeadCallObj * HeadCallObjectPointer)
 {

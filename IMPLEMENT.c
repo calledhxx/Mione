@@ -3,9 +3,8 @@
 #include <stdlib.h>
 #include <tgmath.h>
 
-#include "OBJECTS.h"
-#include "HeadFile/SET.H"
-#include "HeadFile/SVV.h"
+#include "STDMIO.h"
+
 
 
 ImplementedObj IMPLEMENT(const ToImplementObj toImplement)

@@ -3,12 +3,10 @@
 //
 
 #include <stdio.h>
-
-#include "OBJECTS.h"
-#include "COMPUTATION.h"
-
 #include <stdlib.h>
 #include <string.h>
+
+#include "STDMIO.h"
 
 
 VariableObjPtrCarrier REQUEST(const MioneObjCarrier input)
@@ -24,17 +22,13 @@ VariableObjPtrCarrier REQUEST(const MioneObjCarrier input)
 
 
     for (int i = 0; i < PackSize; i++)
-        if ( Pack[i].ObjType == VALUE)
-        {
-            exit(-2);
-        }else if (Pack[i].ObjType == VARIABLE)
+        if (Pack[i].ObjType == VARIABLE)
         {
             VariablePointerCarrierLen ++;
             VariablePointerCarrier = realloc(VariablePointerCarrier, sizeof(ValueObj) * (VariablePointerCarrierLen));
             VariablePointerCarrier[VariablePointerCarrierLen-1] = Pack[i].VariablePointer;
-
-            printf("added %p\n",Pack[i].VariablePointer);
-        }
+        }else if ( Pack[i].ObjType == VALUE)
+            exit(-2);
 
 
     return (VariableObjPtrCarrier){

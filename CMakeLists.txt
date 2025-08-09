@@ -12,7 +12,6 @@ add_executable(Mione
         HeadFile/SET.c
         HeadFile/SVV.c
         COUNT.c MIONE.c
-        ERR.c
         SYMBOL_DEF.c
         HeadFile/AllHeads.c
         REQUEST.c
@@ -23,4 +22,5 @@ add_executable(Mione
         main.c
         COMPUTATION.h
         COMPUTATION.c
+        STDMIO.h
 )

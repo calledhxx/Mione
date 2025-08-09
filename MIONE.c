@@ -4,15 +4,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "OBJECTS.h"
-#include "MIONE.h"
-
 #include <inttypes.h>
 
-#include "HeadFile/AllHeads.h"
-#include "HeadFile/SVV.h"
-#include "ERR.h"
-#include "PROMPT_DEF.h"
+#include "STDMIO.h"
+
 
 static void ResetCarriage(CarriageObj* CarriagePointer)
 {

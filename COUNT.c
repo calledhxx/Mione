@@ -3,16 +3,10 @@
 //
 
 #include <inttypes.h>
-#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
-#include "ERR.h"
-#include "Mione.h"
-#include "PROMPT_DEF.h"
-#include "SYMBOL_DEF.h"
-#include "IMPLEMENT.h"
-#include "COMPUTATION.h"
+#include "STDMIO.h"
 
 
 ValueObjCarrier COUNT(const MioneObjCarrier input)

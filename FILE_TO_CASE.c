@@ -7,8 +7,8 @@
 #include <stdlib.h>
 #include <wchar.h>
 
-#include "ERR.h"
-#include "OBJECTS.h"
+#include "STDMIO.h"
+
 
 int CheckCharType(const char Char)
 {
@@ -66,7 +66,7 @@ int CheckCharType(const char Char)
     return 1;
 }
 
-CaseObjCarrier FCO(FILE* F,const uint8_t LineBreak)
+CaseObjCarrier FCO(FILE* F)
 {
 
     CaseObjCarrier CaseCarriers = {0};

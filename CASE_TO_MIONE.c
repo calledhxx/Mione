@@ -2,22 +2,11 @@
 // Created by calle on 24-12-28.
 //
 
-#include <inttypes.h>
-#include <tgmath.h>
-#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <wchar.h>
 
+#include "STDMIO.h"
 
-#include "OBJECTS.h"
-#include "SYMBOL_DEF.h"
-#include "PROMPT_DEF.h"
-#include "HeadFile/AllHeads.h"
-#include "MIONE.h"
-#include "ERR.h"
-#include "NUMBER.h"
-#include "HeadFile/SET.H"
 
 VariableObj * ReturnVariablePtrIfAlreadyExistedInScope(
     const ScopeObj Scope,

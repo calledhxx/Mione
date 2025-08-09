@@ -2,14 +2,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <unistd.h>
 
-#include "OBJECTS.h"
-#include "FILE_TO_CASE.h"
-#include "CASE_TO_MIONE.h"
-#include "IMPLEMENT.h"
-#include "MIONE.h"
-
+#include "STDMIO.h"
 
 /// 每個EXIT函數對應著那個地方需做錯誤回傳，其呼叫者須做ERROR HANDLE。
 

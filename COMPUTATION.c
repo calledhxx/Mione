@@ -1,11 +1,8 @@
 #include <stdio.h>
-
-#include "OBJECTS.h"
-#include "ERR.h"
-#include "COUNT.h"
-#include "IMPLEMENT.h"
 #include <stdlib.h>
 #include <string.h>
+#include "STDMIO.h"
+
 
 extern inline int _mix(const int a,const int b)
 {
@@ -87,7 +84,7 @@ MioneObjCarrier COMPUTATION(MioneObjCarrier input)
                                             nearByValue = Pack[FirstBracketIndex - 1].Value;
                                             break;
                                         }
-                                    default: ErrCall("AAAA","DaaaASDASSASDadCVVCS",NULL,NULL,NULL);
+                                    default: exit(1);
                                 }
 
                                 if (nearByValue.ValueType == VALUE_TABLE_TYPE)
@@ -111,14 +108,12 @@ MioneObjCarrier COMPUTATION(MioneObjCarrier input)
                                         //         break;
                                         //     }
                                         default:
-                                            {
-                                                ErrCall("AAAA","DASDASSASDCVVCS",NULL,NULL,NULL);
-                                            }
+                                                exit(1);
                                         }
                                     }
 
 
-                                }else ErrCall("kkopkopkopkopdasp","DASDASSASDadCVVCS",NULL,NULL,NULL);
+                                }else exit(1);
 
                             }else
                             {
@@ -145,15 +140,13 @@ MioneObjCarrier COMPUTATION(MioneObjCarrier input)
                                 //         break;
                                 //     }
                                 default:
-                                    {
-                                        ErrCall("AAAA","DASDASSASDCVVCS",NULL,NULL,NULL);
-                                    }
+                                        exit(1);
                                 }
 
 
 
                             }
-                        }else ErrCall("DASDAS","DASDASD",NULL,NULL,NULL);
+                        }else exit(1);
 
                         MioneObj* NewPack = malloc(0);
                         int NewPackSize = 0;
@@ -490,7 +483,7 @@ MioneObjCarrier COMPUTATION(MioneObjCarrier input)
         }
     }
 
-    if (BracketCur) ErrCall("cadasdas","dasdada",NULL,0,0);
+    if (BracketCur) exit(1);
 
     return (MioneObjCarrier){
         .Carrier = Pack,
