@@ -79,7 +79,7 @@ IntegerObj IntegerSub(const IntegerObj A,const IntegerObj B)
     result.Digits = 9*(result.UnitsLen-1);
 
     for (unsigned int j = 0; j < 9; j++)
-        if ((result.Units[result.UnitsLen-1] / ePow(9 - j - 1)))
+        if ((result.Units[result.UnitsLen-1] / ePow(9 - j - 1))) //這東西他媽卡了我20分鐘，我才意識到可以吃真跳
         {
             result.Digits+=9 - (j-1) - 1;
             break;
