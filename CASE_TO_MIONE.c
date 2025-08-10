@@ -174,22 +174,20 @@ MioneObjCarrier CMO(
         case CASE_DECNUMBER:
             {
 
+                ResultMioneObjCarrier.CarrierLen++;
+                ResultMioneObjCarrier.Carrier = realloc(
+                    ResultMioneObjCarrier.Carrier,
+                    ResultMioneObjCarrier.CarrierLen * sizeof(MioneObj)
+                );
+                ResultMioneObjCarrier.Carrier[ResultMioneObjCarrier.CarrierLen - 1] = (MioneObj){
+                    .ObjType = VALUE,
+                    .Value = (ValueObj){
+                        .ValueType = VALUE_NUMBER_TYPE,
+                        .Number = stringToNumber(ThisCase.ObjName)
+                    },
+                    .MioneObjectPosition = ThisCase.CasePosition,
+                };
 
-
-                printIntegerObj(
-                    stringToNumber(ThisCase.ObjName).Integer);
-                printIntegerObj(
-                        IntegerAdd(
-                        stringToNumber(ThisCase.ObjName).Integer,
-                        stringToNumber(ThisCase.ObjName).Integer
-                            )
-                        );
-                printIntegerObj(
-                        IntegerSub(
-                        stringToNumber("100").Integer,
-                        stringToNumber("50").Integer
-                            )
-                        );
                 break;
             }
         default: //二次處理
