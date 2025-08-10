@@ -173,9 +173,15 @@ MioneObjCarrier CMO(
             }
         case CASE_DECNUMBER:
             {
-                extern void printIntegerObj();
 
-                printIntegerObj(stringToNumber(ThisCase.ObjName).Integer);
+
+
+                printIntegerObj(
+                        IntegerAdd(
+                        stringToNumber(ThisCase.ObjName).Integer,
+                        stringToNumber(ThisCase.ObjName).Integer
+                            )
+                        );
                 break;
             }
         default: //二次處理
