@@ -112,6 +112,8 @@ typedef struct _NumberObject
 {
     IntegerObj Integer; //採整數個位最前
     IntegerObj Decimal; //採小數個位最前
+
+    uint8_t Sign; //符號 0:正數 1:負數
 } NumberObj;
 //
 //

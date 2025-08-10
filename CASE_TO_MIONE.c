@@ -2,6 +2,7 @@
 // Created by calle on 24-12-28.
 //
 
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
@@ -149,6 +150,32 @@ MioneObjCarrier CMO(
 
                 if (Paired) break;
             }
+        case CASE_DOUBLE_STRING: //配對成 Value 的String
+        case CASE_SINGLE_STRING:
+            {
+                ResultMioneObjCarrier.CarrierLen++;
+                ResultMioneObjCarrier.Carrier = realloc(
+                    ResultMioneObjCarrier.Carrier,
+                    ResultMioneObjCarrier.CarrierLen * sizeof(MioneObj)
+                );
+                ResultMioneObjCarrier.Carrier[ResultMioneObjCarrier.CarrierLen - 1] = (MioneObj){
+                    .ObjType = VALUE,
+                    .Value = (ValueObj){
+                        .String = ThisCase.ObjName,
+                        .ValueType = VALUE_STRING_TYPE,
+                    },
+                    .MioneObjectPosition = ThisCase.CasePosition,
+                };
+
+                Paired = 1;
+
+                break;
+            }
+        case CASE_DECNUMBER:
+            {
+                printf("%d\n",stringToNumber(ThisCase.ObjName).Integer.Digits);
+                break;
+            }
         default: //二次處理
             {
                 switch (ThisCase.ObjType)
@@ -191,30 +218,6 @@ MioneObjCarrier CMO(
 
                         break;
                     }
-
-                case CASE_DOUBLE_STRING: //配對成 Value 的String
-                case CASE_SINGLE_STRING:
-                    {
-                        ResultMioneObjCarrier.CarrierLen++;
-                        ResultMioneObjCarrier.Carrier = realloc(
-                            ResultMioneObjCarrier.Carrier,
-                            ResultMioneObjCarrier.CarrierLen * sizeof(MioneObj)
-                        );
-                        ResultMioneObjCarrier.Carrier[ResultMioneObjCarrier.CarrierLen - 1] = (MioneObj){
-                            .ObjType = VALUE,
-                            .Value = (ValueObj){
-                                .String = ThisCase.ObjName,
-                                .ValueType = VALUE_STRING_TYPE,
-                            },
-                            .MioneObjectPosition = ThisCase.CasePosition,
-                        };
-
-                        Paired = 1;
-
-                        break;
-                    }
-
-
                 case CASE_CONNECTABLE: //跳出 之後Error Handle 嘻嘻
                 case CASE_UNCONNECTABLE:
                     {

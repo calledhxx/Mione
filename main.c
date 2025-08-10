@@ -9,7 +9,6 @@
 
 ScopeObj MainScope = {0};
 
-
 int main(const int OptionsSize,char **Options)
 {
     FILE *f = fopen("D:\\Mione\\index.mio", "r"); //never read binary again...

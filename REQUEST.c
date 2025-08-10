@@ -11,7 +11,6 @@
 
 VariableObjPtrCarrier REQUEST(const MioneObjCarrier input)
 {
-
     VariableObj ** VariablePointerCarrier = NULL;
     int VariablePointerCarrierLen = 0;
 

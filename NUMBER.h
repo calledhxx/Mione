@@ -4,4 +4,4 @@
 #include "OBJECTS.h"
 #include <wchar.h>
 
-extern NumberObj wcharToNumber(const wchar_t* input);
+extern NumberObj stringToNumber();
