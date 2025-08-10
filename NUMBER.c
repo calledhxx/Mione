@@ -4,10 +4,22 @@
 
 #include <stdlib.h>
 #include <stdint.h>
+#include <stdio.h>
 #include <string.h>
 #include <tgmath.h>
 
 #include "STDMIO.h"
+
+void printIntegerObj(const IntegerObj Obj)
+{
+    printf("Digits: %d\n",Obj.Digits);
+
+    printf("REMEMBER:HIGH TO LOW POSITION:\n",Obj.Digits);
+    for (unsigned int i = 0;i < Obj.UnitsLen; i++)
+        printf("%u ",Obj.Units[i]);
+
+    printf("\nLen: %d\n\n",Obj.UnitsLen);
+}
 
 IntegerObj IntegerSub(const IntegerObj A,const IntegerObj B)
 {
