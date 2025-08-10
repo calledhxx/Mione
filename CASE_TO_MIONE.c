@@ -177,9 +177,17 @@ MioneObjCarrier CMO(
 
 
                 printIntegerObj(
+                    stringToNumber(ThisCase.ObjName).Integer);
+                printIntegerObj(
                         IntegerAdd(
                         stringToNumber(ThisCase.ObjName).Integer,
                         stringToNumber(ThisCase.ObjName).Integer
+                            )
+                        );
+                printIntegerObj(
+                        IntegerSub(
+                        stringToNumber("100").Integer,
+                        stringToNumber("50").Integer
                             )
                         );
                 break;

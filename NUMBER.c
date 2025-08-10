@@ -10,13 +10,23 @@
 
 #include "STDMIO.h"
 
+extern inline uint32_t ePow(const unsigned int e)
+{
+    uint32_t res = 1;
+
+    for (unsigned int i = 0; i < e; i++)
+        res *= 10;
+
+    return res;
+}
+
 void printIntegerObj(const IntegerObj Obj)
 {
     printf("Digits: %d\n",Obj.Digits);
 
     printf("REMEMBER:LOW TO HIGH POSITION:\n");
     for (unsigned int i = 0;i < Obj.UnitsLen; i++)
-        printf("%lld ",Obj.Units[i]);
+        printf("%lu ",Obj.Units[i]);
 
     printf("\nUnit Len: %d\n\n",Obj.UnitsLen);
 }
@@ -27,6 +37,53 @@ IntegerObj IntegerSub(const IntegerObj A,const IntegerObj B)
     result.Digits = 0;
     result.Units = NULL;
     result.UnitsLen = 0;
+
+    const unsigned int maxLen = A.UnitsLen > B.UnitsLen ? A.UnitsLen : B.UnitsLen;
+    const unsigned int maxDigit = A.Digits > B.Digits ? A.Digits : B.Digits;
+
+    result.Digits += maxDigit;
+
+    uint8_t NextCycleSub = 0;
+
+    result.UnitsLen = maxLen;
+    result.Units = realloc(result.Units, result.UnitsLen * sizeof(uint32_t));
+
+    for (unsigned int i = 0;i<result.UnitsLen; i++)
+    {
+        const uint8_t ThisCycleSub = NextCycleSub;
+        NextCycleSub = 0;
+
+        const uint32_t a  = A.UnitsLen > i ? A.Units[i] : 0;
+        const uint32_t b  = B.UnitsLen > i ? B.Units[i] : 0;
+
+        uint32_t c = a - b - ThisCycleSub;
+
+        if (c > 999999999)
+        {
+            NextCycleSub = 1;
+            c = 1000000000 - b - ThisCycleSub + a;
+        }
+
+        result.Units[i] = c;
+    }
+
+
+    for (unsigned int i = result.UnitsLen ;i>0; i--) //I hope no one will make unit len over than 2147483647
+        if (result.Units[i-1])
+            break;
+        else{
+            result.UnitsLen--;
+            result.Units = realloc(result.Units, result.UnitsLen * sizeof(uint32_t));
+        }
+
+    result.Digits = 9*(result.UnitsLen-1);
+
+    for (unsigned int j = 0; j < 9; j++)
+        if ((result.Units[result.UnitsLen-1] / ePow(9 - j - 1)))
+        {
+            result.Digits+=9 - (j-1) - 1;
+            break;
+        }
 
 
     return result;
@@ -57,15 +114,19 @@ IntegerObj IntegerAdd(const IntegerObj A,const IntegerObj B)
         const uint32_t a  = A.UnitsLen > i ? A.Units[i] : 0;
         const uint32_t b  = B.UnitsLen > i ? B.Units[i] : 0;
 
-        const uint32_t c = a + b + ThisCycleAdd;
+        uint32_t c = a + b + ThisCycleAdd;
 
         if (c > 999999999) //(c < a && c < b) IMPOSSIBLE TO HAPPEN (I hope)
         {
-            NextCycleAdd++;
+            NextCycleAdd = 1;
+            c -= 1000000000;
 
-            result.UnitsLen++;
-            result.Units = realloc(result.Units, result.UnitsLen * sizeof(uint32_t));
-
+            if (result.UnitsLen-1 == i)
+            {
+                result.Digits ++;
+                result.UnitsLen++;
+                result.Units = realloc(result.Units, result.UnitsLen * sizeof(uint32_t));
+            }
         }
 
         result.Units[i] = c;
@@ -74,15 +135,6 @@ IntegerObj IntegerAdd(const IntegerObj A,const IntegerObj B)
     return result;
 }
 
-extern inline uint32_t ePow(const unsigned int e)
-{
-    uint32_t res = 1;
-
-    for (unsigned int i = 0; i < e; i++)
-        res *= 10;
-
-    return res;
-}
 
 static  uint32_t CharNumberToInteger(const char * input,const unsigned int inputSize)
 {
@@ -119,7 +171,7 @@ NumberObj stringToNumber(const char* input)
 
         Integer.Digits++;
 
-        if ((charIndex % 8 == 0 && charIndex) || charIndex == strlen(input)-1)
+        if (((charIndex+1) % 9 == 0 && charIndex) || charIndex == strlen(input)-1)
         {
             const uint32_t a = CharNumberToInteger(loader,loaderSize);
 
