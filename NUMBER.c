@@ -23,12 +23,43 @@ void printIntegerObj(const IntegerObj Obj)
 {
     printf("Digits: %d\n",Obj.Digits);
 
-    printf("REMEMBER:LOW TO HIGH POSITION:\n");
+    printf("REMEMBER:HIGH TO LOW POSITION:\n");
     for (unsigned int i = 0;i < Obj.UnitsLen; i++)
         printf("%lu ",Obj.Units[i]);
 
     printf("\nUnit Len: %d\n\n",Obj.UnitsLen);
 }
+
+IntegerObj IntegerMul(const IntegerObj A,const IntegerObj B)
+{
+    IntegerObj result;
+    result.Digits = 0;
+    result.Units = NULL;
+    result.UnitsLen = 0;
+
+    const unsigned int maxLen = A.UnitsLen > B.UnitsLen ? A.UnitsLen : B.UnitsLen;
+    const unsigned int maxDigit = A.Digits > B.Digits ? A.Digits : B.Digits;
+
+    result.UnitsLen = A.UnitsLen + B.UnitsLen;
+    result.Units = realloc(result.Units, result.UnitsLen * sizeof(uint32_t));
+
+    for (unsigned int i = 0;i<maxLen; i++)
+    {
+        const uint32_t a  = A.UnitsLen > i ? A.Units[i] : 0;
+        const uint32_t b  = B.UnitsLen > i ? B.Units[i] : 0;
+
+        // a : a3:1000, a2:2000, a1:3000 即 300020001000
+        // *
+        // b : b3:3000, b2:4000, b1:5000 即 500040003000
+        // =
+        // c
+
+        // c1 = a1 * b1
+    }
+
+    return result;
+}
+
 
 IntegerObj IntegerSub(const IntegerObj A,const IntegerObj B)
 {

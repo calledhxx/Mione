@@ -3,12 +3,7 @@
 #include <string.h>
 #include "STDMIO.h"
 
-
-extern inline int _mix(const int a,const int b)
-{
-    return a>b ? b : a;
-}
-
+#define _mix(a,b) a>b ? b : a
 
 MioneObjCarrier COMPUTATION(MioneObjCarrier input)
 {
@@ -93,20 +88,19 @@ MioneObjCarrier COMPUTATION(MioneObjCarrier input)
                                     {
                                         switch (ChildCount.Carrier[0].ValueType)
                                         {
-                                            //todo
-                                        // case VALUE_STRING_TYPE:
-                                        //     {
-                                        //
-                                        //         if (wcscmp(nearByValue.Table.VariableUPsUP->VarUPs[index]->Name,ChildCount.Value[0].String) == 0 )
-                                        //             TheValue = nearByValue.Table.VariableUPsUP->VarUPs[index]->Val;
-                                        //         break;
-                                        //     }
-                                        // case VALUE_NUMBER_TYPE:
-                                        //     {
-                                        //         if (nearByValue.Table.VariableUPsUP->VarUPs[index]->Place == ChildCount.Value[0].NPNumber)
-                                        //             TheValue = nearByValue.Table.VariableUPsUP->VarUPs[index]->Val;
-                                        //         break;
-                                        //     }
+                                        case VALUE_STRING_TYPE:
+                                            {
+
+                                                if (strcmp(nearByValue.Table.VariableObjPointerCarrierPointer->Carrier[index]->VariableName,ChildCount.Carrier[0].String) == 0 )
+                                                    TheValue = nearByValue.Table.VariableObjPointerCarrierPointer->Carrier[index]->Value;
+                                                break;
+                                            }
+                                        case VALUE_NUMBER_TYPE:
+                                            {
+                                                if (nearByValue.Table.VariableObjPointerCarrierPointer->Carrier[index]->VariablePlace == ChildCount.Carrier[0].Number.Integer.Units[0])
+                                                    TheValue = nearByValue.Table.VariableObjPointerCarrierPointer->Carrier[index]->Value;
+                                                break;
+                                            }
                                         default:
                                                 exit(1);
                                         }
@@ -117,15 +111,15 @@ MioneObjCarrier COMPUTATION(MioneObjCarrier input)
 
                             }else
                             {
-                                extern VariableObj * retVarUP(ScopeObj * SVUup,const wchar_t* Name,const int Place);
-
-                                switch (ChildCount.Carrier[0].ValueType)
-                                {
-                                    //todo
-
+                                // extern VariableObj * ReturnVariablePtrIfAlreadyExistedInScope();
+                                //
+                                // switch (ChildCount.Carrier[0].ValueType)
+                                // {
+                                //     //todo
+                                //
                                 // case VALUE_STRING_TYPE:
                                 //     {
-                                //         VariableObj * VarUP = retVarUP(Pack[0].ScopeUP,ChildCount.Value[0].String,0);
+                                //         VariableObj * VarUP = ReturnVariablePtrIfAlreadyExistedInScope(Pack[0].ScopeUP,ChildCount.Value[0].String,0);
                                 //
                                 //         if (VarUP) TheValue = VarUP->Val; else TheValue = (ValueObj){0};
                                 //
@@ -133,17 +127,17 @@ MioneObjCarrier COMPUTATION(MioneObjCarrier input)
                                 //     }
                                 // case VALUE_NUMBER_TYPE:
                                 //     {
-                                //         VariableObj * VarUP = retVarUP(Pack[0].ScopeUP,NULL,ChildCount.Value[0].NPNumber);
+                                //         VariableObj * VarUP = ReturnVariablePtrIfAlreadyExistedInScope(Pack[0].ScopeUP,NULL,ChildCount.Value[0].NPNumber);
                                 //
                                 //         if (VarUP) TheValue = VarUP->Val; else TheValue = (ValueObj){0};
                                 //
                                 //         break;
                                 //     }
-                                default:
-                                        exit(1);
-                                }
-
-
+                                // default:
+                                //         exit(1);
+                                // }
+                                //
+                                //
 
                             }
                         }else exit(1);
@@ -255,8 +249,7 @@ MioneObjCarrier COMPUTATION(MioneObjCarrier input)
                                             NewPack[NewPackSize - 1] = (MioneObj){
                                                 .ObjType = VALUE,
                                                 .Value = V.Carrier[index],
-                                                // todo .Line = Pack[i-1].Line,
-                                                // .Column = Pack[i-1].Column
+                                                .MioneObjectPosition = Pack[i-1].MioneObjectPosition
                                             };
                                         }
 
@@ -317,8 +310,7 @@ MioneObjCarrier COMPUTATION(MioneObjCarrier input)
                                             NewPack[NewPackSize - 1] = (MioneObj){
                                                 .ObjType = VALUE,
                                                 .Value = V.Carrier[index],
-                                                //TODO .Line = Pack[i-1].Line,
-                                                // .Column = Pack[i-1].Column
+                                                .MioneObjectPosition = Pack[i-1].MioneObjectPosition
                                             };
 
                                         }

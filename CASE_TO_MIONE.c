@@ -150,46 +150,7 @@ MioneObjCarrier CMO(
 
                 if (Paired) break;
             }
-        case CASE_DOUBLE_STRING: //配對成 Value 的String
-        case CASE_SINGLE_STRING:
-            {
-                ResultMioneObjCarrier.CarrierLen++;
-                ResultMioneObjCarrier.Carrier = realloc(
-                    ResultMioneObjCarrier.Carrier,
-                    ResultMioneObjCarrier.CarrierLen * sizeof(MioneObj)
-                );
-                ResultMioneObjCarrier.Carrier[ResultMioneObjCarrier.CarrierLen - 1] = (MioneObj){
-                    .ObjType = VALUE,
-                    .Value = (ValueObj){
-                        .String = ThisCase.ObjName,
-                        .ValueType = VALUE_STRING_TYPE,
-                    },
-                    .MioneObjectPosition = ThisCase.CasePosition,
-                };
 
-                Paired = 1;
-
-                break;
-            }
-        case CASE_DECNUMBER:
-            {
-
-                ResultMioneObjCarrier.CarrierLen++;
-                ResultMioneObjCarrier.Carrier = realloc(
-                    ResultMioneObjCarrier.Carrier,
-                    ResultMioneObjCarrier.CarrierLen * sizeof(MioneObj)
-                );
-                ResultMioneObjCarrier.Carrier[ResultMioneObjCarrier.CarrierLen - 1] = (MioneObj){
-                    .ObjType = VALUE,
-                    .Value = (ValueObj){
-                        .ValueType = VALUE_NUMBER_TYPE,
-                        .Number = stringToNumber(ThisCase.ObjName)
-                    },
-                    .MioneObjectPosition = ThisCase.CasePosition,
-                };
-
-                break;
-            }
         default: //二次處理
             {
                 switch (ThisCase.ObjType)
@@ -200,6 +161,7 @@ MioneObjCarrier CMO(
                             *ScopePointer,
                             ThisCase.ObjName
                             );
+
 
                         if (!VariablePtr)
                         {
@@ -236,6 +198,46 @@ MioneObjCarrier CMO(
                 case CASE_UNCONNECTABLE:
                     {
                         exit(-3);
+                    }
+
+                case CASE_DOUBLE_STRING: //配對成 Value 的String
+                case CASE_SINGLE_STRING:
+                    {
+                        ResultMioneObjCarrier.CarrierLen++;
+                        ResultMioneObjCarrier.Carrier = realloc(
+                            ResultMioneObjCarrier.Carrier,
+                            ResultMioneObjCarrier.CarrierLen * sizeof(MioneObj)
+                        );
+                        ResultMioneObjCarrier.Carrier[ResultMioneObjCarrier.CarrierLen - 1] = (MioneObj){
+                            .ObjType = VALUE,
+                            .Value = (ValueObj){
+                                .String = ThisCase.ObjName,
+                                .ValueType = VALUE_STRING_TYPE,
+                            },
+                            .MioneObjectPosition = ThisCase.CasePosition,
+                        };
+
+                        Paired = 1;
+
+                        break;
+                    }
+                case CASE_DECNUMBER:
+                    {
+                        ResultMioneObjCarrier.CarrierLen++;
+                        ResultMioneObjCarrier.Carrier = realloc(
+                            ResultMioneObjCarrier.Carrier,
+                            ResultMioneObjCarrier.CarrierLen * sizeof(MioneObj)
+                        );
+                        ResultMioneObjCarrier.Carrier[ResultMioneObjCarrier.CarrierLen - 1] = (MioneObj){
+                            .ObjType = VALUE,
+                            .Value = (ValueObj){
+                                .ValueType = VALUE_NUMBER_TYPE,
+                                .Number = stringToNumber(ThisCase.ObjName)
+                            },
+                            .MioneObjectPosition = ThisCase.CasePosition,
+                        };
+
+                        break;
                     }
                 default:break;
                 }
