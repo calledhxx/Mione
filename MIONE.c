@@ -69,6 +69,7 @@ static void SavePassengerIntoCarriage(
     );
     CarriagePointer->CarriagePassengers.Carrier[CarriagePointer->CarriagePassengers.CarrierLen - 1] =
         Passenger;
+
 }
 
 TrainObjCarrier ToMione(const MioneObjCarrier ToBuildObj)
