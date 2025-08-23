@@ -11,7 +11,8 @@
 
 VariableObj * ReturnVariablePtrIfAlreadyExistedInScope(
     const ScopeObj Scope,
-    const char * VariableName
+    const char * VariableName,
+    int * inParentScope
     )
 {
     VariableObj * result = 0;
@@ -24,7 +25,16 @@ VariableObj * ReturnVariablePtrIfAlreadyExistedInScope(
         if (strcmp(Scope.VariablePtrCarrier.Carrier[VariableIndex]->VariableName,VariableName)==0)
             result = Scope.VariablePtrCarrier.Carrier[VariableIndex];
 
-    return result;
+    if (result)
+        return result;
+
+    if (Scope.ParentScopePointer)
+    {
+        *inParentScope = 1;
+        return ReturnVariablePtrIfAlreadyExistedInScope(* Scope.ParentScopePointer,VariableName,inParentScope);
+    }
+
+    return NULL;
 }
 
 
@@ -157,27 +167,49 @@ MioneObjCarrier CMO(
                 {
                 case CASE_NORMAL: //配對成Variable
                     {
+                        int inParentScope = 0;
+
                         VariableObj * VariablePtr = ReturnVariablePtrIfAlreadyExistedInScope(
                             *ScopePointer,
-                            ThisCase.ObjName
+                            ThisCase.ObjName,
+                            &inParentScope
                             );
 
+                        VariableObj * * PointerOfScopeVariablePtr = malloc(sizeof(VariableObj *));
 
-                        if (!VariablePtr)
+                        if (VariablePtr) //old Variable
+                        {
+                            if (inParentScope) //new Variable for this scope
+                            {
+                                ScopePointer->VariablePtrCarrier.CarrierLen++;
+                                ScopePointer->VariablePtrCarrier.Carrier = realloc(
+                                    ScopePointer->VariablePtrCarrier.Carrier,
+                                    sizeof(VariableObj*) * ScopePointer->VariablePtrCarrier.CarrierLen
+                                    );
+                                ScopePointer->VariablePtrCarrier.Carrier[ScopePointer->VariablePtrCarrier.CarrierLen-1] = VariablePtr;
+                                *PointerOfScopeVariablePtr =
+                                    ScopePointer->VariablePtrCarrier.Carrier[ScopePointer->VariablePtrCarrier.CarrierLen-1];
+                            }else
+                                *PointerOfScopeVariablePtr = VariablePtr;
+                        }
+                        else //new Variable for all
                         {
                             ScopePointer->VariablePtrCarrier.CarrierLen++;
                             ScopePointer->VariablePtrCarrier.Carrier = realloc(
                                 ScopePointer->VariablePtrCarrier.Carrier,
                                 sizeof(VariableObj*) * ScopePointer->VariablePtrCarrier.CarrierLen
                                 );
-                            VariablePtr = ScopePointer->VariablePtrCarrier.Carrier[ScopePointer->VariablePtrCarrier.CarrierLen-1] =
-                                malloc(sizeof(VariableObj));
+                            ScopePointer->VariablePtrCarrier.Carrier[ScopePointer->VariablePtrCarrier.CarrierLen-1] = malloc(sizeof(VariableObj));
                             *ScopePointer->VariablePtrCarrier.Carrier[ScopePointer->VariablePtrCarrier.CarrierLen-1] =
                                 (VariableObj){
                                     .VariableName = ThisCase.ObjName,
                                     .VariablePlace = 0,
                                 };
+
+                            *PointerOfScopeVariablePtr =
+                                ScopePointer->VariablePtrCarrier.Carrier[ScopePointer->VariablePtrCarrier.CarrierLen-1];
                         }
+
 
                         ResultMioneObjCarrier.CarrierLen++;
                         ResultMioneObjCarrier.Carrier = realloc(
@@ -186,7 +218,7 @@ MioneObjCarrier CMO(
                         );
                         ResultMioneObjCarrier.Carrier[ResultMioneObjCarrier.CarrierLen - 1] = (MioneObj){
                             .ObjType = VARIABLE,
-                            .VariablePointer = VariablePtr,
+                            .PointerOfScopeVariablePtr = PointerOfScopeVariablePtr,
                             .MioneObjectPosition = ThisCase.CasePosition,
                         };
 

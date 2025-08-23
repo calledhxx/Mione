@@ -5,8 +5,10 @@
 #include <stdlib.h>
 #include <string.h>
 #include <inttypes.h>
+#include <stdbool.h>
 
 #include "STDMIO.h"
+#include "HeadFile/SVV.h"
 
 
 static void ResetCarriage(CarriageObj* CarriagePointer)
@@ -85,6 +87,8 @@ TrainObjCarrier ToMione(const MioneObjCarrier ToBuildObj)
     CarriageObj Carriage;
     ResetCarriage(&Carriage);
 
+    MioneObj LastMio = {0};
+
     for (int index = 0;index < ObjsSize;index++)
     {
         const MioneObj Mio = Objs[index];
@@ -112,9 +116,86 @@ TrainObjCarrier ToMione(const MioneObjCarrier ToBuildObj)
                 break;
             }
         case SYMBOL:
+            {
+                if (LastMio.ObjType == SYMBOL) //`)` +
+                {
+                    if (!(LastMio.Symbol.Identification == 10 || LastMio.Symbol.Identification == 11 || LastMio.Symbol.Identification == 12 || LastMio.Symbol.Identification == 13))
+                        if (!(Mio.Symbol.SymbolCarry & SC_AfterSymbol || LastMio.Symbol.SymbolCarry & SC_BeforeSymbol))
+                        {
+                            SaveCarriageIntoTrain(&Train,Carriage);
+                            SaveTrainIntoCarrier(&BuiltObj,Train);
+                            ResetCarriage(&Carriage);
+                            ResetTrain(&Train);
+
+                            Carriage.CarriageManager = (MioneObj){
+                                .ObjType = Mio.ObjType,
+                                .Head = (HeadObj){
+                                    .Fuc = SVV
+                                }
+                            };
+                        }
+                }else if (LastMio.ObjType == VARIABLE || LastMio.ObjType == VALUE) //VARIABLE || VALUE
+                    if (!(Mio.Symbol.SymbolCarry & SC_AfterVariableOrValue))
+                    {
+                        SaveCarriageIntoTrain(&Train,Carriage);
+                        SaveTrainIntoCarrier(&BuiltObj,Train);
+                        ResetCarriage(&Carriage);
+                        ResetTrain(&Train);
+
+                        Carriage.CarriageManager = (MioneObj){
+                            .ObjType = Mio.ObjType,
+                            .Head = (HeadObj){
+                                .Fuc = SVV
+                            }
+                        };
+                    }
+
+            }
+
         case VARIABLE:
         case VALUE:
             {
+                if (Mio.ObjType == VARIABLE || Mio.ObjType == VALUE)
+                    if (LastMio.ObjType == SYMBOL)
+                    {
+                        if (!(LastMio.Symbol.SymbolCarry & SC_BeforeVariableOrValue))
+                        {
+                            SaveCarriageIntoTrain(&Train,Carriage);
+                            SaveTrainIntoCarrier(&BuiltObj,Train);
+                            ResetCarriage(&Carriage);
+                            ResetTrain(&Train);
+
+                            Carriage.CarriageManager = (MioneObj){
+                                .ObjType = Mio.ObjType,
+                                .Head = (HeadObj){
+                                    .Fuc = SVV
+                                }
+                            };
+                        }
+                    }else if (LastMio.ObjType == VARIABLE || LastMio.ObjType == VALUE)
+                    {
+                        SaveCarriageIntoTrain(&Train,Carriage);
+                        SaveTrainIntoCarrier(&BuiltObj,Train);
+                        ResetCarriage(&Carriage);
+                        ResetTrain(&Train);
+
+
+                        Carriage.CarriageManager = (MioneObj){
+                            .ObjType = Mio.ObjType,
+                            .Head = (HeadObj){
+                                .Fuc = SVV
+                            }
+                        };
+                    }
+
+                if (!Carriage.CarriageManager.ObjType)
+                    Carriage.CarriageManager = (MioneObj){
+                        .ObjType = Mio.ObjType,
+                        .Head = (HeadObj){
+                            .Fuc = SVV
+                        }
+                    };
+
                 SavePassengerIntoCarriage(&Carriage,Mio);
 
                 break;
@@ -127,10 +208,13 @@ TrainObjCarrier ToMione(const MioneObjCarrier ToBuildObj)
                 ResetTrain(&Train);
             };
         }
+
+        LastMio = Mio;
     }
 
     SaveCarriageIntoTrain(&Train,Carriage);
     SaveTrainIntoCarrier(&BuiltObj,Train);
+
 
     return BuiltObj;
 }

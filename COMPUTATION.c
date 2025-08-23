@@ -71,7 +71,7 @@ MioneObjCarrier COMPUTATION(MioneObjCarrier input)
                                 {
                                     case VARIABLE:
                                         {
-                                            nearByValue = Pack[FirstBracketIndex - 1].VariablePointer->Value;
+                                            nearByValue = (*Pack[FirstBracketIndex - 1].PointerOfScopeVariablePtr)->Value;
                                             break;
                                         }
                                     case VALUE:
@@ -218,11 +218,11 @@ MioneObjCarrier COMPUTATION(MioneObjCarrier input)
                                 if (Pack[FirstBracketIndex - 1].ObjType == VARIABLE)
                                 {
 
-                                    if (Pack[FirstBracketIndex - 1].VariablePointer->Value.ValueType == VALUE_FUNCTION_TYPE)
+                                    if ((*Pack[FirstBracketIndex - 1].PointerOfScopeVariablePtr)->Value.ValueType == VALUE_FUNCTION_TYPE)
                                     {
 
                                         ImplementedObj Return =  IMPLEMENT((ToImplementObj){
-                                            .Built =  *Pack[FirstBracketIndex - 1].VariablePointer->Value.Area.TrainObjCarrierPointer,
+                                            .Built =  *(*Pack[FirstBracketIndex - 1].PointerOfScopeVariablePtr)->Value.Area.TrainObjCarrierPointer,
                                             .CallByValueCarrier = ChildCount
                                         });
 
@@ -403,8 +403,8 @@ MioneObjCarrier COMPUTATION(MioneObjCarrier input)
                                     if (i)
                                         exit(0xFF09);
 
-                                    ValueObj Value1 = Pack[i-1].ObjType == VALUE ? Pack[i-1].Value : Pack[i-1].VariablePointer->Value;
-                                    ValueObj Value2 = Pack[i+1].ObjType == VALUE ? Pack[i+1].Value : Pack[i+1].VariablePointer->Value;;
+                                    ValueObj Value1 = Pack[i-1].ObjType == VALUE ? Pack[i-1].Value : (*Pack[i-1].PointerOfScopeVariablePtr)->Value;
+                                    ValueObj Value2 = Pack[i+1].ObjType == VALUE ? Pack[i+1].Value : (*Pack[i+1].PointerOfScopeVariablePtr)->Value;;
 
                                     break;
                                 }

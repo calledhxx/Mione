@@ -8,3 +8,4 @@ extern NumberObj stringToNumber();
 extern void printIntegerObj();
 extern IntegerObj IntegerSub(const IntegerObj A,const IntegerObj B);
 extern IntegerObj IntegerAdd(const IntegerObj A,const IntegerObj B);
+extern IntegerObj IntegerMul(const IntegerObj A,const IntegerObj B);

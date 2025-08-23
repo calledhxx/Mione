@@ -25,7 +25,7 @@ VariableObjPtrCarrier REQUEST(const MioneObjCarrier input)
         {
             VariablePointerCarrierLen ++;
             VariablePointerCarrier = realloc(VariablePointerCarrier, sizeof(ValueObj) * (VariablePointerCarrierLen));
-            VariablePointerCarrier[VariablePointerCarrierLen-1] = Pack[i].VariablePointer;
+            VariablePointerCarrier[VariablePointerCarrierLen-1] = (*Pack[i].PointerOfScopeVariablePtr);
         }else if ( Pack[i].ObjType == VALUE)
         {
             printf("%d\n", Pack[i].Value.ValueType);

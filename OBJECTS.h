@@ -111,7 +111,7 @@ typedef struct _IntegerObject
 typedef struct _NumberObject
 {
     IntegerObj Integer; //採整數個位最前
-    IntegerObj Decimal; //採小數個位最前
+    uint32_t Decimal; //採小數個位最前
 
     uint8_t Sign; //符號 0:正數 1:負數
 } NumberObj;
@@ -145,11 +145,21 @@ typedef struct _PromptObject
 
 //SYMBOL
 
+enum{
+    SC_BeforeSymbol = 1,
+    SC_AfterSymbol = 2,
+    //符合其中之一就連接
+
+    SC_BeforeVariableOrValue = 4,
+    SC_AfterVariableOrValue = 8,
+};
+
 typedef struct _SymbolObject
 {
     char * Name;
     int Identification; //識別符號
-    int AfterConnectVV; //後面是否可與VV相連 不會報錯 MIONE
+
+    uint16_t SymbolCarry;
 }SymbolObj;
 //
 
@@ -255,7 +265,7 @@ typedef struct _MioneObject
 {
     int ObjType; //HPSVV 1H 2P 3S 4VAR 5VAL 0換行
 
-    VariableObj * VariablePointer; //當ObjType為VAR時，會用到此變數。
+    VariableObj ** PointerOfScopeVariablePtr; //當ObjType為VAR時，會用到此變數。
     ValueObj Value;  //當ObjType為VALUE宏時，會用到此值。
 
     SymbolObj Symbol; //當ObjType為SYMBOL時，會用到此符號。
