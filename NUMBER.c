@@ -118,7 +118,6 @@ IntegerObj IntegerDiv(const IntegerObj A,const IntegerObj B)
             const uint32_t b  = B.UnitsLen > y ? B.Units[y] : 0;
 
             uint32_t c = (uint32_t)(a / b);
-            c *= ePow(x - y);
 
             uint32_t d = (uint32_t)(a % b);
 

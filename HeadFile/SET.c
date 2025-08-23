@@ -14,9 +14,6 @@ HeadReturnObj SET(const HeadCallObj * HeadCallObjectPointer)
 {
     HeadReturnObj Result = {0};
 
-    Result.VariableCarrier.CarrierLen = 0;
-    Result.VariableCarrier.Carrier = NULL;
-
     const HeadCallObj HeadCallObject = *HeadCallObjectPointer;
 
     const unsigned int PairsSize = HeadCallObject.Train.CarriageLen;
