@@ -40,7 +40,7 @@ IntegerObj IntegerMul(const IntegerObj A,const IntegerObj B)
     const unsigned int maxLen = A.UnitsLen > B.UnitsLen ? A.UnitsLen : B.UnitsLen;
     const unsigned int maxDigit = A.Digits > B.Digits ? A.Digits : B.Digits;
 
-    for (unsigned int x = 0;x<maxLen; x++) //O(A.UnitsLen * B.UnitsLen)
+    for (unsigned int x = 0;x<maxLen; x++) //O(A.UnitsLen * B.UnitsLen) haha
     {
         const uint32_t a = A.UnitsLen > x ? A.Units[x] : 0;
 
@@ -82,7 +82,7 @@ IntegerObj IntegerMul(const IntegerObj A,const IntegerObj B)
         result.Digits = 9*(result.UnitsLen-1);
 
         for (unsigned int j = 0; j < 9; j++)
-            if ((result.Units[result.UnitsLen-1] / ePow(9 - j - 1)))
+            if (result.Units[result.UnitsLen-1] / ePow(9 - j - 1))
             {
                 result.Digits+=9 - (j-1) - 1;
                 break;
@@ -90,10 +90,29 @@ IntegerObj IntegerMul(const IntegerObj A,const IntegerObj B)
     }else
         result.Digits = 0;
 
-    printIntegerObj(result);
-
 
     return result;
+}
+
+int8_t IntegerCompare(const IntegerObj A,const IntegerObj B)
+{
+    if (A.Digits > B.Digits) return -1;
+    if (A.Digits < B.Digits) return 1;
+
+    const unsigned int maxLen = A.UnitsLen > B.UnitsLen ? A.UnitsLen : B.UnitsLen;
+
+    for (int i = (int)maxLen;i>=0; i--)
+    {
+        const uint32_t a  = A.UnitsLen > i ? A.Units[i] : 0;
+        const uint32_t b  = B.UnitsLen > i ? B.Units[i] : 0;
+
+        if (a > b)
+            return -1;
+        if (a < b)
+            return 1;
+    }
+
+    return 0;
 }
 
 IntegerObj IntegerDiv(const IntegerObj A,const IntegerObj B)
@@ -109,20 +128,30 @@ IntegerObj IntegerDiv(const IntegerObj A,const IntegerObj B)
     result.UnitsLen = maxLen;
     result.Units = malloc(result.UnitsLen * sizeof(uint32_t));
 
-    for (int x = (int)A.UnitsLen; x >= 0; x--)
+    uint32_t * x = malloc(sizeof(uint32_t));
+
+    for (unsigned int i = 0;; i++)
     {
-        const uint32_t a  = A.UnitsLen > x ? A.Units[x] : 0;
+        *x = i;
 
-        for (unsigned int y = 0; y < B.UnitsLen; y++)
+        const IntegerObj C = (IntegerObj){
+            .Digits = (unsigned int)i/10+1,
+            .Units = x,
+            .UnitsLen = 1
+        };
+
+        const IntegerObj D = IntegerMul(B,C);
+
+        if (IntegerCompare(A,D) == 1)
         {
-            const uint32_t b  = B.UnitsLen > y ? B.Units[y] : 0;
+            result = IntegerSub(C,stringToNumber("1").Integer);
 
-            uint32_t c = (uint32_t)(a / b);
-
-            uint32_t d = (uint32_t)(a % b);
-
+            break;
         }
+
     }
+
+    free(x);
 
     return result;
 }

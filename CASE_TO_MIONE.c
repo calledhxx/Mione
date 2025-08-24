@@ -269,6 +269,10 @@ MioneObjCarrier CMO(
                             .MioneObjectPosition = ThisCase.CasePosition,
                         };
 
+                        printIntegerObj(
+                            IntegerDiv(stringToNumber("100000000").Integer,stringToNumber("100000000").Integer)
+                            );
+
                         break;
                     }
                 default:break;
