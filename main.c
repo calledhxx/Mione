@@ -13,11 +13,7 @@ int main(const int OptionsSize,char **Options)
 {
     FILE *f = fopen("D:\\Mione\\index.mio", "r"); //never read binary again...
 
-    if (f == NULL) exit(-1);
-
-    MainScope.VariablePtrCarrier.CarrierLen = 0;
-    MainScope.VariablePtrCarrier.Carrier = NULL;
-    //
+    if (f == NULL) return -1;
 
     const FCOReturnObj FCOReturn = FCO(f);
     //第一步，先將source code轉為case物件。
