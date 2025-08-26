@@ -2,6 +2,7 @@
 // Created by calle on 24-12-28.
 //
 
+#include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -60,6 +61,7 @@ MioneObjCarrier CMO(
 
         switch (ThisCase.ObjType) // 檢查是否匹配 BREAKER, HEAD ,PROMPT與SYMBOL，否則進行第二處理。
         {
+
         case CASE_BREAKER: //新增Breaker
             {
                 ResultMioneObjCarrier.CarrierLen++;
@@ -260,21 +262,78 @@ MioneObjCarrier CMO(
                             ResultMioneObjCarrier.Carrier,
                             ResultMioneObjCarrier.CarrierLen * sizeof(MioneObj)
                         );
+
                         ResultMioneObjCarrier.Carrier[ResultMioneObjCarrier.CarrierLen - 1] = (MioneObj){
                             .ObjType = VALUE,
                             .Value = (ValueObj){
                                 .ValueType = VALUE_NUMBER_TYPE,
-                                .Number = stringToNumber(ThisCase.ObjName)
+                                .Number = (double)atoi(ThisCase.ObjName)
                             },
                             .MioneObjectPosition = ThisCase.CasePosition,
                         };
 
-                        printIntegerObj(
-                            IntegerDiv(stringToNumber("100000000").Integer,stringToNumber("100000000").Integer)
-                            );
+                        break;
+                    }
+                case CASE_BINNUMBER:
+                    {
+                        double Number = 0;
+
+                        ResultMioneObjCarrier.CarrierLen++;
+                        ResultMioneObjCarrier.Carrier = realloc(
+                            ResultMioneObjCarrier.Carrier,
+                            ResultMioneObjCarrier.CarrierLen * sizeof(MioneObj)
+                        );
+
+                        for (unsigned i = 0; i < strlen(ThisCase.ObjName); i++)
+                            Number += (ThisCase.ObjName[i] != '0') * 1<<(strlen(ThisCase.ObjName) - i - 1);
+
+                        ResultMioneObjCarrier.Carrier[ResultMioneObjCarrier.CarrierLen - 1] = (MioneObj){
+                            .ObjType = VALUE,
+                            .Value = (ValueObj){
+                                .ValueType = VALUE_NUMBER_TYPE,
+                                .Number = Number
+                            },
+                            .MioneObjectPosition = ThisCase.CasePosition,
+                        };
 
                         break;
                     }
+                case CASE_HEXNUMBER:{
+                        double Number = 0;
+
+                        ResultMioneObjCarrier.CarrierLen++;
+                        ResultMioneObjCarrier.Carrier = realloc(
+                            ResultMioneObjCarrier.Carrier,
+                            ResultMioneObjCarrier.CarrierLen * sizeof(MioneObj)
+                        );
+
+                        for (unsigned i = 0; i < strlen(ThisCase.ObjName); i++)
+                        {
+                            char unit = ThisCase.ObjName[i];
+
+                            if (ThisCase.ObjName[i] >= '0' && ThisCase.ObjName[i] <= '9')
+                                unit -= '0';
+                            else if (ThisCase.ObjName[i] >= 'a' && ThisCase.ObjName[i] <= 'f')
+                                unit -=  'a' - 10;
+                            else if (ThisCase.ObjName[i] >= 'A' && ThisCase.ObjName[i] <= 'F')
+                                unit -=  'A' - 10;
+
+                            Number += unit * pow(16,strlen(ThisCase.ObjName) - i - 1);
+
+                        }
+
+                        ResultMioneObjCarrier.Carrier[ResultMioneObjCarrier.CarrierLen - 1] = (MioneObj){
+                            .ObjType = VALUE,
+                            .Value = (ValueObj){
+                                .ValueType = VALUE_NUMBER_TYPE,
+                                .Number = Number
+                            },
+                            .MioneObjectPosition = ThisCase.CasePosition,
+                        };
+
+                        break;
+                }
+
                 default:break;
                 }
             };

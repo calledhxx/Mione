@@ -1,14 +1,5 @@
-//
-// Created by chenn on 24-8-3.
-//
-
-#include <stdint.h>
-#include <wchar.h>
-
 #ifndef OBJECTS_H
 #define OBJECTS_H
-
-
 
 enum
 {
@@ -60,11 +51,14 @@ enum
     VALUE_NUMBER_TYPE = 9,
 };
 
-//
-//
-//CASE物件 GROUP
-//
-//
+enum
+{
+    EVENT_NONE = 0,
+    EVENT_ERROR = 1,
+    EVENT_RETURN_VALUES = 2,
+    EVENT_RESET_VARIABLE_TO_VALUE = 4,
+    EVENT_MAJOR_VARIABLE = 8,
+};
 
 typedef struct _CasePositionObject
 {
@@ -79,7 +73,7 @@ typedef struct _CaseObject
 {
     CasePositionObj CasePosition;
 
-    uint8_t ObjType;
+    char ObjType;
     char * ObjName;
 } CaseObj;
 
@@ -88,40 +82,7 @@ typedef struct _CaseObjectsCarrier
     CaseObj * Carrier;
     unsigned int CarrierLen;
 } CaseObjCarrier;
-//
-//
-//
-//
-//
 
-//
-//
-//數組
-//
-//
-
-typedef struct _IntegerObject
-{
-    uint32_t * Units;
-    unsigned int UnitsLen;
-
-    unsigned int Digits;
-} IntegerObj;
-
-typedef struct _NumberObject
-{
-    IntegerObj Integer; //採整數個位最前
-    uint32_t Decimal; //採小數個位最前
-
-    uint8_t Sign; //符號 0:正數 1:負數
-} NumberObj;
-//
-//
-//
-//
-//
-
-//HEAD
 
 typedef struct _HeadObject
 {
@@ -130,20 +91,12 @@ typedef struct _HeadObject
     struct _HeadReturnObject (*Fuc)(struct _HeadCallObject *);
 }HeadObj;
 
-//
-
-
-//PROMPT
 
 typedef struct _PromptObject
 {
     char * Name;
     int Identification; //識別符號
 }PromptObj;
-//
-
-
-//SYMBOL
 
 enum{
     SC_BeforeSymbol = 1,
@@ -157,17 +110,10 @@ enum{
 typedef struct _SymbolObject
 {
     char * Name;
-    int Identification; //識別符號
-
-    uint16_t SymbolCarry;
+    unsigned Identification; //識別符號
+    unsigned SymbolCarry;
 }SymbolObj;
-//
 
-//
-//
-// Area and Table物件 GROUP
-//
-//
 typedef struct _AreaObject
 {
     struct _TrainObjectsCarrier * TrainObjCarrierPointer;
@@ -179,37 +125,13 @@ typedef struct _TableObject
 
     struct _VariableObjectPointersCarrier * VariableObjPointerCarrierPointer;
 }TableObj;
-//
-//
-//
-//
-//
-//
-
-//
-//
-//VALUE GROUP
-//
-//
 
 typedef struct _ValueObject
 {
     int ValueType; //值類型
-    /*
-    1:字串
-    4:函數
-    5:執行式
-    6:表單
-    7:開關
-    8:布林值
-    9:數
-    */
     struct _AreaObject Area; //給於函數(function),開關(lights)或者執行式(range)。
     char * String; //給予文字(string)。
-
-
-
-    NumberObj Number; //給予數字。
+    double Number; //給予數字。
     struct _TableObject Table; //給予表格(table)。
     int db;//布林
 } ValueObj;
@@ -219,21 +141,6 @@ typedef struct _ValueObjectCarrier
     ValueObj* Carrier;
     int CarrierLen;
 } ValueObjCarrier;
-
-//
-//
-//
-//
-//
-
-
-
-
-//
-//
-//VARIABLE GROUP
-//
-//
 
 
 typedef struct _VariableObject
@@ -250,17 +157,6 @@ typedef struct _VariableObjectsCarrier
     unsigned int CarrierLen;
 } VariableObjCarrier;
 
-//
-//
-//
-//
-//
-
-//
-//
-//Mione物件 GROUP
-//
-//
 typedef struct _MioneObject
 {
     int ObjType; //HPSVV 1H 2P 3S 4VAR 5VAL 0換行
@@ -281,17 +177,6 @@ typedef struct _MioneObjectsCarrier
     unsigned int CarrierLen;
 } MioneObjCarrier;
 
-//
-//
-//
-//
-//
-
-
-
-
-
-
 typedef struct _CarriageObject
 {
     MioneObj CarriageManager;
@@ -310,14 +195,6 @@ typedef struct _TrainObjectsCarrier
     TrainObj * Carrier;
 } TrainObjCarrier;
 
-
-
-//
-//
-// Value and Variable物件 GROUP
-//
-//
-
 typedef struct _ValueAndVariableObject
 {
     ValueObj Value;
@@ -330,37 +207,43 @@ typedef struct _ValueAndVariableObjectsCarrier
     int CarrierLen;
 }ValueAndVariableObjCarrier;
 
-//
-//
-//
-//
-//
-
-
 typedef struct _VariableObjectPointersCarrier
 {
     VariableObj ** Carrier;
     unsigned int CarrierLen;
 } VariableObjPtrCarrier;
 
-
-//
-// HEAD 函數交換物件
-//
-
-typedef struct _HeadReturnObject
+typedef struct _ErrorObject
 {
-    int ToState;/*
-        0b00000000:無行動
+    char * Message;
+    char * Code;
+
+    MioneObjCarrier ErrorObjectCarrier;
+} ErrorObj;
+
+typedef struct _EventObject
+{
+    unsigned ToState; /*
+        0b00000000:無
+
+        0b00000001:錯誤
 
         0b00000001:回傳值
         0b00000010:重設Variable
         0b00000100:特色變數
     */
 
-    ValueObjCarrier ValueCarrier;
-    ValueAndVariableObjCarrier ValueAndVariableCarrier;
-    VariableObjCarrier VariableCarrier;
+    ErrorObj Error;
+
+    ValueObjCarrier ReturnValues;
+    ValueAndVariableObjCarrier ResetVariablesToValues;
+    VariableObjCarrier MajorVariables;
+
+} EventObj;
+
+typedef struct _HeadReturnObject
+{
+    EventObj Event;
 
 } HeadReturnObj;
 
@@ -373,34 +256,6 @@ typedef struct _HeadCallObject
     VariableObjPtrCarrier VariablePtrCarrier; //以上本作用域特色變數
 } HeadCallObj;
 
-//
-//
-//
-
-
-typedef struct _ErrorObject
-{
-    char * Message;
-    char * Code;
-
-    MioneObjCarrier ErrorObjectCarrier;
-} ErrorObj;
-
-typedef struct _EventObject
-{
-    int ToState; /*
-        0b00000000:執行回報
-
-        0b00000001:錯誤
-    */
-
-    ErrorObj Error;
-
-} EventObj;
-
-//
-//Mione 運行交換物件
-//
 typedef struct _ToImplementObject
 {
     TrainObjCarrier Built;
@@ -409,21 +264,8 @@ typedef struct _ToImplementObject
 
 typedef struct _ImplementedObject
 {
-    int ToState; /*
-        0b00000000:無行動
-
-        0b00000001:回傳值
-        0b00000010:區域性特色變數
-        0b00000100:事件回傳
-    */
-
-    ValueObjCarrier ValueCarrier;
-    VariableObjCarrier VariableCarrier;
     EventObj Event;
 }ImplementedObj;
-//
-//
-//
 
 typedef struct _ScopeObject
 {
@@ -439,8 +281,10 @@ typedef struct _ScopeObjectCarrier
     unsigned int CarrierLen;
 } ScopeObjCarrier;
 
-
-
-
+typedef struct _FCOReturnObject
+{
+    CaseObjCarrier CaseCarrier;
+    EventObj Event;
+} FCOReturnObj;
 
 #endif //OBJECTS_H

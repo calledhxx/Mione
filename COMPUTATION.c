@@ -97,7 +97,7 @@ MioneObjCarrier COMPUTATION(MioneObjCarrier input)
                                             }
                                         case VALUE_NUMBER_TYPE:
                                             {
-                                                if (nearByValue.Table.VariableObjPointerCarrierPointer->Carrier[index]->VariablePlace == ChildCount.Carrier[0].Number.Integer.Units[0])
+                                                if (nearByValue.Table.VariableObjPointerCarrierPointer->Carrier[index]->VariablePlace == (unsigned)ChildCount.Carrier[0].Number)
                                                     TheValue = nearByValue.Table.VariableObjPointerCarrierPointer->Carrier[index]->Value;
                                                 break;
                                             }

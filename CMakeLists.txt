@@ -17,8 +17,6 @@ add_executable(Mione
         REQUEST.c
         PROMPT_DEF.c
         IMPLEMENT.c
-        NUMBER.h
-        NUMBER.c
         main.c
         COMPUTATION.h
         COMPUTATION.c
