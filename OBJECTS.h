@@ -213,6 +213,12 @@ typedef struct _VariableObjectPointersCarrier
     unsigned int CarrierLen;
 } VariableObjPtrCarrier;
 
+typedef struct _PointersOfVariableObjectPointersCarrier
+{
+    VariableObj *** Carrier;
+    unsigned int CarrierLen;
+} PtrVariableObjPtrCarrier;
+
 typedef struct _ErrorObject
 {
     char * Message;
@@ -262,7 +268,7 @@ typedef struct _ToImplementObject
 
 typedef struct _ScopeObject
 {
-    VariableObjPtrCarrier VariablePtrCarrier;
+    PtrVariableObjPtrCarrier PtrOfVariablePtrCarrier;
 
     struct _ScopeObject * ParentScopePointer;
     struct _ScopeObjectCarrier * ChildrenScopeCarrierPointer;

@@ -10,21 +10,21 @@
 #include "STDMIO.h"
 
 
-VariableObj * ReturnVariablePtrIfAlreadyExistedInScope(
+VariableObj * * ReturnPointerOfVariablePtrIfAlreadyExistedInScope(
     const ScopeObj Scope,
     const char * VariableName,
     int * inParentScope
     )
 {
-    VariableObj * result = 0;
+    VariableObj * * result = 0;
 
     for (
         unsigned int VariableIndex = 0;
-        VariableIndex < Scope.VariablePtrCarrier.CarrierLen;
+        VariableIndex < Scope.PtrOfVariablePtrCarrier.CarrierLen;
         VariableIndex++
         )
-        if (strcmp(Scope.VariablePtrCarrier.Carrier[VariableIndex]->VariableName,VariableName)==0)
-            result = Scope.VariablePtrCarrier.Carrier[VariableIndex];
+        if (strcmp((*Scope.PtrOfVariablePtrCarrier.Carrier[VariableIndex])->VariableName,VariableName)==0)
+            result = Scope.PtrOfVariablePtrCarrier.Carrier[VariableIndex];
 
     if (result)
         return result;
@@ -32,7 +32,7 @@ VariableObj * ReturnVariablePtrIfAlreadyExistedInScope(
     if (Scope.ParentScopePointer)
     {
         *inParentScope = 1;
-        return ReturnVariablePtrIfAlreadyExistedInScope(* Scope.ParentScopePointer,VariableName,inParentScope);
+        return ReturnPointerOfVariablePtrIfAlreadyExistedInScope(* Scope.ParentScopePointer,VariableName,inParentScope);
     }
 
     return NULL;
@@ -175,47 +175,49 @@ CMOReturnObj CMO(
                     {
                         int inParentScope = 0;
 
-                        VariableObj * VariablePtr = ReturnVariablePtrIfAlreadyExistedInScope(
+                        VariableObj * * VariablePtr = ReturnPointerOfVariablePtrIfAlreadyExistedInScope(
                             *ScopePointer,
                             ThisCase.ObjName,
                             &inParentScope
                             );
 
-                        VariableObj * * PointerOfScopeVariablePtr = malloc(sizeof(VariableObj *));
+                        VariableObj * * PointerOfScopeVariablePtr = NULL;
 
                         if (VariablePtr) //old Variable
                         {
                             if (inParentScope) //new Variable for this scope
                             {
-                                ScopePointer->VariablePtrCarrier.CarrierLen++;
-                                ScopePointer->VariablePtrCarrier.Carrier = realloc(
-                                    ScopePointer->VariablePtrCarrier.Carrier,
-                                    sizeof(VariableObj*) * ScopePointer->VariablePtrCarrier.CarrierLen
+                                ScopePointer->PtrOfVariablePtrCarrier.CarrierLen++;
+                                ScopePointer->PtrOfVariablePtrCarrier.Carrier = realloc(
+                                    ScopePointer->PtrOfVariablePtrCarrier.Carrier,
+                                    sizeof(VariableObj**) * ScopePointer->PtrOfVariablePtrCarrier.CarrierLen
                                     );
-                                ScopePointer->VariablePtrCarrier.Carrier[ScopePointer->VariablePtrCarrier.CarrierLen-1] = VariablePtr;
-                                *PointerOfScopeVariablePtr =
-                                    ScopePointer->VariablePtrCarrier.Carrier[ScopePointer->VariablePtrCarrier.CarrierLen-1];
+                                ScopePointer->PtrOfVariablePtrCarrier.Carrier[ScopePointer->PtrOfVariablePtrCarrier.CarrierLen-1] = VariablePtr;
+                                PointerOfScopeVariablePtr =
+                                    ScopePointer->PtrOfVariablePtrCarrier.Carrier[ScopePointer->PtrOfVariablePtrCarrier.CarrierLen-1];
                             }else
-                                *PointerOfScopeVariablePtr = VariablePtr;
+                                PointerOfScopeVariablePtr = VariablePtr;
                         }
                         else //new Variable for all
                         {
-                            ScopePointer->VariablePtrCarrier.CarrierLen++;
-                            ScopePointer->VariablePtrCarrier.Carrier = realloc(
-                                ScopePointer->VariablePtrCarrier.Carrier,
-                                sizeof(VariableObj*) * ScopePointer->VariablePtrCarrier.CarrierLen
+                            ScopePointer->PtrOfVariablePtrCarrier.CarrierLen++;
+                            ScopePointer->PtrOfVariablePtrCarrier.Carrier = realloc(
+                                ScopePointer->PtrOfVariablePtrCarrier.Carrier,
+                                sizeof(VariableObj*) * ScopePointer->PtrOfVariablePtrCarrier.CarrierLen
                                 );
-                            ScopePointer->VariablePtrCarrier.Carrier[ScopePointer->VariablePtrCarrier.CarrierLen-1] = malloc(sizeof(VariableObj));
-                            *ScopePointer->VariablePtrCarrier.Carrier[ScopePointer->VariablePtrCarrier.CarrierLen-1] =
+                            ScopePointer->PtrOfVariablePtrCarrier.Carrier[ScopePointer->PtrOfVariablePtrCarrier.CarrierLen-1] = malloc(sizeof(VariableObj*));
+                            *ScopePointer->PtrOfVariablePtrCarrier.Carrier[ScopePointer->PtrOfVariablePtrCarrier.CarrierLen-1] = malloc(sizeof(VariableObj));
+                            **ScopePointer->PtrOfVariablePtrCarrier.Carrier[ScopePointer->PtrOfVariablePtrCarrier.CarrierLen-1] =
                                 (VariableObj){
                                     .VariableName = ThisCase.ObjName,
                                     .VariablePlace = 0,
                                 };
 
-                            *PointerOfScopeVariablePtr =
-                                ScopePointer->VariablePtrCarrier.Carrier[ScopePointer->VariablePtrCarrier.CarrierLen-1];
+                            PointerOfScopeVariablePtr =
+                                ScopePointer->PtrOfVariablePtrCarrier.Carrier[ScopePointer->PtrOfVariablePtrCarrier.CarrierLen-1];
                         }
 
+                        printf("[NEW  VARIABLE]\n    Scope Pointer:%p;\n    VARIABLE Pointer:%p;\n",PointerOfScopeVariablePtr,*PointerOfScopeVariablePtr);
 
                         ResultMioneObjCarrier.CarrierLen++;
                         ResultMioneObjCarrier.Carrier = realloc(
