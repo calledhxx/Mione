@@ -39,11 +39,15 @@ VariableObj * ReturnVariablePtrIfAlreadyExistedInScope(
 }
 
 
-MioneObjCarrier CMO(
+CMOReturnObj CMO(
     const CaseObjCarrier Carrier,
     ScopeObj * ScopePointer
     )
 {
+    CMOReturnObj result = {0};
+
+    EventObj Event = {0};
+
     const CaseObj * CaseCarrier = Carrier.Carrier;
     const unsigned int CaseCarrierLen = Carrier.CarrierLen;
 
@@ -55,7 +59,7 @@ MioneObjCarrier CMO(
         CaseCarrierIndex++
         )
     {
-        uint8_t Paired = 0; //是否已經配對過了。
+        char Paired = 0; //是否已經配對過了。
 
         const CaseObj ThisCase = CaseCarrier[CaseCarrierIndex];
 
@@ -231,7 +235,17 @@ MioneObjCarrier CMO(
                 case CASE_CONNECTABLE: //跳出 之後Error Handle 嘻嘻
                 case CASE_UNCONNECTABLE:
                     {
-                        exit(-3);
+                        Event.ToState |= EVENT_ERROR;
+                        Event.Error = (ErrorObj){
+                            .Message = "Unknown Word wanted to be SYMBOL.",
+                            .Code = "0",
+                            .ErrorPosition = ThisCase.CasePosition
+                        };
+
+                        result.MioneCarrier = ResultMioneObjCarrier;
+                        result.Event = Event;
+
+                        return result;
                     }
 
                 case CASE_DOUBLE_STRING: //配對成 Value 的String
@@ -340,5 +354,8 @@ MioneObjCarrier CMO(
         }
     }
 
-    return ResultMioneObjCarrier;
+    result.MioneCarrier = ResultMioneObjCarrier;
+    result.Event = Event;
+
+    return result;
 }

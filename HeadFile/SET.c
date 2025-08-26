@@ -67,11 +67,11 @@ HeadReturnObj SET(const HeadCallObj * HeadCallObjectPointer)
         case 0: continue;
         case 1<<(PROMPT_SET-1):
             {
-                Result.ToState |= 0b00000100;
+                Result.Event.ToState |= EVENT_MAJOR_VARIABLE;
 
-                Result.VariableCarrier.Carrier = realloc(
-                    Result.VariableCarrier.Carrier,
-                    (Result.VariableCarrier.CarrierLen + HeadSuffix.CarrierLen)*sizeof(VariableObj)
+                Result.Event.MajorVariables.Carrier = realloc(
+                    Result.Event.MajorVariables.Carrier,
+                    (Result.Event.MajorVariables.CarrierLen + HeadSuffix.CarrierLen)*sizeof(VariableObj)
                     );
 
                 for (
@@ -80,8 +80,8 @@ HeadReturnObj SET(const HeadCallObj * HeadCallObjectPointer)
                     HeadSuffixIndex++
                     )
                 {
-                    Result.VariableCarrier.CarrierLen++;
-                    Result.VariableCarrier.Carrier[Result.VariableCarrier.CarrierLen-1] =
+                    Result.Event.MajorVariables.CarrierLen++;
+                    Result.Event.MajorVariables.Carrier[Result.Event.MajorVariables.CarrierLen-1] =
                         *HeadSuffix.Carrier[HeadSuffixIndex] = (VariableObj){
                             .Value = HeadSuffixIndex < SetPromptSuffix.CarrierLen
                                      ? SetPromptSuffix.Carrier[HeadSuffixIndex]

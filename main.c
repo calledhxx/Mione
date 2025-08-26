@@ -19,19 +19,31 @@ int main(const int OptionsSize,char **Options)
     MainScope.VariablePtrCarrier.Carrier = NULL;
     //
 
-    const CaseObjCarrier CaseCarrier = FCO(f,0);
+    const FCOReturnObj FCOReturn = FCO(f);
     //第一步，先將source code轉為case物件。
 
-    const MioneObjCarrier MioneCarrier = CMO(CaseCarrier,&MainScope);
+    if (FCOReturn.Event.ToState & EVENT_ERROR)
+        return -1;
+
+    const CMOReturnObj CMOReturn = CMO(FCOReturn.CaseCarrier,&MainScope);
     //第二步，將case物件轉為Mione物件。
 
-    const TrainObjCarrier Built = ToMione(MioneCarrier);
+    if (CMOReturn.Event.ToState & EVENT_ERROR)
+        return -1;
+
+    const ToMioneReturnObj ToMioneReturn = ToMione(CMOReturn.MioneCarrier);
     //第三步，將Mione物件轉為程式句。
 
-    const ImplementedObj Implement = IMPLEMENT((ToImplementObj){
-        .Built = Built
+    if (ToMioneReturn.Event.ToState & EVENT_ERROR)
+        return -1;
+
+    const IMPLEMENTReturnObj IMPLEMENTReturn = IMPLEMENT((ToImplementObj){
+        .Built = ToMioneReturn.TrainCarrier
     });
     //第四步，執行程式句。
+
+    if (IMPLEMENTReturn.Event.ToState & EVENT_ERROR)
+        return -1;
 
     printf("Hello, Mione!\n");
     //正確執行完的回應

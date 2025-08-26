@@ -15,7 +15,7 @@ MioneObjCarrier COMPUTATION(MioneObjCarrier input)
     int FirstBracketIndex = 0; //頭括號位置
     int BracketsChild = 0; //括號多寡
 
-    uint8_t BracketCur = 0;//括號樣式 1 : [, 2 : (
+    char BracketCur = 0;//括號樣式 1 : [, 2 : (
 
     MioneObj* inBracket = malloc(0);
     int inBracketSize = 0;
@@ -221,14 +221,14 @@ MioneObjCarrier COMPUTATION(MioneObjCarrier input)
                                     if ((*Pack[FirstBracketIndex - 1].PointerOfScopeVariablePtr)->Value.ValueType == VALUE_FUNCTION_TYPE)
                                     {
 
-                                        ImplementedObj Return =  IMPLEMENT((ToImplementObj){
+                                        IMPLEMENTReturnObj IMPLEMENTReturn =  IMPLEMENT((ToImplementObj){
                                             .Built =  *(*Pack[FirstBracketIndex - 1].PointerOfScopeVariablePtr)->Value.Area.TrainObjCarrierPointer,
                                             .CallByValueCarrier = ChildCount
                                         });
 
-                                        if (!Return.ToState&1) exit(1);
+                                        if (!IMPLEMENTReturn.Event.ToState&1) exit(1);
 
-                                        ValueObjCarrier V = Return.ValueCarrier;
+                                        ValueObjCarrier V = IMPLEMENTReturn.Event.ReturnValues;
 
 
                                         MioneObj* NewPack = malloc(0);
@@ -279,18 +279,18 @@ MioneObjCarrier COMPUTATION(MioneObjCarrier input)
                                 {
                                     if (Pack[FirstBracketIndex - 1].Value.ValueType == VALUE_FUNCTION_TYPE)
                                     {
-                                        ImplementedObj Return = IMPLEMENT((ToImplementObj){
+                                        IMPLEMENTReturnObj IMPLEMENTReturn = IMPLEMENT((ToImplementObj){
                                             .Built =  *Pack[FirstBracketIndex - 1].Value.Area.TrainObjCarrierPointer,
                                             .CallByValueCarrier = ChildCount
                                         });
 
 
 
-                                        if (!Return.ToState&1)
+                                        if (!IMPLEMENTReturn.Event.ToState&1)
                                             exit(1);
 
 
-                                        ValueObjCarrier V = Return.ValueCarrier;
+                                        ValueObjCarrier V = IMPLEMENTReturn.Event.ReturnValues;
 
                                         MioneObj* NewPack = malloc(0);
                                         int NewPackSize = 0;
@@ -429,12 +429,12 @@ MioneObjCarrier COMPUTATION(MioneObjCarrier input)
             {
                 if (Pack[i].ObjType == VALUE && Pack[i].Value.ValueType == VALUE_TABLE_TYPE && !Pack[i].Value.Table.VariableObjPointerCarrierPointer)
                 {
-                    ImplementedObj Return = IMPLEMENT((ToImplementObj){
+                    IMPLEMENTReturnObj IMPLEMENTReturn = IMPLEMENT((ToImplementObj){
                         .Built = *Pack[i].Value.Table.TrainObjCarrierPointer
                     });
 
-                    int VarsSize = Return.VariableCarrier.CarrierLen;
-                    VariableObj * Vars = Return.VariableCarrier.Carrier;
+                    unsigned VarsSize = IMPLEMENTReturn.Event.MajorVariables.CarrierLen;
+                    VariableObj * Vars = IMPLEMENTReturn.Event.MajorVariables.Carrier;
 
                     VariableObjPtrCarrier NewTable;
                     NewTable.Carrier = NULL;

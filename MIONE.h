@@ -2,6 +2,5 @@
 // Created by calle on 24-10-25.
 //
 
-#include "OBJECTS.h"
 
-extern TrainObjCarrier ToMione();
+extern ToMioneReturnObj ToMione(const MioneObjCarrier ToBuildObj);

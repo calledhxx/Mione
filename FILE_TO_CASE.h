@@ -1,1 +1,3 @@
-extern CaseObjCarrier FCO();
+#include <stdio.h>
+
+extern FCOReturnObj FCO(FILE* F);

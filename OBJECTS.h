@@ -217,20 +217,18 @@ typedef struct _ErrorObject
 {
     char * Message;
     char * Code;
+    CasePositionObj ErrorPosition;
 
-    MioneObjCarrier ErrorObjectCarrier;
 } ErrorObj;
 
 typedef struct _EventObject
 {
     unsigned ToState; /*
-        0b00000000:無
-
-        0b00000001:錯誤
-
-        0b00000001:回傳值
-        0b00000010:重設Variable
-        0b00000100:特色變數
+        無
+        錯誤
+        回傳值
+        重設Variable
+        特色變數
     */
 
     ErrorObj Error;
@@ -262,11 +260,6 @@ typedef struct _ToImplementObject
     ValueObjCarrier CallByValueCarrier;
 } ToImplementObj;
 
-typedef struct _ImplementedObject
-{
-    EventObj Event;
-}ImplementedObj;
-
 typedef struct _ScopeObject
 {
     VariableObjPtrCarrier VariablePtrCarrier;
@@ -286,5 +279,22 @@ typedef struct _FCOReturnObject
     CaseObjCarrier CaseCarrier;
     EventObj Event;
 } FCOReturnObj;
+
+typedef struct _CMOReturnObject
+{
+    MioneObjCarrier MioneCarrier;
+    EventObj Event;
+} CMOReturnObj;
+
+typedef struct _ToMioneReturnObject
+{
+    TrainObjCarrier TrainCarrier;
+    EventObj Event;
+} ToMioneReturnObj;
+
+typedef struct _IMPLEMENTReturnObject
+{
+    EventObj Event;
+} IMPLEMENTReturnObj;
 
 #endif //OBJECTS_H

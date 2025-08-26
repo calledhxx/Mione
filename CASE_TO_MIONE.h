@@ -1,1 +1,4 @@
-extern  MioneObjCarrier CMO();
+extern  CMOReturnObj CMO(
+    const CaseObjCarrier Carrier,
+    ScopeObj * ScopePointer
+);

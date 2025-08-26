@@ -66,8 +66,11 @@ int CheckCharType(const char Char)
     return 1;
 }
 
-CaseObjCarrier FCO(FILE* F)
+FCOReturnObj FCO(FILE* F)
 {
+    FCOReturnObj result = {0};
+
+    EventObj Event = {0};
 
     CaseObjCarrier CaseCarriers = {0};
 
@@ -499,7 +502,6 @@ CaseObjCarrier FCO(FILE* F)
             }
         case 2: //Super Character
             {
-
                 if (SuperCharCollect == 0)
                 {
                     switch (ThisCharType)
@@ -579,7 +581,25 @@ CaseObjCarrier FCO(FILE* F)
                             break;
                         }
 
-                    default:exit(123);
+                    default:
+                        {
+                            Event.ToState |= EVENT_ERROR;
+                            Event.Error = (ErrorObj){
+                                .Message = "Unknown Char.",
+                                .Code = "0",
+                                .ErrorPosition = (CasePositionObj){
+                                    .CaseEndColumn = ProcessingColumn,
+                                    .CaseStartColumn = CaseStartColumn,
+                                    .CaseEndLine = ProcessingLine,
+                                    .CaseStartLine = CaseStartLine,
+                                }
+                            };
+
+                            result.CaseCarrier = CaseCarriers;
+                            result.Event = Event;
+
+                            return result;
+                        };
                     }
                 }
 
@@ -623,7 +643,25 @@ CaseObjCarrier FCO(FILE* F)
 
                                 break;
                             }
-                        default: exit(2);
+                        default:
+                            {
+                                Event.ToState |= EVENT_ERROR;
+                                Event.Error = (ErrorObj){
+                                    .Message = "Unknown Super char parent type.",
+                                    .Code = "0",
+                                    .ErrorPosition = (CasePositionObj){
+                                        .CaseEndColumn = ProcessingColumn,
+                                        .CaseStartColumn = CaseStartColumn,
+                                        .CaseEndLine = ProcessingLine,
+                                        .CaseStartLine = CaseStartLine,
+                                    }
+                                };
+
+                                result.CaseCarrier = CaseCarriers;
+                                result.Event = Event;
+
+                                return result;
+                            };
                         }
                     }
 
@@ -646,7 +684,25 @@ CaseObjCarrier FCO(FILE* F)
                 }
                 break;
             }
-        default: exit(2);
+        default:
+            {
+                Event.ToState |= EVENT_ERROR;
+                Event.Error = (ErrorObj){
+                    .Message = "Unknown HandleType.",
+                    .Code = "0",
+                    .ErrorPosition = (CasePositionObj){
+                        .CaseEndColumn = ProcessingColumn,
+                        .CaseStartColumn = CaseStartColumn,
+                        .CaseEndLine = ProcessingLine,
+                        .CaseStartLine = CaseStartLine,
+                    }
+                };
+
+                result.CaseCarrier = CaseCarriers;
+                result.Event = Event;
+
+                return result;
+            };
         }
 
 
@@ -667,6 +723,8 @@ CaseObjCarrier FCO(FILE* F)
         LastCharType = ThisCharType;
     }while (1);
 
+    result.CaseCarrier = CaseCarriers;
+    result.Event = Event;
 
-    return CaseCarriers;
+    return result;
 }
