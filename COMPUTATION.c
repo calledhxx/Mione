@@ -18,7 +18,7 @@ MioneObjCarrier COMPUTATION(MioneObjCarrier input)
 
     char BracketCur = 0;//括號樣式 1 : [, 2 : (
 
-    MioneObj* inBracket = malloc(0);
+    MioneObj* inBracket = NULL;
     int inBracketSize = 0;
 
     unsigned CountLoop = 1; //執行需求
@@ -246,7 +246,8 @@ MioneObjCarrier COMPUTATION(MioneObjCarrier input)
                                             .CallByValueCarrier = ChildCount
                                         });
 
-                                        if (!IMPLEMENTReturn.ToState&1) exit(1);
+                                        if (!IMPLEMENTReturn.ToState&1)
+                                            exit(-5);
 
                                         ValueObjCarrier V = IMPLEMENTReturn.ReturnValues;
 
@@ -307,7 +308,7 @@ MioneObjCarrier COMPUTATION(MioneObjCarrier input)
 
 
                                         if (!IMPLEMENTReturn.ToState&1)
-                                            exit(1);
+                                            exit(-5);
 
 
                                         ValueObjCarrier V = IMPLEMENTReturn.ReturnValues;
@@ -494,6 +495,9 @@ MioneObjCarrier COMPUTATION(MioneObjCarrier input)
         }
         }
     }
+
+    if (inBracket)
+        free(inBracket);
 
     if (BracketCur) exit(1);
 
