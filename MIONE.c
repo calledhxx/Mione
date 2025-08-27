@@ -130,6 +130,7 @@ EventObj ToMione(const MioneObjCarrier ToBuildObj)
                             ResetCarriage(&Carriage);
                             ResetTrain(&Train);
 
+
                             Carriage.CarriageManager = (MioneObj){
                                 .ObjType = Mio.ObjType,
                                 .Head = (HeadObj){
@@ -138,21 +139,21 @@ EventObj ToMione(const MioneObjCarrier ToBuildObj)
                             };
                         }
                 }else if (LastMio.ObjType == VARIABLE || LastMio.ObjType == VALUE) //VARIABLE || VALUE
-                    if (!(Mio.Symbol.SymbolCarry & SC_AfterVariableOrValue))
-                    {
-                        SaveCarriageIntoTrain(&Train,Carriage);
-                        SaveTrainIntoCarrier(&BuiltObj,Train);
-                        ResetCarriage(&Carriage);
-                        ResetTrain(&Train);
+                    if (!(Mio.Symbol.Identification == 10 || Mio.Symbol.Identification == 11 || Mio.Symbol.Identification == 12 || Mio.Symbol.Identification == 13))
+                        if (!(Mio.Symbol.SymbolCarry & SC_AfterVariableOrValue))
+                        {
+                            SaveCarriageIntoTrain(&Train,Carriage);
+                            SaveTrainIntoCarrier(&BuiltObj,Train);
+                            ResetCarriage(&Carriage);
+                            ResetTrain(&Train);
 
-                        Carriage.CarriageManager = (MioneObj){
-                            .ObjType = Mio.ObjType,
-                            .Head = (HeadObj){
-                                .Fuc = SVV
-                            }
-                        };
-                    }
-
+                            Carriage.CarriageManager = (MioneObj){
+                                .ObjType = Mio.ObjType,
+                                .Head = (HeadObj){
+                                    .Fuc = SVV
+                                }
+                            };
+                        }
             }
 
         case VARIABLE:

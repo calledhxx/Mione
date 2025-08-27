@@ -11,7 +11,7 @@ EventObj SVV(const HeadCallObj * HeadCallObjectPointer)
 
     const ValueObjCarrier a = COUNT(HeadCallObject.Train.Carriages[0].CarriagePassengers);
 
-    printf("%d\n",a.Carrier[0].ValueType);
+    printf("%d\n",HeadCallObject.Train.Carriages[0].CarriagePassengers.CarrierLen);
 
     return (EventObj){0};
 }

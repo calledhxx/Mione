@@ -104,11 +104,6 @@ EventObj CMO(
                     if (strcmp(ThisCase.ObjName, NormalKeyword[keywordDetectIndex])==0)
                     {
 
-                        MioneObjCarrierPtr->CarrierLen++;
-                        MioneObjCarrierPtr->Carrier = realloc(
-                            MioneObjCarrierPtr->Carrier,
-                            MioneObjCarrierPtr->CarrierLen * sizeof(MioneObj)
-                        );
 
                         Paired = 1;
 
@@ -144,6 +139,7 @@ EventObj CMO(
                                 {
                                     if (PackBy == VALUE_FUNCTION_TYPE || PackBy == VALUE_RANGE_TYPE)
                                     {
+
                                         MioneObjCarrierPtr = &ResultMioneObjCarrier;
 
                                         TrainObjCarrier * TrainObjCarrierPtr = malloc(sizeof(TrainObjCarrier));
@@ -154,6 +150,13 @@ EventObj CMO(
                                             exit(-1);
 
                                         *TrainObjCarrierPtr = ToMioneReturn.TrainCarrier;
+
+                                        MioneObjCarrierPtr->CarrierLen++;
+                                        MioneObjCarrierPtr->Carrier = realloc(
+                                            MioneObjCarrierPtr->Carrier,
+                                            MioneObjCarrierPtr->CarrierLen * sizeof(MioneObj)
+                                        );
+
 
                                         MioneObjCarrierPtr->Carrier[MioneObjCarrierPtr->CarrierLen - 1] = (MioneObj){
                                             .ObjType = VALUE,
@@ -225,11 +228,6 @@ EventObj CMO(
                   )
                     if (strcmp(ThisCase.ObjName, UnconnectableKeyword[keywordDetectIndex])==0)
                     {
-                        MioneObjCarrierPtr->CarrierLen++;
-                        MioneObjCarrierPtr->Carrier = realloc(
-                            MioneObjCarrierPtr->Carrier,
-                            MioneObjCarrierPtr->CarrierLen * sizeof(MioneObj)
-                        );
 
                         Paired = 1;
 
@@ -264,6 +262,13 @@ EventObj CMO(
                                             exit(-1);
 
                                         *TrainObjCarrierPtr = ToMioneReturn.TrainCarrier;
+
+                                        MioneObjCarrierPtr->CarrierLen++;
+                                        MioneObjCarrierPtr->Carrier = realloc(
+                                            MioneObjCarrierPtr->Carrier,
+                                            MioneObjCarrierPtr->CarrierLen * sizeof(MioneObj)
+                                        );
+
 
                                         MioneObjCarrierPtr->Carrier[MioneObjCarrierPtr->CarrierLen - 1] = (MioneObj){
                                             .ObjType = VALUE,

@@ -20,12 +20,12 @@ MioneObjCarrier COMPUTATION(MioneObjCarrier input)
     MioneObj* inBracket = malloc(0);
     int inBracketSize = 0;
 
-    int CountLoop = 1; //執行需求
+    unsigned CountLoop = 1; //執行需求
 
     for (int CountIndex = 0;CountIndex < CountLoop;CountIndex++) //Count Layers
     for(int i = 0; i < PackSize; i++)
     {
-        int PastCost = 0; //計算符號所扣除之項目 如 1 + 1 (大小3) 將輸出 2 (大小1) 即PastCost = 2;
+        unsigned PastCost = 0; //計算符號所扣除之項目 如 1 + 1 (大小3) 將輸出 2 (大小1) 即PastCost = 2;
 
         switch (Pack[i].ObjType)
         {
