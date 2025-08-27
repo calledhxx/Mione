@@ -108,8 +108,6 @@ EventObj CMO(
                   )
                     if (strcmp(ThisCase.ObjName, NormalKeyword[keywordDetectIndex])==0)
                     {
-
-
                         Paired = 1;
 
                         switch (keywordDetectIndex)
@@ -120,6 +118,30 @@ EventObj CMO(
                                 {
                                     MioneObjCarrierPtr = &AreaMioneObjCarrier;
                                     PackBy = VALUE_FUNCTION_TYPE;
+
+                                    ScopePointer->ChildrenScopePtrCarrierPointer->CarrierLen++;
+                                    ScopePointer->ChildrenScopePtrCarrierPointer->Carrier = realloc(
+                                        ScopePointer->ChildrenScopePtrCarrierPointer->Carrier,
+                                        sizeof(ScopeObj*) * ScopePointer->ChildrenScopePtrCarrierPointer->CarrierLen
+                                        );
+                                    ScopePointer->ChildrenScopePtrCarrierPointer->Carrier[
+                                        ScopePointer->ChildrenScopePtrCarrierPointer->CarrierLen - 1
+                                        ] =
+                                            malloc(sizeof(ScopeObj));
+                                    *ScopePointer->ChildrenScopePtrCarrierPointer->Carrier[
+                                        ScopePointer->ChildrenScopePtrCarrierPointer->CarrierLen - 1
+                                        ] = (ScopeObj){
+                                                .ParentScopePointer = ScopePointer,
+                                                .PtrOfVariablePtrCarrier = (PtrVariableObjPtrCarrier){0},
+                                                .ChildrenScopePtrCarrierPointer = malloc(sizeof(ScopeObjPtrCarrier)),
+                                            };
+                                    *ScopePointer->ChildrenScopePtrCarrierPointer->Carrier[
+                                        ScopePointer->ChildrenScopePtrCarrierPointer->CarrierLen - 1
+                                        ]->ChildrenScopePtrCarrierPointer = (ScopeObjPtrCarrier){0};
+
+                                    ScopePointer = ScopePointer->ChildrenScopePtrCarrierPointer->Carrier[
+                                        ScopePointer->ChildrenScopePtrCarrierPointer->CarrierLen - 1
+                                        ];
                                 }
                                 NumberOfPack++;
 
@@ -132,6 +154,30 @@ EventObj CMO(
                                 {
                                     MioneObjCarrierPtr = &AreaMioneObjCarrier;
                                     PackBy = VALUE_RANGE_TYPE;
+
+                                    ScopePointer->ChildrenScopePtrCarrierPointer->CarrierLen++;
+                                    ScopePointer->ChildrenScopePtrCarrierPointer->Carrier = realloc(
+                                        ScopePointer->ChildrenScopePtrCarrierPointer->Carrier,
+                                        sizeof(ScopeObj*) * ScopePointer->ChildrenScopePtrCarrierPointer->CarrierLen
+                                        );
+                                    ScopePointer->ChildrenScopePtrCarrierPointer->Carrier[
+                                        ScopePointer->ChildrenScopePtrCarrierPointer->CarrierLen - 1
+                                        ] =
+                                            malloc(sizeof(ScopeObj));
+                                    *ScopePointer->ChildrenScopePtrCarrierPointer->Carrier[
+                                        ScopePointer->ChildrenScopePtrCarrierPointer->CarrierLen - 1
+                                        ] = (ScopeObj){
+                                            .ParentScopePointer = ScopePointer,
+                                            .PtrOfVariablePtrCarrier = (PtrVariableObjPtrCarrier){0},
+                                            .ChildrenScopePtrCarrierPointer = malloc(sizeof(ScopeObjPtrCarrier)),
+                                        };
+                                    *ScopePointer->ChildrenScopePtrCarrierPointer->Carrier[
+                                        ScopePointer->ChildrenScopePtrCarrierPointer->CarrierLen - 1
+                                        ]->ChildrenScopePtrCarrierPointer = (ScopeObjPtrCarrier){0};
+
+                                    ScopePointer = ScopePointer->ChildrenScopePtrCarrierPointer->Carrier[
+                                        ScopePointer->ChildrenScopePtrCarrierPointer->CarrierLen - 1
+                                        ];
                                 }
                                 NumberOfPack++;
 
@@ -144,6 +190,7 @@ EventObj CMO(
                                 {
                                     if (PackBy == VALUE_FUNCTION_TYPE || PackBy == VALUE_RANGE_TYPE)
                                     {
+                                        ScopePointer = ScopePointer->ParentScopePointer;
 
                                         MioneObjCarrierPtr = &ResultMioneObjCarrier;
 
@@ -392,7 +439,8 @@ EventObj CMO(
                                     ScopePointer->PtrOfVariablePtrCarrier.Carrier,
                                     sizeof(VariableObj**) * ScopePointer->PtrOfVariablePtrCarrier.CarrierLen
                                     );
-                                ScopePointer->PtrOfVariablePtrCarrier.Carrier[ScopePointer->PtrOfVariablePtrCarrier.CarrierLen-1] = VariablePtr;
+                                ScopePointer->PtrOfVariablePtrCarrier.Carrier[ScopePointer->PtrOfVariablePtrCarrier.CarrierLen-1] = malloc(sizeof(VariableObj*));
+                                *ScopePointer->PtrOfVariablePtrCarrier.Carrier[ScopePointer->PtrOfVariablePtrCarrier.CarrierLen-1] = *VariablePtr;
                                 PointerOfScopeVariablePtr =
                                     ScopePointer->PtrOfVariablePtrCarrier.Carrier[ScopePointer->PtrOfVariablePtrCarrier.CarrierLen-1];
                             }else
@@ -418,7 +466,7 @@ EventObj CMO(
                         }
 
 
-                        printf("[VARIABLE `%s`]\n    Scope Pointer:%p;\n    VARIABLE Pointer:%p;\n",ThisCase.ObjName,PointerOfScopeVariablePtr,*PointerOfScopeVariablePtr);
+                        printf("[VARIABLE `%s`]\n    VARIABLE POINTER POSITION:%p;\n    VARIABLE POSITION:%p;\n",ThisCase.ObjName,PointerOfScopeVariablePtr,*PointerOfScopeVariablePtr);
 
                         MioneObjCarrierPtr->CarrierLen++;
                         MioneObjCarrierPtr->Carrier = realloc(

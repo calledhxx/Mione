@@ -278,13 +278,13 @@ typedef struct _ScopeObject
     PtrVariableObjPtrCarrier PtrOfVariablePtrCarrier;
 
     struct _ScopeObject * ParentScopePointer;
-    struct _ScopeObjectCarrier * ChildrenScopeCarrierPointer;
+    struct _ScopeObjectPointerCarrier * ChildrenScopePtrCarrierPointer;
 } ScopeObj;
 
-typedef struct _ScopeObjectCarrier
+typedef struct _ScopeObjectPointerCarrier
 {
-    ScopeObj * Carrier;
+    ScopeObj * * Carrier;
     unsigned int CarrierLen;
-} ScopeObjCarrier;
+} ScopeObjPtrCarrier;
 
 #endif //OBJECTS_H

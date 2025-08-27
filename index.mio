@@ -1,5 +1,6 @@
 set a = function
-    return 42;
-end;
-set b = (100) + 100;
-b
+    a
+    a
+    return 0;
+end
+a

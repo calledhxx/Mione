@@ -12,6 +12,9 @@ int main(const int OptionsSize,char **Options)
 {
     FILE *f = fopen("D:\\Mione\\index.mio", "r"); //never read binary again...
 
+    MainScope.ChildrenScopePtrCarrierPointer = malloc(sizeof(ScopeObjPtrCarrier));
+    *MainScope.ChildrenScopePtrCarrierPointer = (ScopeObjPtrCarrier){0};
+
     if (f == NULL) return -1;
 
     const EventObj FCOReturn = FCO(f);
