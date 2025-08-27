@@ -58,7 +58,10 @@ MioneObjCarrier COMPUTATION(MioneObjCarrier input)
                     {
                         BracketCur = 0;
 
-                        ValueObjCarrier ChildCount = COUNT(inBracket, inBracketSize);
+                        ValueObjCarrier ChildCount = COUNT((MioneObjCarrier){
+                            .Carrier = inBracket,
+                            .CarrierLen = inBracketSize
+                        });
 
                         ValueObj TheValue = {0};
 
@@ -208,7 +211,10 @@ MioneObjCarrier COMPUTATION(MioneObjCarrier input)
                         int FunctionCalled = 0;
                         BracketCur = 0;
 
-                        ValueObjCarrier ChildCount = COUNT(inBracket, inBracketSize);
+                        ValueObjCarrier ChildCount = COUNT((MioneObjCarrier){
+                            .Carrier = inBracket,
+                            .CarrierLen = inBracketSize
+                        });
 
                         if (FirstBracketIndex > 0)
                         {
@@ -221,14 +227,14 @@ MioneObjCarrier COMPUTATION(MioneObjCarrier input)
                                     if ((*Pack[FirstBracketIndex - 1].PointerOfScopeVariablePtr)->Value.ValueType == VALUE_FUNCTION_TYPE)
                                     {
 
-                                        IMPLEMENTReturnObj IMPLEMENTReturn =  IMPLEMENT((ToImplementObj){
+                                        EventObj IMPLEMENTReturn =  IMPLEMENT((ToImplementObj){
                                             .Built =  *(*Pack[FirstBracketIndex - 1].PointerOfScopeVariablePtr)->Value.Area.TrainObjCarrierPointer,
                                             .CallByValueCarrier = ChildCount
                                         });
 
-                                        if (!IMPLEMENTReturn.Event.ToState&1) exit(1);
+                                        if (!IMPLEMENTReturn.ToState&1) exit(1);
 
-                                        ValueObjCarrier V = IMPLEMENTReturn.Event.ReturnValues;
+                                        ValueObjCarrier V = IMPLEMENTReturn.ReturnValues;
 
 
                                         MioneObj* NewPack = malloc(0);
@@ -279,18 +285,18 @@ MioneObjCarrier COMPUTATION(MioneObjCarrier input)
                                 {
                                     if (Pack[FirstBracketIndex - 1].Value.ValueType == VALUE_FUNCTION_TYPE)
                                     {
-                                        IMPLEMENTReturnObj IMPLEMENTReturn = IMPLEMENT((ToImplementObj){
+                                        EventObj IMPLEMENTReturn = IMPLEMENT((ToImplementObj){
                                             .Built =  *Pack[FirstBracketIndex - 1].Value.Area.TrainObjCarrierPointer,
                                             .CallByValueCarrier = ChildCount
                                         });
 
 
 
-                                        if (!IMPLEMENTReturn.Event.ToState&1)
+                                        if (!IMPLEMENTReturn.ToState&1)
                                             exit(1);
 
 
-                                        ValueObjCarrier V = IMPLEMENTReturn.Event.ReturnValues;
+                                        ValueObjCarrier V = IMPLEMENTReturn.ReturnValues;
 
                                         MioneObj* NewPack = malloc(0);
                                         int NewPackSize = 0;
@@ -429,12 +435,12 @@ MioneObjCarrier COMPUTATION(MioneObjCarrier input)
             {
                 if (Pack[i].ObjType == VALUE && Pack[i].Value.ValueType == VALUE_TABLE_TYPE && !Pack[i].Value.Table.VariableObjPointerCarrierPointer)
                 {
-                    IMPLEMENTReturnObj IMPLEMENTReturn = IMPLEMENT((ToImplementObj){
+                    EventObj IMPLEMENTReturn = IMPLEMENT((ToImplementObj){
                         .Built = *Pack[i].Value.Table.TrainObjCarrierPointer
                     });
 
-                    unsigned VarsSize = IMPLEMENTReturn.Event.MajorVariables.CarrierLen;
-                    VariableObj * Vars = IMPLEMENTReturn.Event.MajorVariables.Carrier;
+                    unsigned VarsSize = IMPLEMENTReturn.MajorVariables.CarrierLen;
+                    VariableObj * Vars = IMPLEMENTReturn.MajorVariables.Carrier;
 
                     VariableObjPtrCarrier NewTable;
                     NewTable.Carrier = NULL;

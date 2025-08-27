@@ -1,1 +1,1 @@
-extern IMPLEMENTReturnObj IMPLEMENT(const ToImplementObj toImplement);
+extern EventObj IMPLEMENT(const ToImplementObj toImplement);

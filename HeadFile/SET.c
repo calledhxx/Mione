@@ -10,9 +10,9 @@
 
 #include "../STDMIO.h"
 
-HeadReturnObj SET(const HeadCallObj * HeadCallObjectPointer)
+EventObj SET(const HeadCallObj * HeadCallObjectPointer)
 {
-    HeadReturnObj Result = {0};
+    EventObj Result = {0};
 
     const HeadCallObj HeadCallObject = *HeadCallObjectPointer;
 
@@ -67,11 +67,11 @@ HeadReturnObj SET(const HeadCallObj * HeadCallObjectPointer)
         case 0: continue;
         case 1<<(PROMPT_SET-1):
             {
-                Result.Event.ToState |= EVENT_MAJOR_VARIABLE;
+                Result.ToState |= EVENT_MAJOR_VARIABLE;
 
-                Result.Event.MajorVariables.Carrier = realloc(
-                    Result.Event.MajorVariables.Carrier,
-                    (Result.Event.MajorVariables.CarrierLen + HeadSuffix.CarrierLen)*sizeof(VariableObj)
+                Result.MajorVariables.Carrier = realloc(
+                    Result.MajorVariables.Carrier,
+                    (Result.MajorVariables.CarrierLen + HeadSuffix.CarrierLen)*sizeof(VariableObj)
                     );
 
                 for (
@@ -80,8 +80,8 @@ HeadReturnObj SET(const HeadCallObj * HeadCallObjectPointer)
                     HeadSuffixIndex++
                     )
                 {
-                    Result.Event.MajorVariables.CarrierLen++;
-                    Result.Event.MajorVariables.Carrier[Result.Event.MajorVariables.CarrierLen-1] =
+                    Result.MajorVariables.CarrierLen++;
+                    Result.MajorVariables.Carrier[Result.MajorVariables.CarrierLen-1] =
                         *HeadSuffix.Carrier[HeadSuffixIndex] = (VariableObj){
                             .Value = HeadSuffixIndex < SetPromptSuffix.CarrierLen
                                      ? SetPromptSuffix.Carrier[HeadSuffixIndex]

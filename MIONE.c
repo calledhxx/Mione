@@ -72,11 +72,9 @@ static void SavePassengerIntoCarriage(
 
 }
 
-ToMioneReturnObj ToMione(const MioneObjCarrier ToBuildObj)
+EventObj ToMione(const MioneObjCarrier ToBuildObj)
 {
-    ToMioneReturnObj result = {0};
-
-    EventObj Event = {0};
+    EventObj result = {0};
 
     const unsigned int ObjsSize = ToBuildObj.CarrierLen;
     const MioneObj* Objs = ToBuildObj.Carrier;
@@ -220,7 +218,7 @@ ToMioneReturnObj ToMione(const MioneObjCarrier ToBuildObj)
     SaveCarriageIntoTrain(&Train,Carriage);
     SaveTrainIntoCarrier(&BuiltObj,Train);
 
-    result.Event = Event;
+    result.ToState |= EVENT_TO_MIONE_RETURN;
     result.TrainCarrier = BuiltObj;
 
     return result;

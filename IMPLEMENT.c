@@ -9,9 +9,9 @@
 #include "HeadFile/SVV.h"
 
 
-IMPLEMENTReturnObj IMPLEMENT(const ToImplementObj toImplement)
+EventObj IMPLEMENT(const ToImplementObj toImplement)
 {
-    IMPLEMENTReturnObj Obj = {0};
+    EventObj Obj = {0};
 
     ValueAndVariableObjCarrier VAVCarrier = {0};
 
@@ -27,13 +27,13 @@ IMPLEMENTReturnObj IMPLEMENT(const ToImplementObj toImplement)
 
         if (thisSection.Carriages[0].CarriageManager.Head.Fuc)
         {
-            const HeadReturnObj HeadReturn = thisSection.Carriages[0].CarriageManager.Head.Fuc(
+            const EventObj HeadReturn = thisSection.Carriages[0].CarriageManager.Head.Fuc(
                    &(HeadCallObj){
                        .Train = thisSection,
 
                        .VariablePtrCarrier = (VariableObjPtrCarrier){
-                           .Carrier = &Obj.Event.MajorVariables.Carrier,
-                           .CarrierLen = Obj.Event.MajorVariables.CarrierLen
+                           .Carrier = &Obj.MajorVariables.Carrier,
+                           .CarrierLen = Obj.MajorVariables.CarrierLen
                        },
 
                        .CallByValueCarrier = toImplement.CallByValueCarrier,
@@ -45,7 +45,7 @@ IMPLEMENTReturnObj IMPLEMENT(const ToImplementObj toImplement)
                 uint8_t breakStateCycle = 0;
                 const int cmp = 1<<i;
 
-                if (HeadReturn.Event.ToState & cmp)
+                if (HeadReturn.ToState & cmp)
                 {
                     switch (cmp)
                     {
@@ -53,20 +53,20 @@ IMPLEMENTReturnObj IMPLEMENT(const ToImplementObj toImplement)
 
                     case EVENT_RETURN_VALUES:
                         {
-                            Obj.Event.ToState |= 1;
+                            Obj.ToState |= 1;
 
-                            Obj.Event.ReturnValues.Carrier = realloc(
-                                Obj.Event.ReturnValues.Carrier,
-                                (Obj.Event.ReturnValues.CarrierLen + HeadReturn.Event.ReturnValues.CarrierLen) * sizeof(ValueObj)
+                            Obj.ReturnValues.Carrier = realloc(
+                                Obj.ReturnValues.Carrier,
+                                (Obj.ReturnValues.CarrierLen + HeadReturn.ReturnValues.CarrierLen) * sizeof(ValueObj)
                                 );
 
-                            Obj.Event.ReturnValues.Carrier = memcpy(
-                                Obj.Event.ReturnValues.Carrier + Obj.Event.ReturnValues.CarrierLen,
-                                HeadReturn.Event.ReturnValues.Carrier,
-                                HeadReturn.Event.ReturnValues.CarrierLen * sizeof(ValueObj)
+                            Obj.ReturnValues.Carrier = memcpy(
+                                Obj.ReturnValues.Carrier + Obj.ReturnValues.CarrierLen,
+                                HeadReturn.ReturnValues.Carrier,
+                                HeadReturn.ReturnValues.CarrierLen * sizeof(ValueObj)
                                 );
 
-                            Obj.Event.ReturnValues.CarrierLen += HeadReturn.Event.ReturnValues.CarrierLen;
+                            Obj.ReturnValues.CarrierLen += HeadReturn.ReturnValues.CarrierLen;
 
 
                             breakStateCycle = 1;
@@ -77,36 +77,36 @@ IMPLEMENTReturnObj IMPLEMENT(const ToImplementObj toImplement)
                         {
                              VAVCarrier.Carrier = realloc(
                                  VAVCarrier.Carrier,
-                             (VAVCarrier.CarrierLen + HeadReturn.Event.ResetVariablesToValues.CarrierLen) * sizeof(ValueAndVariableObj)
+                             (VAVCarrier.CarrierLen + HeadReturn.ResetVariablesToValues.CarrierLen) * sizeof(ValueAndVariableObj)
                              );
 
                             VAVCarrier.Carrier =
                                 memcpy(VAVCarrier.Carrier + VAVCarrier.CarrierLen,
-                                       HeadReturn.Event.ResetVariablesToValues.Carrier,
-                                       HeadReturn.Event.ResetVariablesToValues.CarrierLen * sizeof(ValueAndVariableObj)
+                                       HeadReturn.ResetVariablesToValues.Carrier,
+                                       HeadReturn.ResetVariablesToValues.CarrierLen * sizeof(ValueAndVariableObj)
                                        );
 
-                            VAVCarrier.CarrierLen += HeadReturn.Event.ResetVariablesToValues.CarrierLen;
+                            VAVCarrier.CarrierLen += HeadReturn.ResetVariablesToValues.CarrierLen;
 
                             break;
                         }
                     case EVENT_MAJOR_VARIABLE:
                         {
-                            Obj.Event.ToState |= EVENT_MAJOR_VARIABLE;
+                            Obj.ToState |= EVENT_MAJOR_VARIABLE;
 
-                            Obj.Event.MajorVariables.Carrier = realloc(
-                                 Obj.Event.MajorVariables.Carrier,
-                                 sizeof(VariableObj)*(Obj.Event.MajorVariables.CarrierLen + HeadReturn.Event.MajorVariables.CarrierLen)
+                            Obj.MajorVariables.Carrier = realloc(
+                                 Obj.MajorVariables.Carrier,
+                                 sizeof(VariableObj)*(Obj.MajorVariables.CarrierLen + HeadReturn.MajorVariables.CarrierLen)
                             );
 
-                            Obj.Event.MajorVariables.Carrier =
+                            Obj.MajorVariables.Carrier =
                                 memcpy(
-                                    Obj.Event.MajorVariables.Carrier + Obj.Event.MajorVariables.CarrierLen,
-                                    HeadReturn.Event.MajorVariables.Carrier,
-                                    HeadReturn.Event.MajorVariables.CarrierLen * sizeof(VariableObj)
+                                    Obj.MajorVariables.Carrier + Obj.MajorVariables.CarrierLen,
+                                    HeadReturn.MajorVariables.Carrier,
+                                    HeadReturn.MajorVariables.CarrierLen * sizeof(VariableObj)
                                     );
 
-                            Obj.Event.MajorVariables.CarrierLen += HeadReturn.Event.MajorVariables.CarrierLen;
+                            Obj.MajorVariables.CarrierLen += HeadReturn.MajorVariables.CarrierLen;
 
                             break;
                         }

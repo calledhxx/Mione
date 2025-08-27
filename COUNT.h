@@ -4,4 +4,4 @@
 
 
 
-extern  ValueObjCarrier COUNT();
+extern  ValueObjCarrier COUNT(MioneObjCarrier);

@@ -39,14 +39,12 @@ VariableObj * * ReturnPointerOfVariablePtrIfAlreadyExistedInScope(
 }
 
 
-CMOReturnObj CMO(
+EventObj CMO(
     const CaseObjCarrier Carrier,
     ScopeObj * ScopePointer
     )
 {
-    CMOReturnObj result = {0};
-
-    EventObj Event = {0};
+    EventObj result = {0};
 
     const CaseObj * CaseCarrier = Carrier.Carrier;
     const unsigned int CaseCarrierLen = Carrier.CarrierLen;
@@ -217,7 +215,8 @@ CMOReturnObj CMO(
                                 ScopePointer->PtrOfVariablePtrCarrier.Carrier[ScopePointer->PtrOfVariablePtrCarrier.CarrierLen-1];
                         }
 
-                        printf("[NEW  VARIABLE]\n    Scope Pointer:%p;\n    VARIABLE Pointer:%p;\n",PointerOfScopeVariablePtr,*PointerOfScopeVariablePtr);
+
+                        printf("[VARIABLE `%s`]\n    Scope Pointer:%p;\n    VARIABLE Pointer:%p;\n",ThisCase.ObjName,PointerOfScopeVariablePtr,*PointerOfScopeVariablePtr);
 
                         ResultMioneObjCarrier.CarrierLen++;
                         ResultMioneObjCarrier.Carrier = realloc(
@@ -237,15 +236,15 @@ CMOReturnObj CMO(
                 case CASE_CONNECTABLE: //跳出 之後Error Handle 嘻嘻
                 case CASE_UNCONNECTABLE:
                     {
-                        Event.ToState |= EVENT_ERROR;
-                        Event.Error = (ErrorObj){
+                        result.ToState |= EVENT_ERROR | EVENT_CMO_RETURN;
+
+                        result.Error = (ErrorObj){
                             .Message = "Unknown Word wanted to be SYMBOL.",
                             .Code = "0",
                             .ErrorPosition = ThisCase.CasePosition
                         };
 
                         result.MioneCarrier = ResultMioneObjCarrier;
-                        result.Event = Event;
 
                         return result;
                     }
@@ -356,8 +355,8 @@ CMOReturnObj CMO(
         }
     }
 
+    result.ToState |= EVENT_CMO_RETURN;
     result.MioneCarrier = ResultMioneObjCarrier;
-    result.Event = Event;
 
     return result;
 }

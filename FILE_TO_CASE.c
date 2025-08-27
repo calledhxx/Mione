@@ -66,12 +66,10 @@ int CheckCharType(const char Char)
     return 1;
 }
 
-FCOReturnObj FCO(FILE* F)
+EventObj FCO(FILE* F)
 {
-    FCOReturnObj result = {0};
-
-    EventObj Event = {0};
-
+    EventObj result = {0};
+    
     CaseObjCarrier CaseCarriers = {0};
 
     char * CaseName = NULL;
@@ -583,8 +581,9 @@ FCOReturnObj FCO(FILE* F)
 
                     default:
                         {
-                            Event.ToState |= EVENT_ERROR;
-                            Event.Error = (ErrorObj){
+                            result.ToState |= EVENT_ERROR | EVENT_FCO_RETURN;
+                            
+                            result.Error = (ErrorObj){
                                 .Message = "Unknown Char.",
                                 .Code = "0",
                                 .ErrorPosition = (CasePositionObj){
@@ -596,7 +595,6 @@ FCOReturnObj FCO(FILE* F)
                             };
 
                             result.CaseCarrier = CaseCarriers;
-                            result.Event = Event;
 
                             return result;
                         };
@@ -645,8 +643,9 @@ FCOReturnObj FCO(FILE* F)
                             }
                         default:
                             {
-                                Event.ToState |= EVENT_ERROR;
-                                Event.Error = (ErrorObj){
+                                result.ToState |= EVENT_ERROR | EVENT_FCO_RETURN;
+                            
+                                result.Error = (ErrorObj){
                                     .Message = "Unknown Super char parent type.",
                                     .Code = "0",
                                     .ErrorPosition = (CasePositionObj){
@@ -658,7 +657,6 @@ FCOReturnObj FCO(FILE* F)
                                 };
 
                                 result.CaseCarrier = CaseCarriers;
-                                result.Event = Event;
 
                                 return result;
                             };
@@ -686,8 +684,9 @@ FCOReturnObj FCO(FILE* F)
             }
         default:
             {
-                Event.ToState |= EVENT_ERROR;
-                Event.Error = (ErrorObj){
+                result.ToState |= EVENT_ERROR | EVENT_FCO_RETURN;
+                            
+                result.Error = (ErrorObj){
                     .Message = "Unknown HandleType.",
                     .Code = "0",
                     .ErrorPosition = (CasePositionObj){
@@ -699,7 +698,6 @@ FCOReturnObj FCO(FILE* F)
                 };
 
                 result.CaseCarrier = CaseCarriers;
-                result.Event = Event;
 
                 return result;
             };
@@ -723,8 +721,8 @@ FCOReturnObj FCO(FILE* F)
         LastCharType = ThisCharType;
     }while (1);
 
+    result.ToState |= EVENT_FCO_RETURN;
     result.CaseCarrier = CaseCarriers;
-    result.Event = Event;
 
     return result;
 }

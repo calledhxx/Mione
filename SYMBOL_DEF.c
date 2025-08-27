@@ -2,7 +2,7 @@
 
 #include "OBJECTS.h"
 
-SymbolObj Symbols[] =
+const SymbolObj Symbols[] =
 {
     (SymbolObj){
         .Name = "+",

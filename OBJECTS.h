@@ -51,14 +51,6 @@ enum
     VALUE_NUMBER_TYPE = 9,
 };
 
-enum
-{
-    EVENT_NONE = 0,
-    EVENT_ERROR = 1,
-    EVENT_RETURN_VALUES = 2,
-    EVENT_RESET_VARIABLE_TO_VALUE = 4,
-    EVENT_MAJOR_VARIABLE = 8,
-};
 
 typedef struct _CasePositionObject
 {
@@ -87,15 +79,15 @@ typedef struct _CaseObjectsCarrier
 typedef struct _HeadObject
 {
     char * Name;
-    int Identification;
-    struct _HeadReturnObject (*Fuc)(struct _HeadCallObject *);
+    unsigned Identification;
+    struct _EventObject (*Fuc)(struct _HeadCallObject *);
 }HeadObj;
 
 
 typedef struct _PromptObject
 {
     char * Name;
-    int Identification; //識別符號
+    unsigned Identification; //識別符號
 }PromptObj;
 
 enum{
@@ -133,7 +125,7 @@ typedef struct _ValueObject
     char * String; //給予文字(string)。
     double Number; //給予數字。
     struct _TableObject Table; //給予表格(table)。
-    int db;//布林
+    char db;//布林
 } ValueObj;
 
 typedef struct _ValueObjectCarrier
@@ -159,7 +151,7 @@ typedef struct _VariableObjectsCarrier
 
 typedef struct _MioneObject
 {
-    int ObjType; //HPSVV 1H 2P 3S 4VAR 5VAL 0換行
+    unsigned ObjType; //HPSVV 1H 2P 3S 4VAR 5VAL
 
     VariableObj ** PointerOfScopeVariablePtr; //當ObjType為VAR時，會用到此變數。
     ValueObj Value;  //當ObjType為VALUE宏時，會用到此值。
@@ -227,6 +219,18 @@ typedef struct _ErrorObject
 
 } ErrorObj;
 
+enum
+{
+    EVENT_NONE = 0,
+    EVENT_ERROR = 1,
+    EVENT_RETURN_VALUES = 2,
+    EVENT_RESET_VARIABLE_TO_VALUE = 4,
+    EVENT_MAJOR_VARIABLE = 8,
+    EVENT_FCO_RETURN = 16,
+    EVENT_CMO_RETURN = 32,
+    EVENT_TO_MIONE_RETURN = 64,
+};
+
 typedef struct _EventObject
 {
     unsigned ToState; /*
@@ -235,6 +239,10 @@ typedef struct _EventObject
         回傳值
         重設Variable
         特色變數
+
+        FCO函數回傳
+        CMO函數回傳
+        ToMione函數回傳
     */
 
     ErrorObj Error;
@@ -243,13 +251,11 @@ typedef struct _EventObject
     ValueAndVariableObjCarrier ResetVariablesToValues;
     VariableObjCarrier MajorVariables;
 
+    CaseObjCarrier CaseCarrier;
+    MioneObjCarrier MioneCarrier;
+    TrainObjCarrier TrainCarrier;
+
 } EventObj;
-
-typedef struct _HeadReturnObject
-{
-    EventObj Event;
-
-} HeadReturnObj;
 
 typedef struct _HeadCallObject
 {
@@ -279,28 +285,5 @@ typedef struct _ScopeObjectCarrier
     ScopeObj * Carrier;
     unsigned int CarrierLen;
 } ScopeObjCarrier;
-
-typedef struct _FCOReturnObject
-{
-    CaseObjCarrier CaseCarrier;
-    EventObj Event;
-} FCOReturnObj;
-
-typedef struct _CMOReturnObject
-{
-    MioneObjCarrier MioneCarrier;
-    EventObj Event;
-} CMOReturnObj;
-
-typedef struct _ToMioneReturnObject
-{
-    TrainObjCarrier TrainCarrier;
-    EventObj Event;
-} ToMioneReturnObj;
-
-typedef struct _IMPLEMENTReturnObject
-{
-    EventObj Event;
-} IMPLEMENTReturnObj;
 
 #endif //OBJECTS_H

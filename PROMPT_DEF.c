@@ -3,7 +3,7 @@
 //
 #include "OBJECTS.h"
 
-PromptObj Prompts[] = {
+const PromptObj Prompts[] = {
     (PromptObj) {
         .Name = "=",
         .Identification = 1,

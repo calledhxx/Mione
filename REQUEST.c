@@ -28,7 +28,7 @@ VariableObjPtrCarrier REQUEST(const MioneObjCarrier input)
             VariablePointerCarrier[VariablePointerCarrierLen-1] = (*Pack[i].PointerOfScopeVariablePtr);
         }else if ( Pack[i].ObjType == VALUE)
         {
-            printf("%d\n", Pack[i].Value.ValueType);
+            printf("exit because VALUE APPEARS%d\n", Pack[i].Value.ValueType);
 
             exit(-2);
 
