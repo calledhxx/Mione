@@ -38,6 +38,16 @@ VariableObj * * ReturnPointerOfVariablePtrIfAlreadyExistedInScope(
     return NULL;
 }
 
+static const char *NormalKeyword[] = {
+    "function",
+    "range",
+    "end"
+};
+
+static const char *UnconnectableKeyword[] = {
+    "{",
+    "}",
+};
 
 EventObj CMO(
     const CaseObjCarrier Carrier,
@@ -50,6 +60,13 @@ EventObj CMO(
     const unsigned int CaseCarrierLen = Carrier.CarrierLen;
 
     MioneObjCarrier ResultMioneObjCarrier = {0};
+    MioneObjCarrier AreaMioneObjCarrier = {0};
+
+    MioneObjCarrier * MioneObjCarrierPtr = &ResultMioneObjCarrier;
+
+    signed NumberOfPack = 0;
+    unsigned PackBy = 0;
+    
 
     for (
         unsigned int CaseCarrierIndex = 0;
@@ -66,19 +83,108 @@ EventObj CMO(
 
         case CASE_BREAKER: //新增Breaker
             {
-                ResultMioneObjCarrier.CarrierLen++;
-                ResultMioneObjCarrier.Carrier = realloc(
-                    ResultMioneObjCarrier.Carrier,
-                    ResultMioneObjCarrier.CarrierLen * sizeof(MioneObj)
+                MioneObjCarrierPtr->CarrierLen++;
+                MioneObjCarrierPtr->Carrier = realloc(
+                    MioneObjCarrierPtr->Carrier,
+                    MioneObjCarrierPtr->CarrierLen * sizeof(MioneObj)
                 );
-                ResultMioneObjCarrier.Carrier[ResultMioneObjCarrier.CarrierLen - 1].ObjType = 0;
+                MioneObjCarrierPtr->Carrier[MioneObjCarrierPtr->CarrierLen - 1].ObjType = 0;
 
                 Paired = 1;
 
                 break;
             }
-        case CASE_NORMAL: //一般，該藍處裡 Head
+        case CASE_NORMAL: //一般，該藍處裡 Head 與其他VALUE關鍵字
             {
+                for (
+                  unsigned int keywordDetectIndex = 0;
+                  keywordDetectIndex < (unsigned)(sizeof(NormalKeyword)/sizeof(char*));
+                  keywordDetectIndex++
+                  )
+                    if (strcmp(ThisCase.ObjName, NormalKeyword[keywordDetectIndex])==0)
+                    {
+
+                        MioneObjCarrierPtr->CarrierLen++;
+                        MioneObjCarrierPtr->Carrier = realloc(
+                            MioneObjCarrierPtr->Carrier,
+                            MioneObjCarrierPtr->CarrierLen * sizeof(MioneObj)
+                        );
+
+                        Paired = 1;
+
+                        switch (keywordDetectIndex)
+                        {
+                        case 0: //function
+                            {
+                                if (!NumberOfPack)
+                                {
+                                    MioneObjCarrierPtr = &AreaMioneObjCarrier;
+                                    PackBy = VALUE_FUNCTION_TYPE;
+                                }
+                                NumberOfPack++;
+
+                                break;
+                            }
+
+                        case 1: //range
+                            {
+                                if (!NumberOfPack)
+                                {
+                                    MioneObjCarrierPtr = &AreaMioneObjCarrier;
+                                    PackBy = VALUE_RANGE_TYPE;
+                                }
+                                NumberOfPack++;
+
+                                break;
+                            }
+                        case 2: //end
+                            {
+                                NumberOfPack--;
+                                if (!NumberOfPack)
+                                {
+                                    if (PackBy == VALUE_FUNCTION_TYPE || PackBy == VALUE_RANGE_TYPE)
+                                    {
+                                        MioneObjCarrierPtr = &ResultMioneObjCarrier;
+
+                                        TrainObjCarrier * TrainObjCarrierPtr = malloc(sizeof(TrainObjCarrier));
+
+                                        const EventObj ToMioneReturn = ToMione(AreaMioneObjCarrier);
+
+                                        if (ToMioneReturn.ToState & EVENT_ERROR)
+                                            exit(-1);
+
+                                        *TrainObjCarrierPtr = ToMioneReturn.TrainCarrier;
+
+                                        MioneObjCarrierPtr->Carrier[MioneObjCarrierPtr->CarrierLen - 1] = (MioneObj){
+                                            .ObjType = VALUE,
+                                            .MioneObjectPosition = ThisCase.CasePosition,
+                                            .Value = (ValueObj){
+                                                .ValueType = PackBy,
+                                                .Area = (AreaObj){
+                                                    .TrainObjCarrierPointer = TrainObjCarrierPtr
+                                                }
+                                            }
+                                        };
+
+                                        PackBy = 0;
+                                    }else
+                                        exit(-5);
+
+                                }if (NumberOfPack < 0)
+                                    exit(-2);
+
+                                break;
+                            }
+
+                        default:
+                            exit(-1);
+                        }
+
+                        break;
+                    }
+
+                if (Paired) break;
+
 
                 for (
                     unsigned int HeadDetectIndex = 0;
@@ -88,12 +194,12 @@ EventObj CMO(
                 {
                     if (strcmp(ThisCase.ObjName, Heads[HeadDetectIndex].Name) == 0)
                     {
-                        ResultMioneObjCarrier.CarrierLen++;
-                        ResultMioneObjCarrier.Carrier = realloc(
-                            ResultMioneObjCarrier.Carrier,
-                            ResultMioneObjCarrier.CarrierLen * sizeof(MioneObj)
+                        MioneObjCarrierPtr->CarrierLen++;
+                        MioneObjCarrierPtr->Carrier = realloc(
+                            MioneObjCarrierPtr->Carrier,
+                            MioneObjCarrierPtr->CarrierLen * sizeof(MioneObj)
                         );
-                        ResultMioneObjCarrier.Carrier[ResultMioneObjCarrier.CarrierLen - 1] = (MioneObj){
+                        MioneObjCarrierPtr->Carrier[MioneObjCarrierPtr->CarrierLen - 1] = (MioneObj){
                             .ObjType = HEAD,
                             .MioneObjectPosition = ThisCase.CasePosition,
                             .Head = Heads[HeadDetectIndex]
@@ -106,10 +212,90 @@ EventObj CMO(
                     }
                 }
 
+                if (Paired) break;
+
             }
-        case CASE_CONNECTABLE: //搭配著尚未分配的Normal Case。該藍處理Prompt 及 Symbol
+        case CASE_CONNECTABLE: //搭配著尚未分配的Normal Case。該藍處理Prompt 及 Symbol 與部分VALUE
         case CASE_UNCONNECTABLE:
             {
+                  for (
+                  unsigned int keywordDetectIndex = 0;
+                  keywordDetectIndex < (unsigned)(sizeof(UnconnectableKeyword)/sizeof(char*));
+                  keywordDetectIndex++
+                  )
+                    if (strcmp(ThisCase.ObjName, UnconnectableKeyword[keywordDetectIndex])==0)
+                    {
+                        MioneObjCarrierPtr->CarrierLen++;
+                        MioneObjCarrierPtr->Carrier = realloc(
+                            MioneObjCarrierPtr->Carrier,
+                            MioneObjCarrierPtr->CarrierLen * sizeof(MioneObj)
+                        );
+
+                        Paired = 1;
+
+                        switch (keywordDetectIndex)
+                        {
+                        case 0: // {
+                            {
+                                if (!NumberOfPack)
+                                {
+                                    MioneObjCarrierPtr = &AreaMioneObjCarrier;
+                                    PackBy = VALUE_TABLE_TYPE;
+                                }
+                                NumberOfPack++;
+
+                                break;
+                            }
+
+                        case 1: // }
+                            {
+                                NumberOfPack--;
+                                if (!NumberOfPack)
+                                {
+                                    if (PackBy == VALUE_TABLE_TYPE)
+                                    {
+                                        MioneObjCarrierPtr = &ResultMioneObjCarrier;
+
+                                        TrainObjCarrier * TrainObjCarrierPtr = malloc(sizeof(TrainObjCarrier));
+
+                                        const EventObj ToMioneReturn = ToMione(AreaMioneObjCarrier);
+
+                                        if (ToMioneReturn.ToState & EVENT_ERROR)
+                                            exit(-1);
+
+                                        *TrainObjCarrierPtr = ToMioneReturn.TrainCarrier;
+
+                                        MioneObjCarrierPtr->Carrier[MioneObjCarrierPtr->CarrierLen - 1] = (MioneObj){
+                                            .ObjType = VALUE,
+                                            .MioneObjectPosition = ThisCase.CasePosition,
+                                            .Value = (ValueObj){
+                                                .ValueType = PackBy,
+                                                .Table = (TableObj){
+                                                    .TrainObjCarrierPointer = TrainObjCarrierPtr
+                                                }
+                                            }
+                                        };
+
+                                        PackBy = 0;
+                                    }
+                                    else
+                                        exit(-3);
+
+                                }
+
+                                break;
+                            }
+
+                        default:
+                            exit(-1);
+                        }
+
+                        break;
+                    }
+
+                if (Paired) break;
+
+
                 for (
                     unsigned int PromptDetectIndex = 0;
                     Prompts[PromptDetectIndex].Identification;
@@ -118,12 +304,12 @@ EventObj CMO(
                 {
                     if (strcmp(ThisCase.ObjName, Prompts[PromptDetectIndex].Name) == 0)
                     {
-                        ResultMioneObjCarrier.CarrierLen++;
-                        ResultMioneObjCarrier.Carrier = realloc(
-                            ResultMioneObjCarrier.Carrier,
-                            ResultMioneObjCarrier.CarrierLen * sizeof(MioneObj)
+                        MioneObjCarrierPtr->CarrierLen++;
+                        MioneObjCarrierPtr->Carrier = realloc(
+                            MioneObjCarrierPtr->Carrier,
+                            MioneObjCarrierPtr->CarrierLen * sizeof(MioneObj)
                         );
-                        ResultMioneObjCarrier.Carrier[ResultMioneObjCarrier.CarrierLen - 1] = (MioneObj){
+                        MioneObjCarrierPtr->Carrier[MioneObjCarrierPtr->CarrierLen - 1] = (MioneObj){
                             .ObjType = PROMPT,
                             .MioneObjectPosition = ThisCase.CasePosition,
                             .Prompt = Prompts[PromptDetectIndex]
@@ -145,12 +331,12 @@ EventObj CMO(
                 {
                     if (strcmp(ThisCase.ObjName, Symbols[SymbolDetectIndex].Name) == 0)
                     {
-                        ResultMioneObjCarrier.CarrierLen++;
-                        ResultMioneObjCarrier.Carrier = realloc(
-                            ResultMioneObjCarrier.Carrier,
-                            ResultMioneObjCarrier.CarrierLen * sizeof(MioneObj)
+                        MioneObjCarrierPtr->CarrierLen++;
+                        MioneObjCarrierPtr->Carrier = realloc(
+                            MioneObjCarrierPtr->Carrier,
+                            MioneObjCarrierPtr->CarrierLen * sizeof(MioneObj)
                         );
-                        ResultMioneObjCarrier.Carrier[ResultMioneObjCarrier.CarrierLen - 1] = (MioneObj){
+                        MioneObjCarrierPtr->Carrier[MioneObjCarrierPtr->CarrierLen - 1] = (MioneObj){
                             .ObjType = SYMBOL,
                             .MioneObjectPosition = ThisCase.CasePosition,
                             .Symbol = Symbols[SymbolDetectIndex]
@@ -218,12 +404,12 @@ EventObj CMO(
 
                         printf("[VARIABLE `%s`]\n    Scope Pointer:%p;\n    VARIABLE Pointer:%p;\n",ThisCase.ObjName,PointerOfScopeVariablePtr,*PointerOfScopeVariablePtr);
 
-                        ResultMioneObjCarrier.CarrierLen++;
-                        ResultMioneObjCarrier.Carrier = realloc(
-                            ResultMioneObjCarrier.Carrier,
-                            ResultMioneObjCarrier.CarrierLen * sizeof(MioneObj)
+                        MioneObjCarrierPtr->CarrierLen++;
+                        MioneObjCarrierPtr->Carrier = realloc(
+                            MioneObjCarrierPtr->Carrier,
+                            MioneObjCarrierPtr->CarrierLen * sizeof(MioneObj)
                         );
-                        ResultMioneObjCarrier.Carrier[ResultMioneObjCarrier.CarrierLen - 1] = (MioneObj){
+                        MioneObjCarrierPtr->Carrier[MioneObjCarrierPtr->CarrierLen - 1] = (MioneObj){
                             .ObjType = VARIABLE,
                             .PointerOfScopeVariablePtr = PointerOfScopeVariablePtr,
                             .MioneObjectPosition = ThisCase.CasePosition,
@@ -244,7 +430,7 @@ EventObj CMO(
                             .ErrorPosition = ThisCase.CasePosition
                         };
 
-                        result.MioneCarrier = ResultMioneObjCarrier;
+                        result.MioneCarrier = (*MioneObjCarrierPtr);
 
                         return result;
                     }
@@ -252,12 +438,12 @@ EventObj CMO(
                 case CASE_DOUBLE_STRING: //配對成 Value 的String
                 case CASE_SINGLE_STRING:
                     {
-                        ResultMioneObjCarrier.CarrierLen++;
-                        ResultMioneObjCarrier.Carrier = realloc(
-                            ResultMioneObjCarrier.Carrier,
-                            ResultMioneObjCarrier.CarrierLen * sizeof(MioneObj)
+                        MioneObjCarrierPtr->CarrierLen++;
+                        MioneObjCarrierPtr->Carrier = realloc(
+                            MioneObjCarrierPtr->Carrier,
+                            MioneObjCarrierPtr->CarrierLen * sizeof(MioneObj)
                         );
-                        ResultMioneObjCarrier.Carrier[ResultMioneObjCarrier.CarrierLen - 1] = (MioneObj){
+                        MioneObjCarrierPtr->Carrier[MioneObjCarrierPtr->CarrierLen - 1] = (MioneObj){
                             .ObjType = VALUE,
                             .Value = (ValueObj){
                                 .String = ThisCase.ObjName,
@@ -272,13 +458,13 @@ EventObj CMO(
                     }
                 case CASE_DECNUMBER:
                     {
-                        ResultMioneObjCarrier.CarrierLen++;
-                        ResultMioneObjCarrier.Carrier = realloc(
-                            ResultMioneObjCarrier.Carrier,
-                            ResultMioneObjCarrier.CarrierLen * sizeof(MioneObj)
+                        MioneObjCarrierPtr->CarrierLen++;
+                        MioneObjCarrierPtr->Carrier = realloc(
+                            MioneObjCarrierPtr->Carrier,
+                            MioneObjCarrierPtr->CarrierLen * sizeof(MioneObj)
                         );
 
-                        ResultMioneObjCarrier.Carrier[ResultMioneObjCarrier.CarrierLen - 1] = (MioneObj){
+                        MioneObjCarrierPtr->Carrier[MioneObjCarrierPtr->CarrierLen - 1] = (MioneObj){
                             .ObjType = VALUE,
                             .Value = (ValueObj){
                                 .ValueType = VALUE_NUMBER_TYPE,
@@ -293,16 +479,16 @@ EventObj CMO(
                     {
                         double Number = 0;
 
-                        ResultMioneObjCarrier.CarrierLen++;
-                        ResultMioneObjCarrier.Carrier = realloc(
-                            ResultMioneObjCarrier.Carrier,
-                            ResultMioneObjCarrier.CarrierLen * sizeof(MioneObj)
+                        MioneObjCarrierPtr->CarrierLen++;
+                        MioneObjCarrierPtr->Carrier = realloc(
+                            MioneObjCarrierPtr->Carrier,
+                            MioneObjCarrierPtr->CarrierLen * sizeof(MioneObj)
                         );
 
                         for (unsigned i = 0; i < strlen(ThisCase.ObjName); i++)
                             Number += (ThisCase.ObjName[i] != '0') * 1<<(strlen(ThisCase.ObjName) - i - 1);
 
-                        ResultMioneObjCarrier.Carrier[ResultMioneObjCarrier.CarrierLen - 1] = (MioneObj){
+                        MioneObjCarrierPtr->Carrier[MioneObjCarrierPtr->CarrierLen - 1] = (MioneObj){
                             .ObjType = VALUE,
                             .Value = (ValueObj){
                                 .ValueType = VALUE_NUMBER_TYPE,
@@ -316,10 +502,10 @@ EventObj CMO(
                 case CASE_HEXNUMBER:{
                         double Number = 0;
 
-                        ResultMioneObjCarrier.CarrierLen++;
-                        ResultMioneObjCarrier.Carrier = realloc(
-                            ResultMioneObjCarrier.Carrier,
-                            ResultMioneObjCarrier.CarrierLen * sizeof(MioneObj)
+                        MioneObjCarrierPtr->CarrierLen++;
+                        MioneObjCarrierPtr->Carrier = realloc(
+                            MioneObjCarrierPtr->Carrier,
+                            MioneObjCarrierPtr->CarrierLen * sizeof(MioneObj)
                         );
 
                         for (unsigned i = 0; i < strlen(ThisCase.ObjName); i++)
@@ -337,7 +523,7 @@ EventObj CMO(
 
                         }
 
-                        ResultMioneObjCarrier.Carrier[ResultMioneObjCarrier.CarrierLen - 1] = (MioneObj){
+                        MioneObjCarrierPtr->Carrier[MioneObjCarrierPtr->CarrierLen - 1] = (MioneObj){
                             .ObjType = VALUE,
                             .Value = (ValueObj){
                                 .ValueType = VALUE_NUMBER_TYPE,
@@ -354,6 +540,9 @@ EventObj CMO(
             };
         }
     }
+
+    if (NumberOfPack)
+        exit(-2);
 
     result.ToState |= EVENT_CMO_RETURN;
     result.MioneCarrier = ResultMioneObjCarrier;

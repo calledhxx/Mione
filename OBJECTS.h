@@ -120,7 +120,7 @@ typedef struct _TableObject
 
 typedef struct _ValueObject
 {
-    int ValueType; //值類型
+    unsigned ValueType; //值類型
     struct _AreaObject Area; //給於函數(function),開關(lights)或者執行式(range)。
     char * String; //給予文字(string)。
     double Number; //給予數字。
