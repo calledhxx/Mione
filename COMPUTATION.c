@@ -4,7 +4,7 @@
 
 #include "STDMIO.h"
 
-#define _mix(a,b) a>b ? b : a
+#define _max(a,b) a<b ? b : a
 
 MioneObjCarrier COMPUTATION(MioneObjCarrier input)
 {
@@ -26,7 +26,6 @@ MioneObjCarrier COMPUTATION(MioneObjCarrier input)
     for (int CountIndex = 0;CountIndex < CountLoop;CountIndex++) //Count Layers
     for(int i = 0; i < PackSize; i++)
     {
-        unsigned PastCost = 0; //計算符號所扣除之項目 如 1 + 1 (大小3) 將輸出 2 (大小1) 即PastCost = 2;
 
         switch (Pack[i].ObjType)
         {
@@ -52,6 +51,7 @@ MioneObjCarrier COMPUTATION(MioneObjCarrier input)
                     }
                     BracketsChild++;
 
+                    break;
                 }
                 case 11:{
                     BracketsChild--;
@@ -194,8 +194,9 @@ MioneObjCarrier COMPUTATION(MioneObjCarrier input)
                         inBracket = realloc(inBracket, sizeof(MioneObj) * (inBracketSize));
                         inBracket[inBracketSize - 1] = Pack[i];
                     }
+
+                    break;
                 }
-                break;
                 case 12:
                     {
                         if (!BracketsChild)
@@ -362,8 +363,8 @@ MioneObjCarrier COMPUTATION(MioneObjCarrier input)
 
                         if (!FunctionCalled)
                         {
-                            MioneObj* NewPack = malloc(0);
                             int NewPackSize = 0;
+                            MioneObj* NewPack = NULL;
 
                             for (int index = 0; index < FirstBracketIndex; index++)
                             {
@@ -406,26 +407,53 @@ MioneObjCarrier COMPUTATION(MioneObjCarrier input)
                 }
                 default:
                     {
+
                         if(!BracketsChild)
                         {
+
+                            signed FrontIndex = 0;
+                            signed BackIndex = 0;
+
+                            MioneObjCarrier Output = {0};
+
                             switch (Pack[i].Symbol.Identification)
                             {
                             case 1:
                                 {
-                                    if (CountIndex < 3)
+                                    if (CountIndex < 2)
                                     {
-                                        CountLoop = _mix(CountIndex,3);
+                                        CountLoop = _max(CountIndex,3);
                                         continue;
                                     }
 
-                                    if (!PackSize>i)
-                                        exit(0xFF09);
 
-                                    if (i)
-                                        exit(0xFF09);
+                                    if (!(i - 1 >= 0 && i - 1 <= PackSize - 1))
+                                        exit(2);
+
+                                    if (!(i + 1 >= 0 && i + 1 <= PackSize - 1))
+                                        exit(3);
 
                                     ValueObj Value1 = Pack[i-1].ObjType == VALUE ? Pack[i-1].Value : (*Pack[i-1].PointerOfScopeVariablePtr)->Value;
-                                    ValueObj Value2 = Pack[i+1].ObjType == VALUE ? Pack[i+1].Value : (*Pack[i+1].PointerOfScopeVariablePtr)->Value;;
+                                    ValueObj Value2 = Pack[i+1].ObjType == VALUE ? Pack[i+1].Value : (*Pack[i+1].PointerOfScopeVariablePtr)->Value;
+
+                                    if (Value1.ValueType != VALUE_NUMBER_TYPE || Value2.ValueType != VALUE_NUMBER_TYPE)
+                                        exit(5);
+
+
+                                    FrontIndex = i - 2;
+                                    BackIndex = i + 2;
+
+                                    Output.CarrierLen = 1;
+                                    Output.Carrier = malloc(sizeof(MioneObj));
+                                    *Output.Carrier = (MioneObj){
+                                        .PointerOfScopeVariablePtr = Pack[i].PointerOfScopeVariablePtr,
+                                        .MioneObjectPosition = Pack[i].MioneObjectPosition,
+                                        .ObjType = VALUE,
+                                        .Value = (ValueObj){
+                                            .ValueType = VALUE_NUMBER_TYPE,
+                                            .Number = Value1.Number + Value2.Number
+                                        },
+                                    };
 
                                     break;
                                 }
@@ -435,6 +463,32 @@ MioneObjCarrier COMPUTATION(MioneObjCarrier input)
 
                                 }
                             }
+
+                            unsigned NewPackSize = PackSize - (BackIndex - FrontIndex - 1) + Output.CarrierLen;
+                            MioneObj * NewPack = malloc(NewPackSize * sizeof(MioneObj));
+                            memcpy(
+                                NewPack,
+                                Pack,
+                                sizeof(MioneObj) * (FrontIndex + 1)
+                                );
+                            memcpy(
+                                NewPack + sizeof(MioneObj) * (FrontIndex + 1),
+                                Output.Carrier,
+                                sizeof(MioneObj) * Output.CarrierLen
+                                );
+
+                            if (PackSize >= BackIndex + 1)
+                                memcpy(
+                                    NewPack + sizeof(MioneObj) * (FrontIndex + 1 + Output.CarrierLen),
+                                    Pack + BackIndex + 1,
+                                    sizeof(MioneObj) * PackSize - BackIndex - 1
+                                );
+
+                            free(Pack);
+
+                            Pack = NewPack;
+                            PackSize = NewPackSize;
+
                         }else
                         {
                             inBracketSize++;
@@ -460,7 +514,6 @@ MioneObjCarrier COMPUTATION(MioneObjCarrier input)
                     VariableObjPtrCarrier NewTable;
                     NewTable.Carrier = NULL;
                     NewTable.CarrierLen = 0;
-
 
                     for (int TableChildIndex = 0; TableChildIndex<VarsSize ; TableChildIndex++)
                     {

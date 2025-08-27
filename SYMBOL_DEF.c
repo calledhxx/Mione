@@ -9,7 +9,7 @@ const SymbolObj Symbols[] =
         .Identification = 1,
 
         .SymbolCarry =
-             SC_AfterVariableOrValue ,
+             SC_AfterVariableOrValue | SC_BeforeVariableOrValue ,
 
         //1 + 1
         //(1+1) + 1

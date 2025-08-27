@@ -1,0 +1,1 @@
+extern EventObj RETURN(const HeadCallObj * HeadCallObjectPointer);
