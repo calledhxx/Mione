@@ -161,6 +161,7 @@ typedef struct _MioneObject
     HeadObj Head; //當ObjType為HEAD時，會用到此標題。
 
     CasePositionObj MioneObjectPosition;
+    struct _ScopeObject * PointerOfScope; //此物件所屬的作用域
 } MioneObj;
 
 typedef struct _MioneObjectsCarrier

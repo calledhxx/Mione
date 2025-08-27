@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+
 #include "STDMIO.h"
 
 #define _mix(a,b) a>b ? b : a
@@ -114,33 +115,46 @@ MioneObjCarrier COMPUTATION(MioneObjCarrier input)
 
                             }else
                             {
-                                // extern VariableObj * ReturnVariablePtrIfAlreadyExistedInScope();
-                                //
-                                // switch (ChildCount.Carrier[0].ValueType)
-                                // {
-                                //     //todo
-                                //
-                                // case VALUE_STRING_TYPE:
-                                //     {
-                                //         VariableObj * VarUP = ReturnVariablePtrIfAlreadyExistedInScope(Pack[0].ScopeUP,ChildCount.Value[0].String,0);
-                                //
-                                //         if (VarUP) TheValue = VarUP->Val; else TheValue = (ValueObj){0};
-                                //
-                                //         break;
-                                //     }
-                                // case VALUE_NUMBER_TYPE:
-                                //     {
-                                //         VariableObj * VarUP = ReturnVariablePtrIfAlreadyExistedInScope(Pack[0].ScopeUP,NULL,ChildCount.Value[0].NPNumber);
-                                //
-                                //         if (VarUP) TheValue = VarUP->Val; else TheValue = (ValueObj){0};
-                                //
-                                //         break;
-                                //     }
-                                // default:
-                                //         exit(1);
-                                // }
-                                //
-                                //
+                                switch (ChildCount.Carrier[0].ValueType)
+                                {
+
+                                case VALUE_STRING_TYPE:
+                                    {
+                                        int inParentScope = 0;
+
+                                        VariableObj ** PtrOfVariablePtr = ReturnPointerOfVariablePtrIfAlreadyExistedInScope(
+                                            *Pack[0].PointerOfScope,
+                                            ChildCount.Carrier[0].String,
+                                            0,
+                                            &inParentScope
+                                            );
+
+                                        if (PtrOfVariablePtr)
+                                            TheValue = (*PtrOfVariablePtr)->Value;
+
+                                        break;
+                                    }
+                                case VALUE_NUMBER_TYPE:
+                                    {
+                                        int inParentScope = 0;
+
+                                        VariableObj ** PtrOfVariablePtr = ReturnPointerOfVariablePtrIfAlreadyExistedInScope(
+                                            *Pack[0].PointerOfScope,
+                                            0,
+                                            (int)ChildCount.Carrier[0].Number,
+                                            &inParentScope
+                                            );
+
+
+                                        if (PtrOfVariablePtr)
+                                            TheValue = (*PtrOfVariablePtr)->Value;
+
+                                        break;
+                                    }
+                                default:
+                                        exit(1);
+                                }
+
 
                             }
                         }else exit(1);

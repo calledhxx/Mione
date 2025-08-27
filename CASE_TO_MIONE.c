@@ -13,26 +13,31 @@
 VariableObj * * ReturnPointerOfVariablePtrIfAlreadyExistedInScope(
     const ScopeObj Scope,
     const char * VariableName,
+    const int VariableIndex,
     int * inParentScope
     )
 {
     VariableObj * * result = 0;
 
     for (
-        unsigned int VariableIndex = 0;
-        VariableIndex < Scope.PtrOfVariablePtrCarrier.CarrierLen;
-        VariableIndex++
+        unsigned int Index = 0;
+        Index < Scope.PtrOfVariablePtrCarrier.CarrierLen;
+        Index++
         )
-        if (strcmp((*Scope.PtrOfVariablePtrCarrier.Carrier[VariableIndex])->VariableName,VariableName)==0)
-            result = Scope.PtrOfVariablePtrCarrier.Carrier[VariableIndex];
-
+        if (VariableIndex)
+        {
+            if (strcmp((*Scope.PtrOfVariablePtrCarrier.Carrier[Index])->VariableName,VariableName)==0)
+                result = Scope.PtrOfVariablePtrCarrier.Carrier[Index];
+        }else
+            if ((*Scope.PtrOfVariablePtrCarrier.Carrier[Index])->VariablePlace==VariableIndex)
+                result = Scope.PtrOfVariablePtrCarrier.Carrier[Index];
     if (result)
         return result;
 
     if (Scope.ParentScopePointer)
     {
         *inParentScope = 1;
-        return ReturnPointerOfVariablePtrIfAlreadyExistedInScope(* Scope.ParentScopePointer,VariableName,inParentScope);
+        return ReturnPointerOfVariablePtrIfAlreadyExistedInScope(* Scope.ParentScopePointer,VariableName,VariableIndex,inParentScope);
     }
 
     return NULL;
@@ -160,6 +165,7 @@ EventObj CMO(
 
                                         MioneObjCarrierPtr->Carrier[MioneObjCarrierPtr->CarrierLen - 1] = (MioneObj){
                                             .ObjType = VALUE,
+                                            .PointerOfScope = ScopePointer,
                                             .MioneObjectPosition = ThisCase.CasePosition,
                                             .Value = (ValueObj){
                                                 .ValueType = PackBy,
@@ -204,6 +210,7 @@ EventObj CMO(
                         );
                         MioneObjCarrierPtr->Carrier[MioneObjCarrierPtr->CarrierLen - 1] = (MioneObj){
                             .ObjType = HEAD,
+                            .PointerOfScope = ScopePointer,
                             .MioneObjectPosition = ThisCase.CasePosition,
                             .Head = Heads[HeadDetectIndex]
                         };
@@ -272,6 +279,7 @@ EventObj CMO(
 
                                         MioneObjCarrierPtr->Carrier[MioneObjCarrierPtr->CarrierLen - 1] = (MioneObj){
                                             .ObjType = VALUE,
+                                            .PointerOfScope = ScopePointer,
                                             .MioneObjectPosition = ThisCase.CasePosition,
                                             .Value = (ValueObj){
                                                 .ValueType = PackBy,
@@ -316,6 +324,7 @@ EventObj CMO(
                         );
                         MioneObjCarrierPtr->Carrier[MioneObjCarrierPtr->CarrierLen - 1] = (MioneObj){
                             .ObjType = PROMPT,
+                            .PointerOfScope = ScopePointer,
                             .MioneObjectPosition = ThisCase.CasePosition,
                             .Prompt = Prompts[PromptDetectIndex]
                         };
@@ -343,6 +352,7 @@ EventObj CMO(
                         );
                         MioneObjCarrierPtr->Carrier[MioneObjCarrierPtr->CarrierLen - 1] = (MioneObj){
                             .ObjType = SYMBOL,
+                            .PointerOfScope = ScopePointer,
                             .MioneObjectPosition = ThisCase.CasePosition,
                             .Symbol = Symbols[SymbolDetectIndex]
                         };
@@ -367,6 +377,7 @@ EventObj CMO(
                         VariableObj * * VariablePtr = ReturnPointerOfVariablePtrIfAlreadyExistedInScope(
                             *ScopePointer,
                             ThisCase.ObjName,
+                            0,
                             &inParentScope
                             );
 
@@ -416,6 +427,7 @@ EventObj CMO(
                         );
                         MioneObjCarrierPtr->Carrier[MioneObjCarrierPtr->CarrierLen - 1] = (MioneObj){
                             .ObjType = VARIABLE,
+                            .PointerOfScope = ScopePointer,
                             .PointerOfScopeVariablePtr = PointerOfScopeVariablePtr,
                             .MioneObjectPosition = ThisCase.CasePosition,
                         };
@@ -450,6 +462,7 @@ EventObj CMO(
                         );
                         MioneObjCarrierPtr->Carrier[MioneObjCarrierPtr->CarrierLen - 1] = (MioneObj){
                             .ObjType = VALUE,
+                            .PointerOfScope = ScopePointer,
                             .Value = (ValueObj){
                                 .String = ThisCase.ObjName,
                                 .ValueType = VALUE_STRING_TYPE,
@@ -471,6 +484,7 @@ EventObj CMO(
 
                         MioneObjCarrierPtr->Carrier[MioneObjCarrierPtr->CarrierLen - 1] = (MioneObj){
                             .ObjType = VALUE,
+                            .PointerOfScope = ScopePointer,
                             .Value = (ValueObj){
                                 .ValueType = VALUE_NUMBER_TYPE,
                                 .Number = (double)atoi(ThisCase.ObjName)
@@ -495,6 +509,7 @@ EventObj CMO(
 
                         MioneObjCarrierPtr->Carrier[MioneObjCarrierPtr->CarrierLen - 1] = (MioneObj){
                             .ObjType = VALUE,
+                            .PointerOfScope = ScopePointer,
                             .Value = (ValueObj){
                                 .ValueType = VALUE_NUMBER_TYPE,
                                 .Number = Number
@@ -530,6 +545,7 @@ EventObj CMO(
 
                         MioneObjCarrierPtr->Carrier[MioneObjCarrierPtr->CarrierLen - 1] = (MioneObj){
                             .ObjType = VALUE,
+                            .PointerOfScope = ScopePointer,
                             .Value = (ValueObj){
                                 .ValueType = VALUE_NUMBER_TYPE,
                                 .Number = Number
