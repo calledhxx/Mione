@@ -21,4 +21,7 @@ add_executable(Mione
         COMPUTATION.h
         COMPUTATION.c
         STDMIO.h
+        VARIABLE_PROCESSING.c
+        VARIABLE_PROCESSING.h
+        HeadFile/RETURN.c
 )

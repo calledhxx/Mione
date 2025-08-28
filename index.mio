@@ -1,6 +1,9 @@
-set a = function
+set a = 5;
+set fuc = function
     a
+    set a = 10;
     a
     return 0;
-end
-a
+end;
+
+fuc();

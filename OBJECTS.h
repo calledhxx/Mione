@@ -143,6 +143,24 @@ typedef struct _VariableObject
     ValueObj Value; //值
 } VariableObj;
 
+typedef struct _VariableLinkObject
+{
+    struct _VariableLinkObject * PointToAnotherLink;
+    VariableObj * VariablePtr;
+} VariableLinkObj;
+
+typedef struct _VariableLinkObjectCarrier
+{
+    VariableLinkObj * Carrier;
+    unsigned int CarrierLen;
+} VariableLinkObjCarrier;
+
+typedef struct _VariableLinkPointersObjectCarrier
+{
+    VariableLinkObj * * Carrier;
+    unsigned int CarrierLen;
+} VariableLinkPtrObjCarrier;
+
 typedef struct _VariableObjectsCarrier
 {
     VariableObj * Carrier;
@@ -153,7 +171,7 @@ typedef struct _MioneObject
 {
     unsigned ObjType; //HPSVV 1H 2P 3S 4VAR 5VAL
 
-    VariableObj ** PointerOfScopeVariablePtr; //當ObjType為VAR時，會用到此變數。
+    VariableLinkObj * VariableLinkPtr; //當ObjType為VAR時，會用到此變數。
     ValueObj Value;  //當ObjType為VALUE宏時，會用到此值。
 
     SymbolObj Symbol; //當ObjType為SYMBOL時，會用到此符號。
@@ -275,7 +293,7 @@ typedef struct _ToImplementObject
 
 typedef struct _ScopeObject
 {
-    PtrVariableObjPtrCarrier PtrOfVariablePtrCarrier;
+    VariableLinkPtrObjCarrier VariableLinkPtrCarrier;
 
     struct _ScopeObject * ParentScopePointer;
     struct _ScopeObjectPointerCarrier * ChildrenScopePtrCarrierPointer;

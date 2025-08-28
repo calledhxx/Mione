@@ -25,7 +25,7 @@ VariableObjPtrCarrier REQUEST(const MioneObjCarrier input)
         {
             VariablePointerCarrierLen ++;
             VariablePointerCarrier = realloc(VariablePointerCarrier, sizeof(ValueObj) * (VariablePointerCarrierLen));
-            VariablePointerCarrier[VariablePointerCarrierLen-1] = (*Pack[i].PointerOfScopeVariablePtr);
+            VariablePointerCarrier[VariablePointerCarrierLen-1] = ReturnVariablePtrFromLink(*Pack[i].VariableLinkPtr);
         }else if ( Pack[i].ObjType == VALUE)
         {
             printf("exit because VALUE APPEARS%d\n", Pack[i].Value.ValueType);

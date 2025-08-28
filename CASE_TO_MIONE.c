@@ -10,38 +10,7 @@
 #include "STDMIO.h"
 
 
-VariableObj * * ReturnPointerOfVariablePtrIfAlreadyExistedInScope(
-    const ScopeObj Scope,
-    const char * VariableName,
-    const int VariableIndex,
-    int * inParentScope
-    )
-{
-    VariableObj * * result = 0;
 
-    for (
-        unsigned int Index = 0;
-        Index < Scope.PtrOfVariablePtrCarrier.CarrierLen;
-        Index++
-        )
-        if (VariableIndex)
-        {
-            if (strcmp((*Scope.PtrOfVariablePtrCarrier.Carrier[Index])->VariableName,VariableName)==0)
-                result = Scope.PtrOfVariablePtrCarrier.Carrier[Index];
-        }else
-            if ((*Scope.PtrOfVariablePtrCarrier.Carrier[Index])->VariablePlace==VariableIndex)
-                result = Scope.PtrOfVariablePtrCarrier.Carrier[Index];
-    if (result)
-        return result;
-
-    if (Scope.ParentScopePointer)
-    {
-        *inParentScope = 1;
-        return ReturnPointerOfVariablePtrIfAlreadyExistedInScope(* Scope.ParentScopePointer,VariableName,VariableIndex,inParentScope);
-    }
-
-    return NULL;
-}
 
 static const char *NormalKeyword[] = {
     "function",
@@ -132,7 +101,7 @@ EventObj CMO(
                                         ScopePointer->ChildrenScopePtrCarrierPointer->CarrierLen - 1
                                         ] = (ScopeObj){
                                                 .ParentScopePointer = ScopePointer,
-                                                .PtrOfVariablePtrCarrier = (PtrVariableObjPtrCarrier){0},
+                                                .VariableLinkPtrCarrier = (VariableLinkPtrObjCarrier){0},
                                                 .ChildrenScopePtrCarrierPointer = malloc(sizeof(ScopeObjPtrCarrier)),
                                             };
                                     *ScopePointer->ChildrenScopePtrCarrierPointer->Carrier[
@@ -168,7 +137,7 @@ EventObj CMO(
                                         ScopePointer->ChildrenScopePtrCarrierPointer->CarrierLen - 1
                                         ] = (ScopeObj){
                                             .ParentScopePointer = ScopePointer,
-                                            .PtrOfVariablePtrCarrier = (PtrVariableObjPtrCarrier){0},
+                                            .VariableLinkPtrCarrier = (VariableLinkPtrObjCarrier){0},
                                             .ChildrenScopePtrCarrierPointer = malloc(sizeof(ScopeObjPtrCarrier)),
                                         };
                                     *ScopePointer->ChildrenScopePtrCarrierPointer->Carrier[
@@ -421,52 +390,88 @@ EventObj CMO(
                     {
                         int inParentScope = 0;
 
-                        VariableObj * * VariablePtr = ReturnPointerOfVariablePtrIfAlreadyExistedInScope(
+                        VariableLinkObj * VariableLinkPtr = ReturnVariableLinkPtrIfAlreadyExistedInScope(
                             *ScopePointer,
                             ThisCase.ObjName,
                             0,
                             &inParentScope
                             );
 
-                        VariableObj * * PointerOfScopeVariablePtr = NULL;
+                        VariableLinkObj * ToAddOnVariableLinkPtr = 0;
 
-                        if (VariablePtr) //old Variable
+                        if (VariableLinkPtr) //有連結到
                         {
-                            if (inParentScope) //new Variable for this scope
+                            if (inParentScope) //在母層
                             {
-                                ScopePointer->PtrOfVariablePtrCarrier.CarrierLen++;
-                                ScopePointer->PtrOfVariablePtrCarrier.Carrier = realloc(
-                                    ScopePointer->PtrOfVariablePtrCarrier.Carrier,
-                                    sizeof(VariableObj**) * ScopePointer->PtrOfVariablePtrCarrier.CarrierLen
-                                    );
-                                ScopePointer->PtrOfVariablePtrCarrier.Carrier[ScopePointer->PtrOfVariablePtrCarrier.CarrierLen-1] = malloc(sizeof(VariableObj*));
-                                *ScopePointer->PtrOfVariablePtrCarrier.Carrier[ScopePointer->PtrOfVariablePtrCarrier.CarrierLen-1] = *VariablePtr;
-                                PointerOfScopeVariablePtr =
-                                    ScopePointer->PtrOfVariablePtrCarrier.Carrier[ScopePointer->PtrOfVariablePtrCarrier.CarrierLen-1];
-                            }else
-                                PointerOfScopeVariablePtr = VariablePtr;
-                        }
-                        else //new Variable for all
-                        {
-                            ScopePointer->PtrOfVariablePtrCarrier.CarrierLen++;
-                            ScopePointer->PtrOfVariablePtrCarrier.Carrier = realloc(
-                                ScopePointer->PtrOfVariablePtrCarrier.Carrier,
-                                sizeof(VariableObj*) * ScopePointer->PtrOfVariablePtrCarrier.CarrierLen
+                                ScopePointer->VariableLinkPtrCarrier.CarrierLen++;
+                                ScopePointer->VariableLinkPtrCarrier.Carrier = realloc(
+                                    ScopePointer->VariableLinkPtrCarrier.Carrier,
+                                    sizeof(VariableLinkObj*) * ScopePointer->VariableLinkPtrCarrier.CarrierLen
                                 );
-                            ScopePointer->PtrOfVariablePtrCarrier.Carrier[ScopePointer->PtrOfVariablePtrCarrier.CarrierLen-1] = malloc(sizeof(VariableObj*));
-                            *ScopePointer->PtrOfVariablePtrCarrier.Carrier[ScopePointer->PtrOfVariablePtrCarrier.CarrierLen-1] = malloc(sizeof(VariableObj));
-                            **ScopePointer->PtrOfVariablePtrCarrier.Carrier[ScopePointer->PtrOfVariablePtrCarrier.CarrierLen-1] =
-                                (VariableObj){
-                                    .VariableName = ThisCase.ObjName,
-                                    .VariablePlace = 0,
+                                ScopePointer->VariableLinkPtrCarrier.Carrier[
+                                    ScopePointer->VariableLinkPtrCarrier.CarrierLen - 1
+                                    ] = malloc(sizeof(VariableLinkObj));
+
+                                *ScopePointer->VariableLinkPtrCarrier.Carrier[
+                                    ScopePointer->VariableLinkPtrCarrier.CarrierLen - 1
+                                    ] = (VariableLinkObj){
+                                        .PointToAnotherLink = VariableLinkPtr,
+                                        .VariablePtr = 0
+                                    };
+
+                                ToAddOnVariableLinkPtr = ScopePointer->VariableLinkPtrCarrier.Carrier[
+                                ScopePointer->VariableLinkPtrCarrier.CarrierLen - 1
+                                    ];
+
+                            }else //已存在於本層
+                            {
+                                ToAddOnVariableLinkPtr = VariableLinkPtr;
+                            }
+                        }else //無連結 理解為新變數
+                        {
+                            ScopePointer->VariableLinkPtrCarrier.CarrierLen++;
+                            ScopePointer->VariableLinkPtrCarrier.Carrier = realloc(
+                                ScopePointer->VariableLinkPtrCarrier.Carrier,
+                                sizeof(VariableLinkObj*) * ScopePointer->VariableLinkPtrCarrier.CarrierLen
+                            );
+                            ScopePointer->VariableLinkPtrCarrier.Carrier[
+                                ScopePointer->VariableLinkPtrCarrier.CarrierLen - 1
+                                ] = malloc(sizeof(VariableLinkObj));
+
+                            *ScopePointer->VariableLinkPtrCarrier.Carrier[
+                                ScopePointer->VariableLinkPtrCarrier.CarrierLen - 1
+                                ] = (VariableLinkObj){
+                                    .PointToAnotherLink = 0,
+                                    .VariablePtr = malloc(sizeof(VariableObj ))
                                 };
 
-                            PointerOfScopeVariablePtr =
-                                ScopePointer->PtrOfVariablePtrCarrier.Carrier[ScopePointer->PtrOfVariablePtrCarrier.CarrierLen-1];
+                           *ScopePointer->VariableLinkPtrCarrier.Carrier[
+                                ScopePointer->VariableLinkPtrCarrier.CarrierLen - 1
+                               ]->VariablePtr = (VariableObj){
+                                   .VariableName = ThisCase.ObjName,
+                                   .VariablePlace = 0,
+                                   .Value = (ValueObj){0}
+                               };
+
+                            ToAddOnVariableLinkPtr =
+                                ScopePointer->VariableLinkPtrCarrier.Carrier[
+                                    ScopePointer->VariableLinkPtrCarrier.CarrierLen - 1
+                                ];
                         }
 
-
-                        printf("[VARIABLE `%s`]\n    VARIABLE POINTER POSITION:%p;\n    VARIABLE POSITION:%p;\n",ThisCase.ObjName,PointerOfScopeVariablePtr,*PointerOfScopeVariablePtr);
+                        printf("[`%s` VARIABLE]\n"
+                               "    IN PARENT:%d;\n"
+                               "    FOUND LINK:%p;\n"
+                               "    LINK TO LINK:%p;\n"
+                               "    LINK TO VARIABLE:%p;\n"
+                               "    LINK POSITION:%p;\n",
+                            ThisCase.ObjName,
+                            inParentScope,
+                            VariableLinkPtr,
+                            ToAddOnVariableLinkPtr->PointToAnotherLink,
+                            ToAddOnVariableLinkPtr->VariablePtr,
+                            ToAddOnVariableLinkPtr
+                            );
 
                         MioneObjCarrierPtr->CarrierLen++;
                         MioneObjCarrierPtr->Carrier = realloc(
@@ -476,7 +481,7 @@ EventObj CMO(
                         MioneObjCarrierPtr->Carrier[MioneObjCarrierPtr->CarrierLen - 1] = (MioneObj){
                             .ObjType = VARIABLE,
                             .PointerOfScope = ScopePointer,
-                            .PointerOfScopeVariablePtr = PointerOfScopeVariablePtr,
+                            .VariableLinkPtr = ToAddOnVariableLinkPtr,
                             .MioneObjectPosition = ThisCase.CasePosition,
                         };
 

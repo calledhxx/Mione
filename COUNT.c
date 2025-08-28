@@ -31,7 +31,7 @@ ValueObjCarrier COUNT(const MioneObjCarrier input)
         {
             ValueCarrierLen ++;
             ValueCarrier = realloc(ValueCarrier, sizeof(ValueObj) * (ValueCarrierLen));
-            ValueCarrier[ValueCarrierLen-1] = (*Pack[i].PointerOfScopeVariablePtr)->Value;
+            ValueCarrier[ValueCarrierLen-1] = ReturnVariablePtrFromLink(*Pack[i].VariableLinkPtr)->Value;
         }
 
     return (ValueObjCarrier){

@@ -14,3 +14,4 @@
 #include "REQUEST.h"
 
 #include "COMPUTATION.h"
+#include "VARIABLE_PROCESSING.h"

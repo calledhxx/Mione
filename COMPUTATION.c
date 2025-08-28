@@ -26,7 +26,6 @@ MioneObjCarrier COMPUTATION(MioneObjCarrier input)
     for (int CountIndex = 0;CountIndex < CountLoop;CountIndex++) //Count Layers
     for(int i = 0; i < PackSize; i++)
     {
-
         switch (Pack[i].ObjType)
         {
         case SYMBOL:
@@ -75,7 +74,7 @@ MioneObjCarrier COMPUTATION(MioneObjCarrier input)
                                 {
                                     case VARIABLE:
                                         {
-                                            nearByValue = (*Pack[FirstBracketIndex - 1].PointerOfScopeVariablePtr)->Value;
+                                            nearByValue = ReturnVariablePtrFromLink(*Pack[FirstBracketIndex - 1].VariableLinkPtr)->Value;
                                             break;
                                         }
                                     case VALUE:
@@ -122,15 +121,15 @@ MioneObjCarrier COMPUTATION(MioneObjCarrier input)
                                     {
                                         int inParentScope = 0;
 
-                                        VariableObj ** PtrOfVariablePtr = ReturnPointerOfVariablePtrIfAlreadyExistedInScope(
+                                        VariableLinkObj * VariableLinkPtr = ReturnVariableLinkPtrIfAlreadyExistedInScope(
                                             *Pack[0].PointerOfScope,
                                             ChildCount.Carrier[0].String,
                                             0,
                                             &inParentScope
                                             );
 
-                                        if (PtrOfVariablePtr)
-                                            TheValue = (*PtrOfVariablePtr)->Value;
+                                        if (VariableLinkPtr)
+                                            TheValue = ReturnVariablePtrFromLink(*VariableLinkPtr)->Value;
 
                                         break;
                                     }
@@ -138,7 +137,7 @@ MioneObjCarrier COMPUTATION(MioneObjCarrier input)
                                     {
                                         int inParentScope = 0;
 
-                                        VariableObj ** PtrOfVariablePtr = ReturnPointerOfVariablePtrIfAlreadyExistedInScope(
+                                        VariableLinkObj * VariableLinkPtr = ReturnVariableLinkPtrIfAlreadyExistedInScope(
                                             *Pack[0].PointerOfScope,
                                             0,
                                             (int)ChildCount.Carrier[0].Number,
@@ -146,8 +145,8 @@ MioneObjCarrier COMPUTATION(MioneObjCarrier input)
                                             );
 
 
-                                        if (PtrOfVariablePtr)
-                                            TheValue = (*PtrOfVariablePtr)->Value;
+                                        if (VariableLinkPtr)
+                                            TheValue = ReturnVariablePtrFromLink(*VariableLinkPtr)->Value;
 
                                         break;
                                     }
@@ -239,11 +238,11 @@ MioneObjCarrier COMPUTATION(MioneObjCarrier input)
                                 if (Pack[FirstBracketIndex - 1].ObjType == VARIABLE)
                                 {
 
-                                    if ((*Pack[FirstBracketIndex - 1].PointerOfScopeVariablePtr)->Value.ValueType == VALUE_FUNCTION_TYPE)
+                                    if (ReturnVariablePtrFromLink(*Pack[FirstBracketIndex - 1].VariableLinkPtr)->Value.ValueType == VALUE_FUNCTION_TYPE)
                                     {
 
                                         EventObj IMPLEMENTReturn =  IMPLEMENT((ToImplementObj){
-                                            .Built =  *(*Pack[FirstBracketIndex - 1].PointerOfScopeVariablePtr)->Value.Area.TrainObjCarrierPointer,
+                                            .Built =  *ReturnVariablePtrFromLink(*Pack[FirstBracketIndex - 1].VariableLinkPtr)->Value.Area.TrainObjCarrierPointer,
                                             .CallByValueCarrier = ChildCount
                                         });
 
@@ -433,8 +432,8 @@ MioneObjCarrier COMPUTATION(MioneObjCarrier input)
                                     if (!(i + 1 >= 0 && i + 1 <= PackSize - 1))
                                         exit(3);
 
-                                    ValueObj Value1 = Pack[i-1].ObjType == VALUE ? Pack[i-1].Value : (*Pack[i-1].PointerOfScopeVariablePtr)->Value;
-                                    ValueObj Value2 = Pack[i+1].ObjType == VALUE ? Pack[i+1].Value : (*Pack[i+1].PointerOfScopeVariablePtr)->Value;
+                                    ValueObj Value1 = Pack[i-1].ObjType == VALUE ? Pack[i-1].Value : ReturnVariablePtrFromLink(*Pack[i-1].VariableLinkPtr)->Value;
+                                    ValueObj Value2 = Pack[i+1].ObjType == VALUE ? Pack[i+1].Value : ReturnVariablePtrFromLink(*Pack[i+1].VariableLinkPtr)->Value;
 
                                     if (Value1.ValueType != VALUE_NUMBER_TYPE || Value2.ValueType != VALUE_NUMBER_TYPE)
                                         exit(5);
@@ -446,7 +445,7 @@ MioneObjCarrier COMPUTATION(MioneObjCarrier input)
                                     Output.CarrierLen = 1;
                                     Output.Carrier = malloc(sizeof(MioneObj));
                                     *Output.Carrier = (MioneObj){
-                                        .PointerOfScopeVariablePtr = Pack[i].PointerOfScopeVariablePtr,
+                                        .VariableLinkPtr = Pack[i].VariableLinkPtr,
                                         .MioneObjectPosition = Pack[i].MioneObjectPosition,
                                         .ObjType = VALUE,
                                         .Value = (ValueObj){
