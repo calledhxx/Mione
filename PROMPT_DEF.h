@@ -1,10 +1,5 @@
-//
-// Created by calle on 25-1-18.
-//
+enum{
+    PROMPT_SET = 1,
+};
 
-#include "OBJECTS.h"
-
-#define PROMPT_SET 1
-
-
-extern PromptObj Prompts[];
+extern PromptObjCarrier ReturnPromptList();

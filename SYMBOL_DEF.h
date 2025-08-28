@@ -1,2 +1,2 @@
 
-extern SymbolObj Symbols[];
+extern SymbolObjCarrier ReturnSymbolList();

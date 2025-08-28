@@ -83,12 +83,23 @@ typedef struct _HeadObject
     struct _EventObject (*Fuc)(struct _HeadCallObject *);
 }HeadObj;
 
+typedef struct _HeadObjectCarrier
+{
+    HeadObj * Carrier;
+    unsigned CarrierLen;
+} HeadObjCarrier;
 
 typedef struct _PromptObject
 {
     char * Name;
     unsigned Identification; //識別符號
 }PromptObj;
+
+typedef struct _PromptObjectCarrier
+{
+    PromptObj * Carrier;
+    unsigned CarrierLen;
+} PromptObjCarrier;
 
 enum{
     SC_BeforeSymbol = 1,
@@ -106,6 +117,12 @@ typedef struct _SymbolObject
     unsigned SymbolCarry;
 }SymbolObj;
 
+typedef struct _SymbolObjectCarrier
+{
+    SymbolObj * Carrier;
+    unsigned CarrierLen;
+} SymbolObjCarrier;
+
 typedef struct _AreaObject
 {
     struct _TrainObjectsCarrier * TrainObjCarrierPointer;
@@ -115,7 +132,7 @@ typedef struct _TableObject
 {
     struct _TrainObjectsCarrier * TrainObjCarrierPointer;
 
-    struct _VariableObjectPointersCarrier * VariableObjPointerCarrierPointer;
+    struct _VariableObjectsCarrier * VariableObjCarrierPointer;
 }TableObj;
 
 typedef struct _ValueObject

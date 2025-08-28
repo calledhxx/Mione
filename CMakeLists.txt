@@ -24,4 +24,8 @@ add_executable(Mione
         VARIABLE_PROCESSING.c
         VARIABLE_PROCESSING.h
         HeadFile/RETURN.c
+        HeadFile/GET.h
+        HeadFile/GET.c
+        HeadFile/LIBRARY.h
+        HeadFile/LIBRARY.c
 )

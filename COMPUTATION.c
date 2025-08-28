@@ -87,21 +87,21 @@ MioneObjCarrier COMPUTATION(MioneObjCarrier input)
 
                                 if (nearByValue.ValueType == VALUE_TABLE_TYPE)
                                 {
-                                    for (int index = 0 ;index<nearByValue.Table.VariableObjPointerCarrierPointer->CarrierLen;index++)
+                                    for (int index = 0 ;index<nearByValue.Table.VariableObjCarrierPointer->CarrierLen;index++)
                                     {
                                         switch (ChildCount.Carrier[0].ValueType)
                                         {
                                         case VALUE_STRING_TYPE:
                                             {
 
-                                                if (strcmp(nearByValue.Table.VariableObjPointerCarrierPointer->Carrier[index]->VariableName,ChildCount.Carrier[0].String) == 0 )
-                                                    TheValue = nearByValue.Table.VariableObjPointerCarrierPointer->Carrier[index]->Value;
+                                                if (strcmp(nearByValue.Table.VariableObjCarrierPointer->Carrier[index].VariableName,ChildCount.Carrier[0].String) == 0 )
+                                                    TheValue = nearByValue.Table.VariableObjCarrierPointer->Carrier[index].Value;
                                                 break;
                                             }
                                         case VALUE_NUMBER_TYPE:
                                             {
-                                                if (nearByValue.Table.VariableObjPointerCarrierPointer->Carrier[index]->VariablePlace == (unsigned)ChildCount.Carrier[0].Number)
-                                                    TheValue = nearByValue.Table.VariableObjPointerCarrierPointer->Carrier[index]->Value;
+                                                if (nearByValue.Table.VariableObjCarrierPointer->Carrier[index].VariablePlace == (unsigned)ChildCount.Carrier[0].Number)
+                                                    TheValue = nearByValue.Table.VariableObjCarrierPointer->Carrier[index].Value;
                                                 break;
                                             }
                                         default:
@@ -251,6 +251,8 @@ MioneObjCarrier COMPUTATION(MioneObjCarrier input)
 
                                         ValueObjCarrier V = IMPLEMENTReturn.ReturnValues;
 
+                                        if (!V.CarrierLen)
+                                            exit(-6);
 
                                         MioneObj* NewPack = malloc(0);
                                         int NewPackSize = 0;
@@ -312,6 +314,9 @@ MioneObjCarrier COMPUTATION(MioneObjCarrier input)
 
 
                                         ValueObjCarrier V = IMPLEMENTReturn.ReturnValues;
+
+                                        if (!V.CarrierLen)
+                                            exit(-6);
 
                                         MioneObj* NewPack = malloc(0);
                                         int NewPackSize = 0;
@@ -501,7 +506,7 @@ MioneObjCarrier COMPUTATION(MioneObjCarrier input)
         default:{
             if (!BracketsChild)
             {
-                if (Pack[i].ObjType == VALUE && Pack[i].Value.ValueType == VALUE_TABLE_TYPE && !Pack[i].Value.Table.VariableObjPointerCarrierPointer)
+                if (Pack[i].ObjType == VALUE && Pack[i].Value.ValueType == VALUE_TABLE_TYPE && !Pack[i].Value.Table.VariableObjCarrierPointer)
                 {
                     EventObj IMPLEMENTReturn = IMPLEMENT((ToImplementObj){
                         .Built = *Pack[i].Value.Table.TrainObjCarrierPointer
@@ -510,7 +515,7 @@ MioneObjCarrier COMPUTATION(MioneObjCarrier input)
                     unsigned VarsSize = IMPLEMENTReturn.MajorVariables.CarrierLen;
                     VariableObj * Vars = IMPLEMENTReturn.MajorVariables.Carrier;
 
-                    VariableObjPtrCarrier NewTable;
+                    VariableObjCarrier NewTable;
                     NewTable.Carrier = NULL;
                     NewTable.CarrierLen = 0;
 
@@ -518,15 +523,15 @@ MioneObjCarrier COMPUTATION(MioneObjCarrier input)
                     {
                         NewTable.CarrierLen++;
                         NewTable.Carrier = realloc ( NewTable.Carrier, NewTable.CarrierLen*sizeof(VariableObj *));
-                        NewTable.Carrier[NewTable.CarrierLen-1] = &Vars[TableChildIndex];
+                        NewTable.Carrier[NewTable.CarrierLen-1] = Vars[TableChildIndex];
 
                         if (Vars[TableChildIndex].VariablePlace)
                         {
                             for (int CTCIndex = 0; CTCIndex<NewTable.CarrierLen ; CTCIndex++)
                             {
-                                if (NewTable.Carrier[CTCIndex]->VariablePlace > NewTable.Carrier[NewTable.CarrierLen-1]->VariablePlace && NewTable.Carrier[CTCIndex]->VariablePlace )
+                                if (NewTable.Carrier[CTCIndex].VariablePlace > NewTable.Carrier[NewTable.CarrierLen-1].VariablePlace && NewTable.Carrier[CTCIndex].VariablePlace )
                                 {
-                                    VariableObj * Butter = NewTable.Carrier[CTCIndex];
+                                    VariableObj Butter = NewTable.Carrier[CTCIndex];
                                     NewTable.Carrier[CTCIndex] = NewTable.Carrier[NewTable.CarrierLen-1];
                                     NewTable.Carrier[NewTable.CarrierLen-1] = Butter;
                                 }
@@ -534,9 +539,9 @@ MioneObjCarrier COMPUTATION(MioneObjCarrier input)
                         }
                     }
 
-                    Pack[i].Value.Table.VariableObjPointerCarrierPointer = malloc(sizeof(struct _VariablesObject *));
-
-                    *Pack[i].Value.Table.VariableObjPointerCarrierPointer = NewTable;
+                    Pack[i].Value.Table.TrainObjCarrierPointer = NULL;
+                    Pack[i].Value.Table.VariableObjCarrierPointer = malloc(sizeof(VariableObjCarrier));
+                    *Pack[i].Value.Table.VariableObjCarrierPointer = NewTable;
                 }
             }else
             {

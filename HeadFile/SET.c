@@ -46,7 +46,7 @@ EventObj SET(const HeadCallObj * HeadCallObjectPointer)
                         SetPromptSuffix = COUNT(Pair.CarriagePassengers);
                         break;
                     }
-                default: exit(-1);
+                default: exit(-5);
 
                 }
 
@@ -54,7 +54,7 @@ EventObj SET(const HeadCallObj * HeadCallObjectPointer)
 
                 break;
             }
-        default: exit(-1);
+        default: exit(-3);
         }
     }
 

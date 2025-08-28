@@ -1,9 +1,1 @@
-set a = 5;
-set fuc = function
-    a
-    set a = 10;
-    a
-    return 0;
-end;
-
-fuc();
+library "D://Mione-Libraries/io/x64/Debug/io.dll" into a

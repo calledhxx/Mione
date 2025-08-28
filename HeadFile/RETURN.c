@@ -36,7 +36,7 @@ EventObj RETURN(const HeadCallObj * HeadCallObjectPointer)
                 break;
             }
 
-        default: exit(-1);
+        default: exit(-5);
         }
     }
 

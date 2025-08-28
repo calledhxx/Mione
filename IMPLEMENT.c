@@ -53,7 +53,7 @@ EventObj IMPLEMENT(const ToImplementObj toImplement)
 
                     case EVENT_RETURN_VALUES:
                         {
-                            Obj.ToState |= 1;
+                            Obj.ToState |= EVENT_RETURN_VALUES;
 
                             Obj.ReturnValues.Carrier = realloc(
                                 Obj.ReturnValues.Carrier,

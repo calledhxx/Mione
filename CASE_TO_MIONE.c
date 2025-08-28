@@ -30,6 +30,11 @@ EventObj CMO(
 {
     EventObj result = {0};
 
+
+    HeadObjCarrier HeadList = ReturnHeadList();
+    SymbolObjCarrier SymbolList = ReturnSymbolList();
+    PromptObjCarrier PromptList = ReturnPromptList();
+
     const CaseObj * CaseCarrier = Carrier.Carrier;
     const unsigned int CaseCarrierLen = Carrier.CarrierLen;
 
@@ -168,7 +173,7 @@ EventObj CMO(
                                         const EventObj ToMioneReturn = ToMione(AreaMioneObjCarrier);
 
                                         if (ToMioneReturn.ToState & EVENT_ERROR)
-                                            exit(-1);
+                                            exit(-5);
 
                                         *TrainObjCarrierPtr = ToMioneReturn.TrainCarrier;
 
@@ -202,7 +207,7 @@ EventObj CMO(
                             }
 
                         default:
-                            exit(-1);
+                            exit(-5);
                         }
 
                         break;
@@ -213,11 +218,11 @@ EventObj CMO(
 
                 for (
                     unsigned int HeadDetectIndex = 0;
-                    Heads[HeadDetectIndex].Identification;
+                    HeadDetectIndex < HeadList.CarrierLen;
                     HeadDetectIndex++
                     )
                 {
-                    if (strcmp(ThisCase.ObjName, Heads[HeadDetectIndex].Name) == 0)
+                    if (strcmp(ThisCase.ObjName, HeadList.Carrier[HeadDetectIndex].Name) == 0)
                     {
                         MioneObjCarrierPtr->CarrierLen++;
                         MioneObjCarrierPtr->Carrier = realloc(
@@ -228,7 +233,7 @@ EventObj CMO(
                             .ObjType = HEAD,
                             .PointerOfScope = ScopePointer,
                             .MioneObjectPosition = ThisCase.CasePosition,
-                            .Head = Heads[HeadDetectIndex]
+                            .Head = HeadList.Carrier[HeadDetectIndex]
                         };
 
 
@@ -282,7 +287,7 @@ EventObj CMO(
                                         const EventObj ToMioneReturn = ToMione(AreaMioneObjCarrier);
 
                                         if (ToMioneReturn.ToState & EVENT_ERROR)
-                                            exit(-1);
+                                            exit(-3);
 
                                         *TrainObjCarrierPtr = ToMioneReturn.TrainCarrier;
 
@@ -316,7 +321,7 @@ EventObj CMO(
                             }
 
                         default:
-                            exit(-1);
+                            exit(-3);
                         }
 
                         break;
@@ -327,11 +332,11 @@ EventObj CMO(
 
                 for (
                     unsigned int PromptDetectIndex = 0;
-                    Prompts[PromptDetectIndex].Identification;
+                    PromptDetectIndex < PromptList.CarrierLen;
                     PromptDetectIndex++
                     )
                 {
-                    if (strcmp(ThisCase.ObjName, Prompts[PromptDetectIndex].Name) == 0)
+                    if (strcmp(ThisCase.ObjName, PromptList.Carrier[PromptDetectIndex].Name) == 0)
                     {
                         MioneObjCarrierPtr->CarrierLen++;
                         MioneObjCarrierPtr->Carrier = realloc(
@@ -342,7 +347,7 @@ EventObj CMO(
                             .ObjType = PROMPT,
                             .PointerOfScope = ScopePointer,
                             .MioneObjectPosition = ThisCase.CasePosition,
-                            .Prompt = Prompts[PromptDetectIndex]
+                            .Prompt = PromptList.Carrier[PromptDetectIndex]
                         };
 
                         Paired = 1;
@@ -355,11 +360,11 @@ EventObj CMO(
 
                 for (
                     unsigned int SymbolDetectIndex = 0;
-                    Symbols[SymbolDetectIndex].Identification;
+                    SymbolDetectIndex < SymbolList.CarrierLen;
                     SymbolDetectIndex++
                     )
                 {
-                    if (strcmp(ThisCase.ObjName, Symbols[SymbolDetectIndex].Name) == 0)
+                    if (strcmp(ThisCase.ObjName, SymbolList.Carrier[SymbolDetectIndex].Name) == 0)
                     {
                         MioneObjCarrierPtr->CarrierLen++;
                         MioneObjCarrierPtr->Carrier = realloc(
@@ -370,7 +375,7 @@ EventObj CMO(
                             .ObjType = SYMBOL,
                             .PointerOfScope = ScopePointer,
                             .MioneObjectPosition = ThisCase.CasePosition,
-                            .Symbol = Symbols[SymbolDetectIndex]
+                            .Symbol = SymbolList.Carrier[SymbolDetectIndex]
                         };
 
                         Paired = 1;
