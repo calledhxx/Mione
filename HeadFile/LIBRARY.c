@@ -1,20 +1,20 @@
 #include <stdlib.h>
-#include <windows.h>
+#include <libloaderapi.h>
 
 #include "../STDMIO.h"
 
-EventObj LIBRARY(const HeadCallObj * HeadCallObjectPointer)
+HeadFunctionRespondObj LIBRARY(const HeadFunctionRequestObj * HeadCallObjectPointer)
 {
 
-    EventObj Result = {0};
+    HeadFunctionRespondObj Result = {0};
 
-    const HeadCallObj HeadCallObject = *HeadCallObjectPointer;
+    const HeadFunctionRequestObj HeadCallObject = *HeadCallObjectPointer;
 
     const unsigned int PairsSize = HeadCallObject.Train.CarriageLen;
     const CarriageObj * Pairs = HeadCallObject.Train.Carriages;
 
-    ValueObjCarrier HeadSuffix = {0};
-    VariableObjPtrCarrier IntoPromptSuffix = {0};
+    VariableObjPtrCarrier HeadSuffix = {0};
+    ValueObjCarrier FromPromptSuffix = {0};
 
     unsigned int Registration = 0;
 
@@ -26,10 +26,7 @@ EventObj LIBRARY(const HeadCallObj * HeadCallObjectPointer)
         {
         case HEAD:
             {
-                HeadSuffix = COUNT(Pair.CarriagePassengers);
-
-                Result.ToState |= EVENT_RETURN_VALUES;
-                Result.ReturnValues = HeadSuffix;
+                HeadSuffix = REQUEST(Pair.CarriagePassengers);
 
                 break;
             }
@@ -37,9 +34,9 @@ EventObj LIBRARY(const HeadCallObj * HeadCallObjectPointer)
             {
                 switch (Pair.CarriageManager.Prompt.Identification)
                 {
-                case 3:
+                case 6:
                     {
-                        IntoPromptSuffix = REQUEST(Pair.CarriagePassengers);
+                        FromPromptSuffix = COUNT(Pair.CarriagePassengers);
                         break;
                     }
                 default: exit(1);
@@ -55,19 +52,32 @@ EventObj LIBRARY(const HeadCallObj * HeadCallObjectPointer)
         }
     }
 
-    if (Registration & 4)
+    if (Registration & 32)
     {
         if (HeadSuffix.CarrierLen != 1)
             exit(101);
 
-        if (HeadSuffix.Carrier[0].ValueType != VALUE_STRING_TYPE)
+        if (FromPromptSuffix.CarrierLen != 1)
             exit(102);
 
+        const HMODULE LibraryDll = LoadLibrary(FromPromptSuffix.Carrier[0].String);
 
-        HMODULE LIB = LoadLibraryA(HeadSuffix.Carrier[0].String);
-        if (LIB == NULL)
-            exit(103);
-    }
+        if (LibraryDll == NULL)
+            exit(105);
+
+        HeadSuffix.Carrier[0]->Value = (ValueObj){
+            .ValueType = VALUE_WINDOWS_LIBRARY_TYPE,
+            .WindowsLibrary = LibraryDll,
+        };
+
+        Result.MajorVariables.CarrierLen++;
+        Result.MajorVariables.Carrier = realloc(
+            Result.MajorVariables.Carrier,
+            sizeof(VariableObj) * Result.MajorVariables.CarrierLen
+            );
+        Result.MajorVariables.Carrier[
+            Result.MajorVariables.CarrierLen - 1] = *HeadSuffix.Carrier[0];
+    }else exit(-154);
 
     return Result;
 }

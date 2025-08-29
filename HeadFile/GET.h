@@ -1,2 +1,2 @@
-extern  EventObj GET();
+extern  HeadFunctionRespondObj GET();
 

@@ -5,11 +5,11 @@
 
 #include "../STDMIO.h"
 
-EventObj GET(const HeadCallObj * HeadCallObjectPointer)
+HeadFunctionRespondObj GET(const HeadFunctionRequestObj * HeadCallObjectPointer)
 {
-    EventObj Result = {0};
+    HeadFunctionRespondObj Result = {0};
 
-    const HeadCallObj HeadCallObject = *HeadCallObjectPointer;
+    const HeadFunctionRequestObj HeadCallObject = *HeadCallObjectPointer;
 
     const unsigned int PairsSize = HeadCallObject.Train.CarriageLen;
     const CarriageObj * Pairs = HeadCallObject.Train.Carriages;
@@ -77,6 +77,17 @@ EventObj GET(const HeadCallObj * HeadCallObjectPointer)
 
         for (unsigned index = 0; index < Copy.CarrierLen; index++)
             Copy.Carrier[index] = *(HeadCallObject.VariablePtrCarrier.Carrier[index]);
+    }else
+    {
+        if (!HeadSuffix.CarrierLen)
+            exit(-101);
+
+
+        for (unsigned i = 0; i < HeadSuffix.CarrierLen;i++)
+            HeadSuffix.Carrier[i]->Value =
+                HeadCallObject.CallByValueCarrier.CarrierLen > i ?
+                    HeadCallObject.CallByValueCarrier.Carrier[i] :
+                    (ValueObj){0};
     }
 
 

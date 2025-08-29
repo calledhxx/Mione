@@ -1,3 +1,3 @@
 #include <stdio.h>
 
-extern EventObj FCO(FILE* F);
+extern FCOFunctionRespondObj FCO(FILE* F);

@@ -23,13 +23,12 @@ static const char *UnconnectableKeyword[] = {
     "}",
 };
 
-EventObj CMO(
+CMOFunctionRespondObj CMO(
     const CaseObjCarrier Carrier,
     ScopeObj * ScopePointer
     )
 {
-    EventObj result = {0};
-
+    CMOFunctionRespondObj Result = {0};
 
     HeadObjCarrier HeadList = ReturnHeadList();
     SymbolObjCarrier SymbolList = ReturnSymbolList();
@@ -170,10 +169,10 @@ EventObj CMO(
 
                                         TrainObjCarrier * TrainObjCarrierPtr = malloc(sizeof(TrainObjCarrier));
 
-                                        const EventObj ToMioneReturn = ToMione(AreaMioneObjCarrier);
+                                        const MIONEFunctionRespondObj ToMioneReturn = ToMione(AreaMioneObjCarrier);
 
-                                        if (ToMioneReturn.ToState & EVENT_ERROR)
-                                            exit(-5);
+                                        if (ToMioneReturn.Event.Code)
+                                            exit(1);
 
                                         *TrainObjCarrierPtr = ToMioneReturn.TrainCarrier;
 
@@ -284,10 +283,10 @@ EventObj CMO(
 
                                         TrainObjCarrier * TrainObjCarrierPtr = malloc(sizeof(TrainObjCarrier));
 
-                                        const EventObj ToMioneReturn = ToMione(AreaMioneObjCarrier);
+                                        const MIONEFunctionRespondObj ToMioneReturn = ToMione(AreaMioneObjCarrier);
 
-                                        if (ToMioneReturn.ToState & EVENT_ERROR)
-                                            exit(-3);
+                                        if (ToMioneReturn.Event.Code)
+                                            exit(1);
 
                                         *TrainObjCarrierPtr = ToMioneReturn.TrainCarrier;
 
@@ -497,17 +496,15 @@ EventObj CMO(
                 case CASE_CONNECTABLE: //跳出 之後Error Handle 嘻嘻
                 case CASE_UNCONNECTABLE:
                     {
-                        result.ToState |= EVENT_ERROR | EVENT_CMO_RETURN;
-
-                        result.Error = (ErrorObj){
+                        Result.Event = (EventObj){
+                            .Code = 2,
                             .Message = "Unknown Word wanted to be SYMBOL.",
-                            .Code = "0",
-                            .ErrorPosition = ThisCase.CasePosition
+                            .EventPosition = ThisCase.CasePosition
                         };
 
-                        result.MioneCarrier = (*MioneObjCarrierPtr);
+                        Result.MioneCarrier = ResultMioneObjCarrier;
 
-                        return result;
+                        return Result;
                     }
 
                 case CASE_DOUBLE_STRING: //配對成 Value 的String
@@ -623,8 +620,7 @@ EventObj CMO(
     if (NumberOfPack)
         exit(-2);
 
-    result.ToState |= EVENT_CMO_RETURN;
-    result.MioneCarrier = ResultMioneObjCarrier;
+    Result.MioneCarrier = ResultMioneObjCarrier;
 
-    return result;
+    return Result;
 }

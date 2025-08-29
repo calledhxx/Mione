@@ -10,11 +10,11 @@
 
 #include "../STDMIO.h"
 
-EventObj SET(const HeadCallObj * HeadCallObjectPointer)
+HeadFunctionRespondObj SET(const HeadFunctionRequestObj * HeadCallObjectPointer)
 {
-    EventObj Result = {0};
+    HeadFunctionRespondObj Result = {0};
 
-    const HeadCallObj HeadCallObject = *HeadCallObjectPointer;
+    const HeadFunctionRequestObj HeadCallObject = *HeadCallObjectPointer;
 
     const unsigned int PairsSize = HeadCallObject.Train.CarriageLen;
     const CarriageObj * Pairs = HeadCallObject.Train.Carriages;
@@ -67,8 +67,6 @@ EventObj SET(const HeadCallObj * HeadCallObjectPointer)
         case 0: continue;
         case 1<<(PROMPT_SET-1):
             {
-                Result.ToState |= EVENT_MAJOR_VARIABLE;
-
                 Result.MajorVariables.Carrier = realloc(
                     Result.MajorVariables.Carrier,
                     (Result.MajorVariables.CarrierLen + HeadSuffix.CarrierLen)*sizeof(VariableObj)

@@ -1,5 +1,5 @@
 
-extern  EventObj CMO(
+extern  CMOFunctionRespondObj CMO(
     const CaseObjCarrier Carrier,
     ScopeObj * ScopePointer
 );

@@ -7,6 +7,7 @@
 #include "RETURN.h"
 #include "GET.h"
 #include "LIBRARY.h"
+#include "ENTER.h"
 #include "SVV.h"
 
 
@@ -35,6 +36,12 @@ HeadObjCarrier ReturnHeadList()
         (HeadObj){
             .Fuc = LIBRARY,
             .Name = "library",
+            .Identification = 4,
+        },
+
+        (HeadObj){
+            .Fuc = ENTER,
+            .Name = "enter",
             .Identification = 4,
         }
     };

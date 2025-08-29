@@ -1,3 +1,3 @@
 #include "../OBJECTS.h"
-extern  EventObj SVV();
+extern  HeadFunctionRespondObj SVV(const HeadFunctionRequestObj*);
 

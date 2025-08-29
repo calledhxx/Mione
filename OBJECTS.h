@@ -1,5 +1,6 @@
 #ifndef OBJECTS_H
 #define OBJECTS_H
+#include <libloaderapi.h>
 
 enum
 {
@@ -49,6 +50,8 @@ enum
     VALUE_LIGHTS_TYPE = 7,
     VALUE_DB_TYPE = 8,
     VALUE_NUMBER_TYPE = 9,
+
+    VALUE_WINDOWS_LIBRARY_TYPE = 10,
 };
 
 
@@ -80,7 +83,7 @@ typedef struct _HeadObject
 {
     char * Name;
     unsigned Identification;
-    struct _EventObject (*Fuc)(struct _HeadCallObject *);
+    struct _HeadFunctionRespondObject (*Fuc)(struct _HeadFunctionRequestObject *);
 }HeadObj;
 
 typedef struct _HeadObjectCarrier
@@ -143,19 +146,21 @@ typedef struct _ValueObject
     double Number; //給予數字。
     struct _TableObject Table; //給予表格(table)。
     char db;//布林
+
+    HMODULE WindowsLibrary; //給於外部函式庫
 } ValueObj;
 
 typedef struct _ValueObjectCarrier
 {
     ValueObj* Carrier;
-    int CarrierLen;
+    unsigned CarrierLen;
 } ValueObjCarrier;
 
 
 typedef struct _VariableObject
 {
     char* VariableName; //變數名稱
-    int VariablePlace; //變數位置
+    unsigned VariablePlace; //變數位置
 
     ValueObj Value; //值
 } VariableObj;
@@ -247,60 +252,55 @@ typedef struct _PointersOfVariableObjectPointersCarrier
     unsigned int CarrierLen;
 } PtrVariableObjPtrCarrier;
 
-typedef struct _ErrorObject
-{
-    char * Message;
-    char * Code;
-    CasePositionObj ErrorPosition;
-
-} ErrorObj;
-
-enum
-{
-    EVENT_NONE = 0,
-    EVENT_ERROR = 1,
-    EVENT_RETURN_VALUES = 2,
-    EVENT_RESET_VARIABLE_TO_VALUE = 4,
-    EVENT_MAJOR_VARIABLE = 8,
-    EVENT_FCO_RETURN = 16,
-    EVENT_CMO_RETURN = 32,
-    EVENT_TO_MIONE_RETURN = 64,
-};
-
 typedef struct _EventObject
 {
-    unsigned ToState; /*
-        無
-        錯誤
-        回傳值
-        重設Variable
-        特色變數
+    char * Message;
+    signed Code;
+    CasePositionObj EventPosition;
+} EventObj;
 
-        FCO函數回傳
-        CMO函數回傳
-        ToMione函數回傳
-    */
+typedef struct _FILE_TO_CASE_ObjectFunctionRespondObject
+{
+    CaseObjCarrier CaseCarrier;
+    EventObj Event;
+} FCOFunctionRespondObj;
 
-    ErrorObj Error;
+typedef struct _CASE_TO_MIONE_ObjectFunctionRespondObject
+{
+    MioneObjCarrier MioneCarrier;
+    EventObj Event;
+} CMOFunctionRespondObj;
 
+typedef struct _MIONEFunctionRespondObject
+{
+    TrainObjCarrier TrainCarrier;
+    EventObj Event;
+} MIONEFunctionRespondObj;
+
+typedef struct _IMPLEMENTFunctionRespondObject
+{
     ValueObjCarrier ReturnValues;
     ValueAndVariableObjCarrier ResetVariablesToValues;
     VariableObjCarrier MajorVariables;
+    EventObj Event;
+} IMPLEMENTFunctionRespondObj;
 
-    CaseObjCarrier CaseCarrier;
-    MioneObjCarrier MioneCarrier;
-    TrainObjCarrier TrainCarrier;
+typedef struct _HeadFunctionRespondObject
+{
+    ValueObjCarrier ReturnValues;
+    VariableObjCarrier MajorVariables;
+    ValueAndVariableObjCarrier ResetVariablesToValues;
+    EventObj Event;
+} HeadFunctionRespondObj;
 
-} EventObj;
-
-typedef struct _HeadCallObject
+typedef struct _HeadFunctionRequestObject
 {
     TrainObj Train;
 
     ValueObjCarrier CallByValueCarrier; //傳入的值
 
     VariableObjPtrCarrier VariablePtrCarrier; //以上本作用域特色變數
-} HeadCallObj;
+} HeadFunctionRequestObj;
 
 typedef struct _ToImplementObject
 {
@@ -321,5 +321,15 @@ typedef struct _ScopeObjectPointerCarrier
     ScopeObj * * Carrier;
     unsigned int CarrierLen;
 } ScopeObjPtrCarrier;
+
+typedef struct _ExternalLibraryRespondObject
+{
+    ValueObjCarrier ValueCarrier;
+} ExternalLibraryRespondObj;
+
+typedef struct _ExternalLibraryRequestObject
+{
+    ValueObjCarrier ValueCarrier;
+} ExternalLibraryRequestObj;
 
 #endif //OBJECTS_H

@@ -241,12 +241,12 @@ MioneObjCarrier COMPUTATION(MioneObjCarrier input)
                                     if (ReturnVariablePtrFromLink(*Pack[FirstBracketIndex - 1].VariableLinkPtr)->Value.ValueType == VALUE_FUNCTION_TYPE)
                                     {
 
-                                        EventObj IMPLEMENTReturn =  IMPLEMENT((ToImplementObj){
+                                        IMPLEMENTFunctionRespondObj IMPLEMENTReturn =  IMPLEMENT((ToImplementObj){
                                             .Built =  *ReturnVariablePtrFromLink(*Pack[FirstBracketIndex - 1].VariableLinkPtr)->Value.Area.TrainObjCarrierPointer,
                                             .CallByValueCarrier = ChildCount
                                         });
 
-                                        if (!IMPLEMENTReturn.ToState&1)
+                                        if (IMPLEMENTReturn.Event.Code)
                                             exit(-5);
 
                                         ValueObjCarrier V = IMPLEMENTReturn.ReturnValues;
@@ -302,14 +302,14 @@ MioneObjCarrier COMPUTATION(MioneObjCarrier input)
                                 {
                                     if (Pack[FirstBracketIndex - 1].Value.ValueType == VALUE_FUNCTION_TYPE)
                                     {
-                                        EventObj IMPLEMENTReturn = IMPLEMENT((ToImplementObj){
+                                        IMPLEMENTFunctionRespondObj IMPLEMENTReturn = IMPLEMENT((ToImplementObj){
                                             .Built =  *Pack[FirstBracketIndex - 1].Value.Area.TrainObjCarrierPointer,
                                             .CallByValueCarrier = ChildCount
                                         });
 
 
 
-                                        if (!IMPLEMENTReturn.ToState&1)
+                                        if (IMPLEMENTReturn.Event.Code)
                                             exit(-5);
 
 
@@ -508,7 +508,7 @@ MioneObjCarrier COMPUTATION(MioneObjCarrier input)
             {
                 if (Pack[i].ObjType == VALUE && Pack[i].Value.ValueType == VALUE_TABLE_TYPE && !Pack[i].Value.Table.VariableObjCarrierPointer)
                 {
-                    EventObj IMPLEMENTReturn = IMPLEMENT((ToImplementObj){
+                    IMPLEMENTFunctionRespondObj IMPLEMENTReturn = IMPLEMENT((ToImplementObj){
                         .Built = *Pack[i].Value.Table.TrainObjCarrierPointer
                     });
 

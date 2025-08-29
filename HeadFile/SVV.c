@@ -5,13 +5,13 @@
 
 #include "../STDMIO.h"
 
-EventObj SVV(const HeadCallObj * HeadCallObjectPointer)
+HeadFunctionRespondObj SVV(const HeadFunctionRequestObj * HeadCallObjectPointer)
 {
-    const HeadCallObj HeadCallObject = *HeadCallObjectPointer;
+    const HeadFunctionRequestObj HeadCallObject = *HeadCallObjectPointer;
 
     const ValueObjCarrier a = COUNT(HeadCallObject.Train.Carriages[0].CarriagePassengers);
 
     printf("%f\n",a.Carrier[0].Number);
 
-    return (EventObj){0};
+    return (HeadFunctionRespondObj){0};
 }

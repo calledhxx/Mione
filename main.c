@@ -17,30 +17,30 @@ int main(const int OptionsSize,char **Options)
 
     if (f == NULL) return -1;
 
-    const EventObj FCOReturn = FCO(f);
+    const FCOFunctionRespondObj FCOReturn = FCO(f);
     //第一步，先將source code轉為case物件。
 
-    if (FCOReturn.ToState & EVENT_ERROR)
+    if (FCOReturn.Event.Code)
         return 1;
 
-    const EventObj CMOReturn = CMO(FCOReturn.CaseCarrier,&MainScope);
+    const CMOFunctionRespondObj CMOReturn = CMO(FCOReturn.CaseCarrier,&MainScope);
     //第二步，將case物件轉為Mione物件。
 
-    if (CMOReturn.ToState & EVENT_ERROR)
+    if (CMOReturn.Event.Code)
         return 2;
 
-    const EventObj ToMioneReturn = ToMione(CMOReturn.MioneCarrier);
+    const MIONEFunctionRespondObj ToMioneReturn = ToMione(CMOReturn.MioneCarrier);
     //第三步，將Mione物件轉為程式句。
 
-    if (ToMioneReturn.ToState & EVENT_ERROR)
+    if (ToMioneReturn.Event.Code)
         return 3;
 
-    const EventObj IMPLEMENTReturn = IMPLEMENT((ToImplementObj){
+    const IMPLEMENTFunctionRespondObj IMPLEMENTReturn = IMPLEMENT((ToImplementObj){
         .Built = ToMioneReturn.TrainCarrier
     });
     //第四步，執行程式句。
 
-    if (IMPLEMENTReturn.ToState & EVENT_ERROR)
+    if (IMPLEMENTReturn.Event.Code)
         return 4;
 
     printf("Hello, Mione!\n");

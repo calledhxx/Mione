@@ -1,1 +1,1 @@
-extern EventObj IMPLEMENT(const ToImplementObj toImplement);
+extern IMPLEMENTFunctionRespondObj IMPLEMENT(const ToImplementObj toImplement);

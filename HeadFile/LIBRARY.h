@@ -1,1 +1,1 @@
-extern EventObj LIBRARY(const HeadCallObj * HeadCallObjectPointer);
+extern HeadFunctionRespondObj LIBRARY(const HeadFunctionRequestObj * HeadCallObjectPointer);

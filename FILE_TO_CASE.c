@@ -5,6 +5,7 @@
 #include <inttypes.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <wchar.h>
 
 #include "STDMIO.h"
@@ -66,9 +67,9 @@ int CheckCharType(const char Char)
     return 1;
 }
 
-EventObj FCO(FILE* F)
+FCOFunctionRespondObj FCO(FILE* F)
 {
-    EventObj result = {0};
+    FCOFunctionRespondObj Result = {0};
     
     CaseObjCarrier CaseCarriers = {0};
 
@@ -542,11 +543,11 @@ EventObj FCO(FILE* F)
                         );
                     toCMPChar[SuperCharParentNameLen] = 0;
 
-                    if (wcscmp(toCMPChar,L"n") == 0)
+                    if (strcmp(toCMPChar,L"n") == 0)
                     {
                         SuperCharParentType = 1;
                         SuperCharCollect = 2;
-                    }else if (wcscmp(toCMPChar,L"a") == 0)
+                    }else if (strcmp(toCMPChar,L"a") == 0)
                     {
                         SuperCharParentType = 2;
                         SuperCharCollect = 1;
@@ -581,12 +582,10 @@ EventObj FCO(FILE* F)
 
                     default:
                         {
-                            result.ToState |= EVENT_ERROR | EVENT_FCO_RETURN;
-                            
-                            result.Error = (ErrorObj){
+                            Result.Event = (EventObj){
+                                .Code = 1,
                                 .Message = "Unknown Char.",
-                                .Code = "0",
-                                .ErrorPosition = (CasePositionObj){
+                                .EventPosition = (CasePositionObj){
                                     .CaseEndColumn = ProcessingColumn,
                                     .CaseStartColumn = CaseStartColumn,
                                     .CaseEndLine = ProcessingLine,
@@ -594,9 +593,10 @@ EventObj FCO(FILE* F)
                                 }
                             };
 
-                            result.CaseCarrier = CaseCarriers;
 
-                            return result;
+                            Result.CaseCarrier = CaseCarriers;
+
+                            return Result;
                         };
                     }
                 }
@@ -643,12 +643,10 @@ EventObj FCO(FILE* F)
                             }
                         default:
                             {
-                                result.ToState |= EVENT_ERROR | EVENT_FCO_RETURN;
-                            
-                                result.Error = (ErrorObj){
+                                Result.Event = (EventObj){
+                                    .Code = 2,
                                     .Message = "Unknown Super char parent type.",
-                                    .Code = "0",
-                                    .ErrorPosition = (CasePositionObj){
+                                    .EventPosition = (CasePositionObj){
                                         .CaseEndColumn = ProcessingColumn,
                                         .CaseStartColumn = CaseStartColumn,
                                         .CaseEndLine = ProcessingLine,
@@ -656,9 +654,10 @@ EventObj FCO(FILE* F)
                                     }
                                 };
 
-                                result.CaseCarrier = CaseCarriers;
 
-                                return result;
+                                Result.CaseCarrier = CaseCarriers;
+
+                                return Result;
                             };
                         }
                     }
@@ -684,12 +683,10 @@ EventObj FCO(FILE* F)
             }
         default:
             {
-                result.ToState |= EVENT_ERROR | EVENT_FCO_RETURN;
-                            
-                result.Error = (ErrorObj){
-                    .Message = "Unknown HandleType.",
-                    .Code = "0",
-                    .ErrorPosition = (CasePositionObj){
+                Result.Event = (EventObj){
+                    .Code = 2,
+                    .Message = "Unknown HandleType..",
+                    .EventPosition = (CasePositionObj){
                         .CaseEndColumn = ProcessingColumn,
                         .CaseStartColumn = CaseStartColumn,
                         .CaseEndLine = ProcessingLine,
@@ -697,9 +694,10 @@ EventObj FCO(FILE* F)
                     }
                 };
 
-                result.CaseCarrier = CaseCarriers;
 
-                return result;
+                Result.CaseCarrier = CaseCarriers;
+
+                return Result;
             };
         }
 
@@ -721,8 +719,7 @@ EventObj FCO(FILE* F)
         LastCharType = ThisCharType;
     }while (1);
 
-    result.ToState |= EVENT_FCO_RETURN;
-    result.CaseCarrier = CaseCarriers;
+    Result.CaseCarrier = CaseCarriers;
 
-    return result;
+    return Result;
 }

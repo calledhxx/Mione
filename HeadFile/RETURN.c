@@ -9,11 +9,11 @@
 
 #include "../STDMIO.h"
 
-EventObj RETURN(const HeadCallObj * HeadCallObjectPointer)
+HeadFunctionRespondObj RETURN(const HeadFunctionRequestObj * HeadCallObjectPointer)
 {
-    EventObj Result = {0};
+    HeadFunctionRespondObj Result = {0};
 
-    const HeadCallObj HeadCallObject = *HeadCallObjectPointer;
+    const HeadFunctionRequestObj HeadCallObject = *HeadCallObjectPointer;
 
     const unsigned int PairsSize = HeadCallObject.Train.CarriageLen;
     const CarriageObj * Pairs = HeadCallObject.Train.Carriages;
@@ -30,7 +30,15 @@ EventObj RETURN(const HeadCallObj * HeadCallObjectPointer)
             {
                 HeadSuffix = COUNT(Pair.CarriagePassengers);
 
-                Result.ToState |= EVENT_RETURN_VALUES;
+                if (!HeadSuffix.CarrierLen)
+                {
+                    HeadSuffix.CarrierLen = 1;
+                    HeadSuffix.Carrier = malloc(sizeof(ValueObjCarrier));
+                    HeadSuffix.Carrier[0] = (ValueObj){
+                        .ValueType = VALUE_NUMBER_TYPE,
+                        .Number = 0,
+                    };
+                }
                 Result.ReturnValues = HeadSuffix;
 
                 break;

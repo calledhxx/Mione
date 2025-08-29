@@ -1,1 +1,13 @@
-library "D://Mione-Libraries/io/x64/Debug/io.dll" into a
+library io from "D:/Mione-Libraries/io/main.dll";
+
+set x = 0;
+
+set print = function
+    get x;
+
+    enter "MionePrint" of io request x respond res;
+
+    return 0;
+end
+
+print("I love Mione!\n");
