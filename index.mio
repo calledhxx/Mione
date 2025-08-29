@@ -7,7 +7,10 @@ set print = function
 
     enter "MionePrint" of io request x respond res;
 
+    set x = 42;
+
     return 0;
 end
 
 print("I love Mione!\n");
+x
