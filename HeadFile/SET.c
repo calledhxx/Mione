@@ -72,21 +72,17 @@ HeadFunctionRespondObj SET(const HeadFunctionRequestObj * HeadCallObjectPointer)
                     (Result.MajorVariables.CarrierLen + HeadSuffix.CarrierLen)*sizeof(VariableObj)
                     );
 
+                unsigned len = _min(HeadSuffix.CarrierLen,SetPromptSuffix.CarrierLen);
+
                 for (
                     unsigned int HeadSuffixIndex = 0;
-                    HeadSuffixIndex < HeadSuffix.CarrierLen ;
+                    HeadSuffixIndex <  len;
                     HeadSuffixIndex++
                     )
                 {
                     Result.MajorVariables.CarrierLen++;
-                    Result.MajorVariables.Carrier[Result.MajorVariables.CarrierLen-1] =
-                        *HeadSuffix.Carrier[HeadSuffixIndex] = (VariableObj){
-                            .Value = HeadSuffixIndex < SetPromptSuffix.CarrierLen
-                                     ? SetPromptSuffix.Carrier[HeadSuffixIndex]
-                                     : (ValueObj){
-                                         .ValueType = 0
-                                     }
-                    };
+                    HeadSuffix.Carrier[HeadSuffixIndex]->Value = SetPromptSuffix.Carrier[HeadSuffixIndex];
+                    Result.MajorVariables.Carrier[Result.MajorVariables.CarrierLen-1] = *HeadSuffix.Carrier[HeadSuffixIndex];
                 }
 
                 break;

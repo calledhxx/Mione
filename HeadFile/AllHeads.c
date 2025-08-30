@@ -8,6 +8,7 @@
 #include "GET.h"
 #include "LIBRARY.h"
 #include "ENTER.h"
+#include "INCLUDE.h"
 #include "SVV.h"
 
 
@@ -42,20 +43,26 @@ HeadObjCarrier ReturnHeadList()
         (HeadObj){
             .Fuc = ENTER,
             .Name = "enter",
-            .Identification = 4,
+            .Identification = 5,
+        },
+
+        (HeadObj){
+            .Fuc = INCLUDE,
+            .Name = "include",
+            .Identification = 6,
         }
     };
 
     HeadObjCarrier result = {0};
     result.CarrierLen =
-        sizeof(Heads)/sizeof(Heads[0]);
+        sizeof(Heads)/sizeof(HeadObj);
     result.Carrier =
-        malloc(sizeof(HeadObj) * result.CarrierLen);
+        malloc(sizeof(Heads));
 
     memcpy(
         result.Carrier,
         Heads,
-        sizeof(HeadObj) * result.CarrierLen
+        sizeof(Heads)
         );
 
     return result;

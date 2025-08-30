@@ -1,3 +1,6 @@
+#define _max(a,b) a < b ? b : a
+#define _min(a,b) a > b ? b : a
+
 #include "OBJECTS.h"
 
 #include "FILE_TO_CASE.h"

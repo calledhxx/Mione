@@ -9,9 +9,6 @@
 
 #include "STDMIO.h"
 
-
-
-
 static const char *NormalKeyword[] = {
     "function",
     "range",
@@ -23,11 +20,49 @@ static const char *UnconnectableKeyword[] = {
     "}",
 };
 
+static MioneLayoutObj popLayoutFromLayoutCarrier(MioneLayoutObjCarrier * LayoutCarrierPtr)
+{
+
+    if (1>= LayoutCarrierPtr->CarrierLen)
+        exit(-121);
+
+    const MioneLayoutObj Layout = LayoutCarrierPtr->Carrier[LayoutCarrierPtr->CarrierLen - 1];
+    LayoutCarrierPtr->CarrierLen--;
+    LayoutCarrierPtr->Carrier = realloc(
+        LayoutCarrierPtr->Carrier,
+        sizeof(MioneLayoutObj) * LayoutCarrierPtr->CarrierLen
+        );
+
+    return Layout;
+}
+
+static void pushLayoutIntoLayoutCarrier(MioneLayoutObjCarrier * LayoutCarrierPtr,const MioneLayoutObj NewLayout)
+{
+    LayoutCarrierPtr->CarrierLen++;
+    LayoutCarrierPtr->Carrier = realloc(
+        LayoutCarrierPtr->Carrier,
+        LayoutCarrierPtr->CarrierLen * sizeof(MioneLayoutObj)
+        );
+    LayoutCarrierPtr->Carrier[LayoutCarrierPtr->CarrierLen - 1] = NewLayout;
+}
+
+static void pushMioneObjectIntoLayout(MioneLayoutObj * LayoutPtr,const MioneObj Object)
+{
+
+    LayoutPtr->MioneObjectsCarrier.CarrierLen++;
+    LayoutPtr->MioneObjectsCarrier.Carrier = realloc(
+        LayoutPtr->MioneObjectsCarrier.Carrier,
+        LayoutPtr->MioneObjectsCarrier.CarrierLen * sizeof(MioneObj)
+        );
+    LayoutPtr->MioneObjectsCarrier.Carrier[LayoutPtr->MioneObjectsCarrier.CarrierLen - 1] = Object;
+}
+
 CMOFunctionRespondObj CMO(
     const CaseObjCarrier Carrier,
     ScopeObj * ScopePointer
     )
 {
+
     CMOFunctionRespondObj Result = {0};
 
     HeadObjCarrier HeadList = ReturnHeadList();
@@ -37,14 +72,10 @@ CMOFunctionRespondObj CMO(
     const CaseObj * CaseCarrier = Carrier.Carrier;
     const unsigned int CaseCarrierLen = Carrier.CarrierLen;
 
-    MioneObjCarrier ResultMioneObjCarrier = {0};
-    MioneObjCarrier AreaMioneObjCarrier = {0};
+    MioneLayoutObjCarrier LayoutsCarrier = {0};
 
-    MioneObjCarrier * MioneObjCarrierPtr = &ResultMioneObjCarrier;
 
-    signed NumberOfPack = 0;
-    unsigned PackBy = 0;
-    
+    pushLayoutIntoLayoutCarrier(&LayoutsCarrier,(MioneLayoutObj){0});
 
     for (
         unsigned int CaseCarrierIndex = 0;
@@ -54,6 +85,7 @@ CMOFunctionRespondObj CMO(
     {
         char Paired = 0; //是否已經配對過了。
 
+
         const CaseObj ThisCase = CaseCarrier[CaseCarrierIndex];
 
         switch (ThisCase.ObjType) // 檢查是否匹配 BREAKER, HEAD ,PROMPT與SYMBOL，否則進行第二處理。
@@ -61,12 +93,7 @@ CMOFunctionRespondObj CMO(
 
         case CASE_BREAKER: //新增Breaker
             {
-                MioneObjCarrierPtr->CarrierLen++;
-                MioneObjCarrierPtr->Carrier = realloc(
-                    MioneObjCarrierPtr->Carrier,
-                    MioneObjCarrierPtr->CarrierLen * sizeof(MioneObj)
-                );
-                MioneObjCarrierPtr->Carrier[MioneObjCarrierPtr->CarrierLen - 1].ObjType = 0;
+                pushMioneObjectIntoLayout(&LayoutsCarrier.Carrier[LayoutsCarrier.CarrierLen - 1],(MioneObj){0});
 
                 Paired = 1;
 
@@ -87,120 +114,95 @@ CMOFunctionRespondObj CMO(
                         {
                         case 0: //function
                             {
-                                if (!NumberOfPack)
-                                {
-                                    MioneObjCarrierPtr = &AreaMioneObjCarrier;
-                                    PackBy = VALUE_FUNCTION_TYPE;
+                                pushLayoutIntoLayoutCarrier(&LayoutsCarrier,(MioneLayoutObj){.MioneObjectsCarrier = (MioneObjCarrier){0}, .LayoutHandler = VALUE_FUNCTION_TYPE });
 
-                                    ScopePointer->ChildrenScopePtrCarrierPointer->CarrierLen++;
-                                    ScopePointer->ChildrenScopePtrCarrierPointer->Carrier = realloc(
-                                        ScopePointer->ChildrenScopePtrCarrierPointer->Carrier,
-                                        sizeof(ScopeObj*) * ScopePointer->ChildrenScopePtrCarrierPointer->CarrierLen
-                                        );
-                                    ScopePointer->ChildrenScopePtrCarrierPointer->Carrier[
-                                        ScopePointer->ChildrenScopePtrCarrierPointer->CarrierLen - 1
-                                        ] =
-                                            malloc(sizeof(ScopeObj));
-                                    *ScopePointer->ChildrenScopePtrCarrierPointer->Carrier[
-                                        ScopePointer->ChildrenScopePtrCarrierPointer->CarrierLen - 1
-                                        ] = (ScopeObj){
-                                                .ParentScopePointer = ScopePointer,
-                                                .VariableLinkPtrCarrier = (VariableLinkPtrObjCarrier){0},
-                                                .ChildrenScopePtrCarrierPointer = malloc(sizeof(ScopeObjPtrCarrier)),
-                                            };
-                                    *ScopePointer->ChildrenScopePtrCarrierPointer->Carrier[
-                                        ScopePointer->ChildrenScopePtrCarrierPointer->CarrierLen - 1
-                                        ]->ChildrenScopePtrCarrierPointer = (ScopeObjPtrCarrier){0};
+                                ScopePointer->ChildrenScopePtrCarrierPointer->CarrierLen++;
+                                ScopePointer->ChildrenScopePtrCarrierPointer->Carrier = realloc(
+                                    ScopePointer->ChildrenScopePtrCarrierPointer->Carrier,
+                                    sizeof(ScopeObj*) * ScopePointer->ChildrenScopePtrCarrierPointer->CarrierLen
+                                    );
+                                ScopePointer->ChildrenScopePtrCarrierPointer->Carrier[
+                                    ScopePointer->ChildrenScopePtrCarrierPointer->CarrierLen - 1
+                                    ] =
+                                        malloc(sizeof(ScopeObj));
+                                *ScopePointer->ChildrenScopePtrCarrierPointer->Carrier[
+                                    ScopePointer->ChildrenScopePtrCarrierPointer->CarrierLen - 1
+                                    ] = (ScopeObj){
+                                        .ParentScopePointer = ScopePointer,
+                                        .VariableLinkPtrCarrier = (VariableLinkPtrObjCarrier){0},
+                                        .ChildrenScopePtrCarrierPointer = malloc(sizeof(ScopeObjPtrCarrier)),
+                                    };
+                                *ScopePointer->ChildrenScopePtrCarrierPointer->Carrier[
+                                    ScopePointer->ChildrenScopePtrCarrierPointer->CarrierLen - 1
+                                    ]->ChildrenScopePtrCarrierPointer = (ScopeObjPtrCarrier){0};
 
-                                    ScopePointer = ScopePointer->ChildrenScopePtrCarrierPointer->Carrier[
-                                        ScopePointer->ChildrenScopePtrCarrierPointer->CarrierLen - 1
-                                        ];
-                                }
-                                NumberOfPack++;
+                                ScopePointer = ScopePointer->ChildrenScopePtrCarrierPointer->Carrier[
+                                    ScopePointer->ChildrenScopePtrCarrierPointer->CarrierLen - 1
+                                    ];
 
                                 break;
                             }
 
                         case 1: //range
                             {
-                                if (!NumberOfPack)
-                                {
-                                    MioneObjCarrierPtr = &AreaMioneObjCarrier;
-                                    PackBy = VALUE_RANGE_TYPE;
+                                pushLayoutIntoLayoutCarrier(&LayoutsCarrier,(MioneLayoutObj){.MioneObjectsCarrier = (MioneObjCarrier){0}, .LayoutHandler = VALUE_RANGE_TYPE });
 
-                                    ScopePointer->ChildrenScopePtrCarrierPointer->CarrierLen++;
-                                    ScopePointer->ChildrenScopePtrCarrierPointer->Carrier = realloc(
-                                        ScopePointer->ChildrenScopePtrCarrierPointer->Carrier,
-                                        sizeof(ScopeObj*) * ScopePointer->ChildrenScopePtrCarrierPointer->CarrierLen
-                                        );
-                                    ScopePointer->ChildrenScopePtrCarrierPointer->Carrier[
-                                        ScopePointer->ChildrenScopePtrCarrierPointer->CarrierLen - 1
-                                        ] =
-                                            malloc(sizeof(ScopeObj));
-                                    *ScopePointer->ChildrenScopePtrCarrierPointer->Carrier[
-                                        ScopePointer->ChildrenScopePtrCarrierPointer->CarrierLen - 1
-                                        ] = (ScopeObj){
-                                            .ParentScopePointer = ScopePointer,
-                                            .VariableLinkPtrCarrier = (VariableLinkPtrObjCarrier){0},
-                                            .ChildrenScopePtrCarrierPointer = malloc(sizeof(ScopeObjPtrCarrier)),
-                                        };
-                                    *ScopePointer->ChildrenScopePtrCarrierPointer->Carrier[
-                                        ScopePointer->ChildrenScopePtrCarrierPointer->CarrierLen - 1
-                                        ]->ChildrenScopePtrCarrierPointer = (ScopeObjPtrCarrier){0};
+                                ScopePointer->ChildrenScopePtrCarrierPointer->CarrierLen++;
+                                ScopePointer->ChildrenScopePtrCarrierPointer->Carrier = realloc(
+                                    ScopePointer->ChildrenScopePtrCarrierPointer->Carrier,
+                                    sizeof(ScopeObj*) * ScopePointer->ChildrenScopePtrCarrierPointer->CarrierLen
+                                    );
+                                ScopePointer->ChildrenScopePtrCarrierPointer->Carrier[
+                                    ScopePointer->ChildrenScopePtrCarrierPointer->CarrierLen - 1
+                                    ] =
+                                        malloc(sizeof(ScopeObj));
+                                *ScopePointer->ChildrenScopePtrCarrierPointer->Carrier[
+                                    ScopePointer->ChildrenScopePtrCarrierPointer->CarrierLen - 1
+                                    ] = (ScopeObj){
+                                        .ParentScopePointer = ScopePointer,
+                                        .VariableLinkPtrCarrier = (VariableLinkPtrObjCarrier){0},
+                                        .ChildrenScopePtrCarrierPointer = malloc(sizeof(ScopeObjPtrCarrier)),
+                                    };
+                                *ScopePointer->ChildrenScopePtrCarrierPointer->Carrier[
+                                    ScopePointer->ChildrenScopePtrCarrierPointer->CarrierLen - 1
+                                    ]->ChildrenScopePtrCarrierPointer = (ScopeObjPtrCarrier){0};
 
-                                    ScopePointer = ScopePointer->ChildrenScopePtrCarrierPointer->Carrier[
-                                        ScopePointer->ChildrenScopePtrCarrierPointer->CarrierLen - 1
-                                        ];
-                                }
-                                NumberOfPack++;
+                                ScopePointer = ScopePointer->ChildrenScopePtrCarrierPointer->Carrier[
+                                    ScopePointer->ChildrenScopePtrCarrierPointer->CarrierLen - 1
+                                    ];
 
                                 break;
                             }
                         case 2: //end
                             {
-                                NumberOfPack--;
-                                if (!NumberOfPack)
-                                {
-                                    if (PackBy == VALUE_FUNCTION_TYPE || PackBy == VALUE_RANGE_TYPE)
-                                    {
-                                        ScopePointer = ScopePointer->ParentScopePointer;
+                                const MioneLayoutObj layout = popLayoutFromLayoutCarrier(&LayoutsCarrier);
 
-                                        MioneObjCarrierPtr = &ResultMioneObjCarrier;
+                                if (layout.LayoutHandler != VALUE_FUNCTION_TYPE && layout.LayoutHandler != VALUE_RANGE_TYPE)
+                                    exit(-5);
 
-                                        TrainObjCarrier * TrainObjCarrierPtr = malloc(sizeof(TrainObjCarrier));
+                                ScopePointer = ScopePointer->ParentScopePointer;
 
-                                        const MIONEFunctionRespondObj ToMioneReturn = ToMione(AreaMioneObjCarrier);
+                                TrainObjCarrier * TrainObjCarrierPtr = malloc(sizeof(TrainObjCarrier));
 
-                                        if (ToMioneReturn.Event.Code)
-                                            exit(1);
+                                const MIONEFunctionRespondObj ToMioneReturn = ToMione(layout.MioneObjectsCarrier);
 
-                                        *TrainObjCarrierPtr = ToMioneReturn.TrainCarrier;
+                                if (ToMioneReturn.Event.Code)
+                                    exit(1);
 
-                                        MioneObjCarrierPtr->CarrierLen++;
-                                        MioneObjCarrierPtr->Carrier = realloc(
-                                            MioneObjCarrierPtr->Carrier,
-                                            MioneObjCarrierPtr->CarrierLen * sizeof(MioneObj)
-                                        );
+                                *TrainObjCarrierPtr = ToMioneReturn.TrainCarrier;
 
+                                pushMioneObjectIntoLayout(&LayoutsCarrier.Carrier[LayoutsCarrier.CarrierLen - 1],(MioneObj){
+                                    .ObjType = VALUE,
+                                    .PointerOfScope = ScopePointer,
+                                    .MioneObjectPosition = ThisCase.CasePosition,
+                                    .Value = (ValueObj){
+                                        .ValueType = layout.LayoutHandler,
+                                        .Area = (AreaObj){
+                                            .TrainObjCarrierPointer = TrainObjCarrierPtr
+                                        }
+                                    }
+                                });
 
-                                        MioneObjCarrierPtr->Carrier[MioneObjCarrierPtr->CarrierLen - 1] = (MioneObj){
-                                            .ObjType = VALUE,
-                                            .PointerOfScope = ScopePointer,
-                                            .MioneObjectPosition = ThisCase.CasePosition,
-                                            .Value = (ValueObj){
-                                                .ValueType = PackBy,
-                                                .Area = (AreaObj){
-                                                    .TrainObjCarrierPointer = TrainObjCarrierPtr
-                                                }
-                                            }
-                                        };
-
-                                        PackBy = 0;
-                                    }else
-                                        exit(-5);
-
-                                }if (NumberOfPack < 0)
-                                    exit(-2);
 
                                 break;
                             }
@@ -223,18 +225,12 @@ CMOFunctionRespondObj CMO(
                 {
                     if (strcmp(ThisCase.ObjName, HeadList.Carrier[HeadDetectIndex].Name) == 0)
                     {
-                        MioneObjCarrierPtr->CarrierLen++;
-                        MioneObjCarrierPtr->Carrier = realloc(
-                            MioneObjCarrierPtr->Carrier,
-                            MioneObjCarrierPtr->CarrierLen * sizeof(MioneObj)
-                        );
-                        MioneObjCarrierPtr->Carrier[MioneObjCarrierPtr->CarrierLen - 1] = (MioneObj){
+                        pushMioneObjectIntoLayout(&LayoutsCarrier.Carrier[LayoutsCarrier.CarrierLen - 1],(MioneObj){
                             .ObjType = HEAD,
                             .PointerOfScope = ScopePointer,
                             .MioneObjectPosition = ThisCase.CasePosition,
                             .Head = HeadList.Carrier[HeadDetectIndex]
-                        };
-
+                        });
 
                         Paired = 1;
 
@@ -262,59 +258,64 @@ CMOFunctionRespondObj CMO(
                         {
                         case 0: // {
                             {
-                                if (!NumberOfPack)
-                                {
-                                    MioneObjCarrierPtr = &AreaMioneObjCarrier;
-                                    PackBy = VALUE_TABLE_TYPE;
-                                }
-                                NumberOfPack++;
+                                pushLayoutIntoLayoutCarrier(&LayoutsCarrier,(MioneLayoutObj){.MioneObjectsCarrier = (MioneObjCarrier){0}, .LayoutHandler = VALUE_TABLE_TYPE });
+
+
+                                ScopePointer->ChildrenScopePtrCarrierPointer->CarrierLen++;
+                                ScopePointer->ChildrenScopePtrCarrierPointer->Carrier = realloc(
+                                    ScopePointer->ChildrenScopePtrCarrierPointer->Carrier,
+                                    sizeof(ScopeObj*) * ScopePointer->ChildrenScopePtrCarrierPointer->CarrierLen
+                                    );
+                                ScopePointer->ChildrenScopePtrCarrierPointer->Carrier[
+                                    ScopePointer->ChildrenScopePtrCarrierPointer->CarrierLen - 1
+                                    ] =
+                                        malloc(sizeof(ScopeObj));
+                                *ScopePointer->ChildrenScopePtrCarrierPointer->Carrier[
+                                    ScopePointer->ChildrenScopePtrCarrierPointer->CarrierLen - 1
+                                    ] = (ScopeObj){
+                                        .ParentScopePointer = ScopePointer,
+                                        .VariableLinkPtrCarrier = (VariableLinkPtrObjCarrier){0},
+                                        .ChildrenScopePtrCarrierPointer = malloc(sizeof(ScopeObjPtrCarrier)),
+                                    };
+                                *ScopePointer->ChildrenScopePtrCarrierPointer->Carrier[
+                                    ScopePointer->ChildrenScopePtrCarrierPointer->CarrierLen - 1
+                                    ]->ChildrenScopePtrCarrierPointer = (ScopeObjPtrCarrier){0};
+
+                                ScopePointer = ScopePointer->ChildrenScopePtrCarrierPointer->Carrier[
+                                    ScopePointer->ChildrenScopePtrCarrierPointer->CarrierLen - 1
+                                    ];
 
                                 break;
                             }
 
                         case 1: // }
                             {
-                                NumberOfPack--;
-                                if (!NumberOfPack)
-                                {
-                                    if (PackBy == VALUE_TABLE_TYPE)
-                                    {
-                                        MioneObjCarrierPtr = &ResultMioneObjCarrier;
+                                const MioneLayoutObj layout = popLayoutFromLayoutCarrier(&LayoutsCarrier);
 
-                                        TrainObjCarrier * TrainObjCarrierPtr = malloc(sizeof(TrainObjCarrier));
+                                if (layout.LayoutHandler != VALUE_TABLE_TYPE)
+                                    exit(-5);
 
-                                        const MIONEFunctionRespondObj ToMioneReturn = ToMione(AreaMioneObjCarrier);
+                                TrainObjCarrier * TrainObjCarrierPtr = malloc(sizeof(TrainObjCarrier));
 
-                                        if (ToMioneReturn.Event.Code)
-                                            exit(1);
+                                const MIONEFunctionRespondObj ToMioneReturn = ToMione(layout.MioneObjectsCarrier);
 
-                                        *TrainObjCarrierPtr = ToMioneReturn.TrainCarrier;
+                                if (ToMioneReturn.Event.Code)
+                                    exit(1);
 
-                                        MioneObjCarrierPtr->CarrierLen++;
-                                        MioneObjCarrierPtr->Carrier = realloc(
-                                            MioneObjCarrierPtr->Carrier,
-                                            MioneObjCarrierPtr->CarrierLen * sizeof(MioneObj)
-                                        );
+                                *TrainObjCarrierPtr = ToMioneReturn.TrainCarrier;
 
-
-                                        MioneObjCarrierPtr->Carrier[MioneObjCarrierPtr->CarrierLen - 1] = (MioneObj){
-                                            .ObjType = VALUE,
-                                            .PointerOfScope = ScopePointer,
-                                            .MioneObjectPosition = ThisCase.CasePosition,
-                                            .Value = (ValueObj){
-                                                .ValueType = PackBy,
-                                                .Table = (TableObj){
-                                                    .TrainObjCarrierPointer = TrainObjCarrierPtr
-                                                }
-                                            }
-                                        };
-
-                                        PackBy = 0;
+                                pushMioneObjectIntoLayout(&LayoutsCarrier.Carrier[LayoutsCarrier.CarrierLen - 1],(MioneObj){
+                                    .ObjType = VALUE,
+                                    .PointerOfScope = ScopePointer,
+                                    .MioneObjectPosition = ThisCase.CasePosition,
+                                    .Value = (ValueObj){
+                                        .ValueType = layout.LayoutHandler,
+                                        .Table = (TableObj){
+                                            .TrainObjCarrierPointer = TrainObjCarrierPtr
+                                        }
                                     }
-                                    else
-                                        exit(-3);
+                                });
 
-                                }
 
                                 break;
                             }
@@ -337,17 +338,13 @@ CMOFunctionRespondObj CMO(
                 {
                     if (strcmp(ThisCase.ObjName, PromptList.Carrier[PromptDetectIndex].Name) == 0)
                     {
-                        MioneObjCarrierPtr->CarrierLen++;
-                        MioneObjCarrierPtr->Carrier = realloc(
-                            MioneObjCarrierPtr->Carrier,
-                            MioneObjCarrierPtr->CarrierLen * sizeof(MioneObj)
-                        );
-                        MioneObjCarrierPtr->Carrier[MioneObjCarrierPtr->CarrierLen - 1] = (MioneObj){
+                        pushMioneObjectIntoLayout(&LayoutsCarrier.Carrier[LayoutsCarrier.CarrierLen - 1],(MioneObj){
                             .ObjType = PROMPT,
                             .PointerOfScope = ScopePointer,
                             .MioneObjectPosition = ThisCase.CasePosition,
                             .Prompt = PromptList.Carrier[PromptDetectIndex]
-                        };
+                        });
+
 
                         Paired = 1;
 
@@ -365,17 +362,13 @@ CMOFunctionRespondObj CMO(
                 {
                     if (strcmp(ThisCase.ObjName, SymbolList.Carrier[SymbolDetectIndex].Name) == 0)
                     {
-                        MioneObjCarrierPtr->CarrierLen++;
-                        MioneObjCarrierPtr->Carrier = realloc(
-                            MioneObjCarrierPtr->Carrier,
-                            MioneObjCarrierPtr->CarrierLen * sizeof(MioneObj)
-                        );
-                        MioneObjCarrierPtr->Carrier[MioneObjCarrierPtr->CarrierLen - 1] = (MioneObj){
+                        pushMioneObjectIntoLayout(&LayoutsCarrier.Carrier[LayoutsCarrier.CarrierLen - 1], (MioneObj){
                             .ObjType = SYMBOL,
                             .PointerOfScope = ScopePointer,
                             .MioneObjectPosition = ThisCase.CasePosition,
                             .Symbol = SymbolList.Carrier[SymbolDetectIndex]
-                        };
+                        });
+
 
                         Paired = 1;
 
@@ -477,17 +470,14 @@ CMOFunctionRespondObj CMO(
                             ToAddOnVariableLinkPtr
                             );
 
-                        MioneObjCarrierPtr->CarrierLen++;
-                        MioneObjCarrierPtr->Carrier = realloc(
-                            MioneObjCarrierPtr->Carrier,
-                            MioneObjCarrierPtr->CarrierLen * sizeof(MioneObj)
-                        );
-                        MioneObjCarrierPtr->Carrier[MioneObjCarrierPtr->CarrierLen - 1] = (MioneObj){
+
+                        pushMioneObjectIntoLayout(&LayoutsCarrier.Carrier[LayoutsCarrier.CarrierLen - 1], (MioneObj){
                             .ObjType = VARIABLE,
                             .PointerOfScope = ScopePointer,
                             .VariableLinkPtr = ToAddOnVariableLinkPtr,
                             .MioneObjectPosition = ThisCase.CasePosition,
-                        };
+                        });
+
 
                         Paired = 1;
 
@@ -502,7 +492,7 @@ CMOFunctionRespondObj CMO(
                             .EventPosition = ThisCase.CasePosition
                         };
 
-                        Result.MioneCarrier = ResultMioneObjCarrier;
+                        Result.MioneCarrier = LayoutsCarrier.Carrier[0].MioneObjectsCarrier;
 
                         return Result;
                     }
@@ -510,12 +500,7 @@ CMOFunctionRespondObj CMO(
                 case CASE_DOUBLE_STRING: //配對成 Value 的String
                 case CASE_SINGLE_STRING:
                     {
-                        MioneObjCarrierPtr->CarrierLen++;
-                        MioneObjCarrierPtr->Carrier = realloc(
-                            MioneObjCarrierPtr->Carrier,
-                            MioneObjCarrierPtr->CarrierLen * sizeof(MioneObj)
-                        );
-                        MioneObjCarrierPtr->Carrier[MioneObjCarrierPtr->CarrierLen - 1] = (MioneObj){
+                        pushMioneObjectIntoLayout(&LayoutsCarrier.Carrier[LayoutsCarrier.CarrierLen - 1], (MioneObj){
                             .ObjType = VALUE,
                             .PointerOfScope = ScopePointer,
                             .Value = (ValueObj){
@@ -523,7 +508,8 @@ CMOFunctionRespondObj CMO(
                                 .ValueType = VALUE_STRING_TYPE,
                             },
                             .MioneObjectPosition = ThisCase.CasePosition,
-                        };
+                        });
+
 
                         Paired = 1;
 
@@ -531,13 +517,8 @@ CMOFunctionRespondObj CMO(
                     }
                 case CASE_DECNUMBER:
                     {
-                        MioneObjCarrierPtr->CarrierLen++;
-                        MioneObjCarrierPtr->Carrier = realloc(
-                            MioneObjCarrierPtr->Carrier,
-                            MioneObjCarrierPtr->CarrierLen * sizeof(MioneObj)
-                        );
 
-                        MioneObjCarrierPtr->Carrier[MioneObjCarrierPtr->CarrierLen - 1] = (MioneObj){
+                        pushMioneObjectIntoLayout(&LayoutsCarrier.Carrier[LayoutsCarrier.CarrierLen - 1], (MioneObj){
                             .ObjType = VALUE,
                             .PointerOfScope = ScopePointer,
                             .Value = (ValueObj){
@@ -545,7 +526,8 @@ CMOFunctionRespondObj CMO(
                                 .Number = (double)atoi(ThisCase.ObjName)
                             },
                             .MioneObjectPosition = ThisCase.CasePosition,
-                        };
+                        });
+
 
                         break;
                     }
@@ -553,16 +535,12 @@ CMOFunctionRespondObj CMO(
                     {
                         double Number = 0;
 
-                        MioneObjCarrierPtr->CarrierLen++;
-                        MioneObjCarrierPtr->Carrier = realloc(
-                            MioneObjCarrierPtr->Carrier,
-                            MioneObjCarrierPtr->CarrierLen * sizeof(MioneObj)
-                        );
-
                         for (unsigned i = 0; i < strlen(ThisCase.ObjName); i++)
                             Number += (ThisCase.ObjName[i] != '0') * 1<<(strlen(ThisCase.ObjName) - i - 1);
 
-                        MioneObjCarrierPtr->Carrier[MioneObjCarrierPtr->CarrierLen - 1] = (MioneObj){
+
+
+                        pushMioneObjectIntoLayout(&LayoutsCarrier.Carrier[LayoutsCarrier.CarrierLen - 1], (MioneObj){
                             .ObjType = VALUE,
                             .PointerOfScope = ScopePointer,
                             .Value = (ValueObj){
@@ -570,18 +548,13 @@ CMOFunctionRespondObj CMO(
                                 .Number = Number
                             },
                             .MioneObjectPosition = ThisCase.CasePosition,
-                        };
+                        });
+
 
                         break;
                     }
                 case CASE_HEXNUMBER:{
                         double Number = 0;
-
-                        MioneObjCarrierPtr->CarrierLen++;
-                        MioneObjCarrierPtr->Carrier = realloc(
-                            MioneObjCarrierPtr->Carrier,
-                            MioneObjCarrierPtr->CarrierLen * sizeof(MioneObj)
-                        );
 
                         for (unsigned i = 0; i < strlen(ThisCase.ObjName); i++)
                         {
@@ -598,7 +571,7 @@ CMOFunctionRespondObj CMO(
 
                         }
 
-                        MioneObjCarrierPtr->Carrier[MioneObjCarrierPtr->CarrierLen - 1] = (MioneObj){
+                        pushMioneObjectIntoLayout(&LayoutsCarrier.Carrier[LayoutsCarrier.CarrierLen - 1], (MioneObj){
                             .ObjType = VALUE,
                             .PointerOfScope = ScopePointer,
                             .Value = (ValueObj){
@@ -606,7 +579,9 @@ CMOFunctionRespondObj CMO(
                                 .Number = Number
                             },
                             .MioneObjectPosition = ThisCase.CasePosition,
-                        };
+                        });
+
+
 
                         break;
                 }
@@ -616,11 +591,10 @@ CMOFunctionRespondObj CMO(
             };
         }
     }
-
-    if (NumberOfPack)
+    if (LayoutsCarrier.CarrierLen!=1)
         exit(-2);
 
-    Result.MioneCarrier = ResultMioneObjCarrier;
+    Result.MioneCarrier = LayoutsCarrier.Carrier[0].MioneObjectsCarrier;
 
     return Result;
 }

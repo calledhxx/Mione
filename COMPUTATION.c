@@ -4,7 +4,6 @@
 
 #include "STDMIO.h"
 
-#define _max(a,b) a<b ? b : a
 
 MioneObjCarrier COMPUTATION(MioneObjCarrier input)
 {
@@ -522,7 +521,7 @@ MioneObjCarrier COMPUTATION(MioneObjCarrier input)
                     for (int TableChildIndex = 0; TableChildIndex<VarsSize ; TableChildIndex++)
                     {
                         NewTable.CarrierLen++;
-                        NewTable.Carrier = realloc ( NewTable.Carrier, NewTable.CarrierLen*sizeof(VariableObj *));
+                        NewTable.Carrier = realloc ( NewTable.Carrier, NewTable.CarrierLen*sizeof(VariableObj ));
                         NewTable.Carrier[NewTable.CarrierLen-1] = Vars[TableChildIndex];
 
                         if (Vars[TableChildIndex].VariablePlace)
@@ -537,6 +536,8 @@ MioneObjCarrier COMPUTATION(MioneObjCarrier input)
                                 }
                             }
                         }
+
+                        printf("%p\n",NewTable.Carrier[NewTable.CarrierLen - 1].VariableName);
                     }
 
                     Pack[i].Value.Table.TrainObjCarrierPointer = NULL;

@@ -210,6 +210,18 @@ typedef struct _MioneObjectsCarrier
     unsigned int CarrierLen;
 } MioneObjCarrier;
 
+typedef struct _MioneLayoutObject
+{
+    MioneObjCarrier MioneObjectsCarrier;
+    unsigned LayoutHandler;
+} MioneLayoutObj;
+
+typedef struct _MioneLayoutObjectCarrier
+{
+    MioneLayoutObj * Carrier;
+    unsigned CarrierLen;
+} MioneLayoutObjCarrier;
+
 typedef struct _CarriageObject
 {
     MioneObj CarriageManager;

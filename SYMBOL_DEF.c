@@ -120,12 +120,12 @@ SymbolObjCarrier ReturnSymbolList()
     result.CarrierLen =
         sizeof(Symbols)/sizeof(Symbols[0]);
     result.Carrier =
-        malloc(sizeof(Symbols) * result.CarrierLen);
+        malloc(sizeof(Symbols));
 
     memcpy(
         result.Carrier,
         Symbols,
-        sizeof(Symbols) * result.CarrierLen
+        sizeof(Symbols)
         );
 
     return result;

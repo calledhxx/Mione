@@ -82,12 +82,10 @@ HeadFunctionRespondObj GET(const HeadFunctionRequestObj * HeadCallObjectPointer)
         if (!HeadSuffix.CarrierLen)
             exit(-101);
 
+        const unsigned len = _min(HeadSuffix.CarrierLen,HeadCallObject.CallByValueCarrier.CarrierLen);
 
-        for (unsigned i = 0; i < HeadSuffix.CarrierLen;i++)
-            HeadSuffix.Carrier[i]->Value =
-                HeadCallObject.CallByValueCarrier.CarrierLen > i ?
-                    HeadCallObject.CallByValueCarrier.Carrier[i] :
-                    (ValueObj){0};
+        for (unsigned i = 0; i < len;i++)
+            HeadSuffix.Carrier[i]->Value = HeadCallObject.CallByValueCarrier.Carrier[i];
     }
 
 

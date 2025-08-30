@@ -1,16 +1,11 @@
-library io from "D:/Mione-Libraries/io/main.dll";
+library a from "D:/Mione-Libraries/io/main.dll";
 
-set x = 0;
+set table = {
+    set print = function
+        enter "MionePrint" of a request "Hello\n" respond res;
 
-set print = function
-    get x;
+        return 0;
+    end;
+};
 
-    enter "MionePrint" of io request x respond res;
-
-    set x = 42;
-
-    return 0;
-end
-
-print("I love Mione!\n");
-x
+set b = table["print"]();

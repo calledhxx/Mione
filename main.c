@@ -6,10 +6,12 @@
 
 /// 每個EXIT函數對應著那個地方需做錯誤回傳，其呼叫者須做ERROR HANDLE。
 
-ScopeObj MainScope = {0};
 
 int main(const int OptionsSize,char **Options)
 {
+    printf("Start Mione!\n");
+    ScopeObj MainScope = {0};
+
     FILE *f = fopen("D:\\Mione\\index.mio", "r"); //never read binary again...
 
     MainScope.ChildrenScopePtrCarrierPointer = malloc(sizeof(ScopeObjPtrCarrier));
@@ -17,11 +19,15 @@ int main(const int OptionsSize,char **Options)
 
     if (f == NULL) return -1;
 
+    printf("FCO!\n");
+
     const FCOFunctionRespondObj FCOReturn = FCO(f);
     //第一步，先將source code轉為case物件。
 
     if (FCOReturn.Event.Code)
         return 1;
+
+    printf("CMO!\n");
 
     const CMOFunctionRespondObj CMOReturn = CMO(FCOReturn.CaseCarrier,&MainScope);
     //第二步，將case物件轉為Mione物件。
@@ -29,11 +35,15 @@ int main(const int OptionsSize,char **Options)
     if (CMOReturn.Event.Code)
         return 2;
 
+    printf("ToMione!\n");
+
     const MIONEFunctionRespondObj ToMioneReturn = ToMione(CMOReturn.MioneCarrier);
     //第三步，將Mione物件轉為程式句。
 
     if (ToMioneReturn.Event.Code)
         return 3;
+
+    printf("IMPLEMENT!\n");
 
     const IMPLEMENTFunctionRespondObj IMPLEMENTReturn = IMPLEMENT((ToImplementObj){
         .Built = ToMioneReturn.TrainCarrier

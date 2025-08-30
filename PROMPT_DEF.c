@@ -44,19 +44,24 @@ PromptObjCarrier ReturnPromptList()
         (PromptObj) {
             .Name = "of",
             .Identification = 7,
+        },
+
+        (PromptObj) {
+            .Name = "as",
+            .Identification = 8,
         }
     };
 
     PromptObjCarrier result = {0};
     result.CarrierLen =
-        sizeof(Prompts)/sizeof(Prompts[0]);
+        sizeof(Prompts)/sizeof(PromptObj);
     result.Carrier =
-        malloc(sizeof(PromptObj) * result.CarrierLen);
+        malloc(sizeof(Prompts));
 
     memcpy(
         result.Carrier,
         Prompts,
-        sizeof(PromptObj) * result.CarrierLen
+        sizeof(Prompts)
         );
 
     return result;
