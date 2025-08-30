@@ -6,6 +6,10 @@
 
 /// 每個EXIT函數對應著那個地方需做錯誤回傳，其呼叫者須做ERROR HANDLE。
 
+#ifndef WIN32
+#error "NO"
+#endif
+
 
 int main(const int OptionsSize,char **Options)
 {
