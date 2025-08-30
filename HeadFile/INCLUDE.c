@@ -1,4 +1,5 @@
 #include "../STDMIO.h"
+#include "ENTER.h"
 
 HeadFunctionRespondObj INCLUDE(const HeadFunctionRequestObj * HeadCallObjectPointer)
 {
@@ -24,16 +25,7 @@ HeadFunctionRespondObj INCLUDE(const HeadFunctionRequestObj * HeadCallObjectPoin
             {
                 HeadSuffix = COUNT(Pair.CarriagePassengers);
 
-                if (!HeadSuffix.CarrierLen)
-                {
-                    HeadSuffix.CarrierLen = 1;
-                    HeadSuffix.Carrier = malloc(sizeof(ValueObjCarrier));
-                    HeadSuffix.Carrier[0] = (ValueObj){
-                        .ValueType = VALUE_NUMBER_TYPE,
-                        .Number = 0,
-                    };
-                }
-                Result.ReturnValues = HeadSuffix;
+
 
                 break;
             }
@@ -71,6 +63,8 @@ HeadFunctionRespondObj INCLUDE(const HeadFunctionRequestObj * HeadCallObjectPoin
             exit(-8);
 
         ScopeObj newScope = {0};
+        newScope.ChildrenScopePtrCarrierPointer = malloc(sizeof(ScopeObjPtrCarrier));
+        *newScope.ChildrenScopePtrCarrierPointer = (ScopeObjPtrCarrier){0};
 
         const FCOFunctionRespondObj FCOReturn = FCO(File);
 
@@ -86,6 +80,7 @@ HeadFunctionRespondObj INCLUDE(const HeadFunctionRequestObj * HeadCallObjectPoin
             exit(-9);
 
         const unsigned len = _min(IMPLEMENTReturn.ReturnValues.CarrierLen,AsPromptSuffix.CarrierLen);
+
 
         for (unsigned i = 0; i < len ; i++)
             AsPromptSuffix.Carrier[i]->Value = IMPLEMENTReturn.ReturnValues.Carrier[i];

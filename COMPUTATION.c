@@ -25,6 +25,7 @@ MioneObjCarrier COMPUTATION(MioneObjCarrier input)
     for (int CountIndex = 0;CountIndex < CountLoop;CountIndex++) //Count Layers
     for(int i = 0; i < PackSize; i++)
     {
+
         switch (Pack[i].ObjType)
         {
         case SYMBOL:

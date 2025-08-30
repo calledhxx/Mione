@@ -1,11 +1,3 @@
-library a from "D:/Mione-Libraries/io/main.dll";
+include "D:/Mione-examples-/Objects/module.mio" as a;
 
-set table = {
-    set print = function
-        enter "MionePrint" of a request "Hello\n" respond res;
-
-        return 0;
-    end;
-};
-
-set b = table["print"]();
+set b = a["print"]();
