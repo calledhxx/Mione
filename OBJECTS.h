@@ -337,6 +337,7 @@ typedef struct _ScopeObjectPointerCarrier
 typedef struct _ExternalLibraryRespondObject
 {
     ValueObjCarrier ValueCarrier;
+    EventObj Event;
 } ExternalLibraryRespondObj;
 
 typedef struct _ExternalLibraryRequestObject

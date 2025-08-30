@@ -538,7 +538,6 @@ MioneObjCarrier COMPUTATION(MioneObjCarrier input)
                             }
                         }
 
-                        printf("%p\n",NewTable.Carrier[NewTable.CarrierLen - 1].VariableName);
                     }
 
                     Pack[i].Value.Table.TrainObjCarrierPointer = NULL;
