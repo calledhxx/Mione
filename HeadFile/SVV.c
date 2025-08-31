@@ -9,7 +9,11 @@ HeadFunctionRespondObj SVV(const HeadFunctionRequestObj * HeadCallObjectPointer)
 {
     const HeadFunctionRequestObj HeadCallObject = *HeadCallObjectPointer;
 
-    const ValueObjCarrier a = COUNT(HeadCallObject.Train.Carriages[0].CarriagePassengers);
+
+    const ValueObjCarrier a = RESOURCE((RESOURCERequestObj){
+                            .MioneCarrier = HeadCallObject.Train.Carriages[0].CarriagePassengers,
+                            .EventTemplate = HeadCallObject.EventTemplate
+                        }).ValueCarrier;
 
     printf("%f\n",a.Carrier[0].Number);
 

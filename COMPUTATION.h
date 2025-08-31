@@ -1,1 +1,1 @@
-extern MioneObjCarrier COMPUTATION();
+extern COMPUTATIONRespondObj COMPUTATION(COMPUTATIONRequestObj);

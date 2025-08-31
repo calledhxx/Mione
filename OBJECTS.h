@@ -1,5 +1,6 @@
 #ifndef OBJECTS_H
 #define OBJECTS_H
+#include <stdio.h>
 #include <libloaderapi.h>
 
 enum
@@ -54,6 +55,22 @@ enum
     VALUE_WINDOWS_LIBRARY_TYPE = 10,
 };
 
+enum{
+    SC_BeforeSymbol = 1,
+    SC_AfterSymbol = 2,
+    //符合其中之一就連接
+
+    SC_BeforeVariableOrValue = 4,
+    SC_AfterVariableOrValue = 8,
+};
+
+enum
+{
+    EVENT_NONE,
+    EVENT_ERROR_NO_FILE_FOUND,
+    EVENT_ERROR
+};
+
 
 typedef struct _CasePositionObject
 {
@@ -103,15 +120,6 @@ typedef struct _PromptObjectCarrier
     PromptObj * Carrier;
     unsigned CarrierLen;
 } PromptObjCarrier;
-
-enum{
-    SC_BeforeSymbol = 1,
-    SC_AfterSymbol = 2,
-    //符合其中之一就連接
-
-    SC_BeforeVariableOrValue = 4,
-    SC_AfterVariableOrValue = 8,
-};
 
 typedef struct _SymbolObject
 {
@@ -266,6 +274,7 @@ typedef struct _PointersOfVariableObjectPointersCarrier
 
 typedef struct _EventObject
 {
+    wchar_t * Address;
     char * Message;
     signed Code;
     CasePositionObj EventPosition;
@@ -277,17 +286,36 @@ typedef struct _FILE_TO_CASE_ObjectFunctionRespondObject
     EventObj Event;
 } FCOFunctionRespondObj;
 
+typedef struct _FILE_TO_CASE_ObjectFunctionRequestObject
+{
+    FILE * f;
+    const EventObj EventTemplate;
+} FCOFunctionRequestObj;
+
 typedef struct _CASE_TO_MIONE_ObjectFunctionRespondObject
 {
     MioneObjCarrier MioneCarrier;
     EventObj Event;
 } CMOFunctionRespondObj;
 
+typedef struct _CASE_TO_MIONE_ObjectFunctionRequestObject
+{
+    CaseObjCarrier CassCarrier;
+    struct _ScopeObject * ScopePointer;
+    const EventObj EventTemplate;
+} CMOFunctionRequestObj;
+
 typedef struct _MIONEFunctionRespondObject
 {
     TrainObjCarrier TrainCarrier;
     EventObj Event;
 } MIONEFunctionRespondObj;
+
+typedef struct _MIONEFunctionRequestObject
+{
+    MioneObjCarrier MioneCarrier;
+    const EventObj EventTemplate;
+} MIONEFunctionRequestObj;
 
 typedef struct _IMPLEMENTFunctionRespondObject
 {
@@ -296,6 +324,13 @@ typedef struct _IMPLEMENTFunctionRespondObject
     VariableObjCarrier MajorVariables;
     EventObj Event;
 } IMPLEMENTFunctionRespondObj;
+
+typedef struct _IMPLEMENTFunctionRequestObject
+{
+    TrainObjCarrier Built;
+    ValueObjCarrier CallByValueCarrier;
+    const EventObj EventTemplate;
+} IMPLEMENTFunctionRequestObj;
 
 typedef struct _HeadFunctionRespondObject
 {
@@ -312,13 +347,9 @@ typedef struct _HeadFunctionRequestObject
     ValueObjCarrier CallByValueCarrier; //傳入的值
 
     VariableObjPtrCarrier VariablePtrCarrier; //以上本作用域特色變數
-} HeadFunctionRequestObj;
 
-typedef struct _ToImplementObject
-{
-    TrainObjCarrier Built;
-    ValueObjCarrier CallByValueCarrier;
-} ToImplementObj;
+    const EventObj EventTemplate;
+} HeadFunctionRequestObj;
 
 typedef struct _ScopeObject
 {
@@ -344,5 +375,43 @@ typedef struct _ExternalLibraryRequestObject
 {
     ValueObjCarrier ValueCarrier;
 } ExternalLibraryRequestObj;
+
+typedef struct _CONTAINERRequestObject
+{
+    MioneObjCarrier MioneCarrier;
+    EventObj EventTemplate;
+} CONTAINERRequestObj;
+
+typedef struct _CONTAINERRespondObject
+{
+    VariableObjPtrCarrier VariablePtrCarrier;
+    EventObj Event;
+
+} CONTAINERRespondObj;
+
+typedef struct _RESOURCERequestObject
+{
+    MioneObjCarrier MioneCarrier;
+    EventObj EventTemplate;
+} RESOURCERequestObj;
+
+typedef struct _RESOURCERespondObject
+{
+    ValueObjCarrier ValueCarrier;
+    EventObj Event;
+} RESOURCERespondObj;
+
+typedef struct _COMPUTATIONRequestObject
+{
+    MioneObjCarrier MioneCarrier;
+    EventObj EventTemplate;
+} COMPUTATIONRequestObj;
+
+typedef struct _COMPUTATIONRespondObject
+{
+    MioneObjCarrier MioneCarrier;
+    EventObj Event;
+} COMPUTATIONRespondObj;
+
 
 #endif //OBJECTS_H

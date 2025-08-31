@@ -1,3 +1,3 @@
 #include <stdio.h>
 
-extern FCOFunctionRespondObj FCO(FILE* F);
+extern FCOFunctionRespondObj FCO(FCOFunctionRequestObj);

@@ -27,7 +27,10 @@ HeadFunctionRespondObj GET(const HeadFunctionRequestObj * HeadCallObjectPointer)
         {
         case HEAD:
             {
-                HeadSuffix = REQUEST(Pair.CarriagePassengers);
+                HeadSuffix = CONTAINER((CONTAINERRequestObj){
+                            .MioneCarrier = Pair.CarriagePassengers,
+                            .EventTemplate = HeadCallObject.EventTemplate
+                        }).VariablePtrCarrier;
 
                 break;
             }
@@ -37,7 +40,10 @@ HeadFunctionRespondObj GET(const HeadFunctionRequestObj * HeadCallObjectPointer)
                 {
                 case 2:
                     {
-                        ModelPromptSuffix = REQUEST(Pair.CarriagePassengers);
+                        ModelPromptSuffix = CONTAINER((CONTAINERRequestObj){
+                            .MioneCarrier = Pair.CarriagePassengers,
+                            .EventTemplate = HeadCallObject.EventTemplate
+                        }).VariablePtrCarrier;
                         break;
                     }
                 default: exit(-3);

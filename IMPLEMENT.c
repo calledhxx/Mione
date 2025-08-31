@@ -8,14 +8,15 @@
 #include "HeadFile/SET.h"
 #include "HeadFile/SVV.h"
 
-IMPLEMENTFunctionRespondObj IMPLEMENT(const ToImplementObj toImplement)
+IMPLEMENTFunctionRespondObj IMPLEMENT(const IMPLEMENTFunctionRequestObj input)
 {
     IMPLEMENTFunctionRespondObj Obj = {0};
+    Obj.Event = input.EventTemplate;
 
     ValueAndVariableObjCarrier VAVCarrier = {0};
 
-    const unsigned int SectionsSize = toImplement.Built.CarrierLen;
-    const TrainObj * Sections = toImplement.Built.Carrier;
+    const unsigned int SectionsSize = input.Built.CarrierLen;
+    const TrainObj * Sections = input.Built.Carrier;
 
 
     for (unsigned int SectionIndex = 0; SectionIndex < SectionsSize; SectionIndex++)
@@ -33,7 +34,9 @@ IMPLEMENTFunctionRespondObj IMPLEMENT(const ToImplementObj toImplement)
                            .CarrierLen = Obj.MajorVariables.CarrierLen
                        },
 
-                       .CallByValueCarrier = toImplement.CallByValueCarrier,
+                       .CallByValueCarrier = input.CallByValueCarrier,
+
+                       .EventTemplate = input.EventTemplate
                    });
 
             if (HeadReturn.Event.Code != 0)
@@ -89,10 +92,12 @@ IMPLEMENTFunctionRespondObj IMPLEMENT(const ToImplementObj toImplement)
 
                 Obj.ReturnValues.CarrierLen += HeadReturn.ReturnValues.CarrierLen;
 
-                break;
+                goto end;
             }
         }
     }
+
+    end:
 
     if (VAVCarrier.CarrierLen)
     {

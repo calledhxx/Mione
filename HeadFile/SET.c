@@ -34,7 +34,10 @@ HeadFunctionRespondObj SET(const HeadFunctionRequestObj * HeadCallObjectPointer)
         {
         case HEAD:
             {
-                HeadSuffix = REQUEST(Pair.CarriagePassengers);
+                HeadSuffix = CONTAINER((CONTAINERRequestObj){
+                            .MioneCarrier = Pair.CarriagePassengers,
+                            .EventTemplate = HeadCallObject.EventTemplate
+                        }).VariablePtrCarrier;
                 break;
             }
         case PROMPT:
@@ -43,7 +46,10 @@ HeadFunctionRespondObj SET(const HeadFunctionRequestObj * HeadCallObjectPointer)
                 {
                 case 1:
                     {
-                        SetPromptSuffix = COUNT(Pair.CarriagePassengers);
+                        SetPromptSuffix = RESOURCE((RESOURCERequestObj){
+                            .MioneCarrier = Pair.CarriagePassengers,
+                            .EventTemplate = HeadCallObject.EventTemplate
+                        }).ValueCarrier;
                         break;
                     }
                 default: exit(-5);

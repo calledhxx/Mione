@@ -28,7 +28,10 @@ HeadFunctionRespondObj RETURN(const HeadFunctionRequestObj * HeadCallObjectPoint
         {
         case HEAD:
             {
-                HeadSuffix = COUNT(Pair.CarriagePassengers);
+                HeadSuffix = RESOURCE((RESOURCERequestObj){
+                            .MioneCarrier = Pair.CarriagePassengers,
+                            .EventTemplate = HeadCallObject.EventTemplate
+                        }).ValueCarrier;
 
                 if (!HeadSuffix.CarrierLen)
                 {

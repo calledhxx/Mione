@@ -3,4 +3,4 @@
 //
 
 
-extern MIONEFunctionRespondObj ToMione(const MioneObjCarrier ToBuildObj);
+extern MIONEFunctionRespondObj ToMione(MIONEFunctionRequestObj);

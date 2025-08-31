@@ -58,12 +58,15 @@ static void pushMioneObjectIntoLayout(MioneLayoutObj * LayoutPtr,const MioneObj 
 }
 
 CMOFunctionRespondObj CMO(
-    const CaseObjCarrier Carrier,
-    ScopeObj * ScopePointer
+    CMOFunctionRequestObj input
     )
 {
 
+    CaseObjCarrier Carrier = input.CassCarrier;
+    ScopeObj * ScopePointer = input.ScopePointer;
+
     CMOFunctionRespondObj Result = {0};
+    Result.Event = input.EventTemplate;
 
     HeadObjCarrier HeadList = ReturnHeadList();
     SymbolObjCarrier SymbolList = ReturnSymbolList();
@@ -184,7 +187,10 @@ CMOFunctionRespondObj CMO(
 
                                 TrainObjCarrier * TrainObjCarrierPtr = malloc(sizeof(TrainObjCarrier));
 
-                                const MIONEFunctionRespondObj ToMioneReturn = ToMione(layout.MioneObjectsCarrier);
+                                const MIONEFunctionRespondObj ToMioneReturn = ToMione((MIONEFunctionRequestObj){
+                                    .MioneCarrier = layout.MioneObjectsCarrier,
+                                    .EventTemplate = input.EventTemplate
+                                });
 
                                 if (ToMioneReturn.Event.Code)
                                     exit(1);
@@ -297,7 +303,10 @@ CMOFunctionRespondObj CMO(
 
                                 TrainObjCarrier * TrainObjCarrierPtr = malloc(sizeof(TrainObjCarrier));
 
-                                const MIONEFunctionRespondObj ToMioneReturn = ToMione(layout.MioneObjectsCarrier);
+                                const MIONEFunctionRespondObj ToMioneReturn = ToMione((MIONEFunctionRequestObj){
+                                    .MioneCarrier = layout.MioneObjectsCarrier,
+                                    .EventTemplate = input.EventTemplate
+                                });
 
                                 if (ToMioneReturn.Event.Code)
                                     exit(1);
@@ -486,11 +495,9 @@ CMOFunctionRespondObj CMO(
                 case CASE_CONNECTABLE: //跳出 之後Error Handle 嘻嘻
                 case CASE_UNCONNECTABLE:
                     {
-                        Result.Event = (EventObj){
-                            .Code = 2,
-                            .Message = "Unknown Word wanted to be SYMBOL.",
-                            .EventPosition = ThisCase.CasePosition
-                        };
+                        Result.Event.Code = 2;
+                        Result.Event.Message = "Unknown Word wanted to be SYMBOL.";
+                        Result.Event.EventPosition = ThisCase.CasePosition;
 
                         Result.MioneCarrier = LayoutsCarrier.Carrier[0].MioneObjectsCarrier;
 

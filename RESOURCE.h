@@ -1,0 +1,1 @@
+extern  RESOURCERespondObj RESOURCE(RESOURCERequestObj);

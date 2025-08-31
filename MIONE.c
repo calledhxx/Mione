@@ -72,9 +72,11 @@ static void SavePassengerIntoCarriage(
 
 }
 
-MIONEFunctionRespondObj ToMione(const MioneObjCarrier ToBuildObj)
+MIONEFunctionRespondObj ToMione(MIONEFunctionRequestObj input)
 {
+    MioneObjCarrier ToBuildObj = input.MioneCarrier;
     MIONEFunctionRespondObj Result = {0};
+    Result.Event = input.EventTemplate;
 
     const unsigned int ObjsSize = ToBuildObj.CarrierLen;
     const MioneObj* Objs = ToBuildObj.Carrier;

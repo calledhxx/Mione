@@ -23,9 +23,10 @@ HeadFunctionRespondObj INCLUDE(const HeadFunctionRequestObj * HeadCallObjectPoin
         {
         case HEAD:
             {
-                HeadSuffix = COUNT(Pair.CarriagePassengers);
-
-
+                HeadSuffix = RESOURCE((RESOURCERequestObj){
+                            .MioneCarrier = Pair.CarriagePassengers,
+                            .EventTemplate = HeadCallObject.EventTemplate
+                        }).ValueCarrier;
 
                 break;
             }
@@ -35,7 +36,10 @@ HeadFunctionRespondObj INCLUDE(const HeadFunctionRequestObj * HeadCallObjectPoin
                 {
                 case 8:
                     {
-                        AsPromptSuffix = REQUEST(Pair.CarriagePassengers);
+                        AsPromptSuffix = CONTAINER((CONTAINERRequestObj){
+                            .MioneCarrier = Pair.CarriagePassengers,
+                            .EventTemplate = HeadCallObject.EventTemplate
+                        }).VariablePtrCarrier;
                         break;
                     }
                 }
@@ -66,14 +70,19 @@ HeadFunctionRespondObj INCLUDE(const HeadFunctionRequestObj * HeadCallObjectPoin
         newScope.ChildrenScopePtrCarrierPointer = malloc(sizeof(ScopeObjPtrCarrier));
         *newScope.ChildrenScopePtrCarrierPointer = (ScopeObjPtrCarrier){0};
 
-        const FCOFunctionRespondObj FCOReturn = FCO(File);
+        const EventObj EventTemplate = (EventObj){
+            .Address = HeadSuffix.Carrier[0].String
+        };
 
-        const CMOFunctionRespondObj CMOReturn = CMO(FCOReturn.CaseCarrier,&newScope);
+        const FCOFunctionRespondObj FCOReturn = FCO((FCOFunctionRequestObj){.f = File, .EventTemplate = EventTemplate});
 
-        const MIONEFunctionRespondObj ToMioneReturn = ToMione(CMOReturn.MioneCarrier);
+        const CMOFunctionRespondObj CMOReturn = CMO((CMOFunctionRequestObj){.EventTemplate = EventTemplate, .CassCarrier = FCOReturn.CaseCarrier, .ScopePointer = &newScope});
 
-        const IMPLEMENTFunctionRespondObj IMPLEMENTReturn = IMPLEMENT((ToImplementObj){
-            .Built = ToMioneReturn.TrainCarrier
+        const MIONEFunctionRespondObj ToMioneReturn = ToMione((MIONEFunctionRequestObj){ .EventTemplate = EventTemplate, .MioneCarrier = CMOReturn.MioneCarrier});
+
+        const IMPLEMENTFunctionRespondObj IMPLEMENTReturn = IMPLEMENT((IMPLEMENTFunctionRequestObj){
+            .Built = ToMioneReturn.TrainCarrier,
+            .EventTemplate = EventTemplate,
         });
 
         if (!AsPromptSuffix.CarrierLen)

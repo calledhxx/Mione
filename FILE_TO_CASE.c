@@ -67,9 +67,12 @@ int CheckCharType(const char Char)
     return 1;
 }
 
-FCOFunctionRespondObj FCO(FILE* F)
+FCOFunctionRespondObj FCO(FCOFunctionRequestObj input)
 {
+    FILE *F = input.f;
+
     FCOFunctionRespondObj Result = {0};
+    Result.Event = input.EventTemplate;
     
     CaseObjCarrier CaseCarriers = {0};
 
@@ -582,17 +585,14 @@ FCOFunctionRespondObj FCO(FILE* F)
 
                     default:
                         {
-                            Result.Event = (EventObj){
-                                .Code = 1,
-                                .Message = "Unknown Char.",
-                                .EventPosition = (CasePositionObj){
+                            Result.Event.Code = 1;
+                            Result.Event.Message = "Unknown Char.";
+                            Result.Event.EventPosition = (CasePositionObj){
                                     .CaseEndColumn = ProcessingColumn,
                                     .CaseStartColumn = CaseStartColumn,
                                     .CaseEndLine = ProcessingLine,
                                     .CaseStartLine = CaseStartLine,
-                                }
-                            };
-
+                                };
 
                             Result.CaseCarrier = CaseCarriers;
 
@@ -643,17 +643,14 @@ FCOFunctionRespondObj FCO(FILE* F)
                             }
                         default:
                             {
-                                Result.Event = (EventObj){
-                                    .Code = 2,
-                                    .Message = "Unknown Super char parent type.",
-                                    .EventPosition = (CasePositionObj){
-                                        .CaseEndColumn = ProcessingColumn,
-                                        .CaseStartColumn = CaseStartColumn,
-                                        .CaseEndLine = ProcessingLine,
-                                        .CaseStartLine = CaseStartLine,
-                                    }
+                                Result.Event.Code = 2;
+                                Result.Event.Message = "Unknown Super char parent type.";
+                                Result.Event.EventPosition = (CasePositionObj){
+                                    .CaseEndColumn = ProcessingColumn,
+                                    .CaseStartColumn = CaseStartColumn,
+                                    .CaseEndLine = ProcessingLine,
+                                    .CaseStartLine = CaseStartLine,
                                 };
-
 
                                 Result.CaseCarrier = CaseCarriers;
 
@@ -683,17 +680,14 @@ FCOFunctionRespondObj FCO(FILE* F)
             }
         default:
             {
-                Result.Event = (EventObj){
-                    .Code = 2,
-                    .Message = "Unknown HandleType..",
-                    .EventPosition = (CasePositionObj){
-                        .CaseEndColumn = ProcessingColumn,
-                        .CaseStartColumn = CaseStartColumn,
-                        .CaseEndLine = ProcessingLine,
-                        .CaseStartLine = CaseStartLine,
-                    }
+                Result.Event.Code = 2;
+                Result.Event.Message = "Unknown HandleType..";
+                Result.Event.EventPosition = (CasePositionObj){
+                    .CaseEndColumn = ProcessingColumn,
+                    .CaseStartColumn = CaseStartColumn,
+                    .CaseEndLine = ProcessingLine,
+                    .CaseStartLine = CaseStartLine,
                 };
-
 
                 Result.CaseCarrier = CaseCarriers;
 

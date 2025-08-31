@@ -9,15 +9,18 @@
 #include "STDMIO.h"
 
 
-VariableObjPtrCarrier REQUEST(const MioneObjCarrier input)
+CONTAINERRespondObj CONTAINER(CONTAINERRequestObj input)
 {
     VariableObj ** VariablePointerCarrier = NULL;
     int VariablePointerCarrierLen = 0;
 
-    const MioneObjCarrier Computed = COMPUTATION(input);
+    const COMPUTATIONRespondObj Computed = COMPUTATION((COMPUTATIONRequestObj){
+        .EventTemplate = input.EventTemplate,
+        .MioneCarrier = input.MioneCarrier
+    });
 
-    const MioneObj * Pack = Computed.Carrier;
-    const unsigned int PackSize = Computed.CarrierLen;
+    const MioneObj * Pack = Computed.MioneCarrier.Carrier;
+    const unsigned int PackSize = Computed.MioneCarrier.CarrierLen;
 
 
     for (int i = 0; i < PackSize; i++)
@@ -34,8 +37,11 @@ VariableObjPtrCarrier REQUEST(const MioneObjCarrier input)
 
         }
 
-    return (VariableObjPtrCarrier){
-        .Carrier = VariablePointerCarrier,
+    return (CONTAINERRespondObj){
+        .VariablePtrCarrier = (VariableObjPtrCarrier){
+            .Carrier = VariablePointerCarrier,
         .CarrierLen= VariablePointerCarrierLen
+        },
+        .Event = Computed.Event,
     };
 }

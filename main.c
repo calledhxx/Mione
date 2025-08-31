@@ -10,42 +10,57 @@
 #error "NO"
 #endif
 
-
 int main(const int OptionsSize,char **Options)
 {
     ScopeObj MainScope = {0};
 
-    FILE *f = fopen("D:\\Mione\\index.mio", "r"); //never read binary again...
+    FILE *f = fopen("D:/Mione/index.mio", "r"); //never read binary again...
 
     MainScope.ChildrenScopePtrCarrierPointer = malloc(sizeof(ScopeObjPtrCarrier));
     *MainScope.ChildrenScopePtrCarrierPointer = (ScopeObjPtrCarrier){0};
 
     if (f == NULL) return -1;
 
+    const EventObj EventTemplate = (EventObj){
+        .Address = "D:/Mione/index.mio"
+    };
 
-    const FCOFunctionRespondObj FCOReturn = FCO(f);
+    const FCOFunctionRespondObj FCOReturn = FCO(
+        (FCOFunctionRequestObj){
+            .f = f,
+            .EventTemplate = EventTemplate
+        });
     //第一步，先將source code轉為case物件。
 
     if (FCOReturn.Event.Code)
         return 1;
 
 
-    const CMOFunctionRespondObj CMOReturn = CMO(FCOReturn.CaseCarrier,&MainScope);
+    const CMOFunctionRespondObj CMOReturn = CMO((CMOFunctionRequestObj){
+        .EventTemplate = EventTemplate,
+        .CassCarrier = FCOReturn.CaseCarrier,
+        .ScopePointer = &MainScope
+    });
     //第二步，將case物件轉為Mione物件。
 
     if (CMOReturn.Event.Code)
         return 2;
 
 
-    const MIONEFunctionRespondObj ToMioneReturn = ToMione(CMOReturn.MioneCarrier);
+    const MIONEFunctionRespondObj ToMioneReturn = ToMione((MIONEFunctionRequestObj){
+        .MioneCarrier = CMOReturn.MioneCarrier,
+        .EventTemplate = EventTemplate
+    });
     //第三步，將Mione物件轉為程式句。
 
     if (ToMioneReturn.Event.Code)
         return 3;
 
 
-    const IMPLEMENTFunctionRespondObj IMPLEMENTReturn = IMPLEMENT((ToImplementObj){
-        .Built = ToMioneReturn.TrainCarrier
+    const IMPLEMENTFunctionRespondObj IMPLEMENTReturn = IMPLEMENT((IMPLEMENTFunctionRequestObj){
+        .EventTemplate = EventTemplate,
+        .Built = ToMioneReturn.TrainCarrier,
+        .CallByValueCarrier = (ValueObjCarrier){0}
     });
     //第四步，執行程式句。
 

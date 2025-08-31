@@ -23,7 +23,10 @@ HeadFunctionRespondObj ENTER(const HeadFunctionRequestObj * HeadCallObjectPointe
         {
         case HEAD:
             {
-                HeadSuffix = COUNT(Pair.CarriagePassengers);
+                HeadSuffix = RESOURCE((RESOURCERequestObj){
+                    .MioneCarrier = Pair.CarriagePassengers,
+                    .EventTemplate = HeadCallObject.EventTemplate
+                }).ValueCarrier;
                 break;
             }
         case PROMPT:
@@ -32,18 +35,27 @@ HeadFunctionRespondObj ENTER(const HeadFunctionRequestObj * HeadCallObjectPointe
                 {
                 case 3:
                     {
-                        RequestPromptSuffix = COUNT(Pair.CarriagePassengers);
+                        RequestPromptSuffix = RESOURCE((RESOURCERequestObj){
+                            .MioneCarrier = Pair.CarriagePassengers,
+                            .EventTemplate = HeadCallObject.EventTemplate
+                        }).ValueCarrier;
                         break;
                     }
                 case 5:
                     {
-                        RespondPromptSuffix = REQUEST(Pair.CarriagePassengers);
+                        RespondPromptSuffix = CONTAINER((CONTAINERRequestObj){
+                            .MioneCarrier = Pair.CarriagePassengers,
+                            .EventTemplate = HeadCallObject.EventTemplate
+                        }).VariablePtrCarrier;
                         break;
                     }
 
                 case 7:
                     {
-                        OfPromptSuffix = COUNT(Pair.CarriagePassengers);
+                        OfPromptSuffix = RESOURCE((RESOURCERequestObj){
+                            .MioneCarrier = Pair.CarriagePassengers,
+                            .EventTemplate = HeadCallObject.EventTemplate
+                        }).ValueCarrier;;
                         break;
                     }
                 default: exit(1);

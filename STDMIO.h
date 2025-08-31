@@ -13,8 +13,8 @@
 #include "PROMPT_DEF.h"
 #include "SYMBOL_DEF.h"
 
-#include "COUNT.h"
-#include "REQUEST.h"
+#include "RESOURCE.h"
+#include "CONTAINER.h"
 
 #include "COMPUTATION.h"
 #include "VARIABLE_PROCESSING.h"

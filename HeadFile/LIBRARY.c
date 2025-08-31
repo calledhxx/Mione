@@ -26,7 +26,10 @@ HeadFunctionRespondObj LIBRARY(const HeadFunctionRequestObj * HeadCallObjectPoin
         {
         case HEAD:
             {
-                HeadSuffix = REQUEST(Pair.CarriagePassengers);
+                HeadSuffix = CONTAINER((CONTAINERRequestObj){
+                            .MioneCarrier = Pair.CarriagePassengers,
+                            .EventTemplate = HeadCallObject.EventTemplate
+                        }).VariablePtrCarrier;
 
                 break;
             }
@@ -36,7 +39,10 @@ HeadFunctionRespondObj LIBRARY(const HeadFunctionRequestObj * HeadCallObjectPoin
                 {
                 case 6:
                     {
-                        FromPromptSuffix = COUNT(Pair.CarriagePassengers);
+                        FromPromptSuffix = RESOURCE((RESOURCERequestObj){
+                            .MioneCarrier = Pair.CarriagePassengers,
+                            .EventTemplate = HeadCallObject.EventTemplate
+                        }).ValueCarrier;
                         break;
                     }
                 default: exit(1);

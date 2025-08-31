@@ -9,16 +9,20 @@
 #include "STDMIO.h"
 
 
-ValueObjCarrier COUNT(const MioneObjCarrier input)
+RESOURCERespondObj RESOURCE(const RESOURCERequestObj input)
 {
 
     ValueObj * ValueCarrier = NULL;
     int ValueCarrierLen = 0;
 
-    const MioneObjCarrier Computed = COMPUTATION(input);
 
-    const MioneObj * Pack = Computed.Carrier;
-    const unsigned int PackSize = Computed.CarrierLen;
+    const COMPUTATIONRespondObj Computed = COMPUTATION((COMPUTATIONRequestObj){
+        .EventTemplate = input.EventTemplate,
+        .MioneCarrier = input.MioneCarrier
+    });
+
+    const MioneObj * Pack = Computed.MioneCarrier.Carrier;
+    const unsigned int PackSize = Computed.MioneCarrier.CarrierLen;
 
 
     for (int i = 0; i < PackSize; i++)
@@ -34,8 +38,11 @@ ValueObjCarrier COUNT(const MioneObjCarrier input)
             ValueCarrier[ValueCarrierLen-1] = ReturnVariablePtrFromLink(*Pack[i].VariableLinkPtr)->Value;
         }
 
-    return (ValueObjCarrier){
-        .Carrier = ValueCarrier,
-        .CarrierLen= ValueCarrierLen
+    return (RESOURCERespondObj){
+        .ValueCarrier = (ValueObjCarrier){
+            .Carrier = ValueCarrier,
+            .CarrierLen= ValueCarrierLen
+        },
+        .Event = Computed.Event,
     };
 }

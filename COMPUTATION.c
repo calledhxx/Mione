@@ -4,13 +4,14 @@
 
 #include "STDMIO.h"
 
-
-MioneObjCarrier COMPUTATION(MioneObjCarrier input)
+COMPUTATIONRespondObj COMPUTATION(COMPUTATIONRequestObj input)
 {
-    unsigned int PackSize = input.CarrierLen;
-    MioneObj* Pack = input.Carrier;
+    EventObj Event = input.EventTemplate;
+    unsigned int PackSize = input.MioneCarrier.CarrierLen;
+    MioneObj* Pack = input.MioneCarrier.Carrier;
 
-     if (PackSize == 0) return (MioneObjCarrier){0};
+     if (PackSize == 0)
+         return (COMPUTATIONRespondObj){.Event = Event};
 
     int FirstBracketIndex = 0; //頭括號位置
     int BracketsChild = 0; //括號多寡
@@ -25,7 +26,6 @@ MioneObjCarrier COMPUTATION(MioneObjCarrier input)
     for (int CountIndex = 0;CountIndex < CountLoop;CountIndex++) //Count Layers
     for(int i = 0; i < PackSize; i++)
     {
-
         switch (Pack[i].ObjType)
         {
         case SYMBOL:
@@ -58,14 +58,17 @@ MioneObjCarrier COMPUTATION(MioneObjCarrier input)
                     {
                         BracketCur = 0;
 
-                        ValueObjCarrier ChildCount = COUNT((MioneObjCarrier){
-                            .Carrier = inBracket,
-                            .CarrierLen = inBracketSize
+                         RESOURCERespondObj ChildCount = RESOURCE((RESOURCERequestObj){
+                             .MioneCarrier = (MioneObjCarrier){
+                                 .Carrier = inBracket,
+                                .CarrierLen = inBracketSize
+                             },
+                             .EventTemplate = input.EventTemplate
                         });
 
                         ValueObj TheValue = {0};
 
-                        if (ChildCount.CarrierLen==1){
+                        if (ChildCount.ValueCarrier.CarrierLen==1){
                             if (FirstBracketIndex - 1 >=0)
                             {
                                 ValueObj nearByValue;
@@ -89,18 +92,18 @@ MioneObjCarrier COMPUTATION(MioneObjCarrier input)
                                 {
                                     for (int index = 0 ;index<nearByValue.Table.VariableObjCarrierPointer->CarrierLen;index++)
                                     {
-                                        switch (ChildCount.Carrier[0].ValueType)
+                                        switch (ChildCount.ValueCarrier.Carrier[0].ValueType)
                                         {
                                         case VALUE_STRING_TYPE:
                                             {
 
-                                                if (strcmp(nearByValue.Table.VariableObjCarrierPointer->Carrier[index].VariableName,ChildCount.Carrier[0].String) == 0 )
+                                                if (strcmp(nearByValue.Table.VariableObjCarrierPointer->Carrier[index].VariableName,ChildCount.ValueCarrier.Carrier[0].String) == 0 )
                                                     TheValue = nearByValue.Table.VariableObjCarrierPointer->Carrier[index].Value;
                                                 break;
                                             }
                                         case VALUE_NUMBER_TYPE:
                                             {
-                                                if (nearByValue.Table.VariableObjCarrierPointer->Carrier[index].VariablePlace == (unsigned)ChildCount.Carrier[0].Number)
+                                                if (nearByValue.Table.VariableObjCarrierPointer->Carrier[index].VariablePlace == (unsigned)ChildCount.ValueCarrier.Carrier[0].Number)
                                                     TheValue = nearByValue.Table.VariableObjCarrierPointer->Carrier[index].Value;
                                                 break;
                                             }
@@ -114,7 +117,7 @@ MioneObjCarrier COMPUTATION(MioneObjCarrier input)
 
                             }else
                             {
-                                switch (ChildCount.Carrier[0].ValueType)
+                                switch (ChildCount.ValueCarrier.Carrier[0].ValueType)
                                 {
 
                                 case VALUE_STRING_TYPE:
@@ -123,7 +126,7 @@ MioneObjCarrier COMPUTATION(MioneObjCarrier input)
 
                                         VariableLinkObj * VariableLinkPtr = ReturnVariableLinkPtrIfAlreadyExistedInScope(
                                             *Pack[0].PointerOfScope,
-                                            ChildCount.Carrier[0].String,
+                                            ChildCount.ValueCarrier.Carrier[0].String,
                                             0,
                                             &inParentScope
                                             );
@@ -140,7 +143,7 @@ MioneObjCarrier COMPUTATION(MioneObjCarrier input)
                                         VariableLinkObj * VariableLinkPtr = ReturnVariableLinkPtrIfAlreadyExistedInScope(
                                             *Pack[0].PointerOfScope,
                                             0,
-                                            (int)ChildCount.Carrier[0].Number,
+                                            (int)ChildCount.ValueCarrier.Carrier[0].Number,
                                             &inParentScope
                                             );
 
@@ -225,9 +228,12 @@ MioneObjCarrier COMPUTATION(MioneObjCarrier input)
                         int FunctionCalled = 0;
                         BracketCur = 0;
 
-                        ValueObjCarrier ChildCount = COUNT((MioneObjCarrier){
-                            .Carrier = inBracket,
-                            .CarrierLen = inBracketSize
+                        RESOURCERespondObj ChildCount = RESOURCE((RESOURCERequestObj){
+                            .MioneCarrier = (MioneObjCarrier){
+                                .Carrier = inBracket,
+                                .CarrierLen = inBracketSize
+                            },
+                            .EventTemplate = input.EventTemplate
                         });
 
                         if (FirstBracketIndex > 0)
@@ -241,9 +247,9 @@ MioneObjCarrier COMPUTATION(MioneObjCarrier input)
                                     if (ReturnVariablePtrFromLink(*Pack[FirstBracketIndex - 1].VariableLinkPtr)->Value.ValueType == VALUE_FUNCTION_TYPE)
                                     {
 
-                                        IMPLEMENTFunctionRespondObj IMPLEMENTReturn =  IMPLEMENT((ToImplementObj){
+                                        IMPLEMENTFunctionRespondObj IMPLEMENTReturn =  IMPLEMENT((IMPLEMENTFunctionRequestObj){
                                             .Built =  *ReturnVariablePtrFromLink(*Pack[FirstBracketIndex - 1].VariableLinkPtr)->Value.Area.TrainObjCarrierPointer,
-                                            .CallByValueCarrier = ChildCount
+                                            .CallByValueCarrier = ChildCount.ValueCarrier
                                         });
 
                                         if (IMPLEMENTReturn.Event.Code)
@@ -302,9 +308,9 @@ MioneObjCarrier COMPUTATION(MioneObjCarrier input)
                                 {
                                     if (Pack[FirstBracketIndex - 1].Value.ValueType == VALUE_FUNCTION_TYPE)
                                     {
-                                        IMPLEMENTFunctionRespondObj IMPLEMENTReturn = IMPLEMENT((ToImplementObj){
+                                        IMPLEMENTFunctionRespondObj IMPLEMENTReturn = IMPLEMENT((IMPLEMENTFunctionRequestObj){
                                             .Built =  *Pack[FirstBracketIndex - 1].Value.Area.TrainObjCarrierPointer,
-                                            .CallByValueCarrier = ChildCount
+                                            .CallByValueCarrier = ChildCount.ValueCarrier,
                                         });
 
 
@@ -378,13 +384,13 @@ MioneObjCarrier COMPUTATION(MioneObjCarrier input)
                             }
 
 
-                            for (int index = 0; index < ChildCount.CarrierLen; index++)
+                            for (int index = 0; index < ChildCount.ValueCarrier.CarrierLen; index++)
                             {
                                 NewPackSize++;
                                 NewPack = realloc(NewPack, NewPackSize * sizeof(MioneObj));
                                 NewPack[NewPackSize - 1] = (MioneObj){
                                     .ObjType = VALUE,
-                                    .Value = ChildCount.Carrier[index]
+                                    .Value = ChildCount.ValueCarrier.Carrier[index]
                                 };
 
                             }
@@ -508,8 +514,8 @@ MioneObjCarrier COMPUTATION(MioneObjCarrier input)
             {
                 if (Pack[i].ObjType == VALUE && Pack[i].Value.ValueType == VALUE_TABLE_TYPE && !Pack[i].Value.Table.VariableObjCarrierPointer)
                 {
-                    IMPLEMENTFunctionRespondObj IMPLEMENTReturn = IMPLEMENT((ToImplementObj){
-                        .Built = *Pack[i].Value.Table.TrainObjCarrierPointer
+                    IMPLEMENTFunctionRespondObj IMPLEMENTReturn = IMPLEMENT((IMPLEMENTFunctionRequestObj){
+                        .Built = *Pack[i].Value.Table.TrainObjCarrierPointer,
                     });
 
                     unsigned VarsSize = IMPLEMENTReturn.MajorVariables.CarrierLen;
@@ -559,8 +565,11 @@ MioneObjCarrier COMPUTATION(MioneObjCarrier input)
 
     if (BracketCur) exit(1);
 
-    return (MioneObjCarrier){
-        .Carrier = Pack,
-        .CarrierLen = PackSize,
+    return (COMPUTATIONRespondObj){
+        .MioneCarrier = (MioneObjCarrier){
+            .Carrier = Pack,
+            .CarrierLen = PackSize,
+        },
+        .Event = Event
     };
 }
