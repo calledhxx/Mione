@@ -91,8 +91,8 @@ FCOFunctionRespondObj FCO(FCOFunctionRequestObj input)
 
     uint8_t StringHandleChar = 0; //字串類型 `'` 與 `"` 的編碼
 
-    unsigned int CaseStartLine = 0; //Case開始行號
-    unsigned int CaseStartColumn = 0; //Case開始列號
+    unsigned int CaseStartLine = 1; //Case開始行號
+    unsigned int CaseStartColumn = 1; //Case開始列號
 
     unsigned int ProcessingLine = 1;
     unsigned int ProcessingColumn = 1;
@@ -643,7 +643,7 @@ FCOFunctionRespondObj FCO(FCOFunctionRequestObj input)
                             }
                         default:
                             {
-                                Result.Event.Code = 2;
+                                Result.Event.Code = EVENT_ERROR_UNKNOWN_SUPER_CHAR_PARENT,
                                 Result.Event.Message = "Unknown Super char parent type.";
                                 Result.Event.EventPosition = (CasePositionObj){
                                     .CaseEndColumn = ProcessingColumn,

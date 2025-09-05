@@ -1,24 +1,30 @@
 #include "STDMIO.h"
 
+
+
 void MainEventHandler(const EventObj Event)
 {
-    if (Event.Code)
+    switch (Event.Code)
     {
-        fwrite("[Mione failed] ",1,15,stdout);
-
-        switch (Event.Code)
+    case EVENT_ERROR_UNKNOWN_SUPER_CHAR_PARENT:
         {
-        case EVENT_ERROR_NO_FILE_FOUND:
-            {
-                printf("%d ",Event.Code);
+            printf(
+                "%s:%d:%d~%d:%d %d \"%s\"",
+                   Event.Address,
+                   Event.EventPosition.CaseStartLine,
+                   Event.EventPosition.CaseStartColumn,
+                   Event.EventPosition.CaseEndLine,
+                   Event.EventPosition.CaseEndColumn,
+                   Event.Code,
+                   Event.Message
+                   );
 
-                fwrite("[Mione failed] ",1,15,stdout);
-
-                break;
-            }
-        default:
-            exit(1);
+            break;
         }
-    }else
-        return;
+    default:
+        exit(1);
+    }
+
+
+    exit(-123);
 }

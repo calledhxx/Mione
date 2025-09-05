@@ -32,6 +32,8 @@ int main(const int OptionsSize,char **Options)
         });
     //第一步，先將source code轉為case物件。
 
+    MainEventHandler(FCOReturn.Event);
+
     if (FCOReturn.Event.Code)
         return 1;
 

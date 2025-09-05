@@ -68,6 +68,7 @@ enum
 {
     EVENT_NONE,
     EVENT_ERROR_NO_FILE_FOUND,
+    EVENT_ERROR_UNKNOWN_SUPER_CHAR_PARENT,
     EVENT_ERROR
 };
 
@@ -274,9 +275,9 @@ typedef struct _PointersOfVariableObjectPointersCarrier
 
 typedef struct _EventObject
 {
-    wchar_t * Address;
+    char * Address;
     char * Message;
-    signed Code;
+    unsigned Code;
     CasePositionObj EventPosition;
 } EventObj;
 
@@ -374,6 +375,7 @@ typedef struct _ExternalLibraryRespondObject
 typedef struct _ExternalLibraryRequestObject
 {
     ValueObjCarrier ValueCarrier;
+    EventObj Event;
 } ExternalLibraryRequestObj;
 
 typedef struct _CONTAINERRequestObject
