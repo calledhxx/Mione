@@ -34,8 +34,6 @@ int main(const int OptionsSize,char **Options)
 
     MainEventHandler(FCOReturn.Event);
 
-    if (FCOReturn.Event.Code)
-        return 1;
 
 
     const CMOFunctionRespondObj CMOReturn = CMO((CMOFunctionRequestObj){
@@ -45,8 +43,7 @@ int main(const int OptionsSize,char **Options)
     });
     //第二步，將case物件轉為Mione物件。
 
-    if (CMOReturn.Event.Code)
-        return 2;
+    MainEventHandler(CMOReturn.Event);
 
 
     const MIONEFunctionRespondObj ToMioneReturn = ToMione((MIONEFunctionRequestObj){
@@ -55,8 +52,8 @@ int main(const int OptionsSize,char **Options)
     });
     //第三步，將Mione物件轉為程式句。
 
-    if (ToMioneReturn.Event.Code)
-        return 3;
+    MainEventHandler(ToMioneReturn.Event);
+
 
 
     const IMPLEMENTFunctionRespondObj IMPLEMENTReturn = IMPLEMENT((IMPLEMENTFunctionRequestObj){
@@ -66,8 +63,8 @@ int main(const int OptionsSize,char **Options)
     });
     //第四步，執行程式句。
 
-    if (IMPLEMENTReturn.Event.Code)
-        return 4;
+    MainEventHandler(IMPLEMENTReturn.Event);
+
 
     printf("Hello, Mione!\n");
     //正確執行完的回應

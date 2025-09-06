@@ -90,7 +90,6 @@ HeadFunctionRespondObj INCLUDE(const HeadFunctionRequestObj * HeadCallObjectPoin
 
         const unsigned len = _min(IMPLEMENTReturn.ReturnValues.CarrierLen,AsPromptSuffix.CarrierLen);
 
-
         for (unsigned i = 0; i < len ; i++)
             AsPromptSuffix.Carrier[i]->Value = IMPLEMENTReturn.ReturnValues.Carrier[i];
     }

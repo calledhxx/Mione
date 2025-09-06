@@ -1,0 +1,1 @@
+HeadFunctionRespondObj IF(const HeadFunctionRequestObj * HeadCallObjectPointer);

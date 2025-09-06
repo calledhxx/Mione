@@ -12,7 +12,9 @@
 static const char *NormalKeyword[] = {
     "function",
     "range",
-    "end"
+    "end",
+    "true",
+    "false"
 };
 
 static const char *UnconnectableKeyword[] = {
@@ -143,6 +145,8 @@ CMOFunctionRespondObj CMO(
                                     ScopePointer->ChildrenScopePtrCarrierPointer->CarrierLen - 1
                                     ];
 
+                                Paired = 1;
+
                                 break;
                             }
 
@@ -173,6 +177,8 @@ CMOFunctionRespondObj CMO(
                                 ScopePointer = ScopePointer->ChildrenScopePtrCarrierPointer->Carrier[
                                     ScopePointer->ChildrenScopePtrCarrierPointer->CarrierLen - 1
                                     ];
+
+                                Paired = 1;
 
                                 break;
                             }
@@ -209,10 +215,44 @@ CMOFunctionRespondObj CMO(
                                     }
                                 });
 
+                                Paired = 1;
 
                                 break;
                             }
+                        case 3: //true
+                            {
+                                ValueObj Value = {0};
+                                Value.db = 1;
+                                Value.ValueType = VALUE_DB_TYPE;
 
+                                pushMioneObjectIntoLayout(&LayoutsCarrier.Carrier[LayoutsCarrier.CarrierLen - 1], (MioneObj){
+                                    .ObjType = VALUE,
+                                    .PointerOfScope = ScopePointer,
+                                    .MioneObjectPosition = ThisCase.CasePosition,
+                                    .Value = Value
+                                });
+
+                                Paired = 1;
+
+                                break;
+                            }
+                        case 4: //false
+                            {
+                                ValueObj Value = {0};
+                                Value.db = 0;
+                                Value.ValueType = VALUE_DB_TYPE;
+
+                                pushMioneObjectIntoLayout(&LayoutsCarrier.Carrier[LayoutsCarrier.CarrierLen - 1], (MioneObj){
+                                    .ObjType = VALUE,
+                                    .PointerOfScope = ScopePointer,
+                                    .MioneObjectPosition = ThisCase.CasePosition,
+                                    .Value = Value
+                                });
+
+                                Paired = 1;
+
+                                break;
+                            }
                         default:
                             exit(-5);
                         }
@@ -291,6 +331,8 @@ CMOFunctionRespondObj CMO(
                                     ScopePointer->ChildrenScopePtrCarrierPointer->CarrierLen - 1
                                     ];
 
+                                Paired = 1;
+
                                 break;
                             }
 
@@ -325,6 +367,7 @@ CMOFunctionRespondObj CMO(
                                     }
                                 });
 
+                                Paired = 1;
 
                                 break;
                             }

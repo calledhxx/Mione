@@ -6,6 +6,8 @@ void MainEventHandler(const EventObj Event)
 {
     switch (Event.Code)
     {
+    case 0:
+        return;;
     case EVENT_ERROR_UNKNOWN_SUPER_CHAR_PARENT:
         {
             printf(
@@ -22,7 +24,7 @@ void MainEventHandler(const EventObj Event)
             break;
         }
     default:
-        exit(1);
+        exit(10);
     }
 
 

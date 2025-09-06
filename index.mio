@@ -1,1 +1,9 @@
-"\e"
+set x = 1;
+set y = 2;
+
+if false then range
+    x
+end
+else range
+    y
+end;

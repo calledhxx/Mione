@@ -78,7 +78,7 @@ HeadFunctionRespondObj SET(const HeadFunctionRequestObj * HeadCallObjectPointer)
                     (Result.MajorVariables.CarrierLen + HeadSuffix.CarrierLen)*sizeof(VariableObj)
                     );
 
-                unsigned len = _min(HeadSuffix.CarrierLen,SetPromptSuffix.CarrierLen);
+                const unsigned len = _min(HeadSuffix.CarrierLen,SetPromptSuffix.CarrierLen);
 
 
                 for (

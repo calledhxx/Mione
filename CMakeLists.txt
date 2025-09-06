@@ -34,4 +34,6 @@ add_executable(Mione
         HeadFile/INCLUDE.c
         EVENT_HANDLER.h
         EVENT_HANDLER.c
+        HeadFile/IF.h
+        HeadFile/IF.c
 )

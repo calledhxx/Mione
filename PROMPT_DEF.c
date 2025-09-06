@@ -6,8 +6,6 @@
 
 #include "OBJECTS.h"
 
-
-
 PromptObjCarrier ReturnPromptList()
 {
     const PromptObj Prompts[] = {
@@ -49,6 +47,16 @@ PromptObjCarrier ReturnPromptList()
         (PromptObj) {
             .Name = "as",
             .Identification = 8,
+        },
+
+        (PromptObj) {
+            .Name = "then",
+            .Identification = 9,
+        },
+
+        (PromptObj) {
+            .Name = "else",
+            .Identification = 10,
         }
     };
 

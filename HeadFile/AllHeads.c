@@ -9,6 +9,7 @@
 #include "LIBRARY.h"
 #include "ENTER.h"
 #include "INCLUDE.h"
+#include "IF.h"
 #include "SVV.h"
 
 
@@ -50,6 +51,12 @@ HeadObjCarrier ReturnHeadList()
             .Fuc = INCLUDE,
             .Name = "include",
             .Identification = 6,
+        },
+
+        (HeadObj){
+            .Fuc = IF,
+            .Name = "if",
+            .Identification = 7,
         }
     };
 
