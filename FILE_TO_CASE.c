@@ -23,7 +23,6 @@ int CheckCharType(const char Char)
 
     if (Char == '\'') return CT_SQ;
 
-    if (Char == '#') return CT_SHARP;
 
     static char CanConnectWithAnotherSymbol[] = {
         '*',
@@ -133,10 +132,6 @@ FCOFunctionRespondObj FCO(FCOFunctionRequestObj input)
                     if (!(
                         (LastCharType == CT_NORMAL && ThisCharType == CT_NUMBER)
                         ||
-                        (LastCharType == CT_SHARP && ThisCharType == CT_NORMAL)
-                        ||
-                        (LastCharType == CT_SHARP && ThisCharType == CT_NUMBER)
-                        ||
                         (LastCharType == CT_NUMBER && LastChar == '0' && CaseNameLen == 1 && ThisCharType == CT_NORMAL && (ThisChar == 'x' || ThisChar == 'b'))
                         ||
                         (RecordingNumber == 2 && ThisCharType == CT_NORMAL)
@@ -167,13 +162,6 @@ FCOFunctionRespondObj FCO(FCOFunctionRequestObj input)
                                 {
                                     CaseType = CASE_BREAKER;
 
-
-                                    break;
-                                }
-
-                            case CT_SHARP:
-                                {
-                                    CaseType = CASE_PHRASE;
 
                                     break;
                                 }
@@ -228,10 +216,6 @@ FCOFunctionRespondObj FCO(FCOFunctionRequestObj input)
                             CaseStartLine = ProcessingLine;
                         }
 
-                        if (LastCharType == CT_SHARP)
-                            ThisCharType = CT_SHARP;
-
-
                         if (
                             LastCharType == CT_NUMBER && LastChar == '0' && CaseNameLen == 1
                             &&
@@ -273,9 +257,6 @@ FCOFunctionRespondObj FCO(FCOFunctionRequestObj input)
 
                         if (LastCharType == CT_NORMAL)
                             ThisCharType = CT_NORMAL;
-
-                        if (LastCharType == CT_SHARP)
-                            ThisCharType = CT_SHARP;
 
                         if (RecordingNumber == 1)
                             if (!(ThisChar == '0' || ThisChar == '1'))
@@ -325,7 +306,6 @@ FCOFunctionRespondObj FCO(FCOFunctionRequestObj input)
                         break;
                     }
 
-                case CT_SHARP:
                 case CT_CONNECTABLE:
                     {
                         if (!CaseNameLen)
@@ -465,7 +445,6 @@ FCOFunctionRespondObj FCO(FCOFunctionRequestObj input)
                     }
                 case CT_NORMAL:
                 case CT_NUMBER:
-                case CT_SHARP:
                 case CT_CONNECTABLE:
                 case CT_UNCONNECTABLE:
                 case CT_SPACE:

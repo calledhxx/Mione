@@ -19,7 +19,6 @@ enum
     CT_NUMBER = 2,
     CT_DQ = 3,
     CT_SQ = 4,
-    CT_SHARP = 5,
     CT_CONNECTABLE = 9,
     CT_UNCONNECTABLE = 10,
     CT_SPACE = 11,
@@ -38,7 +37,6 @@ enum
     CASE_BINNUMBER,
     CASE_CONNECTABLE,
     CASE_UNCONNECTABLE,
-    CASE_PHRASE,
     CASE_BREAKER,
 };
 
