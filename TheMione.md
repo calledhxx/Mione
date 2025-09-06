@@ -195,42 +195,17 @@ return 10+20; //其中的`+`為SYMBOL
 ```
 
 #### VARIABLE
-VARIABLE，中譯變數，是一種被動的carriage-passengers成員，能搭配所指向的連結與自身的變數名稱來完成運算(VARIABLE LINK)。若有效的語詞單元未能配對成HEAD、PROMPT、SYMBOL與VALUE，將會自動被分配為VARIABLE。
-
+VARIABLE，中譯變數，是一種被動的carriage-passengers成員，能搭配所被分配的VARIABLE LINK來進行運算。若有效的語詞單元未能配對成HEAD、PROMPT、SYMBOL與VALUE，將會自動被分配為VARIABLE。
 
 ##### VARIABLE LINK
-VARIABLE LINK，中譯變數連結，是一種Mione的存取變數的技術。
+VARIABLE LINK，中譯變數連結。
 
-核心邏輯是在多個VAIRALBE能表示成單個VARIABLE的情況下，Mione會形成多個VARIABLE LINK，而低層的VARIABLE LINK指向高層的VARIABLE LINK，高層的VARIABLE LINK再指向核心VARIABLE(能最終表示VALUE)。如：
-```
-x = 100;
-x = 200;
-x = 300;
-```
-形成多個VARIABLE LINK：
-```
-0 VALUE本身(在初始狀態下為0)
+其可以指向另個VARIABLE LINK，或是直接指向VARIABLE核心(即變數本身)。
 
-^
-|
-|
+在同個作用域內，相同屬性的VARIABLE(如：名稱、編號等...)會被分配相同的VARIABLE LINK。
+若屬性相同但在更低層的作用層，則會創建新的VARIABLE LINK並指向同屬性的上級VARIABLE LINK。
 
-x本身(核心VARIABLE) 指向VALUE
-
-^
-|
-|
-|__ x = 100 指向核心VARIABLE
-    ^
-    |
-    |
-    |__ x = 200 指向上級VARIABLE LINK
-        ^
-        |
-        |
-        |__ x = 300 指向上級VARIABLE LINK
-```
-
+任何有效的VARIABLE LINK都會在運算時「尋路」找到所指向的VARIABLE核心。
 
 #### VALUE
 

@@ -39,9 +39,7 @@ IMPLEMENTFunctionRespondObj IMPLEMENT(const IMPLEMENTFunctionRequestObj input)
                        .EventTemplate = input.EventTemplate
                    });
 
-            if (HeadReturn.Event.Code != 0)
-                exit(99);
-
+            MainEventHandler(HeadReturn.Event);
 
 
             if (HeadReturn.MajorVariables.CarrierLen)
