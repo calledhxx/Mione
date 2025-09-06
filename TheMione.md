@@ -1,737 +1,265 @@
 # Mione Programming Language
 
-# 前言
+一款簡易語法規則的新型程式語言。其程式碼參考了shell script的設計，每行都有他固定的「執行目的」。
 
-Mione是款輕便的簡易語言，其脫穎而出的語法及特性可讓使用者簡易閱讀及編寫！
 
-# 五大別類
-五大別類是奠定Mione簡易語法的基礎，每個Mione語句的組成元件都是由五大別類所成。
-
-以下的類別介紹都會以主語式為主要執行空間。
-
-## 類別介紹
-
-### 1. HEAD
-HEAD又稱標頭，是絕大部分Mione語句的開頭。
-其功能為告訴Mione該語句的具體目的為何。
-
-例如：
+## 了解語法
+### 正規語法展示
 ```
-set x = 1005
-```
-其中的`set`為該語句的HEAD。
-意旨指導Mione進入設定變數的環節。
+/*
+    myMione.mio 
+    Created by Hxx on 2024/10/05
+*/
 
-| HEAD | 具體功能 |
-|:-:|:-:|
-|`set`|設定VARIABLE|
-|`return`|返回該段執行緒|
-|`get`|獲取該段執行式附加值|
-|...|...|
+input "io";
 
-### 2. PROMPT
-PROMPT又稱說明（或題詞），是Mione語句的詳細說明元件。
-其功能為更詳細的告訴Mione該語句的意義。
-PROMPT們是否出現由HEAD部分決定。且在不同的HEAD裡，將會有同個PROMPT上的不同效果。
+set x = 100;
 
+if (x > 99) then range
+    print("number of x is more then 99");
+end;
 
-
-我們來舉個例子：
-```
-set y = 2009
-```
-其中`=`為該語句的PROMPT。
-意旨指導Mione在設定變數的環節上更詳細的說明。
-
-| PROMPT | 具體功能 |
-|:-:|:-:|
-|`=`|在`set`裡表賦予變數一個值。|
-|`do`|在諸多HEAD裡表執行後項。|
-|`then`|在`if`裡表執行後項。|
-|...|...|
-
-
-### 3. SYMBOL
-SYMBOL又稱符號，是資源與容器的運算媒介。
-
-SYMBOL不單單只有「符號」。
-
-每個SYMBOL都有不同的執行順序。
-
-其分為三大種：連接符號、形容符號與交雜符號。
-
-#### 連接符號
-```
-set x = 1 + 1
-```
-`+`因為連接著兩個資源 ，所以是連接符號。
-#### 形容符號
-```
-set numberType = typeof 13
-```
-`typeof`因為後方連接著資源 ，所以是形容符號。
-
-#### 交雜符號
-交雜符號是「連接符號」與「形容符號」的混合。
-
-其運算種類 ( 即呈現連接符號與形容符號的運算方式 ) 將會依前方內容是否為可運算物件而定。
-例如：
-```
-set y = 1.1 //或者<Table>.<ChildName>
-y= .1
-```
-其中`.`這個符號在第一行因為連接著兩個資源 ，所以能表示成連接符號。第二行僅在後方連接一個資源 ，所以只能表示成形容符號。
-
-相似的交雜符號還有：`-`。
-
-常見的SYMBOL有；
-
-| SYMBOL | 類別 |具體功能 |
-|:-:|:-:|:-:|
-|`+`|連接符號|將左項及右項相加並返回。|
-|`typeof`|形容符號|將後項的資源類別做出返回動作。|
-|`.`|交雜符號|在連接符號中，如果前後項均為VALUE的數字類別，則返回該數值表示的小數。| 
-|...|...|...|
-
-### 4. VARIABLE
-VARIABLE亦稱作變數。
-在初始情況下變數並不包含任何的VALUE，也意味著並不表示任何意思。
-
-VARIABLE 的定義為非HEAD,PROMPT,SYMBOL與VALUE的字符組合（其字符需被Mione接受。例如半形反斜號、分號即空格都被列為非執行字符，無法形成VARIABLE）。
-
-VARIABLE 實際上不直接參與Mione的資源處理，而是他內部的VALUE體。（歡迎參閱資源語容器運算。）
-
-
-來舉個例子：
-```
-set x = "Hello,World!"
+return 0;
 ```
 
-其中因為`x`不屬於HEAD,PROMPT,SYMBOL與VALUE，所以形成VARIABLE。
+### 語法列車
+想像有一條列車（train）正從Mione火車站出發，其中最前的車廂為頭車廂（head-carriage）是整台火車的控制者，他可以決定旅途中的岔路往哪走，而其他車廂為子車廂（body-carriages）必須隨著頭車廂。每一節車廂（carriage）都有一位他的車廂管理者（carriage-manager）與車廂乘客（carriage-passengers），車廂管理者能操控者所處的車廂。而車廂管理者與車廂乘客分別是類行為HEAD、PROMPT與SYMBOL、VARIABLE、VALUE的成員。
 
+Mione的每一句程式句就是一條列車，每節車廂都是一個段落，每位成員都是Mione的有效語詞單元。而Mione火車站就是文件的源代碼，有多少句有效語句就有多少條列車；有多少句段落就有多少節車廂；有多少語詞單元就有多少位欲乘成員。
 
-### 5. VALUE
-VALUE亦稱作值（明示上，請參閱明暗示章節）
-是賦予VARIABLE值的主要角色。
-
-VALUE的值類型可細分成：字串、數字、函數、執行塊、開關塊及表單。
-
-以下是他們的示例：
-#### 字串：
-```
-set str = "Hello, World!"
-```
-
-上述的 `"Hello, World!"` 即為VALUE裡的字串。
-##### 字串的Super Characters
-Super Character 簡稱 SuperChar ，是字串獨有的功能，其目的是表示出無法在正常情況下打出的文字。
-
-例如換行符，其ANCII 碼為 10，則我們可以使用SuperChar內的 `/u(160A)`或`/n`來召喚它。
-
-###### `/n` 換行符：
-```
-set n = "Hello/n"
-```
-
-即取代成換行符。
-
-字串設定為：
-
-```
-Hello
-
-```
-###### `/u()` 字元組合：
-```
-set n = "Hello/u(160A)"
-```
-
-`"Hello/u(160A)"`即為將16進位的0A號碼轉為ANSII字符，並取代原SuperChar。
-
-其括號為必須添加選項，內的第一項應為1，第二應為6，並以十六進位的形式描寫碼號。
-
-字串設定為：
-
-```
-Hello
-
-```
-
-###### `/"` 雙引號：
-```
-set n = "It's so /"Crazy/""
-```
-
-即取代為`"`。
-
-字串設定為：
-```
-It's so "Crazy"
-```
-
-###### `/'` 單引號
-```
-set n = 'Character : /'a/''
-```
-
-即取代為`'`。
-
-字串設定為：
-```
-Character : 'a'
-```
-
-#### 數字：
-```
-set number1 = 1;
-set number2 = 1.;
-set number3 =.1;
-```
-
-上述的 `1`,`1.`與`.1` 均為VALUE裡的數字。
-
-
-#### 函數：
-```
-set f = function
-       /*
-               執行段落
-       */
-end
-```
-
-上述的 `function ... end`即為函數本體。
-
-函數內的語式為函數語式。
-
-#### 執行塊：
-```
-if true then range
-        //執行塊1
-end else range
-        //執行塊2
-end
-```
-上述的兩者`range ... end`即為執行塊本體。
-
-執行塊內的語式為執行塊語式
-
-#### 表單：
-```
-set ta = {
-          //**
-}
-```
-上述的 `{...}`即為表單本體。
-
-表單內的語式為表單語式。
-
-表單語式在Mione底層裡分為兩種，一種是解析過後的，另種是未被解析過的。
-
-##### 表單的類別：
-###### 1. 數序組
-表單若僅有以正整數來表示子項的，我們稱之為數序組。
-
-這樣表示子項的整數我們稱之為序。
-
-例如：
-```
-{
-  "Hello"; //虛化序
-  2:"World"
-}
-```
-
-虛化序過後，Mione會自動分配其序為當前已分配虛化序項目的多寡加一。
-數序組的執行順序為序的小到大。
-
-###### 2. 別名組
-
-表單若僅有以字串來表示子項的，我們稱之為
-別名組。
-
-這樣表示子項的字串我們稱之為列。
-
-例如：
-```
-{
-  "Tim":"Hello, John.";
-  "John":"Hi!";
-  Jimmy = "What's up?" //直接表示句
-}
-```
-
-直接表示句會影響上級語式原先宣告的VARIABLE。
-別名組的順序為定義的先後。
-
-###### 3. 混合組
-表單若包含有序及列，我們稱之為混合組。
-
-例如：
-```
-{
-  "Ten":"Five";
-  10:5;
-}
-```
-混合組的順序為序至列，其中序由小至大，列則是宣告的順序。
-
-#### 開關：
-```
-set x = 50;
-switch x do lights
-    pair 30 do range 
-        //x與30匹配時
-    end
-    pair 50 do range 
-        //x與50匹配時
-    end
-    failed range
-        //x尚未匹配
-    end
-end
-```
-
-上述的 `lights`至 `end`（最後）為開關。
-
-開關內的語式為開關語式 。
-
-## 類別組合
-
-### 二大元素
-
-#### 題頭
-題頭是HEAD與PROMPT。
-
-例如：
-```
-set x //`set`是題頭
-= 100; //`=`也是題頭
-```
-
-#### 後綴
-後綴是題頭後方的資源或容器。
-
-例如：
-```
-set x //`x`是後綴
-set y,z //`y`,`,`,`z`三者合併是後綴
-```
-
-### 二大組合
-
-#### 開頭組合
-即HEAD與其後綴所構成的組合，其中HEAD為必定出現項目，後綴則不定。
-
-
-在非固定開頭句中，開頭組合的HEAD為後綴本身，但如果以底層角度來描述，開頭組合的HEAD將會是無意義的，即無實體HEAD。本章不會特別描述非固定開頭句中的開頭組合
-
-如：
-
-```
-set x: //開頭組合
-x //開頭組合（非固定開頭句之頭）
-= 100; //題詞組合
-```
-
-#### 題詞組合
-即PROMPT與其後綴構成的組合，其中PROMPT為必定出現項目，後綴則不定。
-
-如：
-```
-set y //開頭組合
-= 100 //題詞組合
-```
-
-
-# 作用域與語式
-## 作用域
-作用域是指：程式句所在的最低層級載體。
-如：
 ```
 set x = 100;
 
-function
-    x = 50;
-    if x > 49 then range
-        x = 200;
-    end
-end()
+set x //單獨一個Carriage，因carriage所處位置最前，所以為一個head-carriage。
+//其中 `set`為carriage-manager，`x`為carriage-passengers。
+= 100 //單獨一個Carriage，因carriage所處位置在後，所以為一個body-carriage。
+//以上Carriages組成一個Train
 ```
 
-`set x = 100;`這行程式句處於在最高層級，沒有作用域。
+突然某天，前頭車廂的車廂管理員睡過頭而沒來上班，導致沒有人能決定路途中的岔路要往哪，這時所有車廂的管理員會一起協商整列列車所行使的路徑。而這時列車就從一般列車（normal-train）變成簡易列車（simply-train），差別就在於頭列車是否有車廂管理員。
 
-`x = 50;` 這行程式句處於在`function ... end`內，作用域是`function ... end`。
+```
+x = 100;
 
-`x = 200;`這行程式句處於在`range ... end`內，作用域是`range ... end`。
+x //單獨一個Carriage，因carriage所處位置最前，所以為一個head-carriage。
+//其中carriage-manager不存在，所以會令此Train為simply-train，`x`為carriage-passengers。
+= 100 //單獨一個Carriage，因carriage所處位置在後，所以為一個body-carriage。
+//其中`=`為carriage-manager，`100`為carriage-passengers。
+//`=`最常出現在關於「賦予或設置」，所以該Train將會有「賦予或設置」的功能。
+//以上Carriages組成一個Train
+```
 
-## 語式
-語式是指：程式句所在的層級載體類型。
+每位欲乘成員都需要依次上當前列車與當前車廂，但為了更好管理每條列車與車廂，Mione鐵路管理局嚴格規定了一些規則：
+1. 若VARIABLE或VALUE與VARIABLE或VALUE彼此接觸（如：`100 200`），鐵路局會將他們分配到不同的列車中，這也意味著最前的VARIABLE或VALUE將是當前列車最後的成員，最後的VARIABLE或VALUE將是下條列車最前的成員（進而形成簡易列車），隨後的成員都將搭乘該列車與車廂直到觸發相對應的規則。
 
-標準Mione的語式分為：主語式、執行塊語式、區域語式、表單語式與物件定義語式。
+如以下程式碼：
+```
+set a = 100
+a = 200
+```
+轉為可被記錄的語詞單元形式（實際上不包括空格）：
+```
+set a = 100 a = 200
+```
+依規則成的列車：
+`set a = 100` 與 `a = 200` 。
 
-相同程式句在不同語式下的運行結果不一定會一致。
+2. 若SYMBOL不同意與後方的乘客接觸，鐵路局將會把該SYMBOL列為當前列車的最後乘客，隨後的成員都將搭乘下一條列出直到觸發相對應的規則（進而形成簡易列車）。又倘若不被同意的一方為SYMBOL，且同意與原乘客接觸，原乘客會重新同意與改乘客接觸，且不會發生任何事。（欲知每個SYMBOL所同意接觸的乘客請參考語詞類型之SYMBOL小節）
 
-### 主語式
-指程式句沒有層級載體。
-### 函數語式
-指程式句的層級載體是function。
-### 執行塊語式
-指程式句的層級載體是range。
+如以下程式碼：
+```
+set a = (200 + 300)
+a = 200 + -200
+```
+轉為可被記錄的語詞單元形式（實際上不包括空格）：
+```
+set a = (200 + 300) a = 200 + -200
+```
+依規則成的列車：
+`set a = (200 + 300)` 與 `a = 200 + -200` 。
 
-如：
+3. 若成員為一個HEAD，鐵路局會將他分配成變成下部列車的頭車廂管理員，隨後的成員都將搭乘該列車與車廂直到觸發相對應的規則。
+
+如以下程式碼：
+```
+set a = 100
+set b = 200
+```
+轉為可被記錄的語詞單元形式（實際上不包括空格）：
+```
+set a = 100 set b = 200
+```
+依規則成的列車：
+`set a = 100` 與 `set b = 200` 。
+
+4. 若成員為一個PROMPT，鐵路局會將他分配成同列車內的下節車廂管理員，隨後的成員都將搭乘該車廂直到觸發相對應的規則。
+5. 若遇到非有效語詞的`;`符號，且後方乘客不會與該符號觸發以上規則，鐵路局會阻擋他上列車，並分配隨後的成員搭乘下一列列車直到觸發相對應的規則。
+
+如以下程式碼：
+```
+set a = 100; //符號有效，`(` SYMBOL不會與該符號觸發規則。
+(function end)(); //符號無效，該符號會與HEAD觸發第一條規則。
+set a = 200
+```
+轉為可被記錄的語詞單元形式（實際上不包括空格）：
+```
+set a = 100; (function end)(); set a = 200
+```
+依規則成的列車：
+`set a = 100` 、`(function end)()` 與`set a = 200`。
+
+### carriage成員/有效語詞單元在列車中的類型
+#### carriage-manager
+Carriage-manager，中譯車廂管理員，是段落的核心，他的能告訴Mione這段段落是否為head-carriage或body-carriage。
+
+若為HEAD，他能宣告該段落為head-carriage，也能間接的告訴Mione所在程式句的概要目的。
+
+若為PROMPT，他能宣告該段落為body-carriage，也能告訴Mione該段落詳細目的的方式。
+
+在carriage裡，carriage-manager只能有一位成員，也就是單個HEAD或PROMPT。
+#### carriage-passengers
+Carriage-passengers，中譯車廂乘客，是告訴Mione該段落的目的為何（包括head-carriage的概要目的與body-carriages的詳細目的）。
+
+在carriage裡，carriage-passengers能有多個成員，也就能多個SVV（SYMBOL、VARIABLE與VALUE）。
+### 段落／carriage類型
+#### head-carriage
+Head-carriage，中譯頭車廂，是整句程式句的核心，他能告訴Mione這句程式碼的概要目的。
+#### body-carriages
+Body-carriage，中譯子車廂，是程式句中的附加內容，他可以詳細的告訴Mione這程式句的詳細目的。
+
+### 程式句／train類別
+
+#### normal-train
+normal-train，中譯一般列車，是指程式句中存在head-carriage的carriage-manager。
+
+#### simply-train
+simply-train，中譯簡易列車，是指程式句中並不真實存在head-carriage的carriage-manager。
+
+而body-carriages的carriage-manager各自以「最常出現在哪個head-carriage的carriage-manager」來做相互配合以彌補本句不存在的head-carriage的carriage-manager。
+
+
+
+
+## 了解語詞
+### 字元解釋與語詞單元
+語詞單元（又簡稱語詞），是指解釋器從源代碼提取出的特定字串，其若為有效語詞則能在經過第二層的解釋後獲得各自的類型。
+
+解釋器會依源代碼的每個字元一一做解釋，並創建相關的語詞單元，其規則如下：
+* 令當前字元為第`n`項，上個字元為第`n-1`項。
+* 令`0`~`9`為數字字元、`"`為雙引號字元、`'`為單引號字元。
+1. 若第`n`項字元類別與第`n-1`項字元類別不同，則第`n-1`項為當前語詞單元的最後可見字元，第`n`項字元為新語詞單元的第一字元。
+
+
+### 語詞類型
+又稱五大類別或五大別類，每個類型都在Train中扮演著重要不可或缺的角色。
+語詞類型只會分配給有效語詞。
+#### HEAD
+HEAD，中譯標頭，可以成為head-carriage的carriage-manager而告訴Mione所在程式句的概要目的。
+
+常見的HEAD關鍵字如下：
+| 關鍵字 | 說明 |
+|:-:|:-:|
+|`set`|表示程式句的目的為「賦予及設定」|
+
+程式碼：
+```
+set x = 100; //其中的`set`為HEAD
+```
+#### PROMPT
+RPOMPT，中譯題詞，在normal-train中可以成為body-carriages的carriage-manager而告訴Mione所在程式句的詳細目的。在simply-train中可以與其他body-carriages的carriage-manager協調而成為偽head-carriages的carriage-manager。
+
+常見的PROMPT關鍵字如下：
+| 關鍵字 | 說明 |
+|:-:|:-:|
+|`=`|詳細描述程式句的目的為「賦予及設定值給相對應的head-carriage的carriage-passengers」|
+
+程式碼：
+```
+set x = 100; //其中的`=`為PROMPT
+```
+#### SYMBOL
+SYMBOL，中譯符號，可以將指定的carriage-passengers混合成新的carriage-passengers。
+
+
+*以下用`n`表示SYMBOL成員位置，`n+1`為SYMBOL成員的右一位成員。如：`1+2`，則`n+1`表示`2`;`n-1`表示`1`。*
+
+常見的SYMBOL關鍵字如下：
+
+| 關鍵字 | 說明 |
+|:-:|:-:|
+|`+`|將`n+1`成員與`n-1`成員相加|
+
+程式碼：
+```
+return 10+20; //其中的`+`為SYMBOL
+```
+
+#### VARIABLE
+VARIABLE，中譯變數，是一種被動的carriage-passengers成員，能搭配所指向的連結與自身的變數名稱來完成運算(VARIABLE LINK)。若有效的語詞單元未能配對成HEAD、PROMPT、SYMBOL與VALUE，將會自動被分配為VARIABLE。
+
+
+##### VARIABLE LINK
+VARIABLE LINK，中譯變數連結，是一種Mione的存取變數的技術。
+
+核心邏輯是在多個VAIRALBE能表示成單個VARIABLE的情況下，Mione會形成多個VARIABLE LINK，而低層的VARIABLE LINK指向高層的VARIABLE LINK，高層的VARIABLE LINK再指向核心VARIABLE(能最終表示VALUE)。如：
+```
+x = 100;
+x = 200;
+x = 300;
+```
+形成多個VARIABLE LINK：
+```
+0 VALUE本身(在初始狀態下為0)
+
+^
+|
+|
+
+x本身(核心VARIABLE) 指向VALUE
+
+^
+|
+|
+|__ x = 100 指向核心VARIABLE
+    ^
+    |
+    |
+    |__ x = 200 指向上級VARIABLE LINK
+        ^
+        |
+        |
+        |__ x = 300 指向上級VARIABLE LINK
+```
+
+
+#### VALUE
+
+## 作用層與語式
+### 作用層/ Layout
+Layout，中譯作用層，是指一句或多句程式句所被包裹的載體。
+其作用為讓被包裹的程式句脫離主作用層的線性執行(即左到右上到下)。
+
 ```
 set x = 100;
 
-function
-    x = 50;
-    if x > 49 then range
-        x = 200;
-    end
-end()
-```
-
-`set x = 100;`這行程式碼處於在最高層級，固然沒有作用域，屬於主語式。
-
-`x = 50;` 這行程式碼處於在`function ... end`內，作用域是`function ... end`，屬於函數語式。
-
-`x = 200;`這行程式碼處於在`range ... end`內，作用域是`range ... end`，屬於執行塊語式。
-
-
-
-# 固定開頭句與非固定開頭句
-
-## 固定開頭句
-
-即程式句開頭為HEAD的句型，其句型的功能將依據該HEAD而定，因而稱「固定開頭句」。
-
-例如：
-```
-set x;
-get a,b
-input "io"
-```
-
-## 非固定開頭句
-非HEAD開頭的類別總稱，包括由SYMBOL、VARIABLE與VALUE來當作開頭的句型。（非固定開頭句的「頭」為資源或容器）
-
-非固定開頭句所組成的句子又可細分成2種形式：
-
-### 非PROMPT干涉句
-即為句中無PROMPT參與表明的程式句。
-
-這些程式句將會以資源運算模式運行，所以不會直接的影響程式內容。
-
-最常見的非PROMPT干涉行句為：
-```
-//一般函數呼叫
-function end()
-
-// 表單的虛化序宣告值
-"Hello"
-```
-
-
-### PROMPT干涉句
-
-PROMPT干涉句是簡化HEAD部分功能的非固定句型。
-
-譬如說：
-
-```
-set x = "Hello, World"
-```
-
-可以簡化成：
-
-```
-x = "Hello, World"
-```
-
-該句的`=`段落會與`set`的產生同樣的效果。
-
-簡化過後的PROMPT效果是依據其PROMPT**最常**及**最合理**用於何者HEAD句中。
-
-# 運算
-
-即為後綴運算，其運算種類分為資源運算與容器運算。
-
-## 資源運算
-亦稱主動運算，即賦予他人任何資料前所需做的運算動作。
-
-資源運算後的輸出為資源。
-
-例如：
-
-```
-set x 
-= 1+5// `1+5`即為資源運算，回傳`6`這個資源
-```
-
-除了以上簡易的加發之外，函數呼叫（Function call）與子項運算（Children analyze）都是資源運算的一部分。
-
-## 容器運算
-亦稱被動運算，即將VARIABLE與SYMBOL進行最簡化運算的過程。
-
-容器運算的最後輸出為容器。
-
-例如：
-```
-for index  //`index`本為VARIABLE，但因容器運算，形成了容器
-= 0
-to 10
-do range
-    //....
+if x then range
+    set y = 200;
 end
 ```
 
-## 運算後的產物
-運算完後，結果值將會取代原值。如：`12+13`運算完後會被`25`取代。
 
-### 資源
-資源與五大類別的VALUE相似，都是「值」本身。
+## 容器與資源
 
-資源是暗示性的類別，意旨無法明示表達資源本身，只能由資源運算取得。該特點剛好與VALUE相對。
+容器與資源是表示carriage-passengers在經過運算後是被寫入或是被讀出的類型。其次，每個carriage-manager都會指定所在carriage的carriage-passengers運算後為何者類型，若所指定類型不匹配運算後的類型將會報錯。
+
+如：`set x = 100;`中，`x`與`100`都是各自carriage的carriage-passengers，而`x`為容器，`100`為資源。
 
 ### 容器
-容器與五大類別的VARIABLE相似，都是包裝「值」的「箱子」。
-容器是暗示性的類別，即無法明示表達容器本身，只能依靠容器運算取得。該特點與VARIABLE相對。
+容器是表示運算過後的carriage-passengers為寫入的類型。
 
-# 基本語法
-Mione的語法在任何語式下都是相同的。
+若carriage-manager指定的carriage-passengers類型為容器，在運算過後所得的carriage-passengers應為VARIABLE，否則將會報錯。
 
-## 結構
-Mione的每句語句一定是以開頭組合與題詞組合所構成的，其中開頭組合為每句必定會出現項目，題詞組合則不定。
+### 資源
+資源是表示運算過後的carriage-passengers為讀取的類型。
 
-每句組合順序：**開頭組合（最前、必定）+題詞組合（接續、選擇性）+題詞組合（接續、選擇性）...**
-每句語句可有零至無限個題詞組合，但開頭與句限定只能存在一個。
-
-## 斷句判斷
-符合以下規則之語句將被Mione認定為一句話的開始或結束，即斷句。
-
-註：本章節的第`n`項Mione物件為一句程式句的結尾，`n+1`為一句程式句的開頭或虛物。
-
-### VV分格
-若第`n`項物件為VARIABLE或VALUE且`n+1`項物件也是VARIABLE或VALUE，Mione將會把第`n`項物件歸類為原句的最後物件，`n+1`項會成為新句的最前物件。
-
-例如：
-
-```
-set x = "Hello" "World"
-set y = x 999
-```
-
-Mione將會拆分成：
-
-| 語句順序| 語句內容 |
-|:-:|:-:|
-|1|`set x = "Hello"`|
-|2|`"World"` |
-|3|`set y = x` |
-|4|`999` |
-
-### HEAD主導
-無論第`n`項為何，若第`n+1`項Mione物件是HEAD，第`n`項將為原句的最後物件，第`n+1`項將為新句的開頭物件。
-
-
-例如：
-```
-"Hello" set x = 123
-```
-Mione將會拆分成：
-
-| 語句順序| 語句內容 |
-|:-:|:-:|
-|1|`"Hello"`|
-|2|`set x = 123` ||
-
-### 無條件結束
-無論第`n`項物件為何，若第`n+1`項Mione物件為`;`（不屬於五大類別的範疇，是虛物），第`n`項物件將為原句的最後物件。
-
-例如：
-```
-function end;
-["Hello"]="World";
-```
-Mione將會拆分成：
-
-| 語句順序| 語句內容 |
-|:-:|:-:|
-|1|`function end`|
-|2|`["Hello"]="World"` ||
-
-### 特殊SYMBOL裁斷
-若第`n`項Mione物件是SYMBOL後綴符號（如`)`）且`n+1`項物件為非SYMBOL物件，第`n`項將會為原句的最後物件，第`n+1`項物件將會是新句的最前物件。
-
-例如：
-```
-function end() "Hello"
-```
-Mione將會拆分成：
-
-| 語句順序| 語句內容 |
-|:-:|:-:|
-|1|`function end()`|
-|2|`"Hello"`|
-
-# 片語
-片語是為了更詳細操作Mione特性而生的特殊語法。
-
-片語不會干擾斷句（詳情見語法小節）的判斷。
-
-## 片語樣式
-片語的組成方式是`#`（井字符），後方附上片語名稱。如：`#local`、`#scope`。
-
-## 片語組合
-片語的後方會放置被修容物件，稱之為後修項。
-而片語與後修項是一組片語組合。
-
-如：
-```
-#local variable
-```
-其中，`#local`是片語，`variable`是後修項（物件）。
-
-## 片語運算
-Mione會在片語組合修成後直接運算片語與後修項，這也意味著片語運算會在二大元素定義前完成。
-
-## 結果
-在進行完片語運算過後，將會回傳相對應的物件。
-如： `#local var` 會回傳指定的VARIABLE物件，並替代原片語組合與組合。
-
-# 定義順序列表
-本章羅列了標準Mione定義組合與運算的順序。
-
-### 1. 物件定義
-包括底層的源碼至Case物件（無屬物件）（運算內容也包括SuperChar運算），再進行二次運算將Case物件轉至Mione物件（五大類別與虛物）。
-
-### 2. 片語運算
-
-
-### 3. 題頭與後綴定義、斷句判斷
-### 4. 開頭與題詞組合定義
-
-### 運行
-
-
-
-# HPSVV列表
-本節是續「類別介紹」小節尚未完全補充的內容。
-
-關於HEAD、PROMPT、SYMBOL、VARIABLE與VALUE的所有內容及說明都羅列於此。
-
-## HEAD
-HEAD是大部分程式句的開頭。
-其功能是告訴Mione「這句程式的目的為何」。
-
-### `bait`：注入
-`bait`是一種專門注入資源至Mione內存與Table內的HEAD。使用者可在後方放置`into`PROMPT來設置注入位置。
-
-原後綴將運算成資源。
-
-#### 舉例：
-```
-bait "Hello, World" into T;
-bait "Great";
-```
-
-#### HEAD的PROMPT說明
-##### `into`：注入至
-`into`是讓HEAD後綴資源注入至自己的後綴Table內。若未設置此PROMPT則注入至Mione底層。
-
-後綴將運算為容器。
-
-### `fish`：取出
-`fish`是一種專門取出Mione內存或Table資源的HEAD。使用者可設定`from`PROMPOT來告訴Mione資源要從哪裡取出。
-
-```
-fish x from T
-```
-
-### `set` : 設定VARIABLE
-`set`是一種專門設定VARIABLE的HEAD。使用者可以在後綴放入VARIAVLE以標註被設定的變數，並使用`=` 與`host`PROMPT進行設定。
-
-原後綴將運算成容器。
-
-#### 舉例：
-```
-set x = 100;
-```
-
-#### HEAD的PROMPT說明
-##### `=`：賦予
-`=`是將後綴資源賦予主角容器的主要PROMPT。
-
-後綴將運算為資源。
-
-##### `host`：本地主持
-
-`host`意旨讓主角容器僅在該語式區持有`=`後綴資源，結束該語式區後即讓主角容器回到上個語式區的狀態。
-
-此PROMPT不支援任何後綴。
-
-### `input`：匯入返回值
-
-`input`是一種匯入其它Mione文件返回值的HEAD。使用者可以在後綴輸入想要匯入至此的文件名稱，並使用`into`PROMPT匯入至VARIABLE內（也可以省略，即將返回值設成全域VARIABLE）。
-
-原後綴將運算成資源。
-
-#### 舉例：
-```
-input "io" into io;
-```
-
-#### HEAD的PROMPT說明
-##### `into`：匯入至容器內（後綴）。
-
-### `return`：返回資源至呼叫者
-`return`是一種專門將後綴回傳至函數呼叫者（需在同個執行緒）或結束執行緒。
-
-原後綴將運算成資源。
-
-#### 舉例 ：
-```
-x = function
-    return 100; //返回後綴至呼叫者
-end()
-
-return 50; //結束該執行序
-```
-
-
-### `get`：獲取呼叫值
-### `if`：判斷執行
-### `for`：目的性迴圈
-`for`是一種有目的的取資料行為標頭。
-
-原後綴將運算成容器。
-
-#### 舉例 ：
-```
-for index = 0 to 100 do range
-end;
-```
-
-
-### `while`：持續性迴圈
-### `switch`：閥門執行
-## PROMPT
-PROMPT是在所在程式句進行細項說明。
-
-PROMPT後方的資源或容器我們統稱為*後綴* 。
-
-PROMPT可分成兩大種：
-
-## SYMBOL
-
-# 聲明
-
-本文章內容可進行複製與更改，但請標出原出處或原作者。
-
-本文章複製與更改不能應用在商業上，但可從事教育、Mione宣導。
-
-合作之事項歡迎發送電子郵件至 `me@hxx.lol`。
-
-#### Mione Programming Language
-
-##### Copyright © from 2024 to PRESENT @CalledHxx. All rights reserved. 
+若carriage-manager指定的carriage-passengers類型為資源，在運算過後所得的carriage-passengers應為VALUE，否則將會報錯。
