@@ -11,7 +11,7 @@
 #include "STDMIO.h"
 
 
-char CanConnectWithAnotherSymbol[] = {
+static const char CanConnectWithAnotherSymbol[] = {
     '*',
     '/',
     '+',
@@ -19,7 +19,7 @@ char CanConnectWithAnotherSymbol[] = {
     '^'
 };
 
-char CanNotConnectWithAnotherSymbol[] = {
+static const char CanNotConnectWithAnotherSymbol[] = {
     '(',
     ')',
     '[',
