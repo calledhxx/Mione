@@ -11,6 +11,30 @@
 #include "STDMIO.h"
 
 
+char CanConnectWithAnotherSymbol[] = {
+    '*',
+    '/',
+    '+',
+    '=',
+    '^'
+};
+
+char CanNotConnectWithAnotherSymbol[] = {
+    '(',
+    ')',
+    '[',
+    ']',
+    '{',
+    '}',
+    '-',
+    '.',
+    ',',
+    ':',
+    '@',
+    '<',
+    '>',
+};
+
 int CheckCharType(const char Char)
 {
     if (Char == EOF) return CT_NULL;
@@ -23,30 +47,6 @@ int CheckCharType(const char Char)
 
     if (Char == '\'') return CT_SQ;
 
-
-    static char CanConnectWithAnotherSymbol[] = {
-        '*',
-        '/',
-        '+',
-        '=',
-        '^'
-    };
-
-    static char CanNotConnectWithAnotherSymbol[] = {
-        '(',
-        ')',
-        '[',
-        ']',
-        '{',
-        '}',
-        '-',
-        '.',
-        ',',
-        ':',
-        '@',
-        '<',
-        '>',
-    };
 
     for (int i = 0; i < sizeof(CanConnectWithAnotherSymbol)/sizeof(CanConnectWithAnotherSymbol[0]); i++)
         if (CanConnectWithAnotherSymbol[i] == Char)  return CT_CONNECTABLE;
@@ -116,7 +116,11 @@ FCOFunctionRespondObj FCO(FCOFunctionRequestObj input)
 
     // Number 特殊處理
     uint8_t RecordingNumber = 0; //正在紀錄數字 在有表達數字時 0表一般數字; 2表二進制; 3表十六進制;
-    //
+    // !
+
+    // 註解
+    uint8_t CommentChar = 0; //註解類型，以註解開頭的第二符號為主要記錄對象。
+    // !
 
     do
     {
@@ -200,8 +204,9 @@ FCOFunctionRespondObj FCO(FCOFunctionRequestObj input)
                             RecordingNumber = 0; //重置數字紀錄
 
 
-                            CaseName = NULL;
                             CaseNameLen = 0;
+                            //free(CaseName);
+                            CaseName = NULL;
                         }
 
                 //單字元處裡
@@ -291,8 +296,9 @@ FCOFunctionRespondObj FCO(FCOFunctionRequestObj input)
 
                                 RecordingNumber = 0; //重置數字紀錄
 
-                                CaseName = NULL;
                                 CaseNameLen = 0;
+                                //free(CaseName);
+                                CaseName = NULL;
                             }
 
 
@@ -308,6 +314,19 @@ FCOFunctionRespondObj FCO(FCOFunctionRequestObj input)
 
                 case CT_CONNECTABLE:
                     {
+                        if (LastChar == '/')
+                            if (ThisChar == '/' || ThisChar == '*')
+                            {
+                                HandleType = 3;
+                                CommentChar = ThisChar;
+
+                                CaseNameLen = 0;
+                                //free(CaseName);
+                                CaseName = NULL;
+
+                                continue;
+                            }
+
                         if (!CaseNameLen)
                         {
                             CaseStartColumn = ProcessingColumn;
@@ -361,7 +380,9 @@ FCOFunctionRespondObj FCO(FCOFunctionRequestObj input)
 
 
                         CaseNameLen = 0;
+                        //free(CaseName);
                         CaseName = NULL;
+                        
 
                         break;
                     }
@@ -437,8 +458,9 @@ FCOFunctionRespondObj FCO(FCOFunctionRequestObj input)
 
                             StringHandleChar = 0;
 
-                            CaseName = NULL;
                             CaseNameLen = 0;
+                            //free(CaseName);
+                            CaseName = NULL;
 
                             break;
                         }
@@ -449,6 +471,7 @@ FCOFunctionRespondObj FCO(FCOFunctionRequestObj input)
                 case CT_UNCONNECTABLE:
                 case CT_SPACE:
                     {
+
                         if (!CaseNameLen)
                         {
                             CaseStartColumn = ProcessingColumn;
@@ -573,9 +596,7 @@ FCOFunctionRespondObj FCO(FCOFunctionRequestObj input)
                                     .CaseStartLine = CaseStartLine,
                                 };
 
-                            Result.CaseCarrier = CaseCarriers;
-
-                            return Result;
+                            goto end;
                         };
                     }
                 }
@@ -631,9 +652,8 @@ FCOFunctionRespondObj FCO(FCOFunctionRequestObj input)
                                     .CaseStartLine = CaseStartLine,
                                 };
 
-                                Result.CaseCarrier = CaseCarriers;
+                                goto end;
 
-                                return Result;
                             };
                         }
                     }
@@ -657,6 +677,20 @@ FCOFunctionRespondObj FCO(FCOFunctionRequestObj input)
                 }
                 break;
             }
+        case 3: //註解
+            {
+                if (
+                    (ThisChar == '\n' && CommentChar == '/')
+                    ||
+                    (LastChar == '*' && ThisChar == '/' && CommentChar == '*')
+                    )
+                {
+                    CommentChar = 0;
+                    HandleType = 0;
+                }
+
+                break;
+            }
         default:
             {
                 Result.Event.Code = 2;
@@ -668,12 +702,10 @@ FCOFunctionRespondObj FCO(FCOFunctionRequestObj input)
                     .CaseStartLine = CaseStartLine,
                 };
 
-                Result.CaseCarrier = CaseCarriers;
+                goto end;
 
-                return Result;
             };
         }
-
 
         if (ThisCharType == CT_NEWLINE)
         {
@@ -681,6 +713,8 @@ FCOFunctionRespondObj FCO(FCOFunctionRequestObj input)
             ProcessingColumn=1;
             continue;
         }
+
+
 
         if (ThisChar == EOF)
             break;
@@ -692,6 +726,22 @@ FCOFunctionRespondObj FCO(FCOFunctionRequestObj input)
         LastCharType = ThisCharType;
     }while (1);
 
+    if (CommentChar == '*')
+    {
+        Result.Event.Code = 2;
+        Result.Event.Message = "Still comment to the end.";
+        Result.Event.EventPosition = (CasePositionObj){
+            .CaseEndColumn = ProcessingColumn,
+            .CaseStartColumn = CaseStartColumn,
+            .CaseEndLine = ProcessingLine,
+            .CaseStartLine = CaseStartLine,
+        };
+
+        goto end;
+    }
+
+    end:
+    
     Result.CaseCarrier = CaseCarriers;
 
     return Result;
