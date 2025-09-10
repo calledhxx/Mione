@@ -1,3 +1,1 @@
-
-
 extern PromptObjCarrier ReturnPromptList();

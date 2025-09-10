@@ -40,7 +40,7 @@ enum
     CASE_BREAKER,
 };
 
-enum{
+enum{ //含疊加態
     SC_BeforeSymbol = 1,
     SC_AfterSymbol = 2,
     //符合其中之一就連接
