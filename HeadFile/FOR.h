@@ -1,0 +1,1 @@
+extern HeadFunctionRespondObj FOR(const HeadFunctionRequestObj * HeadCallObjectPointer);

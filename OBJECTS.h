@@ -71,6 +71,7 @@ enum //HEAD
     HEAD_ENTER = 5,
     HEAD_INCLUDE = 6,
     HEAD_IF = 7,
+    HEAD_FOR = 8,
 };
 
 enum //PROMPT

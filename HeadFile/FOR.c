@@ -62,5 +62,29 @@ HeadFunctionRespondObj FOR(const HeadFunctionRequestObj * HeadCallObjectPointer)
         }
     }
 
+    if (HeadSuffix.CarrierLen != 1)
+        exit(155);
+
+    if (OfPromptSuffix.CarrierLen != 1)
+        exit(156);
+
+    if (OfPromptSuffix.Carrier[0].ValueType != VALUE_TABLE_TYPE)
+        exit(157);
+
+    if (DoPromptSuffix.CarrierLen != 1)
+        exit(158);
+
+    if (DoPromptSuffix.Carrier[0].ValueType != VALUE_RANGE_TYPE)
+        exit(159);
+
+
+    for (
+        unsigned TableIndex = 0;
+        TableIndex<OfPromptSuffix.Carrier[0].Table.VariableObjCarrierPointer->CarrierLen;
+        TableIndex++)
+    {
+        printf("yes\n");
+    }
+
     return Result;
 }

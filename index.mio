@@ -1,1 +1,3 @@
-set x = 100;
+for i of {set a = 100 set a = 200} do range
+    set value = {set a = 100}[i];
+end

@@ -10,6 +10,7 @@
 #include "ENTER.h"
 #include "INCLUDE.h"
 #include "IF.h"
+#include "FOR.h"
 #include "SVV.h"
 
 
@@ -56,6 +57,12 @@ HeadObjCarrier ReturnHeadList()
         (HeadObj){
             .Fuc = IF,
             .Name = "if",
+            .Identification = HEAD_IF,
+        },
+
+        (HeadObj){
+            .Fuc = FOR,
+            .Name = "for",
             .Identification = HEAD_IF,
         }
     };
