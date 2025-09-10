@@ -20,43 +20,43 @@ HeadObjCarrier ReturnHeadList()
         (HeadObj){
             .Fuc = SET,
             .Name = "set",
-            .Identification = 1,
+            .Identification = HEAD_SET,
         },
 
         (HeadObj){
             .Fuc = RETURN,
             .Name = "return",
-            .Identification = 2,
+            .Identification = HEAD_RETURN,
         },
 
         (HeadObj){
             .Fuc = GET,
             .Name = "get",
-            .Identification = 3,
+            .Identification = HEAD_GET,
         },
 
         (HeadObj){
             .Fuc = LIBRARY,
             .Name = "library",
-            .Identification = 4,
+            .Identification = HEAD_LIBRARY,
         },
 
         (HeadObj){
             .Fuc = ENTER,
             .Name = "enter",
-            .Identification = 5,
+            .Identification = HEAD_ENTER,
         },
 
         (HeadObj){
             .Fuc = INCLUDE,
             .Name = "include",
-            .Identification = 6,
+            .Identification = HEAD_INCLUDE,
         },
 
         (HeadObj){
             .Fuc = IF,
             .Name = "if",
-            .Identification = 7,
+            .Identification = HEAD_IF,
         }
     };
 

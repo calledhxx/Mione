@@ -37,7 +37,7 @@ HeadFunctionRespondObj LIBRARY(const HeadFunctionRequestObj * HeadCallObjectPoin
             {
                 switch (Pair.CarriageManager.Prompt.Identification)
                 {
-                case 6:
+                case PROMPT_FROM:
                     {
                         FromPromptSuffix = RESOURCE((RESOURCERequestObj){
                             .MioneCarrier = Pair.CarriagePassengers,

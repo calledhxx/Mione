@@ -44,7 +44,7 @@ HeadFunctionRespondObj SET(const HeadFunctionRequestObj * HeadCallObjectPointer)
             {
                 switch (Pair.CarriageManager.Prompt.Identification)
                 {
-                case 1:
+                case PROMPT_SET:
                     {
                         SetPromptSuffix = RESOURCE((RESOURCERequestObj){
                             .MioneCarrier = Pair.CarriagePassengers,
@@ -71,7 +71,7 @@ HeadFunctionRespondObj SET(const HeadFunctionRequestObj * HeadCallObjectPointer)
         switch (Registration & cmp)
         {
         case 0: continue;
-        case 1<<(PROMPT_SET-1):
+        case 1<<(PROMPT_SET - 1):
             {
                 Result.MajorVariables.Carrier = realloc(
                     Result.MajorVariables.Carrier,

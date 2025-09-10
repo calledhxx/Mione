@@ -11,52 +11,57 @@ PromptObjCarrier ReturnPromptList()
     const PromptObj Prompts[] = {
         (PromptObj) {
             .Name = "=",
-            .Identification = 1,
+            .Identification = PROMPT_SET,
         },
 
         (PromptObj) {
             .Name = "model",
-            .Identification = 2,
+            .Identification = PROMPT_MODEL,
         },
 
         (PromptObj) {
             .Name = "request",
-            .Identification = 3,
+            .Identification = PROMPT_REQUEST,
         },
 
         (PromptObj) {
             .Name = "position",
-            .Identification = 4,
+            .Identification = PROMPT_POSITION,
         },
 
         (PromptObj) {
             .Name = "respond",
-            .Identification = 5,
+            .Identification = PROMPT_RESPOND,
         },
 
         (PromptObj) {
             .Name = "from",
-            .Identification = 6,
+            .Identification = PROMPT_FROM,
         },
 
         (PromptObj) {
             .Name = "of",
-            .Identification = 7,
+            .Identification = PROMPT_OF,
         },
 
         (PromptObj) {
             .Name = "as",
-            .Identification = 8,
+            .Identification = PROMPT_AS,
         },
 
         (PromptObj) {
             .Name = "then",
-            .Identification = 9,
+            .Identification = PROMPT_THEN,
         },
 
         (PromptObj) {
             .Name = "else",
-            .Identification = 10,
+            .Identification = PROMPT_ELSE,
+        },
+
+        (PromptObj) {
+            .Name = "do",
+            .Identification = PROMPT_DO,
         }
     };
 

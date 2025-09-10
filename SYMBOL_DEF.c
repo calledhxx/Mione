@@ -11,7 +11,7 @@ SymbolObjCarrier ReturnSymbolList()
 {
         (SymbolObj){
             .Name = "+",
-            .Identification = 1,
+            .Identification = SYMBOL_ADD,
 
             .SymbolCarry =
                  SC_AfterVariableOrValue | SC_BeforeVariableOrValue ,
@@ -23,7 +23,7 @@ SymbolObjCarrier ReturnSymbolList()
 
         (SymbolObj){
             .Name = ",",
-            .Identification = 2,
+            .Identification = SYMBOL_COMMA,
 
             .SymbolCarry =
                  SC_AfterVariableOrValue ,
@@ -33,14 +33,14 @@ SymbolObjCarrier ReturnSymbolList()
 
         (SymbolObj){
             .Name = "*",
-            .Identification = 3,
+            .Identification = SYMBOL_STAR,
             .SymbolCarry =
                  SC_AfterVariableOrValue
         },
 
         (SymbolObj){
             .Name = "/",
-            .Identification = 4,
+            .Identification = SYMBOL_SLASH,
             .SymbolCarry =
                  SC_AfterVariableOrValue ,
 
@@ -50,7 +50,7 @@ SymbolObjCarrier ReturnSymbolList()
 
         (SymbolObj){
             .Name = "^",
-            .Identification = 5,
+            .Identification = SYMBOL_UP,
             .SymbolCarry =
                  SC_AfterVariableOrValue ,
 
@@ -58,7 +58,7 @@ SymbolObjCarrier ReturnSymbolList()
 
         (SymbolObj){
             .Name = "-",
-            .Identification = 6,
+            .Identification = SYMBOL_SUB,
             .SymbolCarry =
                 SC_BeforeVariableOrValue |  SC_AfterVariableOrValue |  SC_AfterSymbol,
 
@@ -66,7 +66,7 @@ SymbolObjCarrier ReturnSymbolList()
 
         (SymbolObj){
             .Name = ".",
-            .Identification = 7,
+            .Identification = SYMBOL_DOT,
             .SymbolCarry =
                  SC_AfterVariableOrValue ,
 
@@ -74,7 +74,7 @@ SymbolObjCarrier ReturnSymbolList()
         },
         (SymbolObj){
             .Name = "==",
-            .Identification = 8,
+            .Identification = SYMBOL_IS,
             .SymbolCarry =
                  SC_AfterVariableOrValue ,
 
@@ -83,14 +83,14 @@ SymbolObjCarrier ReturnSymbolList()
 
         (SymbolObj){
             .Name = "[",
-            .Identification = 10,
+            .Identification = SYMBOL_FRONT_BRACKET,
             .SymbolCarry =
                 SC_BeforeVariableOrValue | SC_AfterVariableOrValue ,
         },
 
         (SymbolObj){
             .Name = "]",
-            .Identification = 11,
+            .Identification = SYMBOL_BACK_BRACKET,
             .SymbolCarry =
                 SC_AfterVariableOrValue ,
 
@@ -99,7 +99,7 @@ SymbolObjCarrier ReturnSymbolList()
         },
         (SymbolObj){
             .Name = "(",
-            .Identification = 12,
+            .Identification = SYMBOL_FRONT_PARENTHESES,
             .SymbolCarry =
                  SC_BeforeVariableOrValue,
 
@@ -108,7 +108,7 @@ SymbolObjCarrier ReturnSymbolList()
 
         (SymbolObj){
             .Name = ")",
-            .Identification = 13,
+            .Identification = SYMBOL_BACK_PARENTHESES,
             .SymbolCarry =
                 SC_AfterVariableOrValue,
 

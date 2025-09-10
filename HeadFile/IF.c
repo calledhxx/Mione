@@ -45,7 +45,7 @@ HeadFunctionRespondObj IF(const HeadFunctionRequestObj * HeadCallObjectPointer)
             {
                 switch (Pair.CarriageManager.Prompt.Identification)
                 {
-                case 9:
+                case PROMPT_THEN:
                     {
                         ThenPromptSuffix = RESOURCE((RESOURCERequestObj){
                             .MioneCarrier = Pair.CarriagePassengers,
@@ -72,7 +72,7 @@ HeadFunctionRespondObj IF(const HeadFunctionRequestObj * HeadCallObjectPointer)
 
                         break;
                     }
-                case 10:
+                case PROMPT_ELSE:
                     {
                         ElsePromptSuffix = RESOURCE((RESOURCERequestObj){
                                     .MioneCarrier = Pair.CarriagePassengers,

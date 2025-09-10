@@ -34,7 +34,7 @@ HeadFunctionRespondObj INCLUDE(const HeadFunctionRequestObj * HeadCallObjectPoin
             {
                 switch (Pair.CarriageManager.Prompt.Identification)
                 {
-                case 8:
+                case PROMPT_AS:
                     {
                         AsPromptSuffix = CONTAINER((CONTAINERRequestObj){
                             .MioneCarrier = Pair.CarriagePassengers,

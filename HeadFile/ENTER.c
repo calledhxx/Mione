@@ -33,7 +33,7 @@ HeadFunctionRespondObj ENTER(const HeadFunctionRequestObj * HeadCallObjectPointe
             {
                 switch (Pair.CarriageManager.Prompt.Identification)
                 {
-                case 3:
+                case PROMPT_REQUEST:
                     {
                         RequestPromptSuffix = RESOURCE((RESOURCERequestObj){
                             .MioneCarrier = Pair.CarriagePassengers,
@@ -41,7 +41,7 @@ HeadFunctionRespondObj ENTER(const HeadFunctionRequestObj * HeadCallObjectPointe
                         }).ValueCarrier;
                         break;
                     }
-                case 5:
+                case PROMPT_RESPOND:
                     {
                         RespondPromptSuffix = CONTAINER((CONTAINERRequestObj){
                             .MioneCarrier = Pair.CarriagePassengers,
@@ -50,7 +50,7 @@ HeadFunctionRespondObj ENTER(const HeadFunctionRequestObj * HeadCallObjectPointe
                         break;
                     }
 
-                case 7:
+                case PROMPT_OF:
                     {
                         OfPromptSuffix = RESOURCE((RESOURCERequestObj){
                             .MioneCarrier = Pair.CarriagePassengers,

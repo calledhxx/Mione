@@ -124,7 +124,7 @@ MIONEFunctionRespondObj ToMione(MIONEFunctionRequestObj input)
             {
                 if (LastMio.ObjType == SYMBOL) //`)` +
                 {
-                    if (!(LastMio.Symbol.Identification == 10 || LastMio.Symbol.Identification == 11 || LastMio.Symbol.Identification == 12 || LastMio.Symbol.Identification == 13))
+                    if (!(LastMio.Symbol.Identification == SYMBOL_FRONT_BRACKET || LastMio.Symbol.Identification == SYMBOL_BACK_BRACKET || LastMio.Symbol.Identification == SYMBOL_FRONT_PARENTHESES || LastMio.Symbol.Identification == SYMBOL_BACK_PARENTHESES))
                         if (!(Mio.Symbol.SymbolCarry & SC_AfterSymbol || LastMio.Symbol.SymbolCarry & SC_BeforeSymbol))
                         {
                             SaveCarriageIntoTrain(&Train,Carriage);
@@ -141,7 +141,7 @@ MIONEFunctionRespondObj ToMione(MIONEFunctionRequestObj input)
                             };
                         }
                 }else if (LastMio.ObjType == VARIABLE || LastMio.ObjType == VALUE) //VARIABLE || VALUE
-                    if (!(Mio.Symbol.Identification == 10 || Mio.Symbol.Identification == 11 || Mio.Symbol.Identification == 12 || Mio.Symbol.Identification == 13))
+                    if (!(Mio.Symbol.Identification == SYMBOL_FRONT_BRACKET || Mio.Symbol.Identification == SYMBOL_BACK_BRACKET || Mio.Symbol.Identification == SYMBOL_FRONT_PARENTHESES || Mio.Symbol.Identification == SYMBOL_BACK_PARENTHESES))
                         if (!(Mio.Symbol.SymbolCarry & SC_AfterVariableOrValue))
                         {
                             SaveCarriageIntoTrain(&Train,Carriage);

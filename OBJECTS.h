@@ -40,19 +40,6 @@ enum
     CASE_BREAKER,
 };
 
-enum
-{
-    VALUE_STRING_TYPE = 1,
-    VALUE_FUNCTION_TYPE = 4,
-    VALUE_RANGE_TYPE = 5,
-    VALUE_TABLE_TYPE = 6,
-    VALUE_LIGHTS_TYPE = 7,
-    VALUE_DB_TYPE = 8,
-    VALUE_NUMBER_TYPE = 9,
-
-    VALUE_WINDOWS_LIBRARY_TYPE = 10,
-};
-
 enum{
     SC_BeforeSymbol = 1,
     SC_AfterSymbol = 2,
@@ -73,6 +60,61 @@ enum
     EVENT_PROMPT_SUFFIX_ERROR,
 
     EVENT_TRAIN_ERROR,
+};
+
+enum //HEAD
+{
+    HEAD_SET = 1,
+    HEAD_RETURN = 2,
+    HEAD_GET = 3,
+    HEAD_LIBRARY = 4,
+    HEAD_ENTER = 5,
+    HEAD_INCLUDE = 6,
+    HEAD_IF = 7,
+};
+
+enum //PROMPT
+{
+    PROMPT_SET = 1,
+    PROMPT_MODEL = 2,
+    PROMPT_REQUEST = 3,
+    PROMPT_POSITION = 4,
+    PROMPT_RESPOND = 5,
+    PROMPT_FROM = 6,
+    PROMPT_OF = 7,
+    PROMPT_AS = 8,
+    PROMPT_THEN = 9,
+    PROMPT_ELSE = 10,
+    PROMPT_DO = 11,
+};
+
+enum //SYMBOL
+{
+    SYMBOL_ADD = 1,
+    SYMBOL_COMMA = 2,
+    SYMBOL_STAR = 3,
+    SYMBOL_SLASH = 4,
+    SYMBOL_UP = 5,
+    SYMBOL_SUB = 6,
+    SYMBOL_DOT = 7,
+    SYMBOL_IS = 8,
+    SYMBOL_FRONT_BRACKET = 9,
+    SYMBOL_BACK_BRACKET = 10,
+    SYMBOL_FRONT_PARENTHESES = 11,
+    SYMBOL_BACK_PARENTHESES = 12,
+};
+
+enum //VALUE TYPE
+{
+    VALUE_STRING_TYPE = 1,
+    VALUE_FUNCTION_TYPE = 4,
+    VALUE_RANGE_TYPE = 5,
+    VALUE_TABLE_TYPE = 6,
+    VALUE_LIGHTS_TYPE = 7,
+    VALUE_DB_TYPE = 8,
+    VALUE_NUMBER_TYPE = 9,
+
+    VALUE_WINDOWS_LIBRARY_TYPE = 10,
 };
 
 

@@ -8,7 +8,9 @@ HeadFunctionRespondObj FOR(const HeadFunctionRequestObj * HeadCallObjectPointer)
     const unsigned int PairsSize = HeadCallObject.Train.CarriageLen;
     const CarriageObj * Pairs = HeadCallObject.Train.Carriages;
 
-    ValueObjCarrier HeadSuffix = {0};
+    VariableObjPtrCarrier HeadSuffix = {0};
+    ValueObjCarrier OfPromptSuffix = {0};
+    ValueObjCarrier DoPromptSuffix = {0};
 
     unsigned int Registration = 0;
 
@@ -20,10 +22,10 @@ HeadFunctionRespondObj FOR(const HeadFunctionRequestObj * HeadCallObjectPointer)
         {
         case HEAD:
             {
-                HeadSuffix = RESOURCE((RESOURCERequestObj){
+                HeadSuffix = CONTAINER((CONTAINERRequestObj){
                     .MioneCarrier = Pair.CarriagePassengers,
                     .EventTemplate = HeadCallObject.EventTemplate
-                }).ValueCarrier;
+                }).VariablePtrCarrier;
                 break;
             }
         case PROMPT:
@@ -31,9 +33,20 @@ HeadFunctionRespondObj FOR(const HeadFunctionRequestObj * HeadCallObjectPointer)
                 switch (Pair.CarriageManager.Prompt.Identification)
                 {
 
-                case 7:
+                case PROMPT_OF:
                     {
-
+                        OfPromptSuffix = RESOURCE((RESOURCERequestObj){
+                            .MioneCarrier = Pair.CarriagePassengers,
+                            .EventTemplate = HeadCallObject.EventTemplate
+                        }).ValueCarrier;
+                        break;
+                    }
+                case PROMPT_DO:
+                    {
+                        DoPromptSuffix = RESOURCE((RESOURCERequestObj){
+                            .MioneCarrier = Pair.CarriagePassengers,
+                            .EventTemplate = HeadCallObject.EventTemplate
+                        }).ValueCarrier;
                         break;
                     }
                 default: exit(1);

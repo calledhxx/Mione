@@ -93,7 +93,6 @@ CMOFunctionRespondObj CMO(
 
         const CaseObj ThisCase = CaseCarrier[CaseCarrierIndex];
 
-        printf("::: %s\n",ThisCase.ObjName);
 
         switch (ThisCase.ObjType) // 檢查是否匹配 BREAKER, HEAD ,PROMPT與SYMBOL，否則進行第二處理。
         {

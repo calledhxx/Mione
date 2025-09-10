@@ -32,7 +32,7 @@ COMPUTATIONRespondObj COMPUTATION(COMPUTATIONRequestObj input)
             {
                 switch (Pack[i].Symbol.Identification)
                 {
-                case 10:{
+                case SYMBOL_FRONT_BRACKET:{
                     if (!BracketsChild)
                     {
 
@@ -52,7 +52,7 @@ COMPUTATIONRespondObj COMPUTATION(COMPUTATIONRequestObj input)
 
                     break;
                 }
-                case 11:{
+                case SYMBOL_BACK_BRACKET:{
                     BracketsChild--;
                     if (!BracketsChild && BracketCur == 1)
                     {
@@ -199,7 +199,7 @@ COMPUTATIONRespondObj COMPUTATION(COMPUTATIONRequestObj input)
 
                     break;
                 }
-                case 12:
+                case SYMBOL_FRONT_PARENTHESES:
                     {
                         if (!BracketsChild)
                         {
@@ -220,7 +220,7 @@ COMPUTATIONRespondObj COMPUTATION(COMPUTATIONRequestObj input)
 
                         break;
                     }
-                case 13:
+                case SYMBOL_BACK_PARENTHESES:
                     {
                     BracketsChild--;
                     if (!BracketsChild && BracketCur == 2)
