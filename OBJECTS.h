@@ -461,5 +461,4 @@ typedef struct _COMPUTATIONRespondObject
     EventObj Event;
 } COMPUTATIONRespondObj;
 
-
 #endif //OBJECTS_H

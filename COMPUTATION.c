@@ -512,7 +512,11 @@ COMPUTATIONRespondObj COMPUTATION(COMPUTATIONRequestObj input)
         default:{
             if (!BracketsChild)
             {
-                if (Pack[i].ObjType == VALUE && Pack[i].Value.ValueType == VALUE_TABLE_TYPE && !Pack[i].Value.Table.VariableObjCarrierPointer)
+                if (
+                    Pack[i].ObjType == VALUE &&
+                    Pack[i].Value.ValueType == VALUE_TABLE_TYPE &&
+                    !Pack[i].Value.Table.VariableObjCarrierPointer
+                    )
                 {
                     IMPLEMENTFunctionRespondObj IMPLEMENTReturn = IMPLEMENT((IMPLEMENTFunctionRequestObj){
                         .Built = *Pack[i].Value.Table.TrainObjCarrierPointer,
@@ -521,29 +525,39 @@ COMPUTATIONRespondObj COMPUTATION(COMPUTATIONRequestObj input)
                     unsigned VarsSize = IMPLEMENTReturn.MajorVariables.CarrierLen;
                     VariableObj * Vars = IMPLEMENTReturn.MajorVariables.Carrier;
 
-                    VariableObjCarrier NewTable;
-                    NewTable.Carrier = NULL;
-                    NewTable.CarrierLen = 0;
+                    VariableObjCarrier NewTable = {0};
 
-                    for (int TableChildIndex = 0; TableChildIndex<VarsSize ; TableChildIndex++)
+                    for (unsigned TableChildIndex = 0; TableChildIndex<VarsSize ; TableChildIndex++)
                     {
+                        VariableObj toAddVariable = Vars[TableChildIndex];
+
+                        for (unsigned index = 0; index<NewTable.CarrierLen ; index++)
+                            if (Vars[TableChildIndex].VariablePlace)
+                            {
+                                if (NewTable.Carrier[index].VariablePlace == Vars[TableChildIndex].VariablePlace)
+                                {
+                                    Vars[TableChildIndex].Value = NewTable.Carrier[index].Value;
+                                    goto passTableChildLoop;
+                                }
+
+                                if (NewTable.Carrier[index].VariablePlace && NewTable.Carrier[index].VariablePlace > NewTable.Carrier[NewTable.CarrierLen-1].VariablePlace)
+                                {
+                                    const VariableObj Butter = toAddVariable;
+                                    NewTable.Carrier[index] = NewTable.Carrier[NewTable.CarrierLen-1];
+                                    toAddVariable = Butter;
+                                }
+                            }else
+                                if (strcmp(NewTable.Carrier[index].VariableName , Vars[TableChildIndex].VariableName) == 0)
+                                {
+                                    Vars[TableChildIndex].Value = NewTable.Carrier[index].Value;
+                                    goto passTableChildLoop;
+                                }
+
                         NewTable.CarrierLen++;
                         NewTable.Carrier = realloc ( NewTable.Carrier, NewTable.CarrierLen*sizeof(VariableObj ));
                         NewTable.Carrier[NewTable.CarrierLen-1] = Vars[TableChildIndex];
 
-                        if (Vars[TableChildIndex].VariablePlace)
-                        {
-                            for (int CTCIndex = 0; CTCIndex<NewTable.CarrierLen ; CTCIndex++)
-                            {
-                                if (NewTable.Carrier[CTCIndex].VariablePlace > NewTable.Carrier[NewTable.CarrierLen-1].VariablePlace && NewTable.Carrier[CTCIndex].VariablePlace )
-                                {
-                                    VariableObj Butter = NewTable.Carrier[CTCIndex];
-                                    NewTable.Carrier[CTCIndex] = NewTable.Carrier[NewTable.CarrierLen-1];
-                                    NewTable.Carrier[NewTable.CarrierLen-1] = Butter;
-                                }
-                            }
-                        }
-
+                        passTableChildLoop:
                     }
 
                     Pack[i].Value.Table.TrainObjCarrierPointer = NULL;
