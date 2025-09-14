@@ -1,8 +1,0 @@
-set table = {
-    set a = 100;
-    set b = 200;
-};
-
-for i of table do range
-    set value = table[i];
-end

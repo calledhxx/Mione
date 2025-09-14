@@ -104,7 +104,7 @@ HeadFunctionRespondObj FOR(const HeadFunctionRequestObj * HeadCallObjectPointer)
         const IMPLEMENTFunctionRespondObj IMPLEMENTFunctionRespond =
             IMPLEMENT(IMPLEMENTFunctionRequest);
 
-        printf("yes\n");
+        printf("loop ended with normal eve\n");
     }
 
     return Result;
