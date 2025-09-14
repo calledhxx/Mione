@@ -520,6 +520,7 @@ COMPUTATIONRespondObj COMPUTATION(COMPUTATIONRequestObj input)
                 {
                     IMPLEMENTFunctionRespondObj IMPLEMENTReturn = IMPLEMENT((IMPLEMENTFunctionRequestObj){
                         .Built = *Pack[i].Value.Table.TrainObjCarrierPointer,
+                        .EventTemplate = input.EventTemplate
                     });
 
                     unsigned VarsSize = IMPLEMENTReturn.MajorVariables.CarrierLen;

@@ -261,7 +261,6 @@ CMOFunctionRespondObj CMO(
 
                 if (Paired) break;
 
-
                 for (
                     unsigned int HeadDetectIndex = 0;
                     HeadDetectIndex < HeadList.CarrierLen;
@@ -586,8 +585,6 @@ CMOFunctionRespondObj CMO(
 
                         for (unsigned i = 0; i < strlen(ThisCase.ObjName); i++)
                             Number += (ThisCase.ObjName[i] != '0') * 1<<(strlen(ThisCase.ObjName) - i - 1);
-
-
 
                         pushMioneObjectIntoLayout(&LayoutsCarrier.Carrier[LayoutsCarrier.CarrierLen - 1], (MioneObj){
                             .ObjType = VALUE,
