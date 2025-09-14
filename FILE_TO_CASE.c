@@ -196,16 +196,12 @@ FCOFunctionRespondObj FCO(FCOFunctionRequestObj input)
                                     .CaseStartColumn = CaseStartColumn,
                                     .CaseEndColumn = ProcessingColumn,
                                 }
-
-
                             };
-
 
                             RecordingNumber = 0; //重置數字紀錄
 
-
                             CaseNameLen = 0;
-                            //free(CaseName);
+                            // free(CaseName);
                             CaseName = NULL;
                         }
 
@@ -725,6 +721,10 @@ FCOFunctionRespondObj FCO(FCOFunctionRequestObj input)
         LastChar = ThisChar;
         LastCharType = ThisCharType;
     }while (1);
+
+    free(toCMPChar);
+    free(SuperCharChildName);
+    free(SuperCharParentName);
 
     if (CommentChar == '*')
     {

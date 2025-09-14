@@ -246,7 +246,7 @@ typedef struct _VariableObjectsCarrier
 
 typedef struct _MioneObject
 {
-    unsigned ObjType; //HPSVV 1H 2P 3S 4VAR 5VAL
+    unsigned char ObjType; //HPSVV 1H 2P 3S 4VAR 5VAL
 
     VariableLinkObj * VariableLinkPtr; //當ObjType為VAR時，會用到此變數。
     ValueObj Value;  //當ObjType為VALUE宏時，會用到此值。
