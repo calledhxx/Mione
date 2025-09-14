@@ -1,9 +1,15 @@
-set table = {
-    set a = 100;
-    set b = 500;
-}
+set fuc = function
+    set table = {
+        set a = 100;
+        set b = 500;
+    }
 
-for i of table do range
-    set value = table[i];
-    value
-end
+    for i of table do range
+        set value = table[i];
+        value
+    end
+
+    return 111;
+end();
+
+fuc
