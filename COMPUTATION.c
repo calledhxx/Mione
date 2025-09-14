@@ -350,8 +350,6 @@ COMPUTATIONRespondObj COMPUTATION(COMPUTATIONRequestObj input)
                                            );
                                         NewPackSize+= PackSize - i - 1;
 
-
-
                                         PackSize = NewPackSize;
                                         Pack = NewPack;
 
@@ -369,34 +367,33 @@ COMPUTATIONRespondObj COMPUTATION(COMPUTATIONRequestObj input)
 
                         if (!FunctionCalled)
                         {
-                            int NewPackSize = 0;
-                            MioneObj* NewPack = NULL;
+                            unsigned NewPackSize = 0;
+                            MioneObj* NewPack = malloc(sizeof(MioneObj)*
+                                (FirstBracketIndex + ChildCount.ValueCarrier.CarrierLen + PackSize - i - 1)
+                                );
 
-                            for (int index = 0; index < FirstBracketIndex; index++)
-                            {
-                                NewPackSize++;
-                                NewPack = realloc(NewPack, NewPackSize * sizeof(MioneObj));
-                                NewPack[NewPackSize - 1] = Pack[index];
-                            }
-
+                            memcpy(
+                            NewPack,
+                            Pack,
+                            sizeof(MioneObj) * (FirstBracketIndex)
+                                );
+                            NewPackSize+= FirstBracketIndex;
 
                             for (int index = 0; index < ChildCount.ValueCarrier.CarrierLen; index++)
                             {
                                 NewPackSize++;
-                                NewPack = realloc(NewPack, NewPackSize * sizeof(MioneObj));
                                 NewPack[NewPackSize - 1] = (MioneObj){
                                     .ObjType = VALUE,
                                     .Value = ChildCount.ValueCarrier.Carrier[index]
                                 };
-
                             }
 
-                            for (int index = i + 1; index < PackSize; index++)
-                            {
-                                NewPackSize++;
-                                NewPack = realloc(NewPack, NewPackSize * sizeof(MioneObj));
-                                NewPack[NewPackSize - 1] = Pack[index];
-                            }
+                            memcpy(
+                            NewPack + sizeof(MioneObj) * NewPackSize,
+                            Pack + sizeof(MioneObj) * (i+1),
+                           sizeof(MioneObj) * (PackSize - i - 1)
+                               );
+                            NewPackSize+= PackSize - i - 1;
 
                             Pack = NewPack;
                             PackSize = NewPackSize;
