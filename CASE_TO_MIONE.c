@@ -72,13 +72,12 @@ CMOFunctionRespondObj CMO(
 
     HeadObjCarrier HeadList = ReturnHeadList();
     SymbolObjCarrier SymbolList = ReturnSymbolList();
-    PromptObjCarrier PromptList = ReturnPromptList();
+    PromptObjCarrier PromptList = ReturnPromptList(); //let me think what to do here...
 
     const CaseObj * CaseCarrier = Carrier.Carrier;
     const unsigned int CaseCarrierLen = Carrier.CarrierLen;
 
     MioneLayoutObjCarrier LayoutsCarrier = {0};
-
 
     pushLayoutIntoLayoutCarrier(&LayoutsCarrier,(MioneLayoutObj){0});
 
