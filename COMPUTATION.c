@@ -309,11 +309,8 @@ COMPUTATIONRespondObj COMPUTATION(COMPUTATIONRequestObj input)
                                             .CallByValueCarrier = ChildCount.ValueCarrier,
                                         });
 
-
-
                                         if (IMPLEMENTReturn.Event.Code)
                                             exit(-5);
-
 
                                         ValueObjCarrier V = IMPLEMENTReturn.ReturnValues;
 
