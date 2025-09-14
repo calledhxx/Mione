@@ -10,6 +10,10 @@
 #error "NO"
 #endif
 
+HeadObjCarrier HeadList = {0};
+SymbolObjCarrier SymbolList = {0};
+PromptObjCarrier PromptList = {0};
+
 int main(const int OptionsSize,char **Options)
 {
     ScopeObj MainScope = {0};
@@ -19,7 +23,13 @@ int main(const int OptionsSize,char **Options)
     MainScope.ChildrenScopePtrCarrierPointer = malloc(sizeof(ScopeObjPtrCarrier));
     *MainScope.ChildrenScopePtrCarrierPointer = (ScopeObjPtrCarrier){0};
 
+    HeadList = ReturnHeadList();
+    SymbolList = ReturnSymbolList();
+    PromptList = ReturnPromptList();
+
     if (f == NULL) return -1;
+
+
 
     const EventObj EventTemplate = (EventObj){
         .Address = "D:/Mione/index.mio"

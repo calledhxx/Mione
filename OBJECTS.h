@@ -1,7 +1,7 @@
 #ifndef OBJECTS_H
 #define OBJECTS_H
 #include <stdio.h>
-#include <libloaderapi.h>
+#include <windows.h>
 
 enum
 {

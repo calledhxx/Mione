@@ -1,5 +1,5 @@
 #include <stdlib.h>
-#include <libloaderapi.h>
+#include <windows.h>
 
 #include "../STDMIO.h"
 

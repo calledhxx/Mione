@@ -63,16 +63,15 @@ CMOFunctionRespondObj CMO(
     CMOFunctionRequestObj input
     )
 {
-
     CaseObjCarrier Carrier = input.CassCarrier;
     ScopeObj * ScopePointer = input.ScopePointer;
 
     CMOFunctionRespondObj Result = {0};
     Result.Event = input.EventTemplate;
 
-    HeadObjCarrier HeadList = ReturnHeadList();
-    SymbolObjCarrier SymbolList = ReturnSymbolList();
-    PromptObjCarrier PromptList = ReturnPromptList(); //let me think what to do here...
+    extern HeadObjCarrier HeadList;
+    extern SymbolObjCarrier SymbolList;
+    extern PromptObjCarrier PromptList;
 
     const CaseObj * CaseCarrier = Carrier.Carrier;
     const unsigned int CaseCarrierLen = Carrier.CarrierLen;

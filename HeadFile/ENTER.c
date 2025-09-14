@@ -1,3 +1,4 @@
+#include <windows.h>
 #include "../STDMIO.h"
 
 HeadFunctionRespondObj ENTER(const HeadFunctionRequestObj * HeadCallObjectPointer)
