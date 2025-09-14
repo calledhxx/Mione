@@ -1,3 +1,8 @@
-for i of {set a = 100 set a = 200} do range
-    set value = {set a = 100}[i];
+set table = {
+    set a = 100;
+    set b = 200;
+};
+
+for i of table do range
+    set value = table[i];
 end

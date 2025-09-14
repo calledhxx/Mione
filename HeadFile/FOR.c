@@ -77,12 +77,33 @@ HeadFunctionRespondObj FOR(const HeadFunctionRequestObj * HeadCallObjectPointer)
     if (DoPromptSuffix.Carrier[0].ValueType != VALUE_RANGE_TYPE)
         exit(159);
 
+    const IMPLEMENTFunctionRequestObj IMPLEMENTFunctionRequest = {
+        .Built = *DoPromptSuffix.Carrier[0].Area.TrainObjCarrierPointer,
+        .EventTemplate = HeadCallObject.EventTemplate
+    };
 
     for (
-        unsigned TableIndex = 0;
-        TableIndex<OfPromptSuffix.Carrier[0].Table.VariableObjCarrierPointer->CarrierLen;
-        TableIndex++)
+        unsigned TableChildIndex = 0;
+        TableChildIndex<OfPromptSuffix.Carrier[0].Table.VariableObjCarrierPointer->CarrierLen;
+        TableChildIndex++
+        )
     {
+        if (OfPromptSuffix.Carrier[0].Table.VariableObjCarrierPointer->Carrier[TableChildIndex].VariablePlace)
+            HeadSuffix.Carrier[0]->Value =
+                (ValueObj){
+                    .ValueType = VALUE_NUMBER_TYPE,
+                    .Number = OfPromptSuffix.Carrier[0].Table.VariableObjCarrierPointer->Carrier[TableChildIndex].VariablePlace
+                };
+        else
+            HeadSuffix.Carrier[0]->Value =
+                (ValueObj){
+                    .ValueType = VALUE_STRING_TYPE,
+                    .String = OfPromptSuffix.Carrier[0].Table.VariableObjCarrierPointer->Carrier[TableChildIndex].VariableName
+                };
+
+        const IMPLEMENTFunctionRespondObj IMPLEMENTFunctionRespond =
+            IMPLEMENT(IMPLEMENTFunctionRequest);
+
         printf("yes\n");
     }
 

@@ -93,8 +93,8 @@ HeadFunctionRespondObj ENTER(const HeadFunctionRequestObj * HeadCallObjectPointe
 
         ExternalLibraryRespondObj
             (*EntranceAddress)(ExternalLibraryRequestObj) = GetProcAddress(
-                OfPromptSuffix.Carrier[0].WindowsLibrary,
-                HeadSuffix.Carrier[0].String
+                    OfPromptSuffix.Carrier[0].WindowsLibrary,
+                    HeadSuffix.Carrier[0].String
                 );
 
         if (EntranceAddress)
