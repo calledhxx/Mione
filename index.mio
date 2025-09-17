@@ -1,15 +1,2 @@
-set fuc = function
-    set table = {
-        set a = (100);
-        set b = (500);
-    }
-
-    for i of table do range
-        set value = table[i];
-        value
-    end
-
-    return 111;
-end();
-
-fuc
+include "D:/Mione-examples-/Objects/stdio.mio" as io
+set a = io["print"]("Hello, World!")

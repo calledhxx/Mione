@@ -42,6 +42,7 @@ HeadFunctionRespondObj INCLUDE(const HeadFunctionRequestObj * HeadCallObjectPoin
                         }).VariablePtrCarrier;
                         break;
                     }
+                    default: exit (1234);
                 }
 
                 Registration |= 1<<(Pair.CarriageManager.Prompt.Identification-1);

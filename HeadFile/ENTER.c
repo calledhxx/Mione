@@ -59,7 +59,7 @@ HeadFunctionRespondObj ENTER(const HeadFunctionRequestObj * HeadCallObjectPointe
                         }).ValueCarrier;;
                         break;
                     }
-                default: exit(1);
+                default: exit(4);
 
                 }
 

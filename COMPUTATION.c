@@ -108,12 +108,12 @@ COMPUTATIONRespondObj COMPUTATION(COMPUTATIONRequestObj input)
                                                 break;
                                             }
                                         default:
-                                                exit(1);
+                                                exit(5);
                                         }
                                     }
 
 
-                                }else exit(1);
+                                }else exit(nearByValue.ValueType);
 
                             }else
                             {
@@ -154,7 +154,7 @@ COMPUTATIONRespondObj COMPUTATION(COMPUTATIONRequestObj input)
                                         break;
                                     }
                                 default:
-                                        exit(1);
+                                        exit(3);
                                 }
 
 
@@ -163,12 +163,14 @@ COMPUTATIONRespondObj COMPUTATION(COMPUTATIONRequestObj input)
 
                         unsigned NewPackSize = 0;
                         MioneObj* NewPack = malloc(
-                            sizeof(MioneObj) * (FirstBracketIndex - 1 + PackSize - i)
+                            (FirstBracketIndex - 1 + PackSize - i) * sizeof(MioneObj)
                             );
+
+
 
                         memcpy(
                             NewPack,
-                            Pack + FirstBracketIndex - 1,
+                            Pack,
                             sizeof(MioneObj) * (FirstBracketIndex - 1)
                             );
                         NewPackSize += FirstBracketIndex;
@@ -179,11 +181,11 @@ COMPUTATIONRespondObj COMPUTATION(COMPUTATIONRequestObj input)
 
 
                         memcpy(
-                            NewPack + sizeof(MioneObj) * NewPackSize,
-                            Pack + sizeof(MioneObj) * (i+1),
-                            sizeof(MioneObj) * (PackSize - i - 1));
-                        NewPackSize += PackSize - i - 1;
+                             NewPack + NewPackSize,
+                             Pack + (i+1),
+                             sizeof(MioneObj) * (PackSize - i - 1));
 
+                        NewPackSize += PackSize - i - 1;
 
 
                         PackSize = NewPackSize;
@@ -225,7 +227,7 @@ COMPUTATIONRespondObj COMPUTATION(COMPUTATIONRequestObj input)
                     BracketsChild--;
                     if (!BracketsChild && BracketCur == 2)
                     {
-                        int FunctionCalled = 0;
+                        char FunctionCalled = 0;
                         BracketCur = 0;
 
                         RESOURCERespondObj ChildCount = RESOURCE((RESOURCERequestObj){
@@ -273,7 +275,7 @@ COMPUTATIONRespondObj COMPUTATION(COMPUTATIONRequestObj input)
                                             );
                                         NewPackSize+= FirstBracketIndex - 1;
 
-                                        for (int index = 0; index < V.CarrierLen; index++)
+                                        for (unsigned index = 0; index < V.CarrierLen; index++)
                                         {
                                             NewPackSize++;
                                             NewPack[NewPackSize - 1] = (MioneObj){
@@ -284,9 +286,9 @@ COMPUTATIONRespondObj COMPUTATION(COMPUTATIONRequestObj input)
                                         }
 
                                         memcpy(
-                                        NewPack + sizeof(MioneObj) * NewPackSize,
-                                        Pack + sizeof(MioneObj) * (i+1),
-                                       sizeof(MioneObj) * (PackSize - i - 1)
+                                           NewPack + NewPackSize,
+                                           Pack + (i+1),
+                                           sizeof(MioneObj) * (PackSize - i - 1)
                                            );
                                         NewPackSize+= PackSize - i - 1;
 
@@ -341,10 +343,10 @@ COMPUTATIONRespondObj COMPUTATION(COMPUTATIONRequestObj input)
                                         }
 
                                         memcpy(
-                                        NewPack + sizeof(MioneObj) * NewPackSize,
-                                        Pack + sizeof(MioneObj) * (i+1),
-                                       sizeof(MioneObj) * (PackSize - i - 1)
-                                           );
+                                            NewPack + NewPackSize,
+                                            Pack + (i+1),
+                                            sizeof(MioneObj) * (PackSize - i - 1)
+                                                );
                                         NewPackSize+= PackSize - i - 1;
 
                                         PackSize = NewPackSize;
@@ -385,12 +387,15 @@ COMPUTATIONRespondObj COMPUTATION(COMPUTATIONRequestObj input)
                                 };
                             }
 
+
                             memcpy(
-                            NewPack + sizeof(MioneObj) * NewPackSize,
-                            Pack + sizeof(MioneObj) * (i+1),
-                           sizeof(MioneObj) * (PackSize - i - 1)
-                               );
+                                NewPack +  NewPackSize,
+                                Pack + (i+1),
+                                sizeof(MioneObj) * (PackSize - i - 1)
+                                );
                             NewPackSize+= PackSize - i - 1;
+
+
 
                             Pack = NewPack;
                             PackSize = NewPackSize;
@@ -472,14 +477,14 @@ COMPUTATIONRespondObj COMPUTATION(COMPUTATIONRequestObj input)
                                 sizeof(MioneObj) * (FrontIndex + 1)
                                 );
                             memcpy(
-                                NewPack + sizeof(MioneObj) * (FrontIndex + 1),
+                                NewPack + (FrontIndex + 1),
                                 Output.Carrier,
                                 sizeof(MioneObj) * Output.CarrierLen
                                 );
 
                             if (PackSize >= BackIndex + 1)
                                 memcpy(
-                                    NewPack + sizeof(MioneObj) * (FrontIndex + 1 + Output.CarrierLen),
+                                    NewPack + (FrontIndex + 1 + Output.CarrierLen),
                                     Pack + BackIndex + 1,
                                     sizeof(MioneObj) * PackSize - BackIndex - 1
                                 );
@@ -569,7 +574,7 @@ COMPUTATIONRespondObj COMPUTATION(COMPUTATIONRequestObj input)
     if (inBracket)
         free(inBracket);
 
-    if (BracketCur) exit(1);
+    if (BracketCur) exit(3);
 
     return (COMPUTATIONRespondObj){
         .MioneCarrier = (MioneObjCarrier){

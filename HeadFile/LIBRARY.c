@@ -45,7 +45,7 @@ HeadFunctionRespondObj LIBRARY(const HeadFunctionRequestObj * HeadCallObjectPoin
                         }).ValueCarrier;
                         break;
                     }
-                default: exit(1);
+                default: exit(5);
 
                 }
 
