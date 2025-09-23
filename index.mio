@@ -1,2 +1,5 @@
-include "D:/Mione-examples-/Objects/stdio.mio" as io
-set a = io["print"]("Hello, World!")
+while subject x++; < 10 do range
+    set idx = x;
+
+    //...
+end;

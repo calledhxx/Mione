@@ -38,4 +38,6 @@ add_executable(Mione
         HeadFile/IF.c
         HeadFile/FOR.h
         HeadFile/FOR.c
+        HeadFile/WHILE.h
+        HeadFile/WHILE.c
 )

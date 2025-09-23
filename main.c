@@ -29,8 +29,6 @@ int main(const int OptionsSize,char **Options)
 
     if (f == NULL) return -1;
 
-
-
     const EventObj EventTemplate = (EventObj){
         .Address = "D:/Mione/index.mio"
     };

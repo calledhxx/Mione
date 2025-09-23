@@ -10,6 +10,7 @@ enum
     SYMBOL = 3,
     VARIABLE = 4,
     VALUE = 5,
+    WELD = 6,
 };
 
 enum
