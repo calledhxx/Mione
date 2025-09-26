@@ -94,7 +94,7 @@ MIONEFunctionRespondObj ToMione(MIONEFunctionRequestObj input)
 
     MioneObj LastMio = {0};
 
-    for (int index = 0;index < ObjsSize;index++)
+    for (signed index = 0;index < ObjsSize;index++)
     {
         const MioneObj Mio = Objs[index];
 
@@ -203,6 +203,11 @@ MIONEFunctionRespondObj ToMione(MIONEFunctionRequestObj input)
                     };
 
                 SavePassengerIntoCarriage(&Carriage,Mio);
+
+                break;
+            }
+        case WELD:
+            {
 
                 break;
             }

@@ -13,6 +13,7 @@
 HeadObjCarrier HeadList = {0};
 SymbolObjCarrier SymbolList = {0};
 PromptObjCarrier PromptList = {0};
+WeldObjCarrier WeldList = {0};
 
 int main(const int OptionsSize,char **Options)
 {
@@ -26,6 +27,7 @@ int main(const int OptionsSize,char **Options)
     HeadList = ReturnHeadList();
     SymbolList = ReturnSymbolList();
     PromptList = ReturnPromptList();
+    WeldList = ReturnWelds();
 
     if (f == NULL) return -1;
 

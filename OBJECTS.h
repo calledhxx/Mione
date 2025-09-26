@@ -119,6 +119,10 @@ enum //VALUE TYPE
     VALUE_WINDOWS_LIBRARY_TYPE = 10,
 };
 
+enum //WELD
+{
+    WELD_SUBJECT = 1
+};
 
 typedef struct _CasePositionObject
 {
@@ -148,7 +152,7 @@ typedef struct _HeadObject
 {
     char * Name;
     unsigned Identification;
-    struct _HeadFunctionRespondObject (*Fuc)(struct _HeadFunctionRequestObject *);
+    struct _HeadFunctionRespondObject (*Fuc)(const struct _HeadFunctionRequestObject *);
 }HeadObj;
 
 typedef struct _HeadObjectCarrier
@@ -245,6 +249,19 @@ typedef struct _VariableObjectsCarrier
     unsigned int CarrierLen;
 } VariableObjCarrier;
 
+typedef struct _WeldObject
+{
+    char * Name;
+    unsigned Identification;
+    struct _WeldFunctionRespondObject (*Fuc)(struct _WeldFunctionRequestObject *);
+} WeldObj;
+
+typedef struct _WeldObjectsCarrier
+{
+    WeldObj* Carrier;
+    unsigned CarrierLen;
+} WeldObjCarrier;
+
 typedef struct _MioneObject
 {
     unsigned char ObjType; //HPSVV 1H 2P 3S 4VAR 5VAL
@@ -252,9 +269,10 @@ typedef struct _MioneObject
     VariableLinkObj * VariableLinkPtr; //當ObjType為VAR時，會用到此變數。
     ValueObj Value;  //當ObjType為VALUE宏時，會用到此值。
 
-    SymbolObj Symbol; //當ObjType為SYMBOL時，會用到此符號。
-    PromptObj Prompt; //當ObjType為PROMPT時，會用到此提示。
-    HeadObj Head; //當ObjType為HEAD時，會用到此標題。
+    SymbolObj Symbol; //當ObjType為SYMBOL時，會用到該值。
+    PromptObj Prompt; //當ObjType為PROMPT時，會用到該值。
+    HeadObj Head; //當ObjType為HEAD時，會用到該值。
+    WeldObj Weld; //當ObjType為WELD時，會用到該值。
 
     CasePositionObj MioneObjectPosition;
     struct _ScopeObject * PointerOfScope; //此物件所屬的作用域
@@ -461,5 +479,17 @@ typedef struct _COMPUTATIONRespondObject
     MioneObjCarrier MioneCarrier;
     EventObj Event;
 } COMPUTATIONRespondObj;
+
+typedef struct  _WeldFunctionRespondObject
+{
+    TrainObj Train;
+    EventObj Event;
+} WeldFunctionRespondObj;
+
+typedef struct  _WeldFunctionRequestObject
+{
+    MioneObjCarrier MioneCarrier;
+    EventObj EventTemplate;
+} WeldFunctionRequestObj;
 
 #endif //OBJECTS_H

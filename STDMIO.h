@@ -9,6 +9,7 @@
 #include "IMPLEMENT.h"
 
 #include "HeadFile/AllHeads.h"
+#include "WeldFile/AllWeld.h"
 
 #include "PROMPT_DEF.h"
 #include "SYMBOL_DEF.h"

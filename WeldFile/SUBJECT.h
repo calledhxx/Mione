@@ -1,0 +1,1 @@
+extern WeldFunctionRespondObj SUBJECT(const WeldFunctionRequestObj *);

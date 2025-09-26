@@ -72,6 +72,7 @@ CMOFunctionRespondObj CMO(
     extern HeadObjCarrier HeadList;
     extern SymbolObjCarrier SymbolList;
     extern PromptObjCarrier PromptList;
+    extern WeldObjCarrier WeldList;
 
     const CaseObj * CaseCarrier = Carrier.Carrier;
     const unsigned int CaseCarrierLen = Carrier.CarrierLen;
@@ -92,7 +93,7 @@ CMOFunctionRespondObj CMO(
         const CaseObj ThisCase = CaseCarrier[CaseCarrierIndex];
 
 
-        switch (ThisCase.ObjType) // 檢查是否匹配 BREAKER, HEAD ,PROMPT與SYMBOL，否則進行第二處理。
+        switch (ThisCase.ObjType) // 檢查是否匹配 BREAKER, HEAD ,PROMPT,WELD與SYMBOL，否則進行第二處理。
         {
 
         case CASE_BREAKER: //新增Breaker
@@ -103,7 +104,7 @@ CMOFunctionRespondObj CMO(
 
                 break;
             }
-        case CASE_NORMAL: //一般，該藍處裡 Head 與其他VALUE關鍵字
+        case CASE_NORMAL: //一般，該藍處裡 Head ,Weld 與其他VALUE關鍵字
             {
                 for (
                   unsigned int keywordDetectIndex = 0;
@@ -283,6 +284,30 @@ CMOFunctionRespondObj CMO(
                 }
 
                 if (Paired) break;
+
+                for (
+                    unsigned int WeldDetectIndex = 0;
+                    WeldDetectIndex < WeldList.CarrierLen;
+                    WeldDetectIndex++
+                    )
+                {
+                    if (strcmp(ThisCase.ObjName, WeldList.Carrier[WeldDetectIndex].Name) == 0)
+                    {
+                        pushMioneObjectIntoLayout(&LayoutsCarrier.Carrier[LayoutsCarrier.CarrierLen - 1],(MioneObj){
+                            .ObjType = HEAD,
+                            .PointerOfScope = ScopePointer,
+                            .MioneObjectPosition = ThisCase.CasePosition,
+                            .Weld = WeldList.Carrier[WeldDetectIndex]
+                        });
+
+                        Paired = 1;
+
+                        break;
+                    }
+                }
+
+                if (Paired) break;
+
 
             }
         case CASE_CONNECTABLE: //搭配著尚未分配的Normal Case。該藍處理Prompt 及 Symbol 與部分VALUE

@@ -40,4 +40,8 @@ add_executable(Mione
         HeadFile/FOR.c
         HeadFile/WHILE.h
         HeadFile/WHILE.c
+        WeldFile/AllWeld.c
+        WeldFile/AllWeld.h
+        WeldFile/SUBJECT.h
+        WeldFile/SUBJECT.c
 )
