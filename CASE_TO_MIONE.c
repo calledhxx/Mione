@@ -294,7 +294,7 @@ CMOFunctionRespondObj CMO(
                     if (strcmp(ThisCase.ObjName, WeldList.Carrier[WeldDetectIndex].Name) == 0)
                     {
                         pushMioneObjectIntoLayout(&LayoutsCarrier.Carrier[LayoutsCarrier.CarrierLen - 1],(MioneObj){
-                            .ObjType = HEAD,
+                            .ObjType = WELD,
                             .PointerOfScope = ScopePointer,
                             .MioneObjectPosition = ThisCase.CasePosition,
                             .Weld = WeldList.Carrier[WeldDetectIndex]
