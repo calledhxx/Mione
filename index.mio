@@ -1,5 +1,7 @@
-set y = 1;
-set x = y + subject set y = 100;
+set subject set a = 100; = 300; /*
+    相當於 set a = 100; 在從weld取 a 成 set a = 300; 即：
+    set a = 100;
+    set a = 300;
+*/
 
-x
-y
+a //simply-train 在此為輸出模式

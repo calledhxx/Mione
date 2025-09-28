@@ -12,6 +12,7 @@
 
 HeadFunctionRespondObj SET(const HeadFunctionRequestObj * HeadCallObjectPointer)
 {
+
     HeadFunctionRespondObj Result = {0};
 
     const HeadFunctionRequestObj HeadCallObject = *HeadCallObjectPointer;
@@ -24,6 +25,7 @@ HeadFunctionRespondObj SET(const HeadFunctionRequestObj * HeadCallObjectPointer)
     ValueObjCarrier SetPromptSuffix = {0};
 
     unsigned int Registration = 0;
+
 
     for (unsigned int PairIndex = 0; PairIndex < PairsSize; PairIndex++)
     {
@@ -82,8 +84,12 @@ HeadFunctionRespondObj SET(const HeadFunctionRequestObj * HeadCallObjectPointer)
                     (Result.MajorVariables.CarrierLen + HeadSuffix.CarrierLen)*sizeof(VariableObj)
                     );
 
-                const unsigned len = _min(HeadSuffix.CarrierLen,SetPromptSuffix.CarrierLen);
+                Result.Subjects.Carrier = realloc(
+                    Result.Subjects.Carrier,
+                    (Result.Subjects.CarrierLen + HeadSuffix.CarrierLen)*sizeof(VariableObj*)
+                    );
 
+                const unsigned len = _min(HeadSuffix.CarrierLen,SetPromptSuffix.CarrierLen);
 
                 for (
                     unsigned int HeadSuffixIndex = 0;
@@ -92,8 +98,10 @@ HeadFunctionRespondObj SET(const HeadFunctionRequestObj * HeadCallObjectPointer)
                     )
                 {
                     Result.MajorVariables.CarrierLen++;
+                    Result.Subjects.CarrierLen++;
                     HeadSuffix.Carrier[HeadSuffixIndex]->Value = SetPromptSuffix.Carrier[HeadSuffixIndex];
                     Result.MajorVariables.Carrier[Result.MajorVariables.CarrierLen-1] = *HeadSuffix.Carrier[HeadSuffixIndex];
+                    Result.Subjects.Carrier[Result.Subjects.CarrierLen-1] = HeadSuffix.Carrier[HeadSuffixIndex];
                 }
 
 
@@ -103,6 +111,7 @@ HeadFunctionRespondObj SET(const HeadFunctionRequestObj * HeadCallObjectPointer)
         default: exit(-3);
         }
     }
+
 
     return Result;
 }

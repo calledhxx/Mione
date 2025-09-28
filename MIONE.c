@@ -116,7 +116,7 @@ MIONEFunctionRespondObj ToMione(MIONEFunctionRequestObj input)
                         WeldLayoutCount--;
                         if (!WeldLayoutCount)
                         {
-                            MioneCarrier.CarrierLen = index - OutestWeldIndex;
+                            MioneCarrier.CarrierLen = index - OutestWeldIndex - 1;
                             MioneCarrier.Carrier = malloc(sizeof(MioneObj) * MioneCarrier.CarrierLen);
 
                             memcpy(MioneCarrier.Carrier,Objs + OutestWeldIndex + 1,sizeof(MioneObj) * MioneCarrier.CarrierLen);
@@ -147,8 +147,11 @@ MIONEFunctionRespondObj ToMione(MIONEFunctionRequestObj input)
                 //end carriage
                 if (!WeldLayoutCount)
                 {
+
+
                     SaveCarriageIntoTrain(&Train,Carriage);
                     ResetCarriage(&Carriage);
+
 
                     Carriage.CarriageManager = Mio;
                 }
@@ -168,7 +171,7 @@ MIONEFunctionRespondObj ToMione(MIONEFunctionRequestObj input)
                                 WeldLayoutCount--;
                                 if (!WeldLayoutCount)
                                 {
-                                    MioneCarrier.CarrierLen = index - OutestWeldIndex;
+                                    MioneCarrier.CarrierLen = index - OutestWeldIndex - 1;
                                     MioneCarrier.Carrier = malloc(sizeof(MioneObj) * MioneCarrier.CarrierLen);
 
                                     memcpy(MioneCarrier.Carrier,Objs + OutestWeldIndex + 1,sizeof(MioneObj) * MioneCarrier.CarrierLen);
@@ -209,7 +212,7 @@ MIONEFunctionRespondObj ToMione(MIONEFunctionRequestObj input)
                                 WeldLayoutCount--;
                                 if (!WeldLayoutCount)
                                 {
-                                    MioneCarrier.CarrierLen = index - OutestWeldIndex;
+                                    MioneCarrier.CarrierLen = index - OutestWeldIndex - 1;
                                     MioneCarrier.Carrier = malloc(sizeof(MioneObj) * MioneCarrier.CarrierLen);
 
                                     memcpy(MioneCarrier.Carrier,Objs + OutestWeldIndex + 1,sizeof(MioneObj) * MioneCarrier.CarrierLen);
@@ -254,7 +257,7 @@ MIONEFunctionRespondObj ToMione(MIONEFunctionRequestObj input)
                                 WeldLayoutCount--;
                                 if (!WeldLayoutCount)
                                 {
-                                    MioneCarrier.CarrierLen = index - OutestWeldIndex;
+                                    MioneCarrier.CarrierLen = index - OutestWeldIndex - 1;
                                     MioneCarrier.Carrier = malloc(sizeof(MioneObj) * MioneCarrier.CarrierLen);
 
                                     memcpy(MioneCarrier.Carrier,Objs + OutestWeldIndex + 1,sizeof(MioneObj) * MioneCarrier.CarrierLen);
@@ -281,7 +284,6 @@ MIONEFunctionRespondObj ToMione(MIONEFunctionRequestObj input)
                                     }
                                 };
                             }
-
                         }
                     }else if (LastMio.ObjType == VARIABLE || LastMio.ObjType == VALUE)
                     {
@@ -291,7 +293,7 @@ MIONEFunctionRespondObj ToMione(MIONEFunctionRequestObj input)
                             WeldLayoutCount--;
                             if (!WeldLayoutCount)
                             {
-                                MioneCarrier.CarrierLen = index - OutestWeldIndex;
+                                MioneCarrier.CarrierLen = index - OutestWeldIndex - 1;
                                 MioneCarrier.Carrier = malloc(sizeof(MioneObj) * MioneCarrier.CarrierLen);
 
                                 memcpy(MioneCarrier.Carrier,Objs + OutestWeldIndex + 1,sizeof(MioneObj) * MioneCarrier.CarrierLen);
@@ -342,23 +344,28 @@ MIONEFunctionRespondObj ToMione(MIONEFunctionRequestObj input)
         case WELD:
             {
                 if (!WeldLayoutCount)
-                {
                     OutestWeldIndex = index;
-                }
                 WeldLayoutCount++;
 
                 break;
             }
         default:
             {
-
                 //end train
+                if (!WeldLayoutCount)
+                {
+                    SaveCarriageIntoTrain(&Train,Carriage);
+                    SaveTrainIntoCarrier(&BuiltObj,Train);
+                    ResetCarriage(&Carriage);
+                    ResetTrain(&Train);
+                }
+
                 if (WeldLayoutCount)
                 {
                     WeldLayoutCount--;
                     if (!WeldLayoutCount)
                     {
-                        MioneCarrier.CarrierLen = index - OutestWeldIndex;
+                        MioneCarrier.CarrierLen = index - OutestWeldIndex - 1;
                         MioneCarrier.Carrier = malloc(sizeof(MioneObj) * MioneCarrier.CarrierLen);
 
                         memcpy(MioneCarrier.Carrier,Objs + OutestWeldIndex + 1,sizeof(MioneObj) * MioneCarrier.CarrierLen);
@@ -368,15 +375,8 @@ MIONEFunctionRespondObj ToMione(MIONEFunctionRequestObj input)
                                         .IsIndirect = 1,
                                         .Indirect = MioneCarrier
                                     });
-                    }
-                }
 
-                if (!WeldLayoutCount)
-                {
-                    SaveCarriageIntoTrain(&Train,Carriage);
-                    SaveTrainIntoCarrier(&BuiltObj,Train);
-                    ResetCarriage(&Carriage);
-                    ResetTrain(&Train);
+                    }
                 }
             };
         }
@@ -386,7 +386,7 @@ MIONEFunctionRespondObj ToMione(MIONEFunctionRequestObj input)
 
     if (WeldLayoutCount)
     {
-        MioneCarrier.CarrierLen = ObjsSize - 1 - OutestWeldIndex;
+        MioneCarrier.CarrierLen = ObjsSize - OutestWeldIndex - 1;
         MioneCarrier.Carrier = malloc(sizeof(MioneObj) * MioneCarrier.CarrierLen);
 
         memcpy(MioneCarrier.Carrier,Objs + OutestWeldIndex + 1,sizeof(MioneObj) * MioneCarrier.CarrierLen);
@@ -402,6 +402,8 @@ MIONEFunctionRespondObj ToMione(MIONEFunctionRequestObj input)
     SaveTrainIntoCarrier(&BuiltObj,Train);
 
     Result.TrainCarrier = BuiltObj;
+
+
 
     return Result;
 }

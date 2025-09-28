@@ -401,6 +401,7 @@ typedef struct _IMPLEMENTFunctionRespondObject
     ValueObjCarrier ReturnValues;
     ValueAndVariableObjCarrier ResetVariablesToValues;
     VariableObjCarrier MajorVariables;
+    VariableObjPtrCarrier Subjects;
 
     EventObj Event;
 } IMPLEMENTFunctionRespondObj;
@@ -417,6 +418,7 @@ typedef struct _HeadFunctionRespondObject
     ValueObjCarrier ReturnValues;
     VariableObjCarrier MajorVariables;
     ValueAndVariableObjCarrier ResetVariablesToValues;
+    VariableObjPtrCarrier Subjects;
     EventObj Event;
 } HeadFunctionRespondObj;
 

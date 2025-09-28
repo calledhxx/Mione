@@ -13,7 +13,7 @@
 
 #include "PROMPT_DEF.h"
 #include "SYMBOL_DEF.h"
-#include "Passengers.h"
+#include "PASSENGERS.h"
 
 #include "RESOURCE.h"
 #include "CONTAINER.h"

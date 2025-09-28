@@ -41,6 +41,22 @@ IMPLEMENTFunctionRespondObj IMPLEMENT(const IMPLEMENTFunctionRequestObj input)
 
             MainEventHandler(HeadReturn.Event);
 
+            if (HeadReturn.Subjects.CarrierLen)
+            {
+                Obj.Subjects.Carrier = realloc(
+                    Obj.Subjects.Carrier,
+                    sizeof(VariableObj*) * (Obj.Subjects.CarrierLen + HeadReturn.Subjects.CarrierLen)
+                );
+
+                memcpy(
+                        Obj.Subjects.Carrier + Obj.Subjects.CarrierLen,
+                        HeadReturn.Subjects.Carrier,
+                        HeadReturn.Subjects.CarrierLen * sizeof(VariableObj*)
+                        );
+
+                Obj.Subjects.CarrierLen += HeadReturn.Subjects.CarrierLen;
+            }
+
 
             if (HeadReturn.MajorVariables.CarrierLen)
             {

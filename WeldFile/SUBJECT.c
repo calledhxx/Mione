@@ -15,22 +15,21 @@ WeldFunctionRespondObj SUBJECT(const WeldFunctionRequestObj * RequestPointer)
         .Built = Train.TrainCarrier,
     });
 
-    result.MioneCarrier.CarrierLen = Implement.MajorVariables.CarrierLen;
+    result.MioneCarrier.CarrierLen = Implement.Subjects.CarrierLen;
     result.MioneCarrier.Carrier = malloc(sizeof(MioneObj)* result.MioneCarrier.CarrierLen);
 
-    for (unsigned i = 0; i < Implement.MajorVariables.CarrierLen; i++)
+    for (unsigned i = 0; i < Implement.Subjects.CarrierLen; i++)
     {
-        VariableLinkObj * VarLinkPtr = malloc(sizeof(VariableLinkObj));
-        *VarLinkPtr = (VariableLinkObj){
-            .PointToAnotherLink = 0,
-            .VariablePtr = &Implement.MajorVariables.Carrier[i] //warning! : plenty unsafe
+        VariableLinkObj * LinkPtr = malloc(sizeof(VariableLinkObj));
+        *LinkPtr = (VariableLinkObj){
+            .VariablePtr = Implement.Subjects.Carrier[i],
+            .PointToAnotherLink = 0
         };
-
         result.MioneCarrier.Carrier[i] = (MioneObj){
             .ObjType = VARIABLE,
             .PointerOfScope = 0,
             .MioneObjectPosition = {0},
-            .VariableLinkPtr = VarLinkPtr
+            .VariableLinkPtr = LinkPtr
         };
     }
 
