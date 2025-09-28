@@ -320,7 +320,6 @@ CMOFunctionRespondObj CMO(
                   )
                     if (strcmp(ThisCase.ObjName, UnconnectableKeyword[keywordDetectIndex])==0)
                     {
-
                         Paired = 1;
 
                         switch (keywordDetectIndex)
@@ -403,7 +402,6 @@ CMOFunctionRespondObj CMO(
                     }
 
                 if (Paired) break;
-
 
                 for (
                     unsigned int PromptDetectIndex = 0;

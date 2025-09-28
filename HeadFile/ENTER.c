@@ -19,13 +19,18 @@ HeadFunctionRespondObj ENTER(const HeadFunctionRequestObj * HeadCallObjectPointe
     for (unsigned int PairIndex = 0; PairIndex < PairsSize; PairIndex++)
     {
         const CarriageObj Pair = Pairs[PairIndex];
+        const PASSENGERRespondObj PassengersRes = PASSENGERS((PASSENGERRequestObj){
+            .EventTemplate = HeadCallObject.EventTemplate,
+            .PassenegrsCarrier = Pair.CarriagePassengersCarrier
+        });
+        const MioneObjCarrier Passengers = PassengersRes.MioneCarrier;
 
         switch (Pair.CarriageManager.ObjType)
         {
         case HEAD:
             {
                 HeadSuffix = RESOURCE((RESOURCERequestObj){
-                    .MioneCarrier = Pair.CarriagePassengers,
+                    .MioneCarrier = Passengers,
                     .EventTemplate = HeadCallObject.EventTemplate
                 }).ValueCarrier;
                 break;
@@ -37,7 +42,7 @@ HeadFunctionRespondObj ENTER(const HeadFunctionRequestObj * HeadCallObjectPointe
                 case PROMPT_REQUEST:
                     {
                         RequestPromptSuffix = RESOURCE((RESOURCERequestObj){
-                            .MioneCarrier = Pair.CarriagePassengers,
+                            .MioneCarrier = Passengers,
                             .EventTemplate = HeadCallObject.EventTemplate
                         }).ValueCarrier;
                         break;
@@ -45,7 +50,7 @@ HeadFunctionRespondObj ENTER(const HeadFunctionRequestObj * HeadCallObjectPointe
                 case PROMPT_RESPOND:
                     {
                         RespondPromptSuffix = CONTAINER((CONTAINERRequestObj){
-                            .MioneCarrier = Pair.CarriagePassengers,
+                            .MioneCarrier = Passengers,
                             .EventTemplate = HeadCallObject.EventTemplate
                         }).VariablePtrCarrier;
                         break;
@@ -54,7 +59,7 @@ HeadFunctionRespondObj ENTER(const HeadFunctionRequestObj * HeadCallObjectPointe
                 case PROMPT_OF:
                     {
                         OfPromptSuffix = RESOURCE((RESOURCERequestObj){
-                            .MioneCarrier = Pair.CarriagePassengers,
+                            .MioneCarrier = Passengers,
                             .EventTemplate = HeadCallObject.EventTemplate
                         }).ValueCarrier;;
                         break;

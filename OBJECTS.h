@@ -290,16 +290,29 @@ typedef struct _MioneLayoutObject
     unsigned LayoutHandler;
 } MioneLayoutObj;
 
-typedef struct _MioneLayoutObjectCarrier
+typedef struct _MioneLayoutObjectsCarrier
 {
     MioneLayoutObj * Carrier;
     unsigned CarrierLen;
 } MioneLayoutObjCarrier;
 
+typedef struct _PassengerObject
+{
+    MioneObj Direct;
+    MioneObjCarrier Indirect;
+    char IsIndirect;
+} PassengerObj;
+
+typedef struct _PassengerObjectsCarrier
+{
+    PassengerObj * Carrier;
+    unsigned CarrierLen;
+} PassengerObjCarrier;
+
 typedef struct _CarriageObject
 {
     MioneObj CarriageManager;
-    MioneObjCarrier CarriagePassengers;
+    PassengerObjCarrier CarriagePassengersCarrier;
 }CarriageObj;
 
 typedef struct _TrainObject
@@ -388,6 +401,7 @@ typedef struct _IMPLEMENTFunctionRespondObject
     ValueObjCarrier ReturnValues;
     ValueAndVariableObjCarrier ResetVariablesToValues;
     VariableObjCarrier MajorVariables;
+
     EventObj Event;
 } IMPLEMENTFunctionRespondObj;
 
@@ -482,7 +496,7 @@ typedef struct _COMPUTATIONRespondObject
 
 typedef struct  _WeldFunctionRespondObject
 {
-    TrainObj Train;
+    MioneObjCarrier MioneCarrier;
     EventObj Event;
 } WeldFunctionRespondObj;
 
@@ -491,5 +505,17 @@ typedef struct  _WeldFunctionRequestObject
     MioneObjCarrier MioneCarrier;
     EventObj EventTemplate;
 } WeldFunctionRequestObj;
+
+typedef struct _PASSENGERRequestObject
+{
+    EventObj EventTemplate;
+    PassengerObjCarrier PassenegrsCarrier;
+} PASSENGERRequestObj;
+
+typedef struct _PASSENGERRespondObject
+{
+    EventObj Event;
+    MioneObjCarrier MioneCarrier;
+} PASSENGERRespondObj;
 
 #endif //OBJECTS_H

@@ -14,8 +14,8 @@
 static void ResetCarriage(CarriageObj* CarriagePointer)
 {
     CarriagePointer->CarriageManager.ObjType = 0;
-    CarriagePointer->CarriagePassengers.Carrier = NULL;
-    CarriagePointer->CarriagePassengers.CarrierLen = 0;
+    CarriagePointer->CarriagePassengersCarrier.Carrier = NULL;
+    CarriagePointer->CarriagePassengersCarrier.CarrierLen = 0;
 }
 
 
@@ -30,7 +30,7 @@ static void SaveCarriageIntoTrain(
     const CarriageObj Carriage
     )
 {
-    if (Carriage.CarriageManager.ObjType == 0 && Carriage.CarriagePassengers.CarrierLen == 0) return;
+    if (Carriage.CarriageManager.ObjType == 0 && Carriage.CarriagePassengersCarrier.CarrierLen == 0) return;
 
     TrainPointer->CarriageLen++;
     TrainPointer->Carriages = realloc(
@@ -59,15 +59,15 @@ static void SaveTrainIntoCarrier(
 
 static void SavePassengerIntoCarriage(
     CarriageObj* CarriagePointer,
-    const MioneObj Passenger
+    const PassengerObj Passenger
     )
 {
-    CarriagePointer->CarriagePassengers.CarrierLen++;
-    CarriagePointer->CarriagePassengers.Carrier = realloc(
-        CarriagePointer->CarriagePassengers.Carrier,
-        sizeof(MioneObj) * CarriagePointer->CarriagePassengers.CarrierLen
+    CarriagePointer->CarriagePassengersCarrier.CarrierLen++;
+    CarriagePointer->CarriagePassengersCarrier.Carrier = realloc(
+        CarriagePointer->CarriagePassengersCarrier.Carrier,
+        sizeof(PassengerObj) * CarriagePointer->CarriagePassengersCarrier.CarrierLen
     );
-    CarriagePointer->CarriagePassengers.Carrier[CarriagePointer->CarriagePassengers.CarrierLen - 1] =
+    CarriagePointer->CarriagePassengersCarrier.Carrier[CarriagePointer->CarriagePassengersCarrier.CarrierLen - 1] =
         Passenger;
 
 }
@@ -94,29 +94,64 @@ MIONEFunctionRespondObj ToMione(MIONEFunctionRequestObj input)
 
     MioneObj LastMio = {0};
 
+    unsigned WeldLayoutCount = 0;
+    unsigned OutestWeldIndex = -1;
+
+    MioneObjCarrier MioneCarrier = {0};
+
     for (signed index = 0;index < ObjsSize;index++)
     {
         const MioneObj Mio = Objs[index];
+
 
         switch (Mio.ObjType)
         {
         case HEAD:
             {
-                SaveCarriageIntoTrain(&Train,Carriage);
-                SaveTrainIntoCarrier(&BuiltObj,Train);
-                ResetCarriage(&Carriage);
-                ResetTrain(&Train);
+                //end train
+                if (WeldLayoutCount)
+                {
+                    if (index - OutestWeldIndex > 1)
+                    {
+                        WeldLayoutCount--;
+                        if (!WeldLayoutCount)
+                        {
+                            MioneCarrier.CarrierLen = index - OutestWeldIndex;
+                            MioneCarrier.Carrier = malloc(sizeof(MioneObj) * MioneCarrier.CarrierLen);
 
-                Carriage.CarriageManager = Mio;
+                            memcpy(MioneCarrier.Carrier,Objs + OutestWeldIndex + 1,sizeof(MioneObj) * MioneCarrier.CarrierLen);
+
+                            SavePassengerIntoCarriage(&Carriage,(PassengerObj){
+                                .IsIndirect = 1,
+                                .Indirect = MioneCarrier
+                            });
+                        }
+                    }
+                }
+
+                if (!WeldLayoutCount)
+                {
+                    SaveCarriageIntoTrain(&Train,Carriage);
+                    SaveTrainIntoCarrier(&BuiltObj,Train);
+                    ResetCarriage(&Carriage);
+                    ResetTrain(&Train);
+
+                    Carriage.CarriageManager = Mio;
+                }
+
 
                 break;
             }
         case PROMPT:
             {
-                SaveCarriageIntoTrain(&Train,Carriage);
-                ResetCarriage(&Carriage);
+                //end carriage
+                if (!WeldLayoutCount)
+                {
+                    SaveCarriageIntoTrain(&Train,Carriage);
+                    ResetCarriage(&Carriage);
 
-                Carriage.CarriageManager = Mio;
+                    Carriage.CarriageManager = Mio;
+                }
 
                 break;
             }
@@ -127,35 +162,82 @@ MIONEFunctionRespondObj ToMione(MIONEFunctionRequestObj input)
                     if (!(LastMio.Symbol.Identification == SYMBOL_FRONT_BRACKET || LastMio.Symbol.Identification == SYMBOL_BACK_BRACKET || LastMio.Symbol.Identification == SYMBOL_FRONT_PARENTHESES || LastMio.Symbol.Identification == SYMBOL_BACK_PARENTHESES))
                         if (!(Mio.Symbol.SymbolCarry & SC_AfterSymbol || LastMio.Symbol.SymbolCarry & SC_BeforeSymbol))
                         {
-                            SaveCarriageIntoTrain(&Train,Carriage);
-                            SaveTrainIntoCarrier(&BuiltObj,Train);
-                            ResetCarriage(&Carriage);
-                            ResetTrain(&Train);
+                            //end train
+                            if (WeldLayoutCount)
+                            {
+                                WeldLayoutCount--;
+                                if (!WeldLayoutCount)
+                                {
+                                    MioneCarrier.CarrierLen = index - OutestWeldIndex;
+                                    MioneCarrier.Carrier = malloc(sizeof(MioneObj) * MioneCarrier.CarrierLen);
 
+                                    memcpy(MioneCarrier.Carrier,Objs + OutestWeldIndex + 1,sizeof(MioneObj) * MioneCarrier.CarrierLen);
+                                
 
-                            Carriage.CarriageManager = (MioneObj){
-                                .ObjType = Mio.ObjType,
-                                .Head = (HeadObj){
-                                    .Fuc = SVV
+                                    SavePassengerIntoCarriage(&Carriage,(PassengerObj){
+                                        .IsIndirect = 1,
+                                        .Indirect = MioneCarrier
+                                    });
                                 }
-                            };
+                            }
+
+                            if (!WeldLayoutCount)
+                            {
+                                SaveCarriageIntoTrain(&Train,Carriage);
+                                SaveTrainIntoCarrier(&BuiltObj,Train);
+                                ResetCarriage(&Carriage);
+                                ResetTrain(&Train);
+
+
+                                Carriage.CarriageManager = (MioneObj){
+                                    .ObjType = Mio.ObjType,
+                                    .Head = (HeadObj){
+                                        .Fuc = SVV
+                                    }
+                                };
+                            }
+
                         }
                 }else if (LastMio.ObjType == VARIABLE || LastMio.ObjType == VALUE) //VARIABLE || VALUE
+                {
                     if (!(Mio.Symbol.Identification == SYMBOL_FRONT_BRACKET || Mio.Symbol.Identification == SYMBOL_BACK_BRACKET || Mio.Symbol.Identification == SYMBOL_FRONT_PARENTHESES || Mio.Symbol.Identification == SYMBOL_BACK_PARENTHESES))
                         if (!(Mio.Symbol.SymbolCarry & SC_AfterVariableOrValue))
                         {
-                            SaveCarriageIntoTrain(&Train,Carriage);
-                            SaveTrainIntoCarrier(&BuiltObj,Train);
-                            ResetCarriage(&Carriage);
-                            ResetTrain(&Train);
+                            //end train
+                            if (WeldLayoutCount)
+                            {
+                                WeldLayoutCount--;
+                                if (!WeldLayoutCount)
+                                {
+                                    MioneCarrier.CarrierLen = index - OutestWeldIndex;
+                                    MioneCarrier.Carrier = malloc(sizeof(MioneObj) * MioneCarrier.CarrierLen);
 
-                            Carriage.CarriageManager = (MioneObj){
-                                .ObjType = Mio.ObjType,
-                                .Head = (HeadObj){
-                                    .Fuc = SVV
+                                    memcpy(MioneCarrier.Carrier,Objs + OutestWeldIndex + 1,sizeof(MioneObj) * MioneCarrier.CarrierLen);
+                                
+
+                                    SavePassengerIntoCarriage(&Carriage,(PassengerObj){
+                                        .IsIndirect = 1,
+                                        .Indirect = MioneCarrier
+                                    });
                                 }
-                            };
+                            }
+
+                            if (!WeldLayoutCount)
+                            {
+                                SaveCarriageIntoTrain(&Train,Carriage);
+                                SaveTrainIntoCarrier(&BuiltObj,Train);
+                                ResetCarriage(&Carriage);
+                                ResetTrain(&Train);
+
+                                Carriage.CarriageManager = (MioneObj){
+                                    .ObjType = Mio.ObjType,
+                                    .Head = (HeadObj){
+                                        .Fuc = SVV
+                                    }
+                                };
+                            }
                         }
+                }
             }
 
         case VARIABLE:
@@ -166,10 +248,69 @@ MIONEFunctionRespondObj ToMione(MIONEFunctionRequestObj input)
                     {
                         if (!(LastMio.Symbol.SymbolCarry & SC_BeforeVariableOrValue))
                         {
+                            //end train
+                            if (WeldLayoutCount)
+                            {
+                                WeldLayoutCount--;
+                                if (!WeldLayoutCount)
+                                {
+                                    MioneCarrier.CarrierLen = index - OutestWeldIndex;
+                                    MioneCarrier.Carrier = malloc(sizeof(MioneObj) * MioneCarrier.CarrierLen);
+
+                                    memcpy(MioneCarrier.Carrier,Objs + OutestWeldIndex + 1,sizeof(MioneObj) * MioneCarrier.CarrierLen);
+
+
+                                    SavePassengerIntoCarriage(&Carriage,(PassengerObj){
+                                        .IsIndirect = 1,
+                                        .Indirect = MioneCarrier
+                                    });
+                                }
+                            }
+
+                            if (!WeldLayoutCount)
+                            {
+                                SaveCarriageIntoTrain(&Train,Carriage);
+                                SaveTrainIntoCarrier(&BuiltObj,Train);
+                                ResetCarriage(&Carriage);
+                                ResetTrain(&Train);
+
+                                Carriage.CarriageManager = (MioneObj){
+                                    .ObjType = Mio.ObjType,
+                                    .Head = (HeadObj){
+                                        .Fuc = SVV
+                                    }
+                                };
+                            }
+
+                        }
+                    }else if (LastMio.ObjType == VARIABLE || LastMio.ObjType == VALUE)
+                    {
+                        //end train
+                        if (WeldLayoutCount)
+                        {
+                            WeldLayoutCount--;
+                            if (!WeldLayoutCount)
+                            {
+                                MioneCarrier.CarrierLen = index - OutestWeldIndex;
+                                MioneCarrier.Carrier = malloc(sizeof(MioneObj) * MioneCarrier.CarrierLen);
+
+                                memcpy(MioneCarrier.Carrier,Objs + OutestWeldIndex + 1,sizeof(MioneObj) * MioneCarrier.CarrierLen);
+
+
+                                SavePassengerIntoCarriage(&Carriage,(PassengerObj){
+                                        .IsIndirect = 1,
+                                        .Indirect = MioneCarrier
+                                    });
+                            }
+                        }
+
+                        if (!WeldLayoutCount)
+                        {
                             SaveCarriageIntoTrain(&Train,Carriage);
                             SaveTrainIntoCarrier(&BuiltObj,Train);
                             ResetCarriage(&Carriage);
                             ResetTrain(&Train);
+
 
                             Carriage.CarriageManager = (MioneObj){
                                 .ObjType = Mio.ObjType,
@@ -178,49 +319,83 @@ MIONEFunctionRespondObj ToMione(MIONEFunctionRequestObj input)
                                 }
                             };
                         }
-                    }else if (LastMio.ObjType == VARIABLE || LastMio.ObjType == VALUE)
-                    {
-                        SaveCarriageIntoTrain(&Train,Carriage);
-                        SaveTrainIntoCarrier(&BuiltObj,Train);
-                        ResetCarriage(&Carriage);
-                        ResetTrain(&Train);
+                    }
 
-
+                if (!WeldLayoutCount)
+                {
+                    if (!Carriage.CarriageManager.ObjType)
                         Carriage.CarriageManager = (MioneObj){
                             .ObjType = Mio.ObjType,
                             .Head = (HeadObj){
                                 .Fuc = SVV
                             }
                         };
-                    }
 
-                if (!Carriage.CarriageManager.ObjType)
-                    Carriage.CarriageManager = (MioneObj){
-                        .ObjType = Mio.ObjType,
-                        .Head = (HeadObj){
-                            .Fuc = SVV
-                        }
-                    };
-
-                SavePassengerIntoCarriage(&Carriage,Mio);
+                    SavePassengerIntoCarriage(&Carriage,(PassengerObj){
+                                        .IsIndirect = 0,
+                                        .Direct = Mio
+                                    });
+                }
 
                 break;
             }
         case WELD:
             {
+                if (!WeldLayoutCount)
+                {
+                    OutestWeldIndex = index;
+                }
+                WeldLayoutCount++;
 
                 break;
             }
         default:
             {
-                SaveCarriageIntoTrain(&Train,Carriage);
-                SaveTrainIntoCarrier(&BuiltObj,Train);
-                ResetCarriage(&Carriage);
-                ResetTrain(&Train);
+
+                //end train
+                if (WeldLayoutCount)
+                {
+                    WeldLayoutCount--;
+                    if (!WeldLayoutCount)
+                    {
+                        MioneCarrier.CarrierLen = index - OutestWeldIndex;
+                        MioneCarrier.Carrier = malloc(sizeof(MioneObj) * MioneCarrier.CarrierLen);
+
+                        memcpy(MioneCarrier.Carrier,Objs + OutestWeldIndex + 1,sizeof(MioneObj) * MioneCarrier.CarrierLen);
+                                
+
+                        SavePassengerIntoCarriage(&Carriage,(PassengerObj){
+                                        .IsIndirect = 1,
+                                        .Indirect = MioneCarrier
+                                    });
+                    }
+                }
+
+                if (!WeldLayoutCount)
+                {
+                    SaveCarriageIntoTrain(&Train,Carriage);
+                    SaveTrainIntoCarrier(&BuiltObj,Train);
+                    ResetCarriage(&Carriage);
+                    ResetTrain(&Train);
+                }
             };
         }
 
         LastMio = Mio;
+    }
+
+    if (WeldLayoutCount)
+    {
+        MioneCarrier.CarrierLen = ObjsSize - 1 - OutestWeldIndex;
+        MioneCarrier.Carrier = malloc(sizeof(MioneObj) * MioneCarrier.CarrierLen);
+
+        memcpy(MioneCarrier.Carrier,Objs + OutestWeldIndex + 1,sizeof(MioneObj) * MioneCarrier.CarrierLen);
+                                
+
+        SavePassengerIntoCarriage(&Carriage,(PassengerObj){
+                                        .IsIndirect = 1,
+                                        .Indirect = MioneCarrier
+                                    });
     }
 
     SaveCarriageIntoTrain(&Train,Carriage);

@@ -22,13 +22,18 @@ HeadFunctionRespondObj GET(const HeadFunctionRequestObj * HeadCallObjectPointer)
     for (unsigned int PairIndex = 0; PairIndex < PairsSize; PairIndex++)
     {
         const CarriageObj Pair = Pairs[PairIndex];
+        const PASSENGERRespondObj PassengersRes = PASSENGERS((PASSENGERRequestObj){
+            .EventTemplate = HeadCallObject.EventTemplate,
+            .PassenegrsCarrier = Pair.CarriagePassengersCarrier
+        });
+        const MioneObjCarrier Passengers = PassengersRes.MioneCarrier;
 
         switch (Pair.CarriageManager.ObjType)
         {
         case HEAD:
             {
                 HeadSuffix = CONTAINER((CONTAINERRequestObj){
-                            .MioneCarrier = Pair.CarriagePassengers,
+                            .MioneCarrier = Passengers,
                             .EventTemplate = HeadCallObject.EventTemplate
                         }).VariablePtrCarrier;
 
@@ -41,7 +46,7 @@ HeadFunctionRespondObj GET(const HeadFunctionRequestObj * HeadCallObjectPointer)
                 case 2:
                     {
                         ModelPromptSuffix = CONTAINER((CONTAINERRequestObj){
-                            .MioneCarrier = Pair.CarriagePassengers,
+                            .MioneCarrier = Passengers,
                             .EventTemplate = HeadCallObject.EventTemplate
                         }).VariablePtrCarrier;
                         break;

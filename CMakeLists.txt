@@ -44,4 +44,6 @@ add_executable(Mione
         WeldFile/AllWeld.h
         WeldFile/SUBJECT.h
         WeldFile/SUBJECT.c
+        Passengers.c
+        Passengers.h
 )

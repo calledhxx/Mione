@@ -19,13 +19,18 @@ HeadFunctionRespondObj IF(const HeadFunctionRequestObj * HeadCallObjectPointer)
     for (unsigned int PairIndex = 0; PairIndex < PairsSize; PairIndex++)
     {
         const CarriageObj Pair = Pairs[PairIndex];
+        const PASSENGERRespondObj PassengersRes = PASSENGERS((PASSENGERRequestObj){
+            .EventTemplate = HeadCallObject.EventTemplate,
+            .PassenegrsCarrier = Pair.CarriagePassengersCarrier
+        });
+        const MioneObjCarrier Passengers = PassengersRes.MioneCarrier;
 
         switch (Pair.CarriageManager.ObjType)
         {
         case HEAD:
             {
                 HeadSuffix = RESOURCE((RESOURCERequestObj){
-                            .MioneCarrier = Pair.CarriagePassengers,
+                            .MioneCarrier = Passengers,
                             .EventTemplate = HeadCallObject.EventTemplate
                         }).ValueCarrier;
 
@@ -48,7 +53,7 @@ HeadFunctionRespondObj IF(const HeadFunctionRequestObj * HeadCallObjectPointer)
                 case PROMPT_THEN:
                     {
                         ThenPromptSuffix = RESOURCE((RESOURCERequestObj){
-                            .MioneCarrier = Pair.CarriagePassengers,
+                            .MioneCarrier = Passengers,
                             .EventTemplate = HeadCallObject.EventTemplate
                         }).ValueCarrier;
 
@@ -75,7 +80,7 @@ HeadFunctionRespondObj IF(const HeadFunctionRequestObj * HeadCallObjectPointer)
                 case PROMPT_ELSE:
                     {
                         ElsePromptSuffix = RESOURCE((RESOURCERequestObj){
-                                    .MioneCarrier = Pair.CarriagePassengers,
+                                    .MioneCarrier = Passengers,
                                     .EventTemplate = HeadCallObject.EventTemplate
                                 }).ValueCarrier;
 

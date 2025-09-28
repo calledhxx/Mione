@@ -1,5 +1,5 @@
-while subject x++; < 10 do range
-    set idx = x;
+set y = 1;
+set x = y + subject set y = 100;
 
-    //...
-end;
+x
+y
