@@ -31,7 +31,7 @@ CONTAINERRespondObj CONTAINER(CONTAINERRequestObj input)
             VariablePointerCarrier[VariablePointerCarrierLen-1] = ReturnVariablePtrFromLink(*Pack[i].VariableLinkPtr);
         }else if ( Pack[i].ObjType == VALUE)
         {
-            printf("exit because VALUE APPEARS%d\n", Pack[i].Value.ValueType);
+            printf("exit because VALUE APPEARS %d\n", Pack[i].Value.ValueType);
 
             exit(-2);
 

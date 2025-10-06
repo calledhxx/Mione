@@ -79,5 +79,7 @@ int main(const int OptionsSize,char **Options)
     printf("Hello, Mione!\n");
     //正確執行完的回應
 
+    free(MainScope.ChildrenScopePtrCarrierPointer);
+
     return 0;
 }

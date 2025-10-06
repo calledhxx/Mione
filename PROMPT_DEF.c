@@ -62,7 +62,7 @@ PromptObjCarrier ReturnPromptList()
         (PromptObj) {
             .Name = "do",
             .Identification = PROMPT_DO,
-        }
+        },
     };
 
     PromptObjCarrier result = {0};

@@ -96,7 +96,6 @@ FCOFunctionRespondObj FCO(FCOFunctionRequestObj input)
     unsigned int ProcessingLine = 1;
     unsigned int ProcessingColumn = 1;
 
-
     // Super Character 處理
     unsigned int SuperCharHandlerIndex = 0; //Super Character 控制字元(即 `\` )的位置
 
@@ -555,6 +554,8 @@ FCOFunctionRespondObj FCO(FCOFunctionRequestObj input)
 
                         break;
                     }
+
+                    free(toCMPChar);
                 }
 
                 if (SuperCharCollect == 1){
@@ -667,8 +668,7 @@ FCOFunctionRespondObj FCO(FCOFunctionRequestObj input)
                                SuperCharParentType =
                                    SuperCharChildName =
                                        SuperCharChildNameLen =
-                                           SuperCharCollect =
-                                               toCMPChar = 0;
+                                           SuperCharCollect = 0;
 
                 }
                 break;
@@ -722,7 +722,6 @@ FCOFunctionRespondObj FCO(FCOFunctionRequestObj input)
         LastCharType = ThisCharType;
     }while (1);
 
-    free(toCMPChar);
     free(SuperCharChildName);
     free(SuperCharParentName);
 

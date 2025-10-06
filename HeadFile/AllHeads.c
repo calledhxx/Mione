@@ -11,6 +11,7 @@
 #include "INCLUDE.h"
 #include "IF.h"
 #include "FOR.h"
+#include "WHILE.h"
 #include "SVV.h"
 
 
@@ -64,6 +65,12 @@ HeadObjCarrier ReturnHeadList()
             .Fuc = FOR,
             .Name = "for",
             .Identification = HEAD_IF,
+        },
+
+        (HeadObj){
+            .Fuc = WHILE,
+            .Name = "while",
+            .Identification = HEAD_WHILE
         }
     };
 
