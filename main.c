@@ -15,6 +15,8 @@ SymbolObjCarrier SymbolList = {0};
 PromptObjCarrier PromptList = {0};
 WeldObjCarrier WeldList = {0};
 
+//cl main.c FILE_TO_CASE.c CASE_TO_MIONE.c HeadFile/SET.c HeadFile/SVV.c HeadFile/GET.c HeadFile/ENTER.c HeadFile/LIBRARY.c HeadFile/INCLUDE.c HeadFile/RETURN.c HeadFile/IF.c HeadFile/FOR.c HeadFile/WHILE.c HeadFile/AllHeads.c SYMBOL_DEF.c RESOURCE.c MIONE.c CONTAINER.c PROMPT_DEF.c IMPLEMENT.c COMPUTATION.c VARIABLE_PROCESSING.c EVENT_HANDLER.c WeldFile/AllWeld.c WeldFile/SUBJECT.c PASSENGERS.c /Fe:Mione.exe
+
 int main(const int OptionsSize,char **Options)
 {
     ScopeObj MainScope = {0};
