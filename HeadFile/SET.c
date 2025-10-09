@@ -97,10 +97,12 @@ HeadFunctionRespondObj SET(const HeadFunctionRequestObj * HeadCallObjectPointer)
                     HeadSuffixIndex++
                     )
                 {
-                    Result.MajorVariables.CarrierLen++;
-                    Result.Subjects.CarrierLen++;
                     HeadSuffix.Carrier[HeadSuffixIndex]->Value = SetPromptSuffix.Carrier[HeadSuffixIndex];
+
+                    Result.MajorVariables.CarrierLen++;
                     Result.MajorVariables.Carrier[Result.MajorVariables.CarrierLen-1] = *HeadSuffix.Carrier[HeadSuffixIndex];
+
+                    Result.Subjects.CarrierLen++;
                     Result.Subjects.Carrier[Result.Subjects.CarrierLen-1] = HeadSuffix.Carrier[HeadSuffixIndex];
                 }
 

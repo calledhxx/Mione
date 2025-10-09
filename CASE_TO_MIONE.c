@@ -9,7 +9,7 @@
 
 #include "STDMIO.h"
 
-static const char *NormalKeyword[] = {
+static const char * const NormalKeyword[] = {
     "function",
     "range",
     "end",
@@ -17,7 +17,7 @@ static const char *NormalKeyword[] = {
     "false"
 };
 
-static const char *UnconnectableKeyword[] = {
+static const char * const UnconnectableKeyword[] = {
     "{",
     "}",
 };
