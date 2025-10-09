@@ -24,8 +24,7 @@ static const char * const UnconnectableKeyword[] = {
 
 static MioneLayoutObj popLayoutFromLayoutCarrier(MioneLayoutObjCarrier * LayoutCarrierPtr)
 {
-
-    if (1>= LayoutCarrierPtr->CarrierLen)
+    if (1>= LayoutCarrierPtr->CarrierLen) //這是神經病吧？
         exit(-121);
 
     const MioneLayoutObj Layout = LayoutCarrierPtr->Carrier[LayoutCarrierPtr->CarrierLen - 1];
@@ -34,6 +33,7 @@ static MioneLayoutObj popLayoutFromLayoutCarrier(MioneLayoutObjCarrier * LayoutC
         LayoutCarrierPtr->Carrier,
         sizeof(MioneLayoutObj) * LayoutCarrierPtr->CarrierLen
         );
+
 
     return Layout;
 }
@@ -89,13 +89,10 @@ CMOFunctionRespondObj CMO(
     {
         char Paired = 0; //是否已經配對過了。
 
-
         const CaseObj ThisCase = CaseCarrier[CaseCarrierIndex];
-
 
         switch (ThisCase.ObjType) // 檢查是否匹配 BREAKER, HEAD ,PROMPT,WELD與SYMBOL，否則進行第二處理。
         {
-
         case CASE_BREAKER: //新增Breaker
             {
                 pushMioneObjectIntoLayout(&LayoutsCarrier.Carrier[LayoutsCarrier.CarrierLen - 1],(MioneObj){0});
@@ -260,7 +257,7 @@ CMOFunctionRespondObj CMO(
                         break;
                     }
 
-                if (Paired) break;
+                if (Paired) continue;
 
                 for (
                     unsigned int HeadDetectIndex = 0;
@@ -277,13 +274,15 @@ CMOFunctionRespondObj CMO(
                             .Head = HeadList.Carrier[HeadDetectIndex]
                         });
 
+                        free(ThisCase.ObjName);
+
                         Paired = 1;
 
                         break;
                     }
                 }
 
-                if (Paired) break;
+                if (Paired) continue;
 
                 for (
                     unsigned int WeldDetectIndex = 0;
@@ -300,13 +299,15 @@ CMOFunctionRespondObj CMO(
                             .Weld = WeldList.Carrier[WeldDetectIndex]
                         });
 
+                        free(ThisCase.ObjName);
+
                         Paired = 1;
 
                         break;
                     }
                 }
 
-                if (Paired) break;
+                if (Paired) continue;
 
 
             }
@@ -355,6 +356,8 @@ CMOFunctionRespondObj CMO(
 
                                 Paired = 1;
 
+                                free(ThisCase.ObjName);
+
                                 break;
                             }
 
@@ -391,6 +394,8 @@ CMOFunctionRespondObj CMO(
 
                                 Paired = 1;
 
+                                free(ThisCase.ObjName);
+
                                 break;
                             }
 
@@ -401,7 +406,7 @@ CMOFunctionRespondObj CMO(
                         break;
                     }
 
-                if (Paired) break;
+                if (Paired) continue;
 
                 for (
                     unsigned int PromptDetectIndex = 0;
@@ -421,11 +426,13 @@ CMOFunctionRespondObj CMO(
 
                         Paired = 1;
 
+                        free(ThisCase.ObjName);
+
                         break;
                     }
                 }
 
-                if (Paired) break;
+                if (Paired) continue;
 
                 for (
                     unsigned int SymbolDetectIndex = 0;
@@ -445,11 +452,13 @@ CMOFunctionRespondObj CMO(
 
                         Paired = 1;
 
+                        free(ThisCase.ObjName);
+
                         break;
                     }
                 }
 
-                if (Paired) break;
+                if (Paired) continue;
             }
 
         default: //二次處理
@@ -494,9 +503,7 @@ CMOFunctionRespondObj CMO(
                                     ];
 
                             }else //已存在於本層
-                            {
                                 ToAddOnVariableLinkPtr = VariableLinkPtr;
-                            }
                         }else //無連結 理解為新變數
                         {
                             ScopePointer->VariableLinkPtrCarrier.CarrierLen++;
@@ -599,6 +606,7 @@ CMOFunctionRespondObj CMO(
                             .MioneObjectPosition = ThisCase.CasePosition,
                         });
 
+                        free(ThisCase.ObjName);
 
                         break;
                     }
@@ -619,6 +627,7 @@ CMOFunctionRespondObj CMO(
                             .MioneObjectPosition = ThisCase.CasePosition,
                         });
 
+                        free(ThisCase.ObjName);
 
                         break;
                     }
@@ -637,7 +646,6 @@ CMOFunctionRespondObj CMO(
                                 unit -=  'A' - 10;
 
                             Number += unit * pow(16,strlen(ThisCase.ObjName) - i - 1);
-
                         }
 
                         pushMioneObjectIntoLayout(&LayoutsCarrier.Carrier[LayoutsCarrier.CarrierLen - 1], (MioneObj){
@@ -650,7 +658,7 @@ CMOFunctionRespondObj CMO(
                             .MioneObjectPosition = ThisCase.CasePosition,
                         });
 
-
+                        free(ThisCase.ObjName);
 
                         break;
                 }
@@ -660,10 +668,15 @@ CMOFunctionRespondObj CMO(
             };
         }
     }
+
     if (LayoutsCarrier.CarrierLen!=1)
         exit(-2);
 
+
     Result.MioneCarrier = LayoutsCarrier.Carrier[0].MioneObjectsCarrier;
+
+    free(Carrier.Carrier);
+    free(LayoutsCarrier.Carrier);
 
     return Result;
 }

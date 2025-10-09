@@ -5,7 +5,6 @@
 #include <stdlib.h>
 #include <string.h>
 #include <inttypes.h>
-#include <stdbool.h>
 
 #include "STDMIO.h"
 #include "HeadFile/SVV.h"
@@ -17,7 +16,6 @@ static void ResetCarriage(CarriageObj* CarriagePointer)
     CarriagePointer->CarriagePassengersCarrier.Carrier = NULL;
     CarriagePointer->CarriagePassengersCarrier.CarrierLen = 0;
 }
-
 
 static void ResetTrain(TrainObj* TrainPointer)
 {
@@ -103,7 +101,6 @@ MIONEFunctionRespondObj ToMione(MIONEFunctionRequestObj input)
     {
         const MioneObj Mio = Objs[index];
 
-
         switch (Mio.ObjType)
         {
         case HEAD:
@@ -139,7 +136,6 @@ MIONEFunctionRespondObj ToMione(MIONEFunctionRequestObj input)
                     Carriage.CarriageManager = Mio;
                 }
 
-
                 break;
             }
         case PROMPT:
@@ -147,11 +143,8 @@ MIONEFunctionRespondObj ToMione(MIONEFunctionRequestObj input)
                 //end carriage
                 if (!WeldLayoutCount)
                 {
-
-
                     SaveCarriageIntoTrain(&Train,Carriage);
                     ResetCarriage(&Carriage);
-
 
                     Carriage.CarriageManager = Mio;
                 }
@@ -175,7 +168,6 @@ MIONEFunctionRespondObj ToMione(MIONEFunctionRequestObj input)
                                     MioneCarrier.Carrier = malloc(sizeof(MioneObj) * MioneCarrier.CarrierLen);
 
                                     memcpy(MioneCarrier.Carrier,Objs + OutestWeldIndex + 1,sizeof(MioneObj) * MioneCarrier.CarrierLen);
-                                
 
                                     SavePassengerIntoCarriage(&Carriage,(PassengerObj){
                                         .IsIndirect = 1,
@@ -190,7 +182,6 @@ MIONEFunctionRespondObj ToMione(MIONEFunctionRequestObj input)
                                 SaveTrainIntoCarrier(&BuiltObj,Train);
                                 ResetCarriage(&Carriage);
                                 ResetTrain(&Train);
-
 
                                 Carriage.CarriageManager = (MioneObj){
                                     .ObjType = Mio.ObjType,
@@ -216,7 +207,6 @@ MIONEFunctionRespondObj ToMione(MIONEFunctionRequestObj input)
                                     MioneCarrier.Carrier = malloc(sizeof(MioneObj) * MioneCarrier.CarrierLen);
 
                                     memcpy(MioneCarrier.Carrier,Objs + OutestWeldIndex + 1,sizeof(MioneObj) * MioneCarrier.CarrierLen);
-                                
 
                                     SavePassengerIntoCarriage(&Carriage,(PassengerObj){
                                         .IsIndirect = 1,
@@ -369,7 +359,6 @@ MIONEFunctionRespondObj ToMione(MIONEFunctionRequestObj input)
                         MioneCarrier.Carrier = malloc(sizeof(MioneObj) * MioneCarrier.CarrierLen);
 
                         memcpy(MioneCarrier.Carrier,Objs + OutestWeldIndex + 1,sizeof(MioneObj) * MioneCarrier.CarrierLen);
-                                
 
                         SavePassengerIntoCarriage(&Carriage,(PassengerObj){
                                         .IsIndirect = 1,
@@ -390,7 +379,6 @@ MIONEFunctionRespondObj ToMione(MIONEFunctionRequestObj input)
         MioneCarrier.Carrier = malloc(sizeof(MioneObj) * MioneCarrier.CarrierLen);
 
         memcpy(MioneCarrier.Carrier,Objs + OutestWeldIndex + 1,sizeof(MioneObj) * MioneCarrier.CarrierLen);
-                                
 
         SavePassengerIntoCarriage(&Carriage,(PassengerObj){
                                         .IsIndirect = 1,
@@ -402,8 +390,6 @@ MIONEFunctionRespondObj ToMione(MIONEFunctionRequestObj input)
     SaveTrainIntoCarrier(&BuiltObj,Train);
 
     Result.TrainCarrier = BuiltObj;
-
-
 
     return Result;
 }

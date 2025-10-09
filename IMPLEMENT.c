@@ -18,7 +18,6 @@ IMPLEMENTFunctionRespondObj IMPLEMENT(const IMPLEMENTFunctionRequestObj input)
     const unsigned int SectionsSize = input.Built.CarrierLen;
     const TrainObj * Sections = input.Built.Carrier;
 
-
     for (unsigned int SectionIndex = 0; SectionIndex < SectionsSize; SectionIndex++)
     {
         const TrainObj thisSection = Sections[SectionIndex];
@@ -41,6 +40,7 @@ IMPLEMENTFunctionRespondObj IMPLEMENT(const IMPLEMENTFunctionRequestObj input)
 
             MainEventHandler(HeadReturn.Event);
 
+
             if (HeadReturn.Subjects.CarrierLen)
             {
                 Obj.Subjects.Carrier = realloc(
@@ -48,11 +48,14 @@ IMPLEMENTFunctionRespondObj IMPLEMENT(const IMPLEMENTFunctionRequestObj input)
                     sizeof(VariableObj*) * (Obj.Subjects.CarrierLen + HeadReturn.Subjects.CarrierLen)
                 );
 
+
                 memcpy(
                         Obj.Subjects.Carrier + Obj.Subjects.CarrierLen,
                         HeadReturn.Subjects.Carrier,
                         HeadReturn.Subjects.CarrierLen * sizeof(VariableObj*)
                         );
+
+                free(HeadReturn.Subjects.Carrier);
 
                 Obj.Subjects.CarrierLen += HeadReturn.Subjects.CarrierLen;
             }
@@ -71,6 +74,8 @@ IMPLEMENTFunctionRespondObj IMPLEMENT(const IMPLEMENTFunctionRequestObj input)
                         HeadReturn.MajorVariables.CarrierLen * sizeof(VariableObj)
                         );
 
+                free(HeadReturn.MajorVariables.Carrier);
+
                 Obj.MajorVariables.CarrierLen += HeadReturn.MajorVariables.CarrierLen;
 
             }
@@ -82,10 +87,13 @@ IMPLEMENTFunctionRespondObj IMPLEMENT(const IMPLEMENTFunctionRequestObj input)
                           (VAVCarrier.CarrierLen + HeadReturn.ResetVariablesToValues.CarrierLen) * sizeof(ValueAndVariableObj)
                           );
 
-                    memcpy(VAVCarrier.Carrier + VAVCarrier.CarrierLen,
+                memcpy(VAVCarrier.Carrier + VAVCarrier.CarrierLen,
                            HeadReturn.ResetVariablesToValues.Carrier,
                            HeadReturn.ResetVariablesToValues.CarrierLen * sizeof(ValueAndVariableObj)
                            );
+
+                free(HeadReturn.ResetVariablesToValues.Carrier);
+
 
                 VAVCarrier.CarrierLen += HeadReturn.ResetVariablesToValues.CarrierLen;
             }
@@ -93,18 +101,7 @@ IMPLEMENTFunctionRespondObj IMPLEMENT(const IMPLEMENTFunctionRequestObj input)
 
             if (HeadReturn.ReturnValues.CarrierLen)
             {
-                Obj.ReturnValues.Carrier = realloc(
-                               Obj.ReturnValues.Carrier,
-                               (Obj.ReturnValues.CarrierLen + HeadReturn.ReturnValues.CarrierLen) * sizeof(ValueObj)
-                               );
-
-                Obj.ReturnValues.Carrier = memcpy(
-                    Obj.ReturnValues.Carrier + Obj.ReturnValues.CarrierLen,
-                    HeadReturn.ReturnValues.Carrier,
-                    HeadReturn.ReturnValues.CarrierLen * sizeof(ValueObj)
-                    );
-
-                Obj.ReturnValues.CarrierLen += HeadReturn.ReturnValues.CarrierLen;
+                Obj.ReturnValues = HeadReturn.ReturnValues;
 
                 goto end;
             }

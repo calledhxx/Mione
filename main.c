@@ -67,7 +67,6 @@ int main(const int OptionsSize,char **Options)
     MainEventHandler(ToMioneReturn.Event);
 
 
-
     const IMPLEMENTFunctionRespondObj IMPLEMENTReturn = IMPLEMENT((IMPLEMENTFunctionRequestObj){
         .EventTemplate = EventTemplate,
         .Built = ToMioneReturn.TrainCarrier,
@@ -82,6 +81,7 @@ int main(const int OptionsSize,char **Options)
     //正確執行完的回應
 
     free(MainScope.ChildrenScopePtrCarrierPointer);
+    fclose(f);
 
     return 0;
 }

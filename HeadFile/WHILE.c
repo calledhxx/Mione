@@ -84,7 +84,7 @@ HeadFunctionRespondObj WHILE(const HeadFunctionRequestObj * HeadCallObjectPointe
             IMPLEMENT((IMPLEMENTFunctionRequestObj){
                 .EventTemplate = HeadCallObject.EventTemplate,
                 .Built = *DoPromptSuffix.Carrier[0].Area.TrainObjCarrierPointer
-            });
+            }); //dangerous its keeping pushing objects into heap;
         }
     }
 
