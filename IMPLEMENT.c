@@ -40,7 +40,6 @@ IMPLEMENTFunctionRespondObj IMPLEMENT(const IMPLEMENTFunctionRequestObj input)
 
             MainEventHandler(HeadReturn.Event);
 
-
             if (HeadReturn.Subjects.CarrierLen)
             {
                 Obj.Subjects.Carrier = realloc(
