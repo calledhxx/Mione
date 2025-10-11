@@ -1,0 +1,1 @@
+extern void FreeVariableByTheirCarrier(VariableObjCarrier Carrier);

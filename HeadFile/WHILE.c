@@ -81,10 +81,12 @@ HeadFunctionRespondObj WHILE(const HeadFunctionRequestObj * HeadCallObjectPointe
     {
         while (HeadSuffix.Carrier[0].ValueType == VALUE_DB_TYPE ? HeadSuffix.Carrier[0].db : 1)
         {
-            IMPLEMENT((IMPLEMENTFunctionRequestObj){
+             const IMPLEMENTFunctionRespondObj Res = IMPLEMENT((IMPLEMENTFunctionRequestObj){
                 .EventTemplate = HeadCallObject.EventTemplate,
                 .Built = *DoPromptSuffix.Carrier[0].Area.TrainObjCarrierPointer
-            }); //dangerous its keeping pushing objects into heap;
+            });
+
+            // FreeVariableByTheirCarrier(Res.MajorVariables);
         }
     }
 

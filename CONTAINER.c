@@ -26,7 +26,7 @@ CONTAINERRespondObj CONTAINER(CONTAINERRequestObj input)
         if (Pack[i].ObjType == VARIABLE)
         {
             VariablePointerCarrierLen ++;
-            VariablePointerCarrier = realloc(VariablePointerCarrier, sizeof(ValueObj) * (VariablePointerCarrierLen));
+            VariablePointerCarrier = realloc(VariablePointerCarrier, sizeof(VariableObj*) * (VariablePointerCarrierLen));
             VariablePointerCarrier[VariablePointerCarrierLen-1] = ReturnVariablePtrFromLink(*Pack[i].VariableLinkPtr);
         }else if ( Pack[i].ObjType == VALUE)
         {
