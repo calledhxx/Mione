@@ -7,8 +7,8 @@
 
 SymbolObjCarrier ReturnSymbolList()
 {
-    const SymbolObj Symbols[] =
-{
+    SymbolObj const Symbols[] =
+    {
         (SymbolObj){
             .Name = "+",
             .Identification = SYMBOL_ADD,

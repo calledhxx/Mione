@@ -47,7 +47,6 @@ IMPLEMENTFunctionRespondObj IMPLEMENT(const IMPLEMENTFunctionRequestObj input)
                     sizeof(VariableObj*) * (Obj.Subjects.CarrierLen + HeadReturn.Subjects.CarrierLen)
                 );
 
-
                 memcpy(
                         Obj.Subjects.Carrier + Obj.Subjects.CarrierLen,
                         HeadReturn.Subjects.Carrier,

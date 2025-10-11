@@ -8,7 +8,7 @@
 
 PromptObjCarrier ReturnPromptList()
 {
-    const PromptObj Prompts[] = {
+    PromptObj const Prompts[] = {
         (PromptObj) {
             .Name = "=",
             .Identification = PROMPT_SET,

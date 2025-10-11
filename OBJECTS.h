@@ -113,7 +113,6 @@ enum //VALUE TYPE
     VALUE_FUNCTION_TYPE = 4,
     VALUE_RANGE_TYPE = 5,
     VALUE_TABLE_TYPE = 6,
-    VALUE_LIGHTS_TYPE = 7,
     VALUE_DB_TYPE = 8,
     VALUE_NUMBER_TYPE = 9,
 
@@ -265,7 +264,7 @@ typedef struct _WeldObjectsCarrier
 
 typedef struct _MioneObject
 {
-    unsigned char ObjType; //HPSVV 1H 2P 3S 4VAR 5VAL
+    unsigned char ObjType; //HPSVV 1H 2P 3S 4VAR 5VAL 6W
 
     VariableLinkObj * VariableLinkPtr; //當ObjType為VAR時，會用到此變數。
     ValueObj Value;  //當ObjType為VALUE宏時，會用到此值。

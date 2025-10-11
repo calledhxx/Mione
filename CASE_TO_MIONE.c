@@ -519,7 +519,7 @@ CMOFunctionRespondObj CMO(
                                 ScopePointer->VariableLinkPtrCarrier.CarrierLen - 1
                                 ] = (VariableLinkObj){
                                     .PointToAnotherLink = 0,
-                                    .VariablePtr = malloc(sizeof(VariableObj ))
+                                    .VariablePtr = malloc(sizeof(VariableObj))
                                 };
 
                            *ScopePointer->VariableLinkPtrCarrier.Carrier[

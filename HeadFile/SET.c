@@ -26,7 +26,6 @@ HeadFunctionRespondObj SET(const HeadFunctionRequestObj * HeadCallObjectPointer)
 
     unsigned int Registration = 0;
 
-
     for (unsigned int PairIndex = 0; PairIndex < PairsSize; PairIndex++)
     {
         const CarriageObj Pair = Pairs[PairIndex];
@@ -93,7 +92,7 @@ HeadFunctionRespondObj SET(const HeadFunctionRequestObj * HeadCallObjectPointer)
 
                 for (
                     unsigned int HeadSuffixIndex = 0;
-                    HeadSuffixIndex <  len;
+                    HeadSuffixIndex < len;
                     HeadSuffixIndex++
                     )
                 {

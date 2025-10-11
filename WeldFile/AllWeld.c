@@ -7,7 +7,7 @@
 
 WeldObjCarrier ReturnWelds()
 {
-    const WeldObj Welds[]  = {
+    WeldObj const Welds[]  = {
         (WeldObj){
             .Name = "subject",
             .Identification = WELD_SUBJECT,

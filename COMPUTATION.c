@@ -35,13 +35,12 @@ COMPUTATIONRespondObj COMPUTATION(COMPUTATIONRequestObj input)
                 case SYMBOL_FRONT_BRACKET:{
                     if (!BracketsChild)
                     {
-
                         BracketCur = 1;
                         FirstBracketIndex = i;
 
                         inBracketSize = 0;
                         free(inBracket);
-                        inBracket = malloc(0);
+                        inBracket = NULL;
                     }else
                     {
                         inBracketSize++;
@@ -166,8 +165,6 @@ COMPUTATIONRespondObj COMPUTATION(COMPUTATIONRequestObj input)
                             (FirstBracketIndex - 1 + PackSize - i) * sizeof(MioneObj)
                             );
 
-
-
                         memcpy(
                             NewPack,
                             Pack,
@@ -188,6 +185,7 @@ COMPUTATIONRespondObj COMPUTATION(COMPUTATIONRequestObj input)
                         NewPackSize += PackSize - i - 1;
 
 
+                        free(Pack);
                         PackSize = NewPackSize;
                         Pack = NewPack;
 
@@ -210,7 +208,7 @@ COMPUTATIONRespondObj COMPUTATION(COMPUTATIONRequestObj input)
 
                             inBracketSize = 0;
                             free(inBracket);
-                            inBracket = malloc(0);
+                            inBracket = NULL;
                         }else
                         {
                             inBracketSize++;
@@ -242,13 +240,10 @@ COMPUTATIONRespondObj COMPUTATION(COMPUTATIONRequestObj input)
                         {
                              if (Pack[FirstBracketIndex - 1].ObjType == VARIABLE || Pack[FirstBracketIndex - 1].ObjType == VALUE)
                             {
-
                                 if (Pack[FirstBracketIndex - 1].ObjType == VARIABLE)
                                 {
-
                                     if (ReturnVariablePtrFromLink(*Pack[FirstBracketIndex - 1].VariableLinkPtr)->Value.ValueType == VALUE_FUNCTION_TYPE)
                                     {
-
                                         IMPLEMENTFunctionRespondObj IMPLEMENTReturn =  IMPLEMENT((IMPLEMENTFunctionRequestObj){
                                             .Built =  *ReturnVariablePtrFromLink(*Pack[FirstBracketIndex - 1].VariableLinkPtr)->Value.Area.TrainObjCarrierPointer,
                                             .CallByValueCarrier = ChildCount.ValueCarrier
@@ -292,6 +287,7 @@ COMPUTATIONRespondObj COMPUTATION(COMPUTATIONRequestObj input)
                                            );
                                         NewPackSize+= PackSize - i - 1;
 
+                                        free(Pack);
                                         PackSize = NewPackSize;
                                         Pack = NewPack;
 
@@ -349,6 +345,7 @@ COMPUTATIONRespondObj COMPUTATION(COMPUTATIONRequestObj input)
                                                 );
                                         NewPackSize+= PackSize - i - 1;
 
+                                        free(Pack);
                                         PackSize = NewPackSize;
                                         Pack = NewPack;
 
@@ -396,7 +393,7 @@ COMPUTATIONRespondObj COMPUTATION(COMPUTATIONRequestObj input)
                             NewPackSize+= PackSize - i - 1;
 
 
-
+                            free(Pack);
                             Pack = NewPack;
                             PackSize = NewPackSize;
 
@@ -412,10 +409,8 @@ COMPUTATIONRespondObj COMPUTATION(COMPUTATIONRequestObj input)
                 }
                 default:
                     {
-
                         if(!BracketsChild)
                         {
-
                             signed FrontIndex = 0;
                             signed BackIndex = 0;
 
@@ -430,7 +425,6 @@ COMPUTATIONRespondObj COMPUTATION(COMPUTATIONRequestObj input)
                                         CountLoop = _max(CountIndex,3);
                                         continue;
                                     }
-
 
                                     if (!(i - 1 >= 0 && i - 1 <= PackSize - 1))
                                         exit(2);
@@ -489,8 +483,8 @@ COMPUTATIONRespondObj COMPUTATION(COMPUTATIONRequestObj input)
                                     sizeof(MioneObj) * PackSize - BackIndex - 1
                                 );
 
+                            free(Output.Carrier);
                             free(Pack);
-
                             Pack = NewPack;
                             PackSize = NewPackSize;
 
@@ -574,7 +568,8 @@ COMPUTATIONRespondObj COMPUTATION(COMPUTATIONRequestObj input)
     if (inBracket)
         free(inBracket);
 
-    if (BracketCur) exit(3);
+    if (BracketCur)
+        exit(3);
 
     return (COMPUTATIONRespondObj){
         .MioneCarrier = (MioneObjCarrier){

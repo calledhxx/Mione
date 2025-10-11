@@ -22,7 +22,6 @@ CONTAINERRespondObj CONTAINER(CONTAINERRequestObj input)
     const MioneObj * Pack = Computed.MioneCarrier.Carrier;
     const unsigned int PackSize = Computed.MioneCarrier.CarrierLen;
 
-
     for (int i = 0; i < PackSize; i++)
         if (Pack[i].ObjType == VARIABLE)
         {

@@ -18,7 +18,7 @@
 
 HeadObjCarrier ReturnHeadList()
 {
-    const HeadObj Heads[]  = {
+    HeadObj const Heads[]  = {
         (HeadObj){
             .Fuc = SET,
             .Name = "set",
