@@ -252,7 +252,6 @@ MIONEFunctionRespondObj ToMione(MIONEFunctionRequestObj input)
 
                                     memcpy(MioneCarrier.Carrier,Objs + OutestWeldIndex + 1,sizeof(MioneObj) * MioneCarrier.CarrierLen);
 
-
                                     SavePassengerIntoCarriage(&Carriage,(PassengerObj){
                                         .IsIndirect = 1,
                                         .Indirect = MioneCarrier

@@ -9,10 +9,9 @@ PASSENGERRespondObj PASSENGERS(const PASSENGERRequestObj In)
     const PassengerObjCarrier OriginalObjects = In.PassenegrsCarrier;
 
     result.MioneCarrier.CarrierLen = OriginalObjects.CarrierLen;
-    result.MioneCarrier.Carrier = realloc(result.MioneCarrier.Carrier,sizeof(MioneObj)*result.MioneCarrier.CarrierLen);
+    result.MioneCarrier.Carrier = malloc(sizeof(MioneObj)*result.MioneCarrier.CarrierLen);
 
     for (unsigned index = 0;index<OriginalObjects.CarrierLen;index++)
-    {
         if (OriginalObjects.Carrier[index].IsIndirect)
         {
             const WeldFunctionRespondObj Welded = SUBJECT(&(WeldFunctionRequestObj){
@@ -33,7 +32,7 @@ PASSENGERRespondObj PASSENGERS(const PASSENGERRequestObj In)
                 };
         }else
             result.MioneCarrier.Carrier[index] = OriginalObjects.Carrier[index].Direct;
-    }
 
+    // free (In.PassenegrsCarrier.Carrier);
     return result;
 }

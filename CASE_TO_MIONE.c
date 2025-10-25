@@ -63,7 +63,7 @@ CMOFunctionRespondObj CMO(
     CMOFunctionRequestObj input
     )
 {
-    CaseObjCarrier Carrier = input.CassCarrier;
+    CaseObjCarrier CaseCarrierObj = input.CassCarrier;
     ScopeObj * ScopePointer = input.ScopePointer;
 
     CMOFunctionRespondObj Result = {0};
@@ -74,8 +74,8 @@ CMOFunctionRespondObj CMO(
     extern PromptObjCarrier PromptList;
     extern WeldObjCarrier WeldList;
 
-    const CaseObj * CaseCarrier = Carrier.Carrier;
-    const unsigned int CaseCarrierLen = Carrier.CarrierLen;
+    const CaseObj * CaseCarrier = CaseCarrierObj.Carrier;
+    const unsigned int CaseCarrierLen = CaseCarrierObj.CarrierLen;
 
     MioneLayoutObjCarrier LayoutsCarrier = {0};
 
@@ -274,7 +274,7 @@ CMOFunctionRespondObj CMO(
                             .Head = HeadList.Carrier[HeadDetectIndex]
                         });
 
-                        free(ThisCase.ObjName);
+                        
 
                         Paired = 1;
 
@@ -299,7 +299,7 @@ CMOFunctionRespondObj CMO(
                             .Weld = WeldList.Carrier[WeldDetectIndex]
                         });
 
-                        free(ThisCase.ObjName);
+                        
 
                         Paired = 1;
 
@@ -356,7 +356,7 @@ CMOFunctionRespondObj CMO(
 
                                 Paired = 1;
 
-                                free(ThisCase.ObjName);
+                                
 
                                 break;
                             }
@@ -394,7 +394,7 @@ CMOFunctionRespondObj CMO(
 
                                 Paired = 1;
 
-                                free(ThisCase.ObjName);
+                                
 
                                 break;
                             }
@@ -426,8 +426,6 @@ CMOFunctionRespondObj CMO(
 
                         Paired = 1;
 
-                        free(ThisCase.ObjName);
-
                         break;
                     }
                 }
@@ -452,7 +450,7 @@ CMOFunctionRespondObj CMO(
 
                         Paired = 1;
 
-                        free(ThisCase.ObjName);
+                        
 
                         break;
                     }
@@ -525,7 +523,11 @@ CMOFunctionRespondObj CMO(
                            *ScopePointer->VariableLinkPtrCarrier.Carrier[
                                 ScopePointer->VariableLinkPtrCarrier.CarrierLen - 1
                                ]->VariablePtr = (VariableObj){
-                                   .VariableName = ThisCase.ObjName,
+                                   .VariableName =
+                                       memcpy(
+                                           malloc(sizeof(char) * (strlen(ThisCase.ObjName) + 1)),
+                                           ThisCase.ObjName,
+                                           strlen(ThisCase.ObjName) + 1),
                                    .VariablePlace = 0,
                                    .Value = (ValueObj){0}
                                };
@@ -606,7 +608,7 @@ CMOFunctionRespondObj CMO(
                             .MioneObjectPosition = ThisCase.CasePosition,
                         });
 
-                        free(ThisCase.ObjName);
+                        
 
                         break;
                     }
@@ -627,7 +629,7 @@ CMOFunctionRespondObj CMO(
                             .MioneObjectPosition = ThisCase.CasePosition,
                         });
 
-                        free(ThisCase.ObjName);
+                        
 
                         break;
                     }
@@ -658,7 +660,7 @@ CMOFunctionRespondObj CMO(
                             .MioneObjectPosition = ThisCase.CasePosition,
                         });
 
-                        free(ThisCase.ObjName);
+                        
 
                         break;
                 }
@@ -667,7 +669,10 @@ CMOFunctionRespondObj CMO(
                 }
             };
         }
+
+        free(ThisCase.ObjName);
     }
+    // free(CaseCarrierObj.Carrier);
 
     if (LayoutsCarrier.CarrierLen!=1)
         exit(-2);
@@ -675,7 +680,6 @@ CMOFunctionRespondObj CMO(
 
     Result.MioneCarrier = LayoutsCarrier.Carrier[0].MioneObjectsCarrier;
 
-    free(Carrier.Carrier);
     free(LayoutsCarrier.Carrier);
 
     return Result;

@@ -1,14 +1,29 @@
 #include "OBJECTS.h"
 
-void FreeValueByTheirCarrier()
+void FreeValueCarrier()
 {
 
 }
 
-void FreeVariableByTheirCarrier(const VariableObjCarrier Carrier)
+void FreeTrainCarrier(const TrainObjCarrier Carrier)
 {
-    //free name ,value of each variable
+    for (int i = 0; i < Carrier.CarrierLen; i++)
+    {
+        for (int j = 0; j < Carrier.Carrier[i].CarriageLen; j++)
+        {
+            for (int k = 0; k < Carrier.Carrier[i].Carriages[j].CarriagePassengersCarrier.CarrierLen; k++)
+                if (Carrier.Carrier[i].Carriages[j].CarriagePassengersCarrier.Carrier[k].IsIndirect)
+                    free(Carrier.Carrier[i].Carriages[j].CarriagePassengersCarrier.Carrier[k].Indirect.Carrier);
+            free(Carrier.Carrier[i].Carriages[j].CarriagePassengersCarrier.Carrier);
+        }
+        free(Carrier.Carrier[i].Carriages);
+    }
 
+    free(Carrier.Carrier);
+}
+
+void FreeVariableCarrier(const VariableObjCarrier Carrier)
+{
     for (unsigned i = 0; i < Carrier.CarrierLen;i++)
     {
         free(Carrier.Carrier[i].VariableName);
@@ -57,4 +72,6 @@ void FreeVariableByTheirCarrier(const VariableObjCarrier Carrier)
         default: break;
         }
     }
+
+    free(Carrier.Carrier);
 }

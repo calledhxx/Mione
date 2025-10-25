@@ -35,64 +35,53 @@ int main(const int OptionsSize,char **Options)
         .Address = "D:/Mione/index.mio"
     };
 
+    //第一步，先將source code轉為case物件。
     const FCOFunctionRespondObj FCOReturn = FCO(
         (FCOFunctionRequestObj){
             .f = f,
             .EventTemplate = EventTemplate
         });
-    //第一步，先將source code轉為case物件。
+
+    fclose(f);
 
     MainEventHandler(FCOReturn.Event);
 
+    //第二步，將case物件轉為Mione物件。
     const CMOFunctionRespondObj CMOReturn = CMO((CMOFunctionRequestObj){
         .EventTemplate = EventTemplate,
         .CassCarrier = FCOReturn.CaseCarrier,
         .ScopePointer = &MainScope
     });
-    //第二步，將case物件轉為Mione物件。
+
+    free(FCOReturn.CaseCarrier.Carrier);
 
     MainEventHandler(CMOReturn.Event);
 
-
+    //第三步，將Mione物件轉為程式句。
     const MIONEFunctionRespondObj ToMioneReturn = ToMione((MIONEFunctionRequestObj){
         .MioneCarrier = CMOReturn.MioneCarrier,
         .EventTemplate = EventTemplate
     });
-    //第三步，將Mione物件轉為程式句。
 
     MainEventHandler(ToMioneReturn.Event);
 
-
+    //第四步，執行程式句。
     const IMPLEMENTFunctionRespondObj IMPLEMENTReturn = IMPLEMENT((IMPLEMENTFunctionRequestObj){
         .EventTemplate = EventTemplate,
         .Built = ToMioneReturn.TrainCarrier,
         .CallByValueCarrier = (ValueObjCarrier){0}
     });
-    //第四步，執行程式句。
 
     MainEventHandler(IMPLEMENTReturn.Event);
 
-    for (int i = 0; i < ToMioneReturn.TrainCarrier.CarrierLen; i++)
-    {
-        for (int j = 0; j < ToMioneReturn.TrainCarrier.Carrier[i].CarriageLen; j++)
-        {
-            for (int k = 0; k < ToMioneReturn.TrainCarrier.Carrier[i].Carriages[j].CarriagePassengersCarrier.CarrierLen; k++)
-                if (ToMioneReturn.TrainCarrier.Carrier[i].Carriages[j].CarriagePassengersCarrier.Carrier[k].IsIndirect)
-                    free(ToMioneReturn.TrainCarrier.Carrier[i].Carriages[j].CarriagePassengersCarrier.Carrier[k].Indirect.Carrier);
-            free(ToMioneReturn.TrainCarrier.Carrier[i].Carriages[j].CarriagePassengersCarrier.Carrier);
-        }
-        free(ToMioneReturn.TrainCarrier.Carrier[i].Carriages);
-    }
-    free(ToMioneReturn.TrainCarrier.Carrier);
-
-    FreeVariableByTheirCarrier(IMPLEMENTReturn.MajorVariables);
+    FreeTrainCarrier(ToMioneReturn.TrainCarrier);
+    FreeVariableCarrier(IMPLEMENTReturn.MajorVariables);
 
 
     printf("Hello, Mione!\n");
     //正確執行完的回應
 
     free(MainScope.ChildrenScopePtrCarrierPointer);
-    fclose(f);
 
     return 0;
 }

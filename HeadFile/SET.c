@@ -29,10 +29,12 @@ HeadFunctionRespondObj SET(const HeadFunctionRequestObj * HeadCallObjectPointer)
     for (unsigned int PairIndex = 0; PairIndex < PairsSize; PairIndex++)
     {
         const CarriageObj Pair = Pairs[PairIndex];
+
         const PASSENGERRespondObj PassengersRes = PASSENGERS((PASSENGERRequestObj){
             .EventTemplate = HeadCallObject.EventTemplate,
             .PassenegrsCarrier = Pair.CarriagePassengersCarrier
         });
+
         const MioneObjCarrier Passengers = PassengersRes.MioneCarrier;
 
         switch (Pair.CarriageManager.ObjType)
@@ -104,8 +106,6 @@ HeadFunctionRespondObj SET(const HeadFunctionRequestObj * HeadCallObjectPointer)
                     Result.Subjects.CarrierLen++;
                     Result.Subjects.Carrier[Result.Subjects.CarrierLen-1] = HeadSuffix.Carrier[HeadSuffixIndex];
                 }
-
-
 
                 break;
             }

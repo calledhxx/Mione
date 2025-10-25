@@ -527,7 +527,6 @@ FCOFunctionRespondObj FCO(FCOFunctionRequestObj input)
 
                     default:
                         {
-                            //不收集Child了 :<
                             SuperCharCollect = 2;
                             break;
                         }
@@ -543,11 +542,11 @@ FCOFunctionRespondObj FCO(FCOFunctionRequestObj input)
                         );
                     toCMPChar[SuperCharParentNameLen] = 0;
 
-                    if (strcmp(toCMPChar,L"n") == 0)
+                    if (strcmp(toCMPChar,"n") == 0)
                     {
                         SuperCharParentType = 1;
                         SuperCharCollect = 2;
-                    }else if (strcmp(toCMPChar,L"a") == 0)
+                    }else if (strcmp(toCMPChar,"a") == 0)
                     {
                         SuperCharParentType = 2;
                         SuperCharCollect = 1;

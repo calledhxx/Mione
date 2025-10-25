@@ -1,1 +1,2 @@
-extern void FreeVariableByTheirCarrier(VariableObjCarrier Carrier);
+extern void FreeVariableCarrier(VariableObjCarrier Carrier);
+extern void FreeTrainCarrier(TrainObjCarrier Carrier);

@@ -11,7 +11,7 @@
 
 CONTAINERRespondObj CONTAINER(CONTAINERRequestObj input)
 {
-    VariableObj ** VariablePointerCarrier = NULL;
+    VariableObj * * VariablePointerCarrier = NULL;
     int VariablePointerCarrierLen = 0;
 
     const COMPUTATIONRespondObj Computed = COMPUTATION((COMPUTATIONRequestObj){
