@@ -69,6 +69,8 @@ HeadFunctionRespondObj SET(const HeadFunctionRequestObj * HeadCallObjectPointer)
             }
         default: exit(-3);
         }
+
+        // FreeVariableLinkMioneObjectCarrierOfWeldFunctionRespondObj(Passengers);
     }
 
     for (int i = 0; i < 32;i++)

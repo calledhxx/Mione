@@ -24,12 +24,13 @@ PASSENGERRespondObj PASSENGERS(const PASSENGERRequestObj In)
                 if (Welded.MioneCarrier.CarrierLen != 1)
                     exit(3312);
 
-                result.MioneCarrier.Carrier[index] =Welded.MioneCarrier.Carrier[0];
+                result.MioneCarrier.Carrier[index] = Welded.MioneCarrier.Carrier[0];
             }else
                 result.MioneCarrier.Carrier[index] = (MioneObj){
                     .ObjType = VALUE,
                     .Value = (ValueObj){0}
                 };
+
         }else
             result.MioneCarrier.Carrier[index] = OriginalObjects.Carrier[index].Direct;
 

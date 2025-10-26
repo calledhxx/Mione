@@ -5,6 +5,14 @@ void FreeValueCarrier()
 
 }
 
+void FreeVariableLinkMioneObjectCarrierOfWeldFunctionRespondObj(const MioneObjCarrier Carrier)
+{
+    for (unsigned i = 0; i < Carrier.CarrierLen; i++)
+        free(Carrier.Carrier[i].VariableLinkPtr);
+
+    free(Carrier.Carrier);
+}
+
 void FreeTrainCarrier(const TrainObjCarrier Carrier)
 {
     for (int i = 0; i < Carrier.CarrierLen; i++)

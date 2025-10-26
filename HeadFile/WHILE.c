@@ -65,6 +65,8 @@ HeadFunctionRespondObj WHILE(const HeadFunctionRequestObj * HeadCallObjectPointe
             }
         default: exit(-3);
         }
+
+        // FreeVariableLinkMioneObjectCarrierOfWeldFunctionRespondObj(Passengers);
     }
 
     if (HeadSuffix.CarrierLen != 1)

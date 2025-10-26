@@ -15,6 +15,9 @@ WeldFunctionRespondObj SUBJECT(const WeldFunctionRequestObj * RequestPointer)
         .Built = Train.TrainCarrier,
     });
 
+    FreeTrainCarrier(Train.TrainCarrier);
+    FreeVariableCarrier(Implement.MajorVariables);
+
     result.MioneCarrier.CarrierLen = Implement.Subjects.CarrierLen;
     result.MioneCarrier.Carrier = malloc(sizeof(MioneObj)* result.MioneCarrier.CarrierLen);
 
