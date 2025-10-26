@@ -27,7 +27,7 @@ WeldFunctionRespondObj SUBJECT(const WeldFunctionRequestObj * RequestPointer)
         *LinkPtr = (VariableLinkObj){
             .VariablePtr = Implement.Subjects.Carrier[i],
             .PointToAnotherLink = 0
-        };
+        }; //假元素
         result.MioneCarrier.Carrier[i] = (MioneObj){
             .ObjType = VARIABLE,
             .PointerOfScope = 0,
@@ -35,6 +35,8 @@ WeldFunctionRespondObj SUBJECT(const WeldFunctionRequestObj * RequestPointer)
             .VariableLinkPtr = LinkPtr
         };
     }
+
+    free(Implement.Subjects.Carrier);
 
     return result;
 }

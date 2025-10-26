@@ -36,6 +36,7 @@ HeadFunctionRespondObj SET(const HeadFunctionRequestObj * HeadCallObjectPointer)
         });
 
         const MioneObjCarrier Passengers = PassengersRes.MioneCarrier;
+        printf("a %p\n",PassengersRes.MioneCarrier.Carrier);
 
         switch (Pair.CarriageManager.ObjType)
         {
@@ -70,7 +71,11 @@ HeadFunctionRespondObj SET(const HeadFunctionRequestObj * HeadCallObjectPointer)
         default: exit(-3);
         }
 
-        // FreeVariableLinkMioneObjectCarrierOfWeldFunctionRespondObj(Passengers);
+        printf("???\n");
+
+        FreeVariableLinkMioneObjectCarrierOfWeldFunctionRespondObj(Passengers);
+
+        printf("yess\n");
     }
 
     for (int i = 0; i < 32;i++)

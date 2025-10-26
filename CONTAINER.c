@@ -27,6 +27,7 @@ CONTAINERRespondObj CONTAINER(CONTAINERRequestObj input)
         {
             VariablePointerCarrierLen ++;
             VariablePointerCarrier = realloc(VariablePointerCarrier, sizeof(VariableObj*) * (VariablePointerCarrierLen));
+            printf("con %p\n",Pack[i].VariableLinkPtr);
             VariablePointerCarrier[VariablePointerCarrierLen-1] = ReturnVariablePtrFromLink(*Pack[i].VariableLinkPtr);
         }else if ( Pack[i].ObjType == VALUE)
         {

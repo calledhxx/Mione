@@ -7,8 +7,17 @@ void FreeValueCarrier()
 
 void FreeVariableLinkMioneObjectCarrierOfWeldFunctionRespondObj(const MioneObjCarrier Carrier)
 {
+    printf("bbb %d\n",Carrier.CarrierLen);
     for (unsigned i = 0; i < Carrier.CarrierLen; i++)
-        free(Carrier.Carrier[i].VariableLinkPtr);
+        if (Carrier.Carrier[i].ObjType == VARIABLE && Carrier.Carrier[i].PointerOfScope == 0)
+        {
+            printf ("fre 1 %p\n",Carrier.Carrier[i].VariableLinkPtr->VariablePtr);
+            printf ("fre 2 %p\n",Carrier.Carrier[i].VariableLinkPtr);
+            free(Carrier.Carrier[i].VariableLinkPtr->VariablePtr);
+            free(Carrier.Carrier[i].VariableLinkPtr);
+        }
+
+    printf("cccc %p\n",Carrier.Carrier);
 
     free(Carrier.Carrier);
 }
