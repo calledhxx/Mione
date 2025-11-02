@@ -38,6 +38,8 @@ HeadFunctionRespondObj SET(const HeadFunctionRequestObj * HeadCallObjectPointer)
         const MioneObjCarrier Passengers = PassengersRes.MioneCarrier;
         printf("a %p\n",PassengersRes.MioneCarrier.Carrier);
 
+        for (int i = 0; i < Passengers.CarrierLen; i++)
+            printf("objtype %d\n",Passengers.Carrier[i].ObjType);
         switch (Pair.CarriageManager.ObjType)
         {
         case HEAD:
@@ -70,6 +72,9 @@ HeadFunctionRespondObj SET(const HeadFunctionRequestObj * HeadCallObjectPointer)
             }
         default: exit(-3);
         }
+
+        for (int i = 0; i < Passengers.CarrierLen; i++)
+            printf("objtype %d\n",Passengers.Carrier[i].ObjType);
 
         printf("???\n");
 

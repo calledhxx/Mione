@@ -15,7 +15,6 @@ RESOURCERespondObj RESOURCE(const RESOURCERequestObj input)
     ValueObj * ValueCarrier = NULL;
     int ValueCarrierLen = 0;
 
-
     const COMPUTATIONRespondObj Computed = COMPUTATION((COMPUTATIONRequestObj){
         .EventTemplate = input.EventTemplate,
         .MioneCarrier = input.MioneCarrier
@@ -23,7 +22,6 @@ RESOURCERespondObj RESOURCE(const RESOURCERequestObj input)
 
     const MioneObj * Pack = Computed.MioneCarrier.Carrier;
     const unsigned int PackSize = Computed.MioneCarrier.CarrierLen;
-
 
     for (int i = 0; i < PackSize; i++)
         if ( Pack[i].ObjType == VALUE)
