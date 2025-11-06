@@ -24,6 +24,7 @@ IMPLEMENTFunctionRespondObj IMPLEMENT(const IMPLEMENTFunctionRequestObj input)
 
         if (thisSection.Carriages[0].CarriageManager.Head.Fuc)
         {
+
             const HeadFunctionRespondObj HeadReturn = thisSection.Carriages[0].CarriageManager.Head.Fuc(
                    &(HeadFunctionRequestObj){
                        .Train = thisSection,

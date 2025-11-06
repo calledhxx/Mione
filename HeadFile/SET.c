@@ -12,7 +12,6 @@
 
 HeadFunctionRespondObj SET(const HeadFunctionRequestObj * HeadCallObjectPointer)
 {
-
     HeadFunctionRespondObj Result = {0};
 
     const HeadFunctionRequestObj HeadCallObject = *HeadCallObjectPointer;
@@ -35,11 +34,10 @@ HeadFunctionRespondObj SET(const HeadFunctionRequestObj * HeadCallObjectPointer)
             .PassenegrsCarrier = Pair.CarriagePassengersCarrier
         });
 
-        const MioneObjCarrier Passengers = PassengersRes.MioneCarrier;
-        printf("a %p\n",PassengersRes.MioneCarrier.Carrier);
+        free(Pair.CarriagePassengersCarrier.Carrier);
 
-        for (int i = 0; i < Passengers.CarrierLen; i++)
-            printf("objtype %d\n",Passengers.Carrier[i].ObjType);
+        const MioneObjCarrier Passengers = PassengersRes.MioneCarrier;
+
         switch (Pair.CarriageManager.ObjType)
         {
         case HEAD:
@@ -72,15 +70,6 @@ HeadFunctionRespondObj SET(const HeadFunctionRequestObj * HeadCallObjectPointer)
             }
         default: exit(-3);
         }
-
-        for (int i = 0; i < Passengers.CarrierLen; i++)
-            printf("objtype %d\n",Passengers.Carrier[i].ObjType);
-
-        printf("???\n");
-
-        FreeVariableLinkMioneObjectCarrierOfWeldFunctionRespondObj(Passengers);
-
-        printf("yess\n");
     }
 
     for (int i = 0; i < 32;i++)

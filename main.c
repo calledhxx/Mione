@@ -15,6 +15,9 @@ WeldObjCarrier WeldList = {0};
 
 ///cl main.c FILE_TO_CASE.c CASE_TO_MIONE.c HeadFile/SET.c HeadFile/SVV.c HeadFile/GET.c HeadFile/ENTER.c HeadFile/LIBRARY.c HeadFile/INCLUDE.c HeadFile/RETURN.c HeadFile/IF.c HeadFile/FOR.c HeadFile/WHILE.c HeadFile/AllHeads.c SYMBOL_DEF.c RESOURCE.c MIONE.c CONTAINER.c PROMPT_DEF.c IMPLEMENT.c COMPUTATION.c VARIABLE_PROCESSING.c EVENT_HANDLER.c WeldFile/AllWeld.c WeldFile/SUBJECT.c PASSENGERS.c FREE.c /Fe:Mione.exe
 
+//每個函數調完後，自行釋放輸入的資源
+//Scope變數不可單獨釋放
+
 int main(const int OptionsSize,char **Options)
 {
     ScopeObj MainScope = {0};
@@ -74,8 +77,6 @@ int main(const int OptionsSize,char **Options)
 
     MainEventHandler(IMPLEMENTReturn.Event);
 
-    FreeTrainCarrier(ToMioneReturn.TrainCarrier);
-    FreeVariableCarrier(IMPLEMENTReturn.MajorVariables);
 
 
     printf("Hello, Mione!\n");

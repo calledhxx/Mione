@@ -7,8 +7,10 @@
 COMPUTATIONRespondObj COMPUTATION(COMPUTATIONRequestObj input)
 {
     EventObj Event = input.EventTemplate;
+
     unsigned int PackSize = input.MioneCarrier.CarrierLen;
-    MioneObj* Pack = input.MioneCarrier.Carrier;
+    MioneObj* Pack = malloc(sizeof(MioneObj) * PackSize);
+    memcpy(Pack, input.MioneCarrier.Carrier, sizeof(MioneObj) * PackSize);
 
      if (PackSize == 0)
          return (COMPUTATIONRespondObj){.Event = Event};
@@ -426,6 +428,8 @@ COMPUTATIONRespondObj COMPUTATION(COMPUTATIONRequestObj input)
                                         continue;
                                     }
 
+                                    printf("%d %d %d\n", i, PackSize,Pack[i].ObjType);
+
                                     if (!(i - 1 >= 0 && i - 1 <= PackSize - 1))
                                         exit(2);
 
@@ -506,7 +510,7 @@ COMPUTATIONRespondObj COMPUTATION(COMPUTATIONRequestObj input)
                     Pack[i].Value.ValueType == VALUE_TABLE_TYPE &&
                     !Pack[i].Value.Table.VariableObjCarrierPointer
                     )
-                {
+                { //初始化Table
                     IMPLEMENTFunctionRespondObj IMPLEMENTReturn = IMPLEMENT((IMPLEMENTFunctionRequestObj){
                         .Built = *Pack[i].Value.Table.TrainObjCarrierPointer,
                         .EventTemplate = input.EventTemplate
@@ -550,6 +554,8 @@ COMPUTATIONRespondObj COMPUTATION(COMPUTATIONRequestObj input)
                         passTableChildLoop:
                         ;
                     }
+
+                    free(IMPLEMENTReturn.MajorVariables.Carrier);
 
                     Pack[i].Value.Table.TrainObjCarrierPointer = NULL;
                     Pack[i].Value.Table.VariableObjCarrierPointer = malloc(sizeof(VariableObjCarrier));

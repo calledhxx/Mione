@@ -11,6 +11,8 @@ PASSENGERRespondObj PASSENGERS(const PASSENGERRequestObj In)
     result.MioneCarrier.CarrierLen = OriginalObjects.CarrierLen;
     result.MioneCarrier.Carrier = malloc(sizeof(MioneObj)*result.MioneCarrier.CarrierLen);
 
+    printf("len %d\n",OriginalObjects.CarrierLen);
+
     for (unsigned index = 0;index<OriginalObjects.CarrierLen;index++)
         if (OriginalObjects.Carrier[index].IsIndirect)
         {
@@ -18,6 +20,8 @@ PASSENGERRespondObj PASSENGERS(const PASSENGERRequestObj In)
                 .MioneCarrier = OriginalObjects.Carrier[index].Indirect,
                 .EventTemplate = (EventObj){0}
             });
+
+            free(OriginalObjects.Carrier[index].Indirect.Carrier);
 
             if (Welded.MioneCarrier.CarrierLen)
             {
@@ -30,10 +34,8 @@ PASSENGERRespondObj PASSENGERS(const PASSENGERRequestObj In)
                     .ObjType = VALUE,
                     .Value = (ValueObj){0}
                 };
-
         }else
             result.MioneCarrier.Carrier[index] = OriginalObjects.Carrier[index].Direct;
 
-    // free (In.PassenegrsCarrier.Carrier);
     return result;
 }

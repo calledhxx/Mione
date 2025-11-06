@@ -1,1 +1,6 @@
-set x = subject set x = 500; + 10;
+set x =
+    subject set x =
+        subject set x = 500;
+    + 50;
++ 50
+x

@@ -94,6 +94,7 @@ MIONEFunctionRespondObj ToMione(MIONEFunctionRequestObj input)
 
     unsigned WeldLayoutCount = 0;
     unsigned OutestWeldIndex = -1;
+    unsigned ClosestWeldIndex = -1;
 
     MioneObjCarrier MioneCarrier = {0};
 
@@ -108,7 +109,7 @@ MIONEFunctionRespondObj ToMione(MIONEFunctionRequestObj input)
                 //end train
                 if (WeldLayoutCount)
                 {
-                    if (index - OutestWeldIndex > 1)
+                    if (index - ClosestWeldIndex > 1)
                     {
                         WeldLayoutCount--;
                         if (!WeldLayoutCount)
@@ -334,6 +335,7 @@ MIONEFunctionRespondObj ToMione(MIONEFunctionRequestObj input)
             {
                 if (!WeldLayoutCount)
                     OutestWeldIndex = index;
+                ClosestWeldIndex = index;
                 WeldLayoutCount++;
 
                 break;
@@ -341,14 +343,6 @@ MIONEFunctionRespondObj ToMione(MIONEFunctionRequestObj input)
         default:
             {
                 //end train
-                if (!WeldLayoutCount)
-                {
-                    SaveCarriageIntoTrain(&Train,Carriage);
-                    SaveTrainIntoCarrier(&BuiltObj,Train);
-                    ResetCarriage(&Carriage);
-                    ResetTrain(&Train);
-                }
-
                 if (WeldLayoutCount)
                 {
                     WeldLayoutCount--;
@@ -365,9 +359,17 @@ MIONEFunctionRespondObj ToMione(MIONEFunctionRequestObj input)
                                     });
 
                     }
+                }else
+                {
+                    SaveCarriageIntoTrain(&Train,Carriage);
+                    SaveTrainIntoCarrier(&BuiltObj,Train);
+                    ResetCarriage(&Carriage);
+                    ResetTrain(&Train);
                 }
             };
         }
+
+        printf("%d %d %d %d\n",index,OutestWeldIndex,ClosestWeldIndex,WeldLayoutCount);
 
         LastMio = Mio;
     }
@@ -387,6 +389,8 @@ MIONEFunctionRespondObj ToMione(MIONEFunctionRequestObj input)
 
     SaveCarriageIntoTrain(&Train,Carriage);
     SaveTrainIntoCarrier(&BuiltObj,Train);
+
+    printf("a %d\n",BuiltObj.CarrierLen);
 
     Result.TrainCarrier = BuiltObj;
 

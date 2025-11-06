@@ -394,8 +394,6 @@ CMOFunctionRespondObj CMO(
 
                                 Paired = 1;
 
-                                
-
                                 break;
                             }
 
@@ -474,7 +472,7 @@ CMOFunctionRespondObj CMO(
                             &inParentScope
                             );
 
-                        VariableLinkObj * ToAddOnVariableLinkPtr = 0;
+                        VariableLinkObj * FinialVariableLinkPtr = 0;
 
                         if (VariableLinkPtr) //有連結到
                         {
@@ -496,12 +494,12 @@ CMOFunctionRespondObj CMO(
                                         .VariablePtr = 0
                                     };
 
-                                ToAddOnVariableLinkPtr = ScopePointer->VariableLinkPtrCarrier.Carrier[
+                                FinialVariableLinkPtr = ScopePointer->VariableLinkPtrCarrier.Carrier[
                                 ScopePointer->VariableLinkPtrCarrier.CarrierLen - 1
                                     ];
 
                             }else //已存在於本層
-                                ToAddOnVariableLinkPtr = VariableLinkPtr;
+                                FinialVariableLinkPtr = VariableLinkPtr;
                         }else //無連結 理解為新變數
                         {
                             ScopePointer->VariableLinkPtrCarrier.CarrierLen++;
@@ -532,7 +530,7 @@ CMOFunctionRespondObj CMO(
                                    .Value = (ValueObj){0}
                                };
 
-                            ToAddOnVariableLinkPtr =
+                            FinialVariableLinkPtr =
                                 ScopePointer->VariableLinkPtrCarrier.Carrier[
                                     ScopePointer->VariableLinkPtrCarrier.CarrierLen - 1
                                 ];
@@ -547,16 +545,16 @@ CMOFunctionRespondObj CMO(
                             ThisCase.ObjName,
                             inParentScope,
                             VariableLinkPtr,
-                            ToAddOnVariableLinkPtr->PointToAnotherLink,
-                            ToAddOnVariableLinkPtr->VariablePtr,
-                            ToAddOnVariableLinkPtr
+                            FinialVariableLinkPtr->PointToAnotherLink,
+                            FinialVariableLinkPtr->VariablePtr,
+                            FinialVariableLinkPtr
                             );
 
 
                         pushMioneObjectIntoLayout(&LayoutsCarrier.Carrier[LayoutsCarrier.CarrierLen - 1], (MioneObj){
                             .ObjType = VARIABLE,
                             .PointerOfScope = ScopePointer,
-                            .VariableLinkPtr = ToAddOnVariableLinkPtr,
+                            .VariableLinkPtr = FinialVariableLinkPtr,
                             .MioneObjectPosition = ThisCase.CasePosition,
                         });
 
