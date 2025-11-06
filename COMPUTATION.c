@@ -428,7 +428,6 @@ COMPUTATIONRespondObj COMPUTATION(COMPUTATIONRequestObj input)
                                         continue;
                                     }
 
-                                    printf("%d %d %d\n", i, PackSize,Pack[i].ObjType);
 
                                     if (!(i - 1 >= 0 && i - 1 <= PackSize - 1))
                                         exit(2);

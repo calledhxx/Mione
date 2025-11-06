@@ -369,7 +369,6 @@ MIONEFunctionRespondObj ToMione(MIONEFunctionRequestObj input)
             };
         }
 
-        printf("%d %d %d %d\n",index,OutestWeldIndex,ClosestWeldIndex,WeldLayoutCount);
 
         LastMio = Mio;
     }
@@ -390,7 +389,6 @@ MIONEFunctionRespondObj ToMione(MIONEFunctionRequestObj input)
     SaveCarriageIntoTrain(&Train,Carriage);
     SaveTrainIntoCarrier(&BuiltObj,Train);
 
-    printf("a %d\n",BuiltObj.CarrierLen);
 
     Result.TrainCarrier = BuiltObj;
 

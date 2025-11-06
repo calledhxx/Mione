@@ -11,7 +11,6 @@ PASSENGERRespondObj PASSENGERS(const PASSENGERRequestObj In)
     result.MioneCarrier.CarrierLen = OriginalObjects.CarrierLen;
     result.MioneCarrier.Carrier = malloc(sizeof(MioneObj)*result.MioneCarrier.CarrierLen);
 
-    printf("len %d\n",OriginalObjects.CarrierLen);
 
     for (unsigned index = 0;index<OriginalObjects.CarrierLen;index++)
         if (OriginalObjects.Carrier[index].IsIndirect)
