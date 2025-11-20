@@ -1,8 +1,10 @@
+#include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
 #include "STDMIO.h"
+
 
 COMPUTATIONRespondObj COMPUTATION(COMPUTATIONRequestObj input)
 {
@@ -413,15 +415,17 @@ COMPUTATIONRespondObj COMPUTATION(COMPUTATIONRequestObj input)
                     {
                         if(!BracketsChild)
                         {
-                            signed FrontIndex = 0;
-                            signed BackIndex = 0;
+                            signed FrontIndex = -1; //不參與計算的前方最高位，其代表index可以不存在。
+                            signed BackIndex = -1; //不參與計算的後方最低位，其代表index可以不存在。
 
                             MioneObjCarrier Output = {0};
 
                             switch (Pack[i].Symbol.Identification)
                             {
-                            case 1:
+                            case SYMBOL_ADD:
                                 {
+
+                                    //order counting loop
                                     if (CountIndex < 2)
                                     {
                                         CountLoop = _max(CountIndex,3);
@@ -429,18 +433,14 @@ COMPUTATIONRespondObj COMPUTATION(COMPUTATIONRequestObj input)
                                     }
 
 
-                                    if (!(i - 1 >= 0 && i - 1 <= PackSize - 1))
-                                        exit(2);
-
                                     if (!(i + 1 >= 0 && i + 1 <= PackSize - 1))
                                         exit(3);
 
-                                    ValueObj Value1 = Pack[i-1].ObjType == VALUE ? Pack[i-1].Value : ReturnVariablePtrFromLink(*Pack[i-1].VariableLinkPtr)->Value;
-                                    ValueObj Value2 = Pack[i+1].ObjType == VALUE ? Pack[i+1].Value : ReturnVariablePtrFromLink(*Pack[i+1].VariableLinkPtr)->Value;
+                                    const ValueObj Value1 = Pack[i-1].ObjType == VALUE ? Pack[i-1].Value : ReturnVariablePtrFromLink(*Pack[i-1].VariableLinkPtr)->Value;
+                                    const ValueObj Value2 = Pack[i+1].ObjType == VALUE ? Pack[i+1].Value : ReturnVariablePtrFromLink(*Pack[i+1].VariableLinkPtr)->Value;
 
                                     if (Value1.ValueType != VALUE_NUMBER_TYPE || Value2.ValueType != VALUE_NUMBER_TYPE)
                                         exit(5);
-
 
                                     FrontIndex = i - 2;
                                     BackIndex = i + 2;
@@ -459,12 +459,80 @@ COMPUTATIONRespondObj COMPUTATION(COMPUTATIONRequestObj input)
 
                                     break;
                                 }
+                            case SYMBOL_SUB:
+                                {
+                                    const char expressNegative =
+                                        !(i - 1 >= 0) ? 1 : (
+                                            Pack[i-1].ObjType != VALUE && Pack[i - 1].ObjType != VARIABLE
+                                            );
+
+                                    if (expressNegative)
+                                    {
+                                        if (!(i + 1 >= 0 && i + 1 <= PackSize - 1))
+                                            exit(3);
+
+                                        const ValueObj Value1 = Pack[i+1].ObjType == VALUE ? Pack[i+1].Value : ReturnVariablePtrFromLink(*Pack[i+1].VariableLinkPtr)->Value;
+
+                                        FrontIndex = i - 1;
+                                        BackIndex = i + 2;
+
+                                        Output.CarrierLen = 1;
+                                        Output.Carrier = malloc(sizeof(MioneObj));
+                                        *Output.Carrier = (MioneObj){
+                                            .VariableLinkPtr = Pack[i].VariableLinkPtr,
+                                            .MioneObjectPosition = Pack[i].MioneObjectPosition,
+                                            .ObjType = VALUE,
+                                            .Value = (ValueObj){
+                                                .ValueType = VALUE_NUMBER_TYPE,
+                                                .Number = -Value1.Number
+                                            },
+                                        };
+                                    }else
+                                    {
+                                        if (!(i + 1 >= 0 && i + 1 <= PackSize - 1))
+                                            exit(3);
+
+                                        if (CountIndex < 2)
+                                        {
+                                            CountLoop = _max(CountIndex,3);
+                                            continue;
+                                        }
+
+
+                                        const ValueObj Value1 = Pack[i-1].ObjType == VALUE ? Pack[i-1].Value : ReturnVariablePtrFromLink(*Pack[i-1].VariableLinkPtr)->Value;
+                                        const ValueObj Value2 = Pack[i+1].ObjType == VALUE ? Pack[i+1].Value : ReturnVariablePtrFromLink(*Pack[i+1].VariableLinkPtr)->Value;
+
+                                        if (Value1.ValueType != VALUE_NUMBER_TYPE || Value2.ValueType != VALUE_NUMBER_TYPE)
+                                            exit(5);
+
+                                        FrontIndex = i - 2;
+                                        BackIndex = i + 2;
+
+                                        Output.CarrierLen = 1;
+                                        Output.Carrier = malloc(sizeof(MioneObj));
+                                        *Output.Carrier = (MioneObj){
+                                            .VariableLinkPtr = Pack[i].VariableLinkPtr,
+                                            .MioneObjectPosition = Pack[i].MioneObjectPosition,
+                                            .ObjType = VALUE,
+                                            .Value = (ValueObj){
+                                                .ValueType = VALUE_NUMBER_TYPE,
+                                                .Number = Value1.Number - Value2.Number
+                                            },
+                                        };
+                                    }
+
+
+                                    break;
+                                }
+
 
                             default:
                                 {
 
                                 }
                             }
+
+
 
                             unsigned NewPackSize = PackSize - (BackIndex - FrontIndex - 1) + Output.CarrierLen;
                             MioneObj * NewPack = malloc(NewPackSize * sizeof(MioneObj));
@@ -479,18 +547,24 @@ COMPUTATIONRespondObj COMPUTATION(COMPUTATIONRequestObj input)
                                 sizeof(MioneObj) * Output.CarrierLen
                                 );
 
-                            if (PackSize >= BackIndex + 1)
+                            if (PackSize >= BackIndex)
                                 memcpy(
                                     NewPack + (FrontIndex + 1 + Output.CarrierLen),
-                                    Pack + BackIndex + 1,
-                                    sizeof(MioneObj) * PackSize - BackIndex - 1
+                                    Pack + BackIndex,
+                                    sizeof(MioneObj) * (PackSize - BackIndex)
                                 );
 
-                            free(Output.Carrier);
+
+                            if (Output.Carrier)
+                            {
+                                free(Output.Carrier);
+                                Output.Carrier = 0;
+                            }
+
                             free(Pack);
                             Pack = NewPack;
                             PackSize = NewPackSize;
-
+                            i = FrontIndex + (int)Output.CarrierLen - 1;
                         }else
                         {
                             inBracketSize++;
@@ -569,6 +643,7 @@ COMPUTATIONRespondObj COMPUTATION(COMPUTATIONRequestObj input)
         }
         }
     }
+
 
     if (inBracket)
         free(inBracket);

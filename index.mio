@@ -1,9 +1,3 @@
-set x =
-    subject set x =
-        subject set x =
-            subject set x = 500;
-        + 50;
-    + 50;
-+ 50
+set x = 1 - 4 - 4;
 
-x //輸出預覽(非正式用法
+x
