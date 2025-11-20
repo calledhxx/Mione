@@ -727,7 +727,7 @@ FCOFunctionRespondObj FCO(FCOFunctionRequestObj input)
     if (CommentChar == '*')
     {
         Result.Event.Code = 2;
-        Result.Event.Message = "Still comment to the end.";
+        Result.Event.Message = "Still commenting to the end.";
         Result.Event.EventPosition = (CasePositionObj){
             .CaseEndColumn = ProcessingColumn,
             .CaseStartColumn = CaseStartColumn,
