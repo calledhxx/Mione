@@ -85,7 +85,7 @@ SymbolObjCarrier ReturnSymbolList()
             .Name = "[",
             .Identification = SYMBOL_FRONT_BRACKET,
             .SymbolCarry =
-                SC_BeforeVariableOrValue | SC_AfterVariableOrValue ,
+                SC_BeforeVariableOrValue | SC_AfterVariableOrValue | SC_AfterSymbol ,
         },
 
         (SymbolObj){
@@ -101,7 +101,7 @@ SymbolObjCarrier ReturnSymbolList()
             .Name = "(",
             .Identification = SYMBOL_FRONT_PARENTHESES,
             .SymbolCarry =
-                 SC_BeforeVariableOrValue,
+                 SC_BeforeVariableOrValue | SC_AfterVariableOrValue | SC_AfterSymbol
 
 
         },

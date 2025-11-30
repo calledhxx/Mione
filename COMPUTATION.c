@@ -157,7 +157,7 @@ COMPUTATIONRespondObj COMPUTATION(COMPUTATIONRequestObj input)
                                         break;
                                     }
                                 default:
-                                        exit(3);
+                                        exit(4);
                                 }
 
 
@@ -193,13 +193,14 @@ COMPUTATIONRespondObj COMPUTATION(COMPUTATIONRequestObj input)
                         PackSize = NewPackSize;
                         Pack = NewPack;
 
-                        i = FirstBracketIndex-1;
                     }else
                     {
                         inBracketSize++;
                         inBracket = realloc(inBracket, sizeof(MioneObj) * (inBracketSize));
                         inBracket[inBracketSize - 1] = Pack[i];
                     }
+
+                    i = FirstBracketIndex-1;
 
                     break;
                 }
@@ -229,6 +230,7 @@ COMPUTATIONRespondObj COMPUTATION(COMPUTATIONRequestObj input)
                     BracketsChild--;
                     if (!BracketsChild && BracketCur == 2)
                     {
+
                         char FunctionCalled = 0;
                         BracketCur = 0;
 
@@ -401,7 +403,7 @@ COMPUTATIONRespondObj COMPUTATION(COMPUTATIONRequestObj input)
                             Pack = NewPack;
                             PackSize = NewPackSize;
 
-                            i = FirstBracketIndex -1;
+
                         }
                     }else
                     {
@@ -409,6 +411,9 @@ COMPUTATIONRespondObj COMPUTATION(COMPUTATIONRequestObj input)
                         inBracket = realloc(inBracket, sizeof(MioneObj) * (inBracketSize));
                         inBracket[inBracketSize - 1] = Pack[i];
                     }
+
+                    i = FirstBracketIndex -1;
+
                     break;
                 }
                 default:
@@ -433,8 +438,8 @@ COMPUTATIONRespondObj COMPUTATION(COMPUTATIONRequestObj input)
                                     }
 
 
-                                    if (!(i + 1 >= 0 && i + 1 <= PackSize - 1))
-                                        exit(3);
+                                    if (!(i - 1 >= 0 && i + 1 <= PackSize - 1))
+                                        exit(4);
 
                                     const ValueObj Value1 = Pack[i-1].ObjType == VALUE ? Pack[i-1].Value : ReturnVariablePtrFromLink(*Pack[i-1].VariableLinkPtr)->Value;
                                     const ValueObj Value2 = Pack[i+1].ObjType == VALUE ? Pack[i+1].Value : ReturnVariablePtrFromLink(*Pack[i+1].VariableLinkPtr)->Value;
@@ -468,8 +473,8 @@ COMPUTATIONRespondObj COMPUTATION(COMPUTATIONRequestObj input)
 
                                     if (expressNegative)
                                     {
-                                        if (!(i + 1 >= 0 && i + 1 <= PackSize - 1))
-                                            exit(3);
+                                        if (i + 1 > PackSize - 1)
+                                            exit(5);
 
                                         const ValueObj Value1 = Pack[i+1].ObjType == VALUE ? Pack[i+1].Value : ReturnVariablePtrFromLink(*Pack[i+1].VariableLinkPtr)->Value;
 
@@ -489,15 +494,15 @@ COMPUTATIONRespondObj COMPUTATION(COMPUTATIONRequestObj input)
                                         };
                                     }else
                                     {
-                                        if (!(i + 1 >= 0 && i + 1 <= PackSize - 1))
-                                            exit(3);
-
                                         if (CountIndex < 2)
                                         {
                                             CountLoop = _max(CountIndex,3);
                                             continue;
                                         }
 
+
+                                        if (!(i - 1 >= 0 && i + 1 <= PackSize - 1))
+                                            exit(4);
 
                                         const ValueObj Value1 = Pack[i-1].ObjType == VALUE ? Pack[i-1].Value : ReturnVariablePtrFromLink(*Pack[i-1].VariableLinkPtr)->Value;
                                         const ValueObj Value2 = Pack[i+1].ObjType == VALUE ? Pack[i+1].Value : ReturnVariablePtrFromLink(*Pack[i+1].VariableLinkPtr)->Value;
@@ -651,6 +656,7 @@ COMPUTATIONRespondObj COMPUTATION(COMPUTATIONRequestObj input)
     if (BracketCur)
         exit(3);
 
+
     return (COMPUTATIONRespondObj){
         .MioneCarrier = (MioneObjCarrier){
             .Carrier = Pack,
@@ -658,4 +664,5 @@ COMPUTATIONRespondObj COMPUTATION(COMPUTATIONRequestObj input)
         },
         .Event = Event
     };
+
 }
