@@ -93,7 +93,6 @@ IMPLEMENTFunctionRespondObj IMPLEMENT(const IMPLEMENTFunctionRequestObj input)
 
                 free(HeadReturn.ResetVariablesToValues.Carrier);
 
-
                 VAVCarrier.CarrierLen += HeadReturn.ResetVariablesToValues.CarrierLen;
             }
 

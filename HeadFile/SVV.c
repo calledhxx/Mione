@@ -21,7 +21,9 @@ HeadFunctionRespondObj SVV(const HeadFunctionRequestObj * HeadCallObjectPointer)
                             .EventTemplate = HeadCallObject.EventTemplate
                         }).ValueCarrier;
 
-    printf("%f\n",a.Carrier[0].Number);
+
+    if ()
+
 
     return (HeadFunctionRespondObj){0};
 }

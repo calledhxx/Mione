@@ -13,10 +13,13 @@ SymbolObjCarrier SymbolList = {0};
 PromptObjCarrier PromptList = {0};
 WeldObjCarrier WeldList = {0};
 
-///cl main.c FILE_TO_CASE.c CASE_TO_MIONE.c HeadFile/SET.c HeadFile/SVV.c HeadFile/GET.c HeadFile/ENTER.c HeadFile/LIBRARY.c HeadFile/INCLUDE.c HeadFile/RETURN.c HeadFile/IF.c HeadFile/FOR.c HeadFile/WHILE.c HeadFile/AllHeads.c SYMBOL_DEF.c RESOURCE.c MIONE.c CONTAINER.c PROMPT_DEF.c IMPLEMENT.c COMPUTATION.c VARIABLE_PROCESSING.c EVENT_HANDLER.c WeldFile/AllWeld.c WeldFile/SUBJECT.c PASSENGERS.c FREE.c /Fe:Mione.exe
+///cl main.c FILE_TO_CASE.c CASE_TO_MIONE.c HeadFile/SET.c HeadFile/SVV.c HeadFile/GET.c HeadFile/ENTER.c HeadFile/LIBRARY.c HeadFile/INCLUDE.c HeadFile/RETURN.c HeadFile/IF.c HeadFile/FOR.c HeadFile/WHILE.c HeadFile/AllHeads.c SYMBOL_DEF.c RESOURCE.c MIONE.c CONTAINER.c PROMPT_DEF.c IMPLEMENT.c COMPUTATION.c VARIABLE_PROCESSING.c EVENT_HANDLER.c WeldFile/AllWeld.c WeldFile/SUBJECT.c PASSENGERS.c MEMORY.c /Fe:Mione.exe
 
 int main(const int OptionsSize,char **Options)
 {
+    // CreateLine();
+    // Allocate(0,0);
+
     ScopeObj MainScope = {0};
 
     FILE *f = fopen("D:/Mione/index.mio", "r"); //never read binary again...
@@ -76,7 +79,7 @@ int main(const int OptionsSize,char **Options)
 
 
 
-    printf("Hello, Mione!\n");
+    // printf("Hello, Mione!\n");
     //正確執行完的回應
 
     free(MainScope.ChildrenScopePtrCarrierPointer);

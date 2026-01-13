@@ -46,6 +46,6 @@ add_executable(Mione
         WeldFile/SUBJECT.c
         Passengers.c
         Passengers.h
-        FREE.h
-        FREE.c
+        MEMORY.h
+        MEMORY.c
 )

@@ -5,6 +5,7 @@ WeldFunctionRespondObj SUBJECT(const WeldFunctionRequestObj * RequestPointer)
     const WeldFunctionRequestObj Request = *RequestPointer;
     WeldFunctionRespondObj result = {0};
 
+
     const MIONEFunctionRespondObj Train = ToMione((MIONEFunctionRequestObj){
         .EventTemplate = Request.EventTemplate,
         .MioneCarrier = Request.MioneCarrier,
@@ -14,7 +15,6 @@ WeldFunctionRespondObj SUBJECT(const WeldFunctionRequestObj * RequestPointer)
         .EventTemplate = Request.EventTemplate,
         .Built = Train.TrainCarrier,
     });
-
 
     result.MioneCarrier.CarrierLen = Implement.Subjects.CarrierLen;
     result.MioneCarrier.Carrier = malloc(sizeof(MioneObj)* result.MioneCarrier.CarrierLen);

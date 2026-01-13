@@ -29,12 +29,13 @@ HeadFunctionRespondObj SET(const HeadFunctionRequestObj * HeadCallObjectPointer)
     {
         const CarriageObj Pair = Pairs[PairIndex];
 
+
         const PASSENGERRespondObj PassengersRes = PASSENGERS((PASSENGERRequestObj){
             .EventTemplate = HeadCallObject.EventTemplate,
             .PassenegrsCarrier = Pair.CarriagePassengersCarrier
         });
 
-        free(Pair.CarriagePassengersCarrier.Carrier);
+        // free(Pair.CarriagePassengersCarrier.Carrier); !!
 
         const MioneObjCarrier Passengers = PassengersRes.MioneCarrier;
 

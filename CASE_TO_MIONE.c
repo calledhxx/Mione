@@ -536,19 +536,19 @@ CMOFunctionRespondObj CMO(
                                 ];
                         }
 
-                        printf("[`%s` VARIABLE]\n"
-                               "    IN PARENT:%d;\n"
-                               "    FOUND LINK:%p;\n"
-                               "    LINK TO LINK:%p;\n"
-                               "    LINK TO VARIABLE:%p;\n"
-                               "    LINK POSITION:%p;\n",
-                            ThisCase.ObjName,
-                            inParentScope,
-                            VariableLinkPtr,
-                            FinialVariableLinkPtr->PointToAnotherLink,
-                            FinialVariableLinkPtr->VariablePtr,
-                            FinialVariableLinkPtr
-                            );
+                        // printf("[`%s` VARIABLE]\n"
+                        //        "    IN PARENT:%d;\n"
+                        //        "    FOUND LINK:%p;\n"
+                        //        "    LINK TO LINK:%p;\n"
+                        //        "    LINK TO VARIABLE:%p;\n"
+                        //        "    LINK POSITION:%p;\n",
+                        //     ThisCase.ObjName,
+                        //     inParentScope,
+                        //     VariableLinkPtr,
+                        //     FinialVariableLinkPtr->PointToAnotherLink,
+                        //     FinialVariableLinkPtr->VariablePtr,
+                        //     FinialVariableLinkPtr
+                        //     );
 
 
                         pushMioneObjectIntoLayout(&LayoutsCarrier.Carrier[LayoutsCarrier.CarrierLen - 1], (MioneObj){

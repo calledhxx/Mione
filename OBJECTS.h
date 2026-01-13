@@ -124,6 +124,22 @@ enum //WELD
     WELD_SUBJECT = 1
 };
 
+typedef struct block_s
+{
+    unsigned size;
+    struct block_s * next;
+    struct block_s * current;
+} block_t;
+
+typedef char unit_t;
+
+typedef struct line_s
+{
+    unit_t * units;
+    unit_t * originalPointerOfUnits;
+    block_t * leaderPointer;
+} line_t;
+
 typedef struct _CasePositionObject
 {
     unsigned int CaseStartLine; //Case開始行號
