@@ -22,7 +22,6 @@ HeadFunctionRespondObj SVV(const HeadFunctionRequestObj * HeadCallObjectPointer)
                         }).ValueCarrier;
 
 
-    if ()
 
 
     return (HeadFunctionRespondObj){0};
