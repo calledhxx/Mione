@@ -26,7 +26,7 @@ SymbolObjCarrier ReturnSymbolList()
             .Identification = SYMBOL_COMMA,
 
             .SymbolCarry =
-                 SC_AfterVariableOrValue ,
+                 SC_AfterVariableOrValue | SC_BeforeVariableOrValue,
             //1,1
             //(1),(2)
         },
@@ -35,14 +35,14 @@ SymbolObjCarrier ReturnSymbolList()
             .Name = "*",
             .Identification = SYMBOL_STAR,
             .SymbolCarry =
-                 SC_AfterVariableOrValue
+                 SC_AfterVariableOrValue | SC_BeforeVariableOrValue
         },
 
         (SymbolObj){
             .Name = "/",
             .Identification = SYMBOL_SLASH,
             .SymbolCarry =
-                 SC_AfterVariableOrValue ,
+                 SC_AfterVariableOrValue | SC_BeforeVariableOrValue,
 
         },
 
@@ -52,7 +52,7 @@ SymbolObjCarrier ReturnSymbolList()
             .Name = "^",
             .Identification = SYMBOL_UP,
             .SymbolCarry =
-                 SC_AfterVariableOrValue ,
+                 SC_AfterVariableOrValue | SC_BeforeVariableOrValue,
 
         },
 
@@ -68,7 +68,7 @@ SymbolObjCarrier ReturnSymbolList()
             .Name = ".",
             .Identification = SYMBOL_DOT,
             .SymbolCarry =
-                 SC_AfterVariableOrValue ,
+                 SC_AfterVariableOrValue | SC_BeforeVariableOrValue ,
 
 
         },
@@ -76,9 +76,7 @@ SymbolObjCarrier ReturnSymbolList()
             .Name = "==",
             .Identification = SYMBOL_IS,
             .SymbolCarry =
-                 SC_AfterVariableOrValue ,
-
-
+                 SC_AfterVariableOrValue | SC_BeforeVariableOrValue ,
         },
 
         (SymbolObj){
@@ -111,9 +109,21 @@ SymbolObjCarrier ReturnSymbolList()
             .Identification = SYMBOL_BACK_PARENTHESES,
             .SymbolCarry =
                 SC_AfterVariableOrValue,
+        },
 
+        (SymbolObj){
+            .Name = ">",
+            .Identification = SYMBOL_GREATER_THAN,
+            .SymbolCarry =
+                 SC_AfterVariableOrValue | SC_BeforeVariableOrValue,
+        },
 
-        }
+        (SymbolObj){
+            .Name = "<",
+            .Identification = SYMBOL_LESS_THAN,
+            .SymbolCarry =
+                 SC_AfterVariableOrValue | SC_BeforeVariableOrValue,
+        },
 };
 
     SymbolObjCarrier result = {0};

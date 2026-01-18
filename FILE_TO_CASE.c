@@ -639,7 +639,7 @@ FCOFunctionRespondObj FCO(FCOFunctionRequestObj input)
                             }
                         default:
                             {
-                                Result.Event.Code = EVENT_ERROR_UNKNOWN_SUPER_CHAR_PARENT,
+                                Result.Event.Code = EVENT_SUPER_CHAR_ERROR,
                                 Result.Event.Message = "Unknown Super char parent type.";
                                 Result.Event.EventPosition = (CasePositionObj){
                                     .CaseEndColumn = ProcessingColumn,
@@ -726,7 +726,7 @@ FCOFunctionRespondObj FCO(FCOFunctionRequestObj input)
 
     if (CommentChar == '*')
     {
-        Result.Event.Code = 2;
+        Result.Event.Code = EVENT_SUPER_CHAR_ERROR;
         Result.Event.Message = "Still commenting to the end.";
         Result.Event.EventPosition = (CasePositionObj){
             .CaseEndColumn = ProcessingColumn,

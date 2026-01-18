@@ -29,12 +29,15 @@ HeadFunctionRespondObj SVV(const HeadFunctionRequestObj * HeadCallObjectPointer)
 
         switch (Pair.CarriageManager.ObjType)
         {
-        case HEAD:
+        case VARIABLE:
+        case VALUE:
             {
                 RESOURCEHeadSuffix = RESOURCE((RESOURCERequestObj){
                     .MioneCarrier = Passengers,
                     .EventTemplate = HeadCallObject.EventTemplate
                 }).ValueCarrier;
+
+                printf("%f\n",RESOURCEHeadSuffix.Carrier[0].Number);
 
                 break;
             }
@@ -49,9 +52,10 @@ HeadFunctionRespondObj SVV(const HeadFunctionRequestObj * HeadCallObjectPointer)
                             .EventTemplate = HeadCallObject.EventTemplate
                         }).VariablePtrCarrier;
 
-                        CONTAINERHeadSuffix.Carrier[0] -> Value
+                        // CONTAINERHeadSuffix.Carrier[0] -> Value //todo
+                        break;
                     }
-                default: exit(4);
+                default: exit(5);
 
                 }
 

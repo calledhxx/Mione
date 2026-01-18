@@ -1,1 +1,8 @@
-set x x = 100;
+set x = 10;
+set y = 10;
+
+if x > 5 then range
+    x
+end else range
+    y
+end

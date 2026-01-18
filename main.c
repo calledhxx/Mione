@@ -21,8 +21,9 @@ int main(const int OptionsSize,char **Options)
     // Allocate(0,0);
 
     ScopeObj MainScope = {0};
+    const char FileAddress[] = "../index.mio";
 
-    FILE *f = fopen("D:/Mione/index.mio", "r"); //never read binary again...
+    FILE *f = fopen(FileAddress, "r"); //never read binary again...
 
     MainScope.ChildrenScopePtrCarrierPointer = malloc(sizeof(ScopeObjPtrCarrier));
     *MainScope.ChildrenScopePtrCarrierPointer = (ScopeObjPtrCarrier){0};
@@ -32,11 +33,16 @@ int main(const int OptionsSize,char **Options)
     PromptList = ReturnPromptList();
     WeldList = ReturnWelds();
 
-    if (f == NULL) return -1;
-
     const EventObj EventTemplate = (EventObj){
-        .Address = "D:/Mione/index.mio"
+        .Address = FileAddress
     };
+
+    if (f == NULL)
+        MainEventHandler((EventObj){
+            .Address = EventTemplate.Address,
+            .Code = EVENT_NO_FILE_FOUND,
+            .Message = "index.mio not found in current folder."
+        });
 
     //第一步，先將source code轉為case物件。
     const FCOFunctionRespondObj FCOReturn = FCO(
@@ -76,8 +82,6 @@ int main(const int OptionsSize,char **Options)
     });
 
     MainEventHandler(IMPLEMENTReturn.Event);
-
-
 
     // printf("Hello, Mione!\n");
     //正確執行完的回應

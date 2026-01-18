@@ -73,48 +73,35 @@ HeadFunctionRespondObj SET(const HeadFunctionRequestObj * HeadCallObjectPointer)
         }
     }
 
-    for (int i = 0; i < 32;i++)
+    if (Registration & 1<<(PROMPT_SET - 1))
     {
-        const int cmp = 1<<i;
-
-        switch (Registration & cmp)
-        {
-        case 0: continue;
-        case 1<<(PROMPT_SET - 1):
-            {
-                Result.MajorVariables.Carrier = realloc(
+        Result.MajorVariables.Carrier = realloc(
                     Result.MajorVariables.Carrier,
                     (Result.MajorVariables.CarrierLen + HeadSuffix.CarrierLen)*sizeof(VariableObj)
                     );
 
-                Result.Subjects.Carrier = realloc(
-                    Result.Subjects.Carrier,
-                    (Result.Subjects.CarrierLen + HeadSuffix.CarrierLen)*sizeof(VariableObj*)
-                    );
+        Result.Subjects.Carrier = realloc(
+            Result.Subjects.Carrier,
+            (Result.Subjects.CarrierLen + HeadSuffix.CarrierLen)*sizeof(VariableObj*)
+            );
 
-                const unsigned len = _min(HeadSuffix.CarrierLen,SetPromptSuffix.CarrierLen);
+        const unsigned len = _min(HeadSuffix.CarrierLen,SetPromptSuffix.CarrierLen);
 
-                for (
-                    unsigned int HeadSuffixIndex = 0;
-                    HeadSuffixIndex < len;
-                    HeadSuffixIndex++
-                    )
-                {
-                    HeadSuffix.Carrier[HeadSuffixIndex]->Value = SetPromptSuffix.Carrier[HeadSuffixIndex];
+        for (
+            unsigned int HeadSuffixIndex = 0;
+            HeadSuffixIndex < len;
+            HeadSuffixIndex++
+            )
+        {
+            HeadSuffix.Carrier[HeadSuffixIndex]->Value = SetPromptSuffix.Carrier[HeadSuffixIndex];
 
-                    Result.MajorVariables.CarrierLen++;
-                    Result.MajorVariables.Carrier[Result.MajorVariables.CarrierLen-1] = *HeadSuffix.Carrier[HeadSuffixIndex];
+            Result.MajorVariables.CarrierLen++;
+            Result.MajorVariables.Carrier[Result.MajorVariables.CarrierLen-1] = *HeadSuffix.Carrier[HeadSuffixIndex];
 
-                    Result.Subjects.CarrierLen++;
-                    Result.Subjects.Carrier[Result.Subjects.CarrierLen-1] = HeadSuffix.Carrier[HeadSuffixIndex];
-                }
-
-                break;
-            }
-        default: exit(-3);
+            Result.Subjects.CarrierLen++;
+            Result.Subjects.Carrier[Result.Subjects.CarrierLen-1] = HeadSuffix.Carrier[HeadSuffixIndex];
         }
     }
-
-
+    
     return Result;
 }

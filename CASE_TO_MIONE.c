@@ -184,7 +184,12 @@ CMOFunctionRespondObj CMO(
                                 const MioneLayoutObj layout = popLayoutFromLayoutCarrier(&LayoutsCarrier);
 
                                 if (layout.LayoutHandler != VALUE_FUNCTION_TYPE && layout.LayoutHandler != VALUE_RANGE_TYPE)
-                                    exit(-5);
+                                {
+                                    Result.Event.Code = EVENT_LAYOUT_ERROR;
+                                    Result.Event.Message = "Close of Layout `FUNCTION` or `RANGE` should be `END`";
+                                    Result.Event.EventPosition = ThisCase.CasePosition;
+                                    goto end;
+                                }
 
                                 ScopePointer = ScopePointer->ParentScopePointer;
 
@@ -196,7 +201,10 @@ CMOFunctionRespondObj CMO(
                                 });
 
                                 if (ToMioneReturn.Event.Code)
-                                    exit(1);
+                                {
+                                    Result.Event = ToMioneReturn.Event;
+                                    goto end;
+                                }
 
                                 *TrainObjCarrierPtr = ToMioneReturn.TrainCarrier;
 
@@ -251,6 +259,7 @@ CMOFunctionRespondObj CMO(
                                 break;
                             }
                         default:
+                            printf("the other keywords come up unexpectedly (NormalKeyword).\n");
                             exit(-5);
                         }
 
@@ -366,7 +375,12 @@ CMOFunctionRespondObj CMO(
                                 const MioneLayoutObj layout = popLayoutFromLayoutCarrier(&LayoutsCarrier);
 
                                 if (layout.LayoutHandler != VALUE_TABLE_TYPE)
-                                    exit(-5);
+                                {
+                                    Result.Event.Code = EVENT_LAYOUT_ERROR;
+                                    Result.Event.Message = "Close of Layout `{` should be `}`";
+                                    Result.Event.EventPosition = ThisCase.CasePosition;
+                                    goto end;
+                                }
 
                                 TrainObjCarrier * TrainObjCarrierPtr = malloc(sizeof(TrainObjCarrier));
 
@@ -376,7 +390,11 @@ CMOFunctionRespondObj CMO(
                                 });
 
                                 if (ToMioneReturn.Event.Code)
-                                    exit(1);
+                                {
+                                    Result.Event = ToMioneReturn.Event;
+                                    goto end;
+                                }
+
 
                                 *TrainObjCarrierPtr = ToMioneReturn.TrainCarrier;
 
@@ -398,6 +416,7 @@ CMOFunctionRespondObj CMO(
                             }
 
                         default:
+                            printf("the other keywords come up unexpectedly (UnconnectableKeyword).\n");
                             exit(-3);
                         }
 
@@ -566,8 +585,8 @@ CMOFunctionRespondObj CMO(
                 case CASE_CONNECTABLE: //跳出 之後Error Handle 嘻嘻
                 case CASE_UNCONNECTABLE:
                     {
-                        Result.Event.Code = 2;
-                        Result.Event.Message = "Unknown Word wanted to be SYMBOL.";
+                        Result.Event.Code = EVENT_MO_ERROR;
+                        Result.Event.Message = "Unknown word tried to be SYMBOL.";
                         Result.Event.EventPosition = ThisCase.CasePosition;
 
                         Result.MioneCarrier = LayoutsCarrier.Carrier[0].MioneObjectsCarrier;
@@ -673,8 +692,13 @@ CMOFunctionRespondObj CMO(
     // free(CaseCarrierObj.Carrier);
 
     if (LayoutsCarrier.CarrierLen!=1)
-        exit(-2);
+    {
+        Result.Event.Code = EVENT_LAYOUT_ERROR;
+        Result.Event.Message = "Layout not closed properly.";
+        goto end;
+    }
 
+    end:
 
     Result.MioneCarrier = LayoutsCarrier.Carrier[0].MioneObjectsCarrier;
 

@@ -536,7 +536,80 @@ COMPUTATIONRespondObj COMPUTATION(COMPUTATIONRequestObj input)
 
                             break;
                         }
-                        default:break;
+                        case SYMBOL_GREATER_THAN:
+                        {
+                             if (OrderOfOperations < 3)
+                            {
+                                LowestRequestedOrder = _min(LowestRequestedOrder, 3);
+                                continue;
+                            }
+                            if (OrderOfOperations > 3) continue;
+
+                            if (!(i - 1 >= 0 && i + 1 <= PackSize - 1))
+                                exit(PackSize);
+
+                            const ValueObj Value1 = Pack[i - 1].ObjType == VALUE ? Pack[i - 1].Value : ReturnVariablePtrFromLink(*Pack[i - 1].VariableLinkPtr)->Value;
+                            const ValueObj Value2 = Pack[i + 1].ObjType == VALUE ? Pack[i + 1].Value : ReturnVariablePtrFromLink(*Pack[i + 1].VariableLinkPtr)->Value;
+
+                            if (Value1.ValueType != VALUE_NUMBER_TYPE || Value2.ValueType != VALUE_NUMBER_TYPE)
+                                exit(5);
+
+                            FrontIndex = i - 2;
+                            BackIndex = i + 2;
+
+                            Output.CarrierLen = 1;
+                            Output.Carrier = malloc(sizeof(MioneObj));
+                            *Output.Carrier = (MioneObj){
+                                .VariableLinkPtr = Pack[i].VariableLinkPtr,
+                                .MioneObjectPosition = Pack[i].MioneObjectPosition,
+                                .ObjType = VALUE,
+                                .Value = (ValueObj){
+                                    .ValueType = VALUE_DB_TYPE,
+                                    .db = (char) (Value1.Number > Value2.Number)
+                                },
+                            };
+
+                            break;
+                        }
+                        case SYMBOL_LESS_THAN:
+                            {
+                                if (OrderOfOperations < 3)
+                                {
+                                    LowestRequestedOrder = _min(LowestRequestedOrder, 3);
+                                    continue;
+                                }
+                                if (OrderOfOperations > 3) continue;
+
+                                if (!(i - 1 >= 0 && i + 1 <= PackSize - 1))
+                                    exit(5);
+
+                                const ValueObj Value1 = Pack[i - 1].ObjType == VALUE ? Pack[i - 1].Value : ReturnVariablePtrFromLink(*Pack[i - 1].VariableLinkPtr)->Value;
+                                const ValueObj Value2 = Pack[i + 1].ObjType == VALUE ? Pack[i + 1].Value : ReturnVariablePtrFromLink(*Pack[i + 1].VariableLinkPtr)->Value;
+
+                                if (Value1.ValueType != VALUE_NUMBER_TYPE || Value2.ValueType != VALUE_NUMBER_TYPE)
+                                    exit(5);
+
+                                FrontIndex = i - 2;
+                                BackIndex = i + 2;
+
+                                Output.CarrierLen = 1;
+                                Output.Carrier = malloc(sizeof(MioneObj));
+                                *Output.Carrier = (MioneObj){
+                                    .VariableLinkPtr = Pack[i].VariableLinkPtr,
+                                    .MioneObjectPosition = Pack[i].MioneObjectPosition,
+                                    .ObjType = VALUE,
+                                    .Value = (ValueObj){
+                                        .ValueType = VALUE_DB_TYPE,
+                                        .db = (char) (Value1.Number < Value2.Number)
+                                    },
+                                };
+
+                                break;
+                            }
+                        default:
+                            printf("unexpected symbols appeared. :<\n");
+                            exit(5);
+                            ;
                         }
 
 
