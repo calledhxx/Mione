@@ -13,6 +13,7 @@ PASSENGERRespondObj PASSENGERS(const PASSENGERRequestObj In)
 
 
     for (unsigned index = 0;index<OriginalObjects.CarrierLen;index++)
+    {
         if (OriginalObjects.Carrier[index].IsIndirect)
         {
             const WeldFunctionRespondObj Welded = SUBJECT(&(WeldFunctionRequestObj){
@@ -35,6 +36,9 @@ PASSENGERRespondObj PASSENGERS(const PASSENGERRequestObj In)
                 };
         }else
             result.MioneCarrier.Carrier[index] = OriginalObjects.Carrier[index].Direct;
+
+    }
+
 
     return result;
 }

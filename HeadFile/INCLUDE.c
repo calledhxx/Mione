@@ -33,6 +33,7 @@ HeadFunctionRespondObj INCLUDE(const HeadFunctionRequestObj * HeadCallObjectPoin
                             .EventTemplate = HeadCallObject.EventTemplate
                         }).ValueCarrier;
 
+
                 break;
             }
         case PROMPT:
@@ -69,6 +70,7 @@ HeadFunctionRespondObj INCLUDE(const HeadFunctionRequestObj * HeadCallObjectPoin
 
         FILE * File = fopen(HeadSuffix.Carrier[0].String,"r");
 
+
         if (File == NULL)
             exit(-8);
 
@@ -98,6 +100,7 @@ HeadFunctionRespondObj INCLUDE(const HeadFunctionRequestObj * HeadCallObjectPoin
 
         for (unsigned i = 0; i < len ; i++)
             AsPromptSuffix.Carrier[i]->Value = IMPLEMENTReturn.ReturnValues.Carrier[i];
+
     }
 
     return Result;

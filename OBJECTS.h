@@ -57,6 +57,7 @@ enum
     EVENT_SUPER_CHAR_ERROR,
     EVENT_MO_ERROR, //Mione Object Error
     EVENT_LAYOUT_ERROR,
+    EVENT_COMPUTATION_ERROR,
     EVENT_HEAD_SUFFIX_ERROR,
     EVENT_PROMPT_SUFFIX_ERROR,
     EVENT_TRAIN_ERROR,
@@ -473,7 +474,7 @@ typedef struct _ExternalLibraryRespondObject
 typedef struct _ExternalLibraryRequestObject
 {
     ValueObjCarrier ValueCarrier;
-    EventObj Event;
+    EventObj EventTemplate;
 } ExternalLibraryRequestObj;
 
 typedef struct _CONTAINERRequestObject

@@ -103,12 +103,14 @@ HeadFunctionRespondObj ENTER(const HeadFunctionRequestObj * HeadCallObjectPointe
                     HeadSuffix.Carrier[0].String
                 );
 
-        if (EntranceAddress)
-            EntranceAddress((ExternalLibraryRequestObj){
-                .ValueCarrier = RequestPromptSuffix
-            });
-        else
+        if (!EntranceAddress)
             exit(-507);
+
+        ExternalLibraryRespondObj Final = EntranceAddress((ExternalLibraryRequestObj){
+               .ValueCarrier = RequestPromptSuffix
+           });
+
+        Result.ReturnValues = Final.ValueCarrier;
 
     }else exit(-154);
 

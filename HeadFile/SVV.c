@@ -37,8 +37,6 @@ HeadFunctionRespondObj SVV(const HeadFunctionRequestObj * HeadCallObjectPointer)
                     .EventTemplate = HeadCallObject.EventTemplate
                 }).ValueCarrier;
 
-                printf("%f\n",RESOURCEHeadSuffix.Carrier[0].Number);
-
                 break;
             }
         case PROMPT:

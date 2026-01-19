@@ -449,23 +449,54 @@ COMPUTATIONRespondObj COMPUTATION(COMPUTATIONRequestObj input)
                             const ValueObj Value1 = Pack[i - 1].ObjType == VALUE ? Pack[i - 1].Value : ReturnVariablePtrFromLink(*Pack[i - 1].VariableLinkPtr)->Value;
                             const ValueObj Value2 = Pack[i + 1].ObjType == VALUE ? Pack[i + 1].Value : ReturnVariablePtrFromLink(*Pack[i + 1].VariableLinkPtr)->Value;
 
-                            if (Value1.ValueType != VALUE_NUMBER_TYPE || Value2.ValueType != VALUE_NUMBER_TYPE)
-                                exit(5);
+                            if (Value1.ValueType == VALUE_NUMBER_TYPE || Value2.ValueType == VALUE_NUMBER_TYPE)
+                            {
+                                FrontIndex = i - 2;
+                                BackIndex = i + 2;
 
-                            FrontIndex = i - 2;
-                            BackIndex = i + 2;
+                                Output.CarrierLen = 1;
+                                Output.Carrier = malloc(sizeof(MioneObj));
+                                *Output.Carrier = (MioneObj){
+                                    .VariableLinkPtr = Pack[i].VariableLinkPtr,
+                                    .MioneObjectPosition = Pack[i].MioneObjectPosition,
+                                    .ObjType = VALUE,
+                                    .Value = (ValueObj){
+                                        .ValueType = VALUE_NUMBER_TYPE,
+                                        .Number = Value1.Number + Value2.Number
+                                    },
+                                };
+                            }
+                            else if (Value1.ValueType == VALUE_STRING_TYPE || Value2.ValueType == VALUE_STRING_TYPE)
+                            {
+                                FrontIndex = i - 2;
+                                BackIndex = i + 2;
 
-                            Output.CarrierLen = 1;
-                            Output.Carrier = malloc(sizeof(MioneObj));
-                            *Output.Carrier = (MioneObj){
-                                .VariableLinkPtr = Pack[i].VariableLinkPtr,
-                                .MioneObjectPosition = Pack[i].MioneObjectPosition,
-                                .ObjType = VALUE,
-                                .Value = (ValueObj){
-                                    .ValueType = VALUE_NUMBER_TYPE,
-                                    .Number = Value1.Number + Value2.Number
-                                },
-                            };
+                                char * newStr = malloc(strlen(Value1.String) + strlen(Value2.String) + 1);
+                                memcpy(newStr, Value1.String, strlen(Value1.String));
+                                memcpy(newStr + strlen(Value1.String), Value2.String, strlen(Value2.String));
+                                newStr[strlen(Value1.String) + strlen(Value2.String)] = 0;
+
+                                Output.CarrierLen = 1;
+                                Output.Carrier = malloc(sizeof(MioneObj));
+                                *Output.Carrier = (MioneObj){
+                                    .VariableLinkPtr = Pack[i].VariableLinkPtr,
+                                    .MioneObjectPosition = Pack[i].MioneObjectPosition,
+                                    .ObjType = VALUE,
+                                    .Value = (ValueObj){
+                                        .ValueType = VALUE_STRING_TYPE,
+                                        .String = newStr
+                                    },
+                                };
+                            }else
+                            {
+                                Event.Code = EVENT_COMPUTATION_ERROR;
+                                Event.Message = "Value Type was not supported to `+`";
+                                Event.EventPosition = Pack[i].MioneObjectPosition;
+
+                                goto end;
+                            }
+
+
 
                             break;
                         }
@@ -606,8 +637,30 @@ COMPUTATIONRespondObj COMPUTATION(COMPUTATIONRequestObj input)
 
                                 break;
                             }
+                        case SYMBOL_COMMA:
+                            {
+                                if (OrderOfOperations < 4)
+                                {
+                                    LowestRequestedOrder = _min(LowestRequestedOrder, 4);
+                                    continue;
+                                }
+                                if (OrderOfOperations > 4) continue;
+
+                                if (!(i - 1 >= 0 && i + 1 <= PackSize - 1))
+                                    exit(5);
+
+                                FrontIndex = i - 2;
+                                BackIndex = i + 2;
+
+                                Output.CarrierLen = 2;
+                                Output.Carrier = malloc(sizeof(MioneObj) * 2);
+                                Output.Carrier[0] = Pack[i - 1];
+                                Output.Carrier[1] = Pack[i + 1];
+
+                                break;
+                            }
                         default:
-                            printf("unexpected symbols appeared. :<\n");
+                            printf("unexpected symbols appeared. %d :<\n",Pack[i].Symbol.Identification);
                             exit(5);
                             ;
                         }
@@ -737,8 +790,11 @@ COMPUTATIONRespondObj COMPUTATION(COMPUTATIONRequestObj input)
         free(inBracket);
 
     if (BracketCur)
-        exit(3);
+    {
+        //todo
+    }
 
+    end:
 
     return (COMPUTATIONRespondObj){
         .MioneCarrier = (MioneObjCarrier){

@@ -44,6 +44,7 @@ void MainEventHandler(const EventObj Event)
             break;
         }
     case EVENT_LAYOUT_ERROR:
+    case EVENT_COMPUTATION_ERROR:
         {
             printf(
                  "%s:%d:%d~%d:%d %d \"%s\"",

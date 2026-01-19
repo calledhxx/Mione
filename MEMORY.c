@@ -44,7 +44,7 @@ void CreateLine(void)
 
     LinePointerList[LinePointerListLength - 1] = malloc(sizeof(line_t));
     LinePointerList[LinePointerListLength - 1]->units = AlignedMalloc(
-        alignof(block_t),
+        sizeof(block_t),
         1048576,
         &LinePointerList[LinePointerListLength - 1]->originalPointerOfUnits
         );

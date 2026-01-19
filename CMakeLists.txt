@@ -48,6 +48,4 @@ add_executable(Mione
         Passengers.h
         MEMORY.h
         MEMORY.c
-        HeadFile/OUT.h
-        HeadFile/OUT.c
 )

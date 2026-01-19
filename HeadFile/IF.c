@@ -117,7 +117,7 @@ HeadFunctionRespondObj IF(const HeadFunctionRequestObj * HeadCallObjectPointer)
         }
     }
 
-    if (!(Registration & 256))
+    if (!(Registration & 1<<(PROMPT_THEN-1)))
     {
         Result.Event.Code = EVENT_TRAIN_ERROR;
         Result.Event.Message = "Meaningless or incomprehensible Trian.";
@@ -126,17 +126,22 @@ HeadFunctionRespondObj IF(const HeadFunctionRequestObj * HeadCallObjectPointer)
         goto end;
     }
 
-    const AreaObj ThenRange = ThenPromptSuffix.Carrier[0].Area;
-    const AreaObj ElseRange = ElsePromptSuffix.Carrier[0].Area;
 
-    const IMPLEMENTFunctionRespondObj IMPLEMENTReturn =
-        IMPLEMENT((IMPLEMENTFunctionRequestObj){
-            .Built = HeadSuffix.Carrier[0].ValueType == VALUE_DB_TYPE && HeadSuffix.Carrier[0].db == 0 ?
-                *ElseRange.TrainObjCarrierPointer :
-                *ThenRange.TrainObjCarrierPointer
-            ,
-            .EventTemplate = HeadCallObject.EventTemplate,
-        });
+    IMPLEMENTFunctionRequestObj Final = (IMPLEMENTFunctionRequestObj){
+        .EventTemplate = HeadCallObject.EventTemplate
+    };
+
+    if (HeadSuffix.Carrier[0].ValueType == VALUE_DB_TYPE && HeadSuffix.Carrier[0].db == 0)
+    {
+        if (Registration & 1<<(PROMPT_ELSE-1))
+            Final.Built = *ElsePromptSuffix.Carrier[0].Area.TrainObjCarrierPointer;
+        else
+            goto end;
+    }
+    else
+        Final.Built = *ThenPromptSuffix.Carrier[0].Area.TrainObjCarrierPointer;
+
+    const IMPLEMENTFunctionRespondObj IMPLEMENTReturn =IMPLEMENT(Final);
 
     MainEventHandler(IMPLEMENTReturn.Event);
 

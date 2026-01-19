@@ -21,7 +21,7 @@ int main(const int OptionsSize,char **Options)
     // Allocate(0,0);
 
     ScopeObj MainScope = {0};
-    const char FileAddress[] = "../index.mio";
+    const char FileAddress[] = "./index.mio";
 
     FILE *f = fopen(FileAddress, "r"); //never read binary again...
 

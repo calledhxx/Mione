@@ -1,8 +1,7 @@
-set x = 10;
-set y = 10;
+include "D://Mione File/Mione Module/std/std.mio" as print,input
 
-if x > 5 then range
-    x
-end else range
-    y
-end
+set x = input()
+set y = input()
+set z = print(x+y)
+
+

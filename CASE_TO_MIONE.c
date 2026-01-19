@@ -597,11 +597,12 @@ CMOFunctionRespondObj CMO(
                 case CASE_DOUBLE_STRING: //配對成 Value 的String
                 case CASE_SINGLE_STRING:
                     {
+
                         pushMioneObjectIntoLayout(&LayoutsCarrier.Carrier[LayoutsCarrier.CarrierLen - 1], (MioneObj){
                             .ObjType = VALUE,
                             .PointerOfScope = ScopePointer,
                             .Value = (ValueObj){
-                                .String = ThisCase.ObjName,
+                                .String = memcpy(malloc(sizeof(char) * (strlen(ThisCase.ObjName) + 1)),ThisCase.ObjName,sizeof(char) * (strlen(ThisCase.ObjName) + 1)),
                                 .ValueType = VALUE_STRING_TYPE,
                             },
                             .MioneObjectPosition = ThisCase.CasePosition,
