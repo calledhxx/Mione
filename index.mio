@@ -1,7 +1,20 @@
 include "D://Mione File/Mione Module/std/std.mio" as print,input
 
-set x = input()
-set y = input()
-set z = print(x+y)
+// 取得係數
+set a = number input()
+set b = number input()
+set c = number input()
 
+// 計算判別式
+set d = b*b - 4*a*c
 
+// 判斷結果
+if d > 0 then range
+    print("Two real solutions")
+end else range
+    if d == 0 then range
+        print("One real solution")
+    end else range
+        print("No real solutions")
+    end
+end

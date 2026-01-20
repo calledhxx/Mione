@@ -124,6 +124,27 @@ SymbolObjCarrier ReturnSymbolList()
             .SymbolCarry =
                  SC_AfterVariableOrValue | SC_BeforeVariableOrValue,
         },
+
+        (SymbolObj){
+            .Name = "number",
+            .Identification = SYMBOL_NUMBER,
+            .SymbolCarry =
+                 SC_AfterVariableOrValue | SC_BeforeVariableOrValue,
+        },
+
+        (SymbolObj){
+            .Name = ">=",
+            .Identification = SYMBOL_GTE,
+            .SymbolCarry =
+                 SC_AfterVariableOrValue | SC_BeforeVariableOrValue,
+        },
+
+        (SymbolObj){
+            .Name = "<=",
+            .Identification = SYMBOL_LTE,
+            .SymbolCarry =
+                 SC_AfterVariableOrValue | SC_BeforeVariableOrValue,
+        },
 };
 
     SymbolObjCarrier result = {0};

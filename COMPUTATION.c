@@ -115,10 +115,8 @@ COMPUTATIONRespondObj COMPUTATION(COMPUTATIONRequestObj input)
                                             exit(5);
                                         }
                                     }
-
-
                                 }
-                                else exit(nearByValue.ValueType);
+                                else exit(3);
 
                             }
                             else
@@ -449,13 +447,14 @@ COMPUTATIONRespondObj COMPUTATION(COMPUTATIONRequestObj input)
                             const ValueObj Value1 = Pack[i - 1].ObjType == VALUE ? Pack[i - 1].Value : ReturnVariablePtrFromLink(*Pack[i - 1].VariableLinkPtr)->Value;
                             const ValueObj Value2 = Pack[i + 1].ObjType == VALUE ? Pack[i + 1].Value : ReturnVariablePtrFromLink(*Pack[i + 1].VariableLinkPtr)->Value;
 
-                            if (Value1.ValueType == VALUE_NUMBER_TYPE || Value2.ValueType == VALUE_NUMBER_TYPE)
-                            {
+                                Output.CarrierLen = 1;
+                                Output.Carrier = malloc(sizeof(MioneObj));
+
                                 FrontIndex = i - 2;
                                 BackIndex = i + 2;
 
-                                Output.CarrierLen = 1;
-                                Output.Carrier = malloc(sizeof(MioneObj));
+                            if (Value1.ValueType == VALUE_NUMBER_TYPE || Value2.ValueType == VALUE_NUMBER_TYPE)
+                            {
                                 *Output.Carrier = (MioneObj){
                                     .VariableLinkPtr = Pack[i].VariableLinkPtr,
                                     .MioneObjectPosition = Pack[i].MioneObjectPosition,
@@ -468,16 +467,12 @@ COMPUTATIONRespondObj COMPUTATION(COMPUTATIONRequestObj input)
                             }
                             else if (Value1.ValueType == VALUE_STRING_TYPE || Value2.ValueType == VALUE_STRING_TYPE)
                             {
-                                FrontIndex = i - 2;
-                                BackIndex = i + 2;
-
                                 char * newStr = malloc(strlen(Value1.String) + strlen(Value2.String) + 1);
                                 memcpy(newStr, Value1.String, strlen(Value1.String));
                                 memcpy(newStr + strlen(Value1.String), Value2.String, strlen(Value2.String));
                                 newStr[strlen(Value1.String) + strlen(Value2.String)] = 0;
 
-                                Output.CarrierLen = 1;
-                                Output.Carrier = malloc(sizeof(MioneObj));
+
                                 *Output.Carrier = (MioneObj){
                                     .VariableLinkPtr = Pack[i].VariableLinkPtr,
                                     .MioneObjectPosition = Pack[i].MioneObjectPosition,
@@ -550,6 +545,7 @@ COMPUTATIONRespondObj COMPUTATION(COMPUTATIONRequestObj input)
 
                                 FrontIndex = i - 2;
                                 BackIndex = i + 2;
+
 
                                 Output.CarrierLen = 1;
                                 Output.Carrier = malloc(sizeof(MioneObj));
@@ -656,6 +652,229 @@ COMPUTATIONRespondObj COMPUTATION(COMPUTATIONRequestObj input)
                                 Output.Carrier = malloc(sizeof(MioneObj) * 2);
                                 Output.Carrier[0] = Pack[i - 1];
                                 Output.Carrier[1] = Pack[i + 1];
+
+                                break;
+                            }
+                        case SYMBOL_NUMBER:
+                            {
+                                if (OrderOfOperations < 4)
+                                {
+                                    LowestRequestedOrder = _min(LowestRequestedOrder, 4);
+                                    continue;
+                                }
+                                if (OrderOfOperations > 4) continue;
+
+                                if (!(i + 1 <= PackSize - 1))
+                                    exit(5);
+
+                                const ValueObj Value = Pack[i + 1].ObjType == VALUE ? Pack[i + 1].Value : ReturnVariablePtrFromLink(*Pack[i + 1].VariableLinkPtr)->Value;
+
+                                if (Value.ValueType != VALUE_STRING_TYPE)
+                                    exit(5);
+
+                                FrontIndex = -1;
+                                BackIndex = i + 2;
+
+                                Output.CarrierLen = 1;
+                                Output.Carrier = malloc(sizeof(MioneObj));
+                                *Output.Carrier = (MioneObj){
+                                    .VariableLinkPtr = Pack[i].VariableLinkPtr,
+                                    .MioneObjectPosition = Pack[i].MioneObjectPosition,
+                                    .ObjType = VALUE,
+                                    .Value = (ValueObj){
+                                        .ValueType = VALUE_NUMBER_TYPE,
+                                        .Number = atof(Value.String)
+                                    },
+                                };
+
+                                break;
+                            }
+                        case SYMBOL_GTE:
+                            {
+                                if (OrderOfOperations < 3)
+                                {
+                                    LowestRequestedOrder = _min(LowestRequestedOrder, 3);
+                                    continue;
+                                }
+                                if (OrderOfOperations > 3) continue;
+
+                                if (!(i - 1 >= 0 && i + 1 <= PackSize - 1))
+                                    exit(5);
+
+                                const ValueObj Value1 = Pack[i - 1].ObjType == VALUE ? Pack[i - 1].Value : ReturnVariablePtrFromLink(*Pack[i - 1].VariableLinkPtr)->Value;
+                                const ValueObj Value2 = Pack[i + 1].ObjType == VALUE ? Pack[i + 1].Value : ReturnVariablePtrFromLink(*Pack[i + 1].VariableLinkPtr)->Value;
+
+                                if (Value1.ValueType != VALUE_NUMBER_TYPE || Value2.ValueType != VALUE_NUMBER_TYPE)
+                                    exit(5);
+
+                                FrontIndex = i - 2;
+                                BackIndex = i + 2;
+
+                                Output.CarrierLen = 1;
+                                Output.Carrier = malloc(sizeof(MioneObj));
+                                *Output.Carrier = (MioneObj){
+                                    .VariableLinkPtr = Pack[i].VariableLinkPtr,
+                                    .MioneObjectPosition = Pack[i].MioneObjectPosition,
+                                    .ObjType = VALUE,
+                                    .Value = (ValueObj){
+                                        .ValueType = VALUE_DB_TYPE,
+                                        .db = (char) (Value1.Number >= Value2.Number)
+                                    },
+                                };
+
+                                break;
+                            }
+                        case SYMBOL_LTE:
+                            {
+                                if (OrderOfOperations < 3)
+                                {
+                                    LowestRequestedOrder = _min(LowestRequestedOrder, 3);
+                                    continue;
+                                }
+                                if (OrderOfOperations > 3) continue;
+
+                                if (!(i - 1 >= 0 && i + 1 <= PackSize - 1))
+                                    exit(5);
+
+                                const ValueObj Value1 = Pack[i - 1].ObjType == VALUE ? Pack[i - 1].Value : ReturnVariablePtrFromLink(*Pack[i - 1].VariableLinkPtr)->Value;
+                                const ValueObj Value2 = Pack[i + 1].ObjType == VALUE ? Pack[i + 1].Value : ReturnVariablePtrFromLink(*Pack[i + 1].VariableLinkPtr)->Value;
+
+                                if (Value1.ValueType != VALUE_NUMBER_TYPE || Value2.ValueType != VALUE_NUMBER_TYPE)
+                                    exit(5);
+
+                                FrontIndex = i - 2;
+                                BackIndex = i + 2;
+
+                                Output.CarrierLen = 1;
+                                Output.Carrier = malloc(sizeof(MioneObj));
+                                *Output.Carrier = (MioneObj){
+                                    .VariableLinkPtr = Pack[i].VariableLinkPtr,
+                                    .MioneObjectPosition = Pack[i].MioneObjectPosition,
+                                    .ObjType = VALUE,
+                                    .Value = (ValueObj){
+                                        .ValueType = VALUE_DB_TYPE,
+                                        .db = (char) (Value1.Number <= Value2.Number)
+                                    },
+                                };
+
+                                break;
+                            }
+
+                        case SYMBOL_STAR:
+                            {
+                                if (OrderOfOperations < 1)
+                                {
+                                    LowestRequestedOrder = _min(LowestRequestedOrder, 1);
+                                    continue;
+                                }
+                                if (OrderOfOperations > 1) continue;
+
+                                if (!(i - 1 >= 0 && i + 1 <= PackSize - 1))
+                                    exit(PackSize);
+
+                                const ValueObj Value1 = Pack[i - 1].ObjType == VALUE ? Pack[i - 1].Value : ReturnVariablePtrFromLink(*Pack[i - 1].VariableLinkPtr)->Value;
+                                const ValueObj Value2 = Pack[i + 1].ObjType == VALUE ? Pack[i + 1].Value : ReturnVariablePtrFromLink(*Pack[i + 1].VariableLinkPtr)->Value;
+
+                                if (Value1.ValueType != VALUE_NUMBER_TYPE || Value2.ValueType != VALUE_NUMBER_TYPE)
+                                    exit(5);
+
+                                FrontIndex = i - 2;
+                                BackIndex = i + 2;
+
+                                Output.CarrierLen = 1;
+                                Output.Carrier = malloc(sizeof(MioneObj));
+                                *Output.Carrier = (MioneObj){
+                                    .VariableLinkPtr = Pack[i].VariableLinkPtr,
+                                    .MioneObjectPosition = Pack[i].MioneObjectPosition,
+                                    .ObjType = VALUE,
+                                    .Value = (ValueObj){
+                                        .ValueType = VALUE_NUMBER_TYPE,
+                                        .Number = Value1.Number * Value2.Number
+                                    },
+                                };
+
+                                break;
+                            }
+                        case SYMBOL_SLASH:
+                            {
+                                if (OrderOfOperations < 1)
+                                {
+                                    LowestRequestedOrder = _min(LowestRequestedOrder, 1);
+                                    continue;
+                                }
+                                if (OrderOfOperations > 1) continue;
+
+                                if (!(i - 1 >= 0 && i + 1 <= PackSize - 1))
+                                    exit(PackSize);
+
+                                const ValueObj Value1 = Pack[i - 1].ObjType == VALUE ? Pack[i - 1].Value : ReturnVariablePtrFromLink(*Pack[i - 1].VariableLinkPtr)->Value;
+                                const ValueObj Value2 = Pack[i + 1].ObjType == VALUE ? Pack[i + 1].Value : ReturnVariablePtrFromLink(*Pack[i + 1].VariableLinkPtr)->Value;
+
+                                if (Value1.ValueType != VALUE_NUMBER_TYPE || Value2.ValueType != VALUE_NUMBER_TYPE)
+                                    exit(5);
+
+                                FrontIndex = i - 2;
+                                BackIndex = i + 2;
+
+                                Output.CarrierLen = 1;
+                                Output.Carrier = malloc(sizeof(MioneObj));
+                                *Output.Carrier = (MioneObj){
+                                    .VariableLinkPtr = Pack[i].VariableLinkPtr,
+                                    .MioneObjectPosition = Pack[i].MioneObjectPosition,
+                                    .ObjType = VALUE,
+                                    .Value = (ValueObj){
+                                        .ValueType = VALUE_NUMBER_TYPE,
+                                        .Number = Value1.Number / Value2.Number
+                                    },
+                                };
+
+                                break;
+                            }
+                        case SYMBOL_IS:
+                            {
+                                if (OrderOfOperations < 3)
+                                {
+                                    LowestRequestedOrder = _min(LowestRequestedOrder, 3);
+                                    continue;
+                                }
+                                if (OrderOfOperations > 3) continue;
+
+                                if (!(i - 1 >= 0 && i + 1 <= PackSize - 1))
+                                    exit(PackSize);
+
+                                const ValueObj Value1 = Pack[i - 1].ObjType == VALUE ? Pack[i - 1].Value : ReturnVariablePtrFromLink(*Pack[i - 1].VariableLinkPtr)->Value;
+                                const ValueObj Value2 = Pack[i + 1].ObjType == VALUE ? Pack[i + 1].Value : ReturnVariablePtrFromLink(*Pack[i + 1].VariableLinkPtr)->Value;
+
+                                Output.CarrierLen = 1;
+                                Output.Carrier = malloc(sizeof(MioneObj));
+
+
+                                if (Value1.ValueType == VALUE_NUMBER_TYPE || Value2.ValueType == VALUE_NUMBER_TYPE)
+                                {
+                                    *Output.Carrier = (MioneObj){
+                                        .VariableLinkPtr = Pack[i].VariableLinkPtr,
+                                        .MioneObjectPosition = Pack[i].MioneObjectPosition,
+                                        .ObjType = VALUE,
+                                        .Value = (ValueObj){
+                                            .ValueType = VALUE_DB_TYPE,
+                                            .db = (char)(Value1.Number == Value2.Number)
+                                        },
+                                    };
+                                }else if (Value1.ValueType == VALUE_STRING_TYPE || Value2.ValueType == VALUE_STRING_TYPE)
+                                {
+                                    *Output.Carrier = (MioneObj){
+                                        .VariableLinkPtr = Pack[i].VariableLinkPtr,
+                                        .MioneObjectPosition = Pack[i].MioneObjectPosition,
+                                        .ObjType = VALUE,
+                                        .Value = (ValueObj){
+                                            .ValueType = VALUE_DB_TYPE,
+                                            .db = (char)(strcmp(Value1.String,Value2.String) == 0)
+                                        },
+                                    };
+                                }
+
+                                FrontIndex = i - 2;
+                                BackIndex = i + 2;
 
                                 break;
                             }

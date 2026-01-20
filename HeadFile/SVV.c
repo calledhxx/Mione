@@ -65,5 +65,6 @@ HeadFunctionRespondObj SVV(const HeadFunctionRequestObj * HeadCallObjectPointer)
         default: exit(3);
         }
     }
+
     return (HeadFunctionRespondObj){0};
 }

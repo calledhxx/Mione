@@ -16,7 +16,9 @@ static const char CanConnectWithAnotherSymbol[] = {
     '/',
     '+',
     '=',
-    '^'
+    '^',
+    '<',
+    '>',
 };
 
 static const char CanNotConnectWithAnotherSymbol[] = {
@@ -31,8 +33,7 @@ static const char CanNotConnectWithAnotherSymbol[] = {
     ',',
     ':',
     '@',
-    '<',
-    '>',
+
 };
 
 int CheckCharType(const char Char)
@@ -55,7 +56,7 @@ int CheckCharType(const char Char)
         if (CanNotConnectWithAnotherSymbol[i] == Char) return CT_UNCONNECTABLE;
 
 
-    if (Char == ' ') return CT_SPACE;
+    if (Char == ' ' || Char == '\t') return CT_SPACE;
 
     if (Char == '\\') return CT_BS;
 
