@@ -13,6 +13,7 @@
 #include "head.h"
 #include "prompt.h"
 #include "symbol.h"
+#include "train.h"
 #include "weld.h"
 
 static const char * const NormalKeyword[] = {
@@ -195,30 +196,13 @@ object_carrier_t word_to_object(
 
                                 current_scope_ptr = current_scope_ptr->parent_scope_ptr;
 
-                                TrainObjCarrier * TrainObjCarrierPtr = malloc(sizeof(TrainObjCarrier));
+                                train_carrier_t train_carrier = object_to_train(LastLayout.object_carrier);
 
-                                const MIONEFunctionRespondObj ToMioneReturn = ToMione((MIONEFunctionRequestObj){
-                                    .MioneCarrier = layout.MioneObjectsCarrier,
-                                    .EventTemplate = input.EventTemplate
-                                });
-
-                                if (ToMioneReturn.Event.Code)
-                                {
-                                    Result.Event = ToMioneReturn.Event;
-                                    goto end;
-                                }
-
-                                *TrainObjCarrierPtr = ToMioneReturn.TrainCarrier;
-
-                                pushMioneObjectIntoLayout(&LayoutsCarrier.Carrier[LayoutsCarrier.CarrierLen - 1],(MioneObj){
-                                    .ObjType = VALUE,
-                                    .PointerOfScope = main_scope_ptr,
-                                    .MioneObjectPosition = ThisCase.CasePosition,
-                                    .Value = (ValueObj){
-                                        .ValueType = layout.LayoutHandler,
-                                        .Area = (AreaObj){
-                                            .TrainObjCarrierPointer = TrainObjCarrierPtr
-                                        }
+                                pushMioneObjectIntoLayout(&layout_carrier.layouts[layout_carrier.layouts_length - 1],(object_t){
+                                    .object_type = OBJECT_VALUE,
+                                    .vv.value = (value_t){
+                                        .value_type = LastLayout.layout_handler == LAYOUT_HANDLER_FUNCTION ? VALUE_FUNCTION : VALUE_RANGE,
+                                        .value.train_carrier = train_carrier
                                     }
                                 });
 
@@ -357,39 +341,21 @@ object_carrier_t word_to_object(
 
                         case 1: // }
                             {
-                                const layout_t layout = popLayoutFromLayoutCarrier(&layout_carrier);
+                                const layout_t LastLayout = popLayoutFromLayoutCarrier(&layout_carrier);
 
-                                if (layout.layout_handler != LAYOUT_HANDLER_TABLE)
+                                if (LastLayout.layout_handler != LAYOUT_HANDLER_TABLE)
                                 {
                                     exit(1);
                                     goto end;
                                 }
 
-                                TrainObjCarrier * TrainObjCarrierPtr = malloc(sizeof(TrainObjCarrier));
+                                train_carrier_t train_carrier = object_to_train(LastLayout.object_carrier);
 
-                                const MIONEFunctionRespondObj ToMioneReturn = ToMione((MIONEFunctionRequestObj){
-                                    .MioneCarrier = layout.MioneObjectsCarrier,
-                                    .EventTemplate = input.EventTemplate
-                                });
-
-                                if (ToMioneReturn.Event.Code)
-                                {
-                                    Result.Event = ToMioneReturn.Event;
-                                    goto end;
-                                }
-
-
-                                *TrainObjCarrierPtr = ToMioneReturn.TrainCarrier;
-
-                                pushMioneObjectIntoLayout(&LayoutsCarrier.Carrier[LayoutsCarrier.CarrierLen - 1],(MioneObj){
-                                    .ObjType = VALUE,
-                                    .PointerOfScope = main_scope_ptr,
-                                    .MioneObjectPosition = ThisCase.CasePosition,
-                                    .Value = (ValueObj){
-                                        .ValueType = layout.LayoutHandler,
-                                        .Table = (TableObj){
-                                            .TrainObjCarrierPointer = TrainObjCarrierPtr
-                                        }
+                                pushMioneObjectIntoLayout(&layout_carrier.layouts[layout_carrier.layouts_length - 1],(object_t){
+                                    .object_type = OBJECT_VALUE,
+                                    .vv.value = (value_t){
+                                        .value_type = LastLayout.layout_handler == LAYOUT_HANDLER_TABLE,
+                                        .value.train_carrier = train_carrier
                                     }
                                 });
 

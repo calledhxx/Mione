@@ -46,4 +46,6 @@ typedef struct train_carrier_s
     unsigned trains_length;
 }train_carrier_t;
 
+train_carrier_t object_to_train(object_carrier_t object_carrier);
+
 #endif //TRAIN_H

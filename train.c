@@ -1,7 +1,6 @@
 #include <stdlib.h>
 
 #include "train.h"
-
 #include "symbol.h"
 
 void pushTrainIntoTrainCarrier(train_carrier_t * const TrainCarrierPtr,const train_t train)
@@ -54,13 +53,17 @@ void endCarriage(train_t * const trainPtr, carriage_t * const carriagePtr)
     *carriagePtr = (carriage_t){0};
 }
 
-train_carrier_t object_to_train(object_carrier_t object_carrier)
+#define TRAIN_STACK_SIZE 16
+
+train_carrier_t object_to_train(object_carrier_t const object_carrier)
 {
     train_carrier_t train_carrier = {0};
 
-    train_t train = {0};
+    train_t train_stack[TRAIN_STACK_SIZE] = {0};
+    train_t * train_stack_top = (train_t*)train_stack+TRAIN_STACK_SIZE;
 
-    carriage_t carriage = {0};
+    carriage_t carriage_stack[TRAIN_STACK_SIZE] = {0};
+    carriage_t * carriage_stack_top = (carriage_t*)carriage_stack+TRAIN_STACK_SIZE;
 
     object_t LastObject = {0};
 
@@ -72,20 +75,28 @@ train_carrier_t object_to_train(object_carrier_t object_carrier)
         {
         case OBJECT_HEAD:
             {
-                endCarriage(&train, &carriage);
-                endTrain(&train_carrier, &train);
+                if (train_stack_top - TRAIN_STACK_SIZE != (train_t*)train_stack)
+                {
+                    train_stack_top = train_stack_top + 1;
+                    carriage_stack_top = carriage_stack_top + 1;
+                }else
+                {
+                    endCarriage(train_stack_top, carriage_stack_top);
+                    endTrain(&train_carrier, train_stack_top);
 
-                carriage.carriage_type = CARRIAGE_HEAD;
-                carriage.conductor = ThisObject.token;
+                    carriage_stack_top->carriage_type = CARRIAGE_HEAD;
+                    carriage_stack_top->conductor = ThisObject.token;
+                }
+
 
                 break;
             }
         case OBJECT_PROMPT:
             {
-                endCarriage(&train, &carriage);
+                endCarriage(train_stack_top, carriage_stack_top);
 
-                carriage.carriage_type = CARRIAGE_BODY;
-                carriage.conductor = ThisObject.token;
+                carriage_stack_top->carriage_type = CARRIAGE_BODY;
+                carriage_stack_top->conductor = ThisObject.token;
 
                 break;
             }
@@ -96,11 +107,17 @@ train_carrier_t object_to_train(object_carrier_t object_carrier)
                 if (LastObject.object_type == OBJECT_VALUE || LastObject.object_type == OBJECT_VARIABLE)
                     if (!(symbol.connect_condition_flag & SYMBOL_CONNECT_CONDITION_FLAG_AFTER_VV))
                     {
-                        endCarriage(&train, &carriage);
-                        endTrain(&train_carrier, &train);
+                        if (train_stack_top - TRAIN_STACK_SIZE != (train_t*)train_stack)
+                        {
+                            train_stack_top = train_stack_top + 1;
+                    carriage_stack_top = carriage_stack_top + 1;
+                        }else{
+                            endCarriage(train_stack_top, carriage_stack_top);
+                            endTrain(&train_carrier, train_stack_top);
 
-                        carriage.carriage_type = CARRIAGE_HEAD;
-                        carriage.conductor = 0; //simple train
+                            carriage_stack_top->carriage_type = CARRIAGE_HEAD;
+                            carriage_stack_top->conductor = 0; //simple train
+                        }
                     }
 
                 if (LastObject.object_type == OBJECT_SYMBOL)
@@ -109,22 +126,34 @@ train_carrier_t object_to_train(object_carrier_t object_carrier)
                         {
                             if (!(symbol.connect_condition_flag & SYMBOL_CONNECT_CONDITION_FLAG_MODESTY))
                             {
-                                endCarriage(&train, &carriage);
-                                endTrain(&train_carrier, &train);
+                                if (train_stack_top - TRAIN_STACK_SIZE != (train_t*)train_stack)
+                                {
+                                    train_stack_top = train_stack_top + 1;
+                    carriage_stack_top = carriage_stack_top + 1;
+                                }else{
+                                    endCarriage(train_stack_top, carriage_stack_top);
+                                    endTrain(&train_carrier, train_stack_top);
 
-                                carriage.carriage_type = CARRIAGE_HEAD;
-                                carriage.conductor = 0; //simple train
+                                    carriage_stack_top->carriage_type = CARRIAGE_HEAD;
+                                    carriage_stack_top->conductor = 0; //simple train
+                                }
                             }
                         }else
                         {
-                            endCarriage(&train, &carriage);
-                            endTrain(&train_carrier, &train);
+                            if (train_stack_top - TRAIN_STACK_SIZE != (train_t*)train_stack)
+                            {
+                                train_stack_top = train_stack_top + 1;
+                    carriage_stack_top = carriage_stack_top + 1;
+                            }else{
+                                endCarriage(train_stack_top, carriage_stack_top);
+                                endTrain(&train_carrier, train_stack_top);
 
-                            carriage.carriage_type = CARRIAGE_HEAD;
-                            carriage.conductor = 0; //simple train
+                                carriage_stack_top->carriage_type = CARRIAGE_HEAD;
+                                carriage_stack_top->conductor = 0; //simple train
+                            }
                         }
 
-                pushPassengerIntoCarriage(&carriage,ThisObject);
+                pushPassengerIntoCarriage(carriage_stack_top,ThisObject);
 
                 break;
             }
@@ -137,28 +166,40 @@ train_carrier_t object_to_train(object_carrier_t object_carrier)
 
                     if (!(symbol.connect_condition_flag & SYMBOL_CONNECT_CONDITION_FLAG_BEFORE_VV))
                     {
-                        endCarriage(&train, &carriage);
-                        endTrain(&train_carrier, &train);
+                        if (train_stack_top - TRAIN_STACK_SIZE != (train_t*)train_stack)
+                        {
+                            train_stack_top = train_stack_top + 1;
+                    carriage_stack_top = carriage_stack_top + 1;
+                        }else{
+                            endCarriage(train_stack_top, carriage_stack_top);
+                            endTrain(&train_carrier, train_stack_top);
 
-                        carriage.carriage_type = CARRIAGE_HEAD;
-                        carriage.conductor = 0; //simple train
+                            carriage_stack_top->carriage_type = CARRIAGE_HEAD;
+                            carriage_stack_top->conductor = 0; //simple train
+                        }
                     }
                 }
-                pushPassengerIntoCarriage(&carriage,ThisObject);
+                pushPassengerIntoCarriage(carriage_stack_top,ThisObject);
 
                 break;
             }
         case OBJECT_WELD:
             {
+                train_stack_top = train_stack_top - 1;
+                carriage_stack_top = carriage_stack_top - 1;
+
                 break;
             }
         default:
             {
-                endCarriage(&train, &carriage);
-                endTrain(&train_carrier, &train);
-
-                carriage.carriage_type = CARRIAGE_HEAD;
-                carriage.conductor = ThisObject.token;
+                if (train_stack_top - TRAIN_STACK_SIZE != (train_t*)train_stack)
+                {
+                    train_stack_top = train_stack_top + 1;
+                    carriage_stack_top = carriage_stack_top + 1;
+                }else{
+                    endCarriage(train_stack_top, carriage_stack_top);
+                    endTrain(&train_carrier, train_stack_top);
+                }
             }
         }
 

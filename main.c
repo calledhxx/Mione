@@ -11,12 +11,9 @@ int main(void)
 
     word_carrier_t const WordCarrier = stream_to_word(f,EOF);
 
-    for (unsigned i = 0;i < WordCarrier.words_length;i++)
-    {
-        printf("word %u : %s (type %u)\n",i,WordCarrier.words[i].word,WordCarrier.words[i].word_type);
-    }
+    object_carrier_t const ObjectCarrier = word_to_object(WordCarrier);
 
-    object_carrier_t ObjectCarrier;
+    train_carrier_t const TrainCarrier = object_to_train(ObjectCarrier);
 
     CreateLine(); //start using Allocate
 

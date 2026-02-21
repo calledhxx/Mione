@@ -1,6 +1,8 @@
 #ifndef VALUE_H
 #define VALUE_H
 
+#include "train.h"
+
 enum value_type_e
 {
     VALUE_NONE,
@@ -21,6 +23,7 @@ typedef struct value_s
         char* string;
         double number;
         char boolean;
+        train_carrier_t train_carrier;
     } value;
 } value_t;
 
