@@ -1,7 +1,6 @@
 #include <stdlib.h>
 
-#include "train.h"
-#include "symbol.h"
+#include "main.h"
 
 void pushTrainIntoTrainCarrier(train_carrier_t * const TrainCarrierPtr,const train_t train)
 {

@@ -1,7 +1,6 @@
 #include <string.h>
 
-#include "object.h"
-#include "symbol.h"
+#include "main.h"
 
 static keyword_t SymbolKeywordArray[] = {
     {
@@ -30,11 +29,11 @@ static keyword_t SymbolKeywordArray[] = {
 
 keyword_t * SymbolKeyword = SymbolKeywordArray;
 
-symbol_t token_to_symbol(const enum token_e token)
+symbol_t token_to_symbol(const int token)
 {
     for (unsigned i = 0; i < sizeof(SymbolKeywordArray) / sizeof(keyword_t); i++)
         if (SymbolKeywordArray[i].token == token)
             return *(symbol_t*)SymbolKeywordArray[i].instance;
 
-    return {0};
+    return (symbol_t){0};
 }

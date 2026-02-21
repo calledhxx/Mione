@@ -1,9 +1,6 @@
 #ifndef VARIABLE_H
 #define VARIABLE_H
 
-#include "object.h"
-#include "value.h"
-
 enum variable_link_type_e
 {
     VARIABLE_LINK_NONE,
@@ -43,7 +40,7 @@ typedef struct variable_s
     {
         genuine_variable_t genuine_variable;
         dummy_variable_t dummy_variable;
-    } variable;
+        } variable;
     char is_dummy;
 } variable_t;
 
@@ -53,6 +50,6 @@ typedef struct variable_carrier_s
     unsigned variables_length;
 } variable_carrier_t;
 
-extern variable_link_t find_variable_in_scope(scope_t scope,const char* name,unsigned * scope_depth_butter_ptr);
+extern variable_link_t find_variable_in_scope(void * scopePtr,const char* name,unsigned * scope_depth_butter_ptr);
 
 #endif

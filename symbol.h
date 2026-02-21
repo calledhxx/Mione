@@ -1,7 +1,6 @@
 #ifndef SYMBOL_H
 #define SYMBOL_H
 
-
 extern keyword_t * SymbolKeyword;
 
 enum symbol_connect_condition_flag_e
@@ -19,7 +18,7 @@ typedef struct symbol_s
     enum symbol_connect_condition_flag_e connect_condition_flag;
 } symbol_t;
 
-extern symbol_t token_to_symbol(enum token_e token);
+extern symbol_t token_to_symbol(const int token);
 
 
 #endif

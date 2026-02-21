@@ -1,20 +1,9 @@
-#include "object.h"
-#include "word.h"
-
-//
-// Created by calle on 24-12-28.
-//
-
 #include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
-#include "head.h"
-#include "prompt.h"
-#include "symbol.h"
-#include "train.h"
-#include "weld.h"
+#include "main.h"
 
 static const char * const NormalKeyword[] = {
     "function",
@@ -69,6 +58,8 @@ object_carrier_t word_to_object(
 {
     scope_t * current_scope_ptr = malloc(sizeof(scope_t));
     *current_scope_ptr = (scope_t){0};
+    current_scope_ptr->child_scope_carrier_ptr = malloc(sizeof(scope_carrier_t));
+    *current_scope_ptr->child_scope_carrier_ptr = (scope_carrier_t){0};
 
     layout_carrier_t layout_carrier = {0}; //沒有父級關西，所以不用俄羅斯娃娃法
 
@@ -202,7 +193,7 @@ object_carrier_t word_to_object(
                                     .object_type = OBJECT_VALUE,
                                     .vv.value = (value_t){
                                         .value_type = LastLayout.layout_handler == LAYOUT_HANDLER_FUNCTION ? VALUE_FUNCTION : VALUE_RANGE,
-                                        .value.train_carrier = train_carrier
+                                        .value.train_carrier_ptr = memcpy(malloc(sizeof(train_carrier_t)),&train_carrier,sizeof(train_carrier_t))
                                     }
                                 });
 
@@ -355,7 +346,7 @@ object_carrier_t word_to_object(
                                     .object_type = OBJECT_VALUE,
                                     .vv.value = (value_t){
                                         .value_type = LastLayout.layout_handler == LAYOUT_HANDLER_TABLE,
-                                        .value.train_carrier = train_carrier
+                                        .value.train_carrier_ptr = memcpy(malloc(sizeof(train_carrier_t)),&train_carrier,sizeof(train_carrier_t))
                                     }
                                 });
 
@@ -435,6 +426,25 @@ object_carrier_t word_to_object(
 
                         switch (v_link.variable_link_type)
                         {
+                        case VARIABLE_LINK_NONE:
+                            {
+                                current_scope_ptr->variable_link_carrier.variable_links_length++;
+                                current_scope_ptr->variable_link_carrier.variable_links = realloc(
+                                    current_scope_ptr->variable_link_carrier.variable_links,
+                                current_scope_ptr->variable_link_carrier.variable_links_length * sizeof(variable_link_t)
+                                    );
+                                current_scope_ptr->variable_link_carrier.variable_links[
+                                current_scope_ptr->variable_link_carrier.variable_links_length - 1
+                                    ] = variable.variable.dummy_variable.variable_link =  (variable_link_t){
+                                        .variable_link_type = VARIABLE_LINK_LEADER,
+                                        .toward_variable_ptr = memcpy(malloc(sizeof(variable_t)),&(variable_t){
+                                            .variable.genuine_variable = (genuine_variable_t){
+                                                .name = ThisWord.word,
+                                                .value = (value_t){0}
+                                            }
+                                        },sizeof(variable_t))
+                                    };
+                            }
                         case VARIABLE_LINK_COLEADER:
                         case VARIABLE_LINK_LEADER:
                             {
@@ -446,7 +456,7 @@ object_carrier_t word_to_object(
                                 current_scope_ptr->variable_link_carrier.variable_links[
                                 current_scope_ptr->variable_link_carrier.variable_links_length - 1
                                     ] = variable.variable.dummy_variable.variable_link =  (variable_link_t){
-                                        .variable_link_type = VARIABLE_LINK_FOLLOWER,
+                                        .variable_link_type = v_link.variable_link_type == VARIABLE_LINK_LEADER ? VARIABLE_LINK_COLEADER : VARIABLE_LINK_FOLLOWER,
                                         .toward_variable_link_ptr = memcpy(malloc(sizeof(variable_link_t)),&v_link,sizeof(variable_link_t)),
                                     };
 
@@ -467,6 +477,8 @@ object_carrier_t word_to_object(
                         default:
                             exit(125);
                         }
+
+                        printf("%d\n",v_link.variable_link_type);
 
                         pushMioneObjectIntoLayout(&layout_carrier.layouts[layout_carrier.layouts_length - 1],(object_t){
                            .object_type = OBJECT_VALUE,

@@ -1,7 +1,7 @@
 #ifndef WELD_H
 #define WELD_H
 
-extern keyword_t WeldKeyword[1];
+extern keyword_t * WeldKeyword;
 
 typedef struct weld_s
 {

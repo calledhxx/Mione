@@ -2,8 +2,7 @@
 #include <string.h>
 #include <stdlib.h>
 
-#include "object.h"
-#include "variable.h"
+#include "main.h"
 
 variable_t * variable_chaser(variable_link_t variable_link)
 {
@@ -28,31 +27,32 @@ variable_t * variable_chaser(variable_link_t variable_link)
     }
 }
 
-variable_link_t find_variable_in_scope(scope_t scope,const char* name,unsigned * const scope_depth_butter_ptr)
+variable_link_t find_variable_in_scope(void * const scopePtr,const char* name,unsigned * const scope_depth_butter_ptr)
 {
+    scope_t const * scope_ptr = (scope_t*)scopePtr;
     variable_link_t result = {0};
 
     *scope_depth_butter_ptr = 0;
 
-    while (scope.parent_scope_ptr){
-        for (unsigned i = 0; i < scope.variable_link_carrier.variable_links_length; i++)
-            if (scope.variable_link_carrier.variable_links[i].variable_link_type != VARIABLE_LINK_NONE)
+    while (scope_ptr){
+        for (unsigned i = 0; i < scope_ptr->variable_link_carrier.variable_links_length; i++)
+            if (scope_ptr->variable_link_carrier.variable_links[i].variable_link_type != VARIABLE_LINK_NONE)
             {
-                variable_t const * const variable_ptr  = variable_chaser(scope.variable_link_carrier.variable_links[i]);
+                variable_t const * const variable_ptr  = variable_chaser(scope_ptr->variable_link_carrier.variable_links[i]);
 
                 if (variable_ptr->is_dummy) //這東西要是能被觸發 那天就塌了
                     exit(124);
 
                 if (strcmp(name,variable_ptr->variable.genuine_variable.name) == 0)
                 {
-                    result = scope.variable_link_carrier.variable_links[i];
+                    result = scope_ptr->variable_link_carrier.variable_links[i];
                     goto end;
                 }
             }
 
         (*scope_depth_butter_ptr)++;
 
-        scope = *scope.parent_scope_ptr;
+        scope_ptr = scope_ptr->parent_scope_ptr;
     };
 
     end:

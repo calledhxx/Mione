@@ -3,9 +3,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "word.h"
-#include "memory.h"
-
+#include "main.h"
 
 static const char Connectable[] = {
     '*',

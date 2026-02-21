@@ -1,10 +1,6 @@
 #ifndef OBJECT_H
 #define OBJECT_H
 
-#include "value.h"
-#include "variable.h"
-#include "word.h"
-
 enum object_type_e
 {
     OBJECT_NONE ,
@@ -15,7 +11,6 @@ enum object_type_e
     OBJECT_VALUE,
     OBJECT_WELD,
 };
-
 
 enum token_e
 {
@@ -86,13 +81,6 @@ typedef struct layout_carrier_s
     layout_t * layouts;
     unsigned layouts_length;
 } layout_carrier_t;
-
-typedef struct keyword_s
-{
-    char * name;
-    enum token_e token;
-    void * instance; //ptr of head_t, prompt_t, symbol_t or weld_t
-} keyword_t;
 
 extern object_carrier_t word_to_object(word_carrier_t word_carrier);
 

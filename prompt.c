@@ -1,5 +1,4 @@
-#include "object.h"
-#include "prompt.h"
+#include "main.h"
 
 static  keyword_t PromptKeywordArray[] = {
     {

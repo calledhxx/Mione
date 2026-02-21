@@ -1,11 +1,5 @@
-//
-// Created by calle on 2026/2/18.
-//
-
 #ifndef TRAIN_H
 #define TRAIN_H
-
-#include "object.h"
 
 enum carriage_type_e
 {

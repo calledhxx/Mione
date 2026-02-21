@@ -43,7 +43,14 @@ typedef struct word_carrier_s
     unsigned words_length;
 } word_carrier_t;
 
-word_carrier_t stream_to_word(FILE * F,char END_FLAG);
+typedef struct keyword_s
+{
+    char * name;
+    int token;
+    void * instance; //ptr of head_t, prompt_t, symbol_t or weld_t
+} keyword_t;
+
+extern word_carrier_t stream_to_word(FILE * F,char END_FLAG);
 
 
 #endif

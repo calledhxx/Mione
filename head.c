@@ -1,10 +1,12 @@
-#include "object.h"
-#include "head.h"
+#include "main.h"
 
 static keyword_t HeadKeywordArray[] = {
     {
         .name = "set",
         .token = TOKEN_HEAD_SET,
+        .instance = &(head_t){
+
+        }
     },
 {0}
 };
