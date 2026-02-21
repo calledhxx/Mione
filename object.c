@@ -439,7 +439,11 @@ object_carrier_t word_to_object(
                             variable.is_dummy = 0;
                             variable.variable.genuine_variable = (genuine_variable_t){
                                 .value = (value_t){0},
-                                .name = ThisWord.word
+                                .name = memcpy(
+                                    malloc(strlen(ThisWord.word)+1),
+                                    ThisWord.word,
+                                    strlen(ThisWord.word)+1
+                                    )
                             };
 
                             *variable_link_ptr->toward_variable_ptr = variable;
@@ -551,7 +555,11 @@ object_carrier_t word_to_object(
                             .object_type = OBJECT_VALUE,
                             .vv.value = (value_t){
                                 .value_type = VALUE_STRING,
-                                .value.string = ThisWord.word
+                                .value.string = memcpy(
+                                    malloc(strlen(ThisWord.word)+1),
+                                    ThisWord.word,
+                                    strlen(ThisWord.word)+1
+                                    )
                             },
                         });
 
@@ -581,8 +589,6 @@ object_carrier_t word_to_object(
                 }
             };
         }
-
-        // free(ThisWord.ObjName);
     }
     // free(word_carrier.Carrier);
 
@@ -591,6 +597,7 @@ object_carrier_t word_to_object(
         exit(100);
         goto end;
     }
+
 
     end:
 

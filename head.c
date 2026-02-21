@@ -2,8 +2,10 @@
 
 #include "main.h"
 
-static instruct_carrier_t * set(train_t const train)
+static instruct_carrier_t * set(train_t * const trainPtr)
 {
+    train_t train = *trainPtr;
+
     instruct_carrier_t instruct_carrier = {0};
 
     for (int i = 0; i < train.carriage_carrier.carriages_length; i++)
@@ -66,9 +68,13 @@ static instruct_carrier_t * set(train_t const train)
                 break;
             }
         default:
-            exit(3);
+            exit(ThisCarriage.carriage_type);
         }
     }
+
+    instruct_carrier_t * res = malloc(sizeof(instruct_carrier_t));
+    *res = instruct_carrier;
+    return res;
 }
 
 static keyword_t HeadKeywordArray[] = {

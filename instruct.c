@@ -27,7 +27,7 @@ instruct_carrier_t train_to_instruct(train_carrier_t const train_carrier)
             {
                 head_t const head = token_to_head(ThisTrain.carriage_carrier.carriages[0].conductor);
 
-                instruct_carrier_t const * const head_instruct_carrier =  head.function((void*)&train_carrier);
+                instruct_carrier_t const * const head_instruct_carrier =  head.function(&ThisTrain);
 
                 instruct_carrier.instructs_length += head_instruct_carrier->instructs_length;
                 instruct_carrier.instructs = realloc(
@@ -48,4 +48,7 @@ instruct_carrier_t train_to_instruct(train_carrier_t const train_carrier)
             exit(2);
         }
     }
+
+    return instruct_carrier;
+
 }
