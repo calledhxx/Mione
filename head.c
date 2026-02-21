@@ -33,11 +33,12 @@ static instruct_carrier_t * set(train_t * const trainPtr)
                     {
                         if (ThisCarriage.passengers.objects[0].object_type == OBJECT_VARIABLE)
                         {
+                            ThisCarriage.passengers
                             pushInstructIntoCarrier(
                                     &instruct_carrier,
                                     (instruct_t){
                                         .instruct = INSTRUCT_LOAD_VARIABLE,
-                                        .object = (intptr_t)ThisCarriage.passengers.objects
+                                        .object =
                                     }
                                     );
 

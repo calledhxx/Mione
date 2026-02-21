@@ -487,7 +487,7 @@ word_carrier_t stream_to_word(FILE * F,const char END_FLAG)
                         }
                     case CHAR_UNCONNECTABLE:
                         {
-                            if (ThisChar == '<')
+                            if (ThisChar == '(')
                             {
                                 SuperCharCollect = 1;
                                 break;
@@ -545,7 +545,7 @@ word_carrier_t stream_to_word(FILE * F,const char END_FLAG)
 
                     case CHAR_UNCONNECTABLE:
                         {
-                            if (ThisChar == '>')
+                            if (ThisChar == ')')
                                 SuperCharCollect = 2;
 
                             break;

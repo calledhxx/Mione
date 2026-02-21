@@ -32,14 +32,9 @@ int main(void)
     }
     free(TrainCarrier.trains);
 
-    for (unsigned i = 0; i < InstructCarrier.instructs_length;i++)
-    {
-        instruct_t const ThisInstruct = InstructCarrier.instructs[i];
-
-        printf("instruct: %d, object: %llu\n",ThisInstruct.instruct,ThisInstruct.object);
-    }
-
     CreateLine(); //start using Allocate
+
+
 
     return 0;
 }

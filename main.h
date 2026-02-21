@@ -12,6 +12,7 @@
 
 #include "object.h"
 #include "train.h"
+#include "calculator.h"
 #include "instruct.h"
 
 #include "memory.h"

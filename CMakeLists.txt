@@ -24,4 +24,8 @@ add_executable(New_Mione main.c
         word.h
         instruct.c
         instruct.h
+        run.h
+        run.c
+        calculate.c
+        calculator.h
 )
