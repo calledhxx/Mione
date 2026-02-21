@@ -1,2 +1,6 @@
 set x = subject set x = 100;
 set y = 100;
+
+function
+    y
+end

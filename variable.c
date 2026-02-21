@@ -16,10 +16,7 @@ variable_t * variable_chaser(variable_link_t variable_link)
         case VARIABLE_LINK_COLEADER:
             {
                 if (variable_link.toward_variable_link_ptr)
-                {
-                    printf("%d\n", variable_link.toward_variable_link_ptr->variable_link_type);
                     variable_link = *variable_link.toward_variable_link_ptr;
-                }
                 else
                     return 0;
 
