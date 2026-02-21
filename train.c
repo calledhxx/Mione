@@ -6,6 +6,9 @@
 
 void pushTrainIntoTrainCarrier(train_carrier_t * const TrainCarrierPtr,const train_t train)
 {
+    if (!train.train_type)
+        return;
+
     TrainCarrierPtr->trains_length++;
     TrainCarrierPtr->trains=realloc(TrainCarrierPtr->trains,sizeof(train_t)*TrainCarrierPtr->trains_length);
     TrainCarrierPtr->trains[TrainCarrierPtr->trains_length - 1] = train;
@@ -13,6 +16,9 @@ void pushTrainIntoTrainCarrier(train_carrier_t * const TrainCarrierPtr,const tra
 
 void pushCarriageIntoTrain(train_t * const trainPtr,const carriage_t carriage)
 {
+    if (!carriage.carriage_type)
+        return;
+
     trainPtr->carriage_carrier.carriages_length++;
     trainPtr->carriage_carrier.carriages = realloc(
         trainPtr->carriage_carrier.carriages,
@@ -24,6 +30,9 @@ void pushCarriageIntoTrain(train_t * const trainPtr,const carriage_t carriage)
 
 void pushPassengerIntoCarriage(carriage_t * const carriagePtr,const object_t passenger)
 {
+    if (!(passenger.token || passenger.object_type))
+        return;
+
     carriagePtr->passengers.objects_length++;
     carriagePtr->passengers.objects = realloc(
         carriagePtr->passengers.objects,
@@ -85,11 +94,7 @@ train_carrier_t object_to_train(object_carrier_t object_carrier)
                 symbol_t const symbol = token_to_symbol(ThisObject.token);
 
                 if (LastObject.object_type == OBJECT_VALUE || LastObject.object_type == OBJECT_VARIABLE)
-                    if (symbol.connect_condition_flag & SYMBOL_CONNECT_CONDITION_FLAG_AFTER_VV)
-                    {
-
-                    }
-                    else
+                    if (!(symbol.connect_condition_flag & SYMBOL_CONNECT_CONDITION_FLAG_AFTER_VV))
                     {
                         endCarriage(&train, &carriage);
                         endTrain(&train_carrier, &train);
@@ -98,18 +103,47 @@ train_carrier_t object_to_train(object_carrier_t object_carrier)
                         carriage.conductor = 0; //simple train
                     }
 
+                if (LastObject.object_type == OBJECT_SYMBOL)
+                    if (!(symbol.connect_condition_flag & SYMBOL_CONNECT_CONDITION_FLAG_AFTER_SYMBOL))
+                        if (token_to_symbol(LastObject.token).connect_condition_flag & SYMBOL_CONNECT_CONDITION_FLAG_BEFORE_SYMBOL)
+                        {
+                            if (!(symbol.connect_condition_flag & SYMBOL_CONNECT_CONDITION_FLAG_MODESTY))
+                            {
+                                endCarriage(&train, &carriage);
+                                endTrain(&train_carrier, &train);
+
+                                carriage.carriage_type = CARRIAGE_HEAD;
+                                carriage.conductor = 0; //simple train
+                            }
+                        }else
+                        {
+                            endCarriage(&train, &carriage);
+                            endTrain(&train_carrier, &train);
+
+                            carriage.carriage_type = CARRIAGE_HEAD;
+                            carriage.conductor = 0; //simple train
+                        }
+
                 pushPassengerIntoCarriage(&carriage,ThisObject);
 
                 break;
             }
         case OBJECT_VARIABLE:
-            {
-                pushPassengerIntoCarriage(&carriage,ThisObject);
-
-                break;
-            }
         case OBJECT_VALUE:
             {
+                if (LastObject.object_type == OBJECT_SYMBOL)
+                {
+                    symbol_t const symbol = token_to_symbol(LastObject.token);
+
+                    if (!(symbol.connect_condition_flag & SYMBOL_CONNECT_CONDITION_FLAG_BEFORE_VV))
+                    {
+                        endCarriage(&train, &carriage);
+                        endTrain(&train_carrier, &train);
+
+                        carriage.carriage_type = CARRIAGE_HEAD;
+                        carriage.conductor = 0; //simple train
+                    }
+                }
                 pushPassengerIntoCarriage(&carriage,ThisObject);
 
                 break;
@@ -119,7 +153,13 @@ train_carrier_t object_to_train(object_carrier_t object_carrier)
                 break;
             }
         default:
-            exit(124);
+            {
+                endCarriage(&train, &carriage);
+                endTrain(&train_carrier, &train);
+
+                carriage.carriage_type = CARRIAGE_HEAD;
+                carriage.conductor = ThisObject.token;
+            }
         }
 
         LastObject = ThisObject;
