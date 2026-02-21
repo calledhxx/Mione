@@ -10,8 +10,6 @@ void pushTrainIntoTrainCarrier(train_carrier_t * const TrainCarrierPtr,const tra
 
     TrainCarrierPtr->trains_length++;
 
-    printf("aaa %d\n",TrainCarrierPtr->trains_length);
-
     TrainCarrierPtr->trains = realloc(
         TrainCarrierPtr->trains,
         sizeof(train_t)*TrainCarrierPtr->trains_length
@@ -113,6 +111,7 @@ train_carrier_t object_to_train(object_carrier_t const object_carrier)
                 symbol_t const symbol = token_to_symbol(ThisObject.token);
 
                 if (LastObject.object_type == OBJECT_VALUE || LastObject.object_type == OBJECT_VARIABLE)
+                {
                     if (!(symbol.connect_condition_flag & SYMBOL_CONNECT_CONDITION_FLAG_AFTER_VV))
                     {
                         if (train_stack_top - TRAIN_STACK_SIZE + 1 != (train_t*)train_stack)
@@ -129,7 +128,8 @@ train_carrier_t object_to_train(object_carrier_t const object_carrier)
                             carriage_stack_top->conductor = 0; //simple train
                         }
                     }
-
+                }
+                else
                 if (LastObject.object_type == OBJECT_SYMBOL)
                     if (!(symbol.connect_condition_flag & SYMBOL_CONNECT_CONDITION_FLAG_AFTER_SYMBOL))
                         if (token_to_symbol(LastObject.token).connect_condition_flag & SYMBOL_CONNECT_CONDITION_FLAG_BEFORE_SYMBOL)
@@ -195,12 +195,30 @@ train_carrier_t object_to_train(object_carrier_t const object_carrier)
                         }
                     }
                 }
+                else
+                if (LastObject.object_type == OBJECT_VALUE || LastObject.object_type == OBJECT_VARIABLE)
+                    if (train_stack_top - TRAIN_STACK_SIZE + 1 != (train_t*)train_stack)
+                    {
+                        train_stack_top = train_stack_top + 1;
+                        carriage_stack_top = carriage_stack_top + 1;
+                    }else{
+                        endCarriage(train_stack_top, carriage_stack_top);
+                        endTrain(&train_carrier, train_stack_top);
+
+                        train_stack_top->train_type = TRAIN_SIMPLE;
+
+                        carriage_stack_top->carriage_type = CARRIAGE_HEAD;
+                        carriage_stack_top->conductor = 0; //simple train
+                    }
                 pushPassengerIntoCarriage(carriage_stack_top,ThisObject);
 
                 break;
             }
         case OBJECT_WELD:
             {
+                if (train_stack_top == (train_t*)train_stack)
+                    exit(1);
+
                 train_stack_top = train_stack_top - 1;
                 carriage_stack_top = carriage_stack_top - 1;
 

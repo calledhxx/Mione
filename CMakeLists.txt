@@ -22,4 +22,6 @@ add_executable(New_Mione main.c
         weld.c
         weld.h
         word.h
+        instruct.c
+        instruct.h
 )
