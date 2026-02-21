@@ -478,10 +478,8 @@ object_carrier_t word_to_object(
                             exit(125);
                         }
 
-                        printf("%d\n",v_link.variable_link_type);
-
                         pushMioneObjectIntoLayout(&layout_carrier.layouts[layout_carrier.layouts_length - 1],(object_t){
-                           .object_type = OBJECT_VALUE,
+                           .object_type = OBJECT_VARIABLE,
                             .vv.variable = variable,
                        });
 

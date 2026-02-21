@@ -12,8 +12,9 @@ int main(void)
 
     train_carrier_t const TrainCarrier = object_to_train(ObjectCarrier);
 
-    CreateLine(); //start using Allocate
+    printf("%d\n",TrainCarrier.trains_length);
 
+    CreateLine(); //start using Allocate
 
     return 0;
 }

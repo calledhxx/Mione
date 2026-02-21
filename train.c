@@ -7,8 +7,15 @@ void pushTrainIntoTrainCarrier(train_carrier_t * const TrainCarrierPtr,const tra
     if (!train.train_type)
         return;
 
+
     TrainCarrierPtr->trains_length++;
-    TrainCarrierPtr->trains=realloc(TrainCarrierPtr->trains,sizeof(train_t)*TrainCarrierPtr->trains_length);
+
+    printf("aaa %d\n",TrainCarrierPtr->trains_length);
+
+    TrainCarrierPtr->trains = realloc(
+        TrainCarrierPtr->trains,
+        sizeof(train_t)*TrainCarrierPtr->trains_length
+        );
     TrainCarrierPtr->trains[TrainCarrierPtr->trains_length - 1] = train;
 }
 
@@ -59,10 +66,10 @@ train_carrier_t object_to_train(object_carrier_t const object_carrier)
     train_carrier_t train_carrier = {0};
 
     train_t train_stack[TRAIN_STACK_SIZE] = {0};
-    train_t * train_stack_top = (train_t*)train_stack+TRAIN_STACK_SIZE;
+    train_t * train_stack_top = (train_t*)train_stack+TRAIN_STACK_SIZE-1;
 
     carriage_t carriage_stack[TRAIN_STACK_SIZE] = {0};
-    carriage_t * carriage_stack_top = (carriage_t*)carriage_stack+TRAIN_STACK_SIZE;
+    carriage_t * carriage_stack_top = (carriage_t*)carriage_stack+TRAIN_STACK_SIZE-1;
 
     object_t LastObject = {0};
 
@@ -74,7 +81,7 @@ train_carrier_t object_to_train(object_carrier_t const object_carrier)
         {
         case OBJECT_HEAD:
             {
-                if (train_stack_top - TRAIN_STACK_SIZE != (train_t*)train_stack)
+                if (train_stack_top - TRAIN_STACK_SIZE + 1 != (train_t*)train_stack)
                 {
                     train_stack_top = train_stack_top + 1;
                     carriage_stack_top = carriage_stack_top + 1;
@@ -82,6 +89,8 @@ train_carrier_t object_to_train(object_carrier_t const object_carrier)
                 {
                     endCarriage(train_stack_top, carriage_stack_top);
                     endTrain(&train_carrier, train_stack_top);
+
+                    train_stack_top->train_type = TRAIN_NORMAL;
 
                     carriage_stack_top->carriage_type = CARRIAGE_HEAD;
                     carriage_stack_top->conductor = ThisObject.token;
@@ -106,13 +115,15 @@ train_carrier_t object_to_train(object_carrier_t const object_carrier)
                 if (LastObject.object_type == OBJECT_VALUE || LastObject.object_type == OBJECT_VARIABLE)
                     if (!(symbol.connect_condition_flag & SYMBOL_CONNECT_CONDITION_FLAG_AFTER_VV))
                     {
-                        if (train_stack_top - TRAIN_STACK_SIZE != (train_t*)train_stack)
+                        if (train_stack_top - TRAIN_STACK_SIZE + 1 != (train_t*)train_stack)
                         {
                             train_stack_top = train_stack_top + 1;
-                    carriage_stack_top = carriage_stack_top + 1;
+                            carriage_stack_top = carriage_stack_top + 1;
                         }else{
                             endCarriage(train_stack_top, carriage_stack_top);
                             endTrain(&train_carrier, train_stack_top);
+
+                            train_stack_top->train_type = TRAIN_SIMPLE;
 
                             carriage_stack_top->carriage_type = CARRIAGE_HEAD;
                             carriage_stack_top->conductor = 0; //simple train
@@ -125,13 +136,15 @@ train_carrier_t object_to_train(object_carrier_t const object_carrier)
                         {
                             if (!(symbol.connect_condition_flag & SYMBOL_CONNECT_CONDITION_FLAG_MODESTY))
                             {
-                                if (train_stack_top - TRAIN_STACK_SIZE != (train_t*)train_stack)
+                                if (train_stack_top - TRAIN_STACK_SIZE + 1 != (train_t*)train_stack)
                                 {
                                     train_stack_top = train_stack_top + 1;
-                    carriage_stack_top = carriage_stack_top + 1;
+                                    carriage_stack_top = carriage_stack_top + 1;
                                 }else{
                                     endCarriage(train_stack_top, carriage_stack_top);
                                     endTrain(&train_carrier, train_stack_top);
+
+                                    train_stack_top->train_type = TRAIN_SIMPLE;
 
                                     carriage_stack_top->carriage_type = CARRIAGE_HEAD;
                                     carriage_stack_top->conductor = 0; //simple train
@@ -139,13 +152,15 @@ train_carrier_t object_to_train(object_carrier_t const object_carrier)
                             }
                         }else
                         {
-                            if (train_stack_top - TRAIN_STACK_SIZE != (train_t*)train_stack)
+                            if (train_stack_top - TRAIN_STACK_SIZE + 1 != (train_t*)train_stack)
                             {
                                 train_stack_top = train_stack_top + 1;
-                    carriage_stack_top = carriage_stack_top + 1;
+                                carriage_stack_top = carriage_stack_top + 1;
                             }else{
                                 endCarriage(train_stack_top, carriage_stack_top);
                                 endTrain(&train_carrier, train_stack_top);
+
+                                train_stack_top->train_type = TRAIN_SIMPLE;
 
                                 carriage_stack_top->carriage_type = CARRIAGE_HEAD;
                                 carriage_stack_top->conductor = 0; //simple train
@@ -165,13 +180,15 @@ train_carrier_t object_to_train(object_carrier_t const object_carrier)
 
                     if (!(symbol.connect_condition_flag & SYMBOL_CONNECT_CONDITION_FLAG_BEFORE_VV))
                     {
-                        if (train_stack_top - TRAIN_STACK_SIZE != (train_t*)train_stack)
+                        if (train_stack_top - TRAIN_STACK_SIZE + 1 != (train_t*)train_stack)
                         {
                             train_stack_top = train_stack_top + 1;
-                    carriage_stack_top = carriage_stack_top + 1;
+                            carriage_stack_top = carriage_stack_top + 1;
                         }else{
                             endCarriage(train_stack_top, carriage_stack_top);
                             endTrain(&train_carrier, train_stack_top);
+
+                            train_stack_top->train_type = TRAIN_SIMPLE;
 
                             carriage_stack_top->carriage_type = CARRIAGE_HEAD;
                             carriage_stack_top->conductor = 0; //simple train
@@ -191,7 +208,7 @@ train_carrier_t object_to_train(object_carrier_t const object_carrier)
             }
         default:
             {
-                if (train_stack_top - TRAIN_STACK_SIZE != (train_t*)train_stack)
+                if (train_stack_top - TRAIN_STACK_SIZE + 1 != (train_t*)train_stack)
                 {
                     train_stack_top = train_stack_top + 1;
                     carriage_stack_top = carriage_stack_top + 1;
@@ -204,6 +221,9 @@ train_carrier_t object_to_train(object_carrier_t const object_carrier)
 
         LastObject = ThisObject;
     }
+
+    endCarriage(train_stack_top, carriage_stack_top);
+    endTrain(&train_carrier, train_stack_top);
 
     return train_carrier;
 };
