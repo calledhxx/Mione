@@ -2,7 +2,7 @@
 
 #include "main.h"
 
-static instruct_carrier_t set(train_t const train)
+static instruct_carrier_t * set(train_t const train)
 {
     instruct_carrier_t instruct_carrier = {0};
 

@@ -124,7 +124,7 @@ object_carrier_t word_to_object(
                                     ] = (scope_t){
                                         .parent_scope_ptr = current_scope_ptr,
                                         .child_scope_carrier_ptr = malloc(sizeof(scope_carrier_t)),
-                                        .variable_link_carrier = (variable_link_carrier_t){0}
+                                        .variable_link_ptr_carrier = (variable_link_ptr_carrier_t){0}
                                     };
                                 *current_scope_ptr->child_scope_carrier_ptr->scopes[
                                     current_scope_ptr->child_scope_carrier_ptr->scopes_length - 1
@@ -161,7 +161,7 @@ object_carrier_t word_to_object(
                                     ] = (scope_t){
                                         .parent_scope_ptr = current_scope_ptr,
                                         .child_scope_carrier_ptr = malloc(sizeof(scope_carrier_t)),
-                                        .variable_link_carrier = (variable_link_carrier_t){0}
+                                        .variable_link_ptr_carrier = (variable_link_ptr_carrier_t){0}
                                     };
                                 *current_scope_ptr->child_scope_carrier_ptr->scopes[
                                     current_scope_ptr->child_scope_carrier_ptr->scopes_length - 1
@@ -315,7 +315,7 @@ object_carrier_t word_to_object(
                                     ] = (scope_t){
                                         .parent_scope_ptr = current_scope_ptr,
                                         .child_scope_carrier_ptr = malloc(sizeof(scope_carrier_t)),
-                                        .variable_link_carrier = (variable_link_carrier_t){0}
+                                        .variable_link_ptr_carrier = (variable_link_ptr_carrier_t){0}
                                     };
                                 *current_scope_ptr->child_scope_carrier_ptr->scopes[
                                     current_scope_ptr->child_scope_carrier_ptr->scopes_length - 1
@@ -416,66 +416,116 @@ object_carrier_t word_to_object(
                     {
                         unsigned scope_depth = 0;
 
-                        variable_link_t v_link = find_variable_in_scope(
+                        variable_link_t * v_link_ptr = find_variable_in_scope(
                             current_scope_ptr,
                             ThisWord.word,
                             &scope_depth
                             );
 
                         variable_t variable = {0};
+                        variable_link_t * variable_link_ptr = 0;
 
-                        switch (v_link.variable_link_type)
+                        if (!v_link_ptr)
                         {
-                        case VARIABLE_LINK_NONE:
-                            {
-                                current_scope_ptr->variable_link_carrier.variable_links_length++;
-                                current_scope_ptr->variable_link_carrier.variable_links = realloc(
-                                    current_scope_ptr->variable_link_carrier.variable_links,
-                                current_scope_ptr->variable_link_carrier.variable_links_length * sizeof(variable_link_t)
-                                    );
-                                current_scope_ptr->variable_link_carrier.variable_links[
-                                current_scope_ptr->variable_link_carrier.variable_links_length - 1
-                                    ] = variable.variable.dummy_variable.variable_link =  (variable_link_t){
-                                        .variable_link_type = VARIABLE_LINK_LEADER,
-                                        .toward_variable_ptr = memcpy(malloc(sizeof(variable_t)),&(variable_t){
-                                            .variable.genuine_variable = (genuine_variable_t){
-                                                .name = ThisWord.word,
-                                                .value = (value_t){0}
-                                            }
-                                        },sizeof(variable_t))
-                                    };
-                            }
-                        case VARIABLE_LINK_COLEADER:
-                        case VARIABLE_LINK_LEADER:
-                            {
-                                current_scope_ptr->variable_link_carrier.variable_links_length++;
-                                current_scope_ptr->variable_link_carrier.variable_links = realloc(
-                                    current_scope_ptr->variable_link_carrier.variable_links,
-                                current_scope_ptr->variable_link_carrier.variable_links_length * sizeof(variable_link_t)
-                                    );
-                                current_scope_ptr->variable_link_carrier.variable_links[
-                                current_scope_ptr->variable_link_carrier.variable_links_length - 1
-                                    ] = variable.variable.dummy_variable.variable_link =  (variable_link_t){
-                                        .variable_link_type = v_link.variable_link_type == VARIABLE_LINK_LEADER ? VARIABLE_LINK_COLEADER : VARIABLE_LINK_FOLLOWER,
-                                        .toward_variable_link_ptr = memcpy(malloc(sizeof(variable_link_t)),&v_link,sizeof(variable_link_t)),
-                                    };
+                            //新變數
 
-                                variable.is_dummy = 1;
-
-                                break;
-                            }
-                        case VARIABLE_LINK_FOLLOWER:
-                            {
-                                variable.is_dummy = 0;
-                                variable.variable.genuine_variable = (genuine_variable_t){
-                                    .name = ThisWord.word,
-                                    .value = (value_t){.value_type = VALUE_NONE}
+                            variable_link_ptr = malloc(sizeof(variable_link_t));
+                            *variable_link_ptr =
+                                (variable_link_t){
+                                    .variable_link_type = VARIABLE_LINK_LEADER,
+                                    .toward_variable_ptr = malloc(sizeof(variable_t)),
                                 };
 
-                                break;
+                            variable.is_dummy = 0;
+                            variable.variable.genuine_variable = (genuine_variable_t){
+                                .value = (value_t){0},
+                                .name = ThisWord.word
+                            };
+
+                            *variable_link_ptr->toward_variable_ptr = variable;
+                        }else
+                        {
+                            switch (v_link_ptr->variable_link_type)
+                            {
+                            case VARIABLE_LINK_COLEADER:
+                            case VARIABLE_LINK_LEADER:
+                                {
+                                    if (scope_depth)
+                                    {
+                                        //同域沒有該變數
+
+                                        variable_link_ptr = malloc(sizeof(variable_link_t));
+                                        *variable_link_ptr = (variable_link_t){
+                                            .variable_link_type = VARIABLE_LINK_COLEADER,
+                                            .toward_variable_link_ptr = v_link_ptr,
+                                        };
+
+                                        variable.is_dummy = 1;
+                                        variable.variable.dummy_variable = (dummy_variable_t){
+                                            .variable_link = *variable_link_ptr
+                                        };
+                                    }else
+                                    {
+                                        //同域已有該變數，且一定為COLEADER
+
+                                        variable_link_ptr = malloc(sizeof(variable_link_t));
+                                        *variable_link_ptr = (variable_link_t){
+                                            .variable_link_type = VARIABLE_LINK_FOLLOWER,
+                                            .toward_variable_link_ptr = v_link_ptr,
+                                        };
+
+                                        variable.is_dummy = 1;
+                                        variable.variable.dummy_variable = (dummy_variable_t){
+                                            .variable_link = *variable_link_ptr
+                                        };
+                                    }
+                                    break;
+                                }
+                            case VARIABLE_LINK_FOLLOWER:
+                                {
+                                    //同域已有該變數
+
+                                    variable_link_ptr = 0;
+
+                                    variable.is_dummy = 1;
+                                    variable.variable.dummy_variable = (dummy_variable_t){
+                                        .variable_link = *v_link_ptr
+                                    };
+
+                                    break;
+                                }
+                            default:
+                                exit(125);
                             }
-                        default:
-                            exit(125);
+                        }
+
+                        printf(
+                            "VARIABLE CREATED!\n"
+                            "VARIABLE NAME: %s\n"
+                            "VARIABLE IS_DUMMY: %d\n"
+                            ,ThisWord.word,variable.is_dummy
+                            );
+
+
+                        if (variable_link_ptr)
+                        {
+                            printf(
+                            "   VARIABLE LINK CREATED!\n"
+                            "   VARIABLE LINK: %p\n"
+                            "   VARIABLE LINK TYPE: %d\n"
+                            "   VARIABLE LINK TO VARIABLE: %p\n"
+                            "   VARIABLE LINK TO VARIABLE LINK: %p\n"
+                            ,variable_link_ptr,variable_link_ptr->variable_link_type,variable_link_ptr->toward_variable_ptr,variable_link_ptr->toward_variable_link_ptr
+                            );
+
+                            current_scope_ptr->variable_link_ptr_carrier.variable_link_ptrs_length++;
+                            current_scope_ptr->variable_link_ptr_carrier.variable_link_ptrs = realloc(
+                                current_scope_ptr->variable_link_ptr_carrier.variable_link_ptrs,
+                            current_scope_ptr->variable_link_ptr_carrier.variable_link_ptrs_length * sizeof(variable_link_t*)
+                                );
+                            current_scope_ptr->variable_link_ptr_carrier.variable_link_ptrs[
+                            current_scope_ptr->variable_link_ptr_carrier.variable_link_ptrs_length - 1
+                                ] = variable_link_ptr;
                         }
 
                         pushMioneObjectIntoLayout(&layout_carrier.layouts[layout_carrier.layouts_length - 1],(object_t){

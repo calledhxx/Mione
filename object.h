@@ -61,7 +61,7 @@ typedef struct scope_s
 {
     struct scope_carrier_s * child_scope_carrier_ptr;
     struct scope_s * parent_scope_ptr;
-    variable_link_carrier_t variable_link_carrier;
+    variable_link_ptr_carrier_t variable_link_ptr_carrier;
 } scope_t;
 
 typedef struct scope_carrier_s

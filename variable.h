@@ -22,6 +22,11 @@ typedef struct variable_link_carrier_s
     unsigned variable_links_length;
 } variable_link_carrier_t;
 
+typedef struct variable_link_ptr_carrier_s
+{
+    variable_link_t ** variable_link_ptrs;
+    unsigned variable_link_ptrs_length;
+} variable_link_ptr_carrier_t;
 
 typedef struct genuine_variable_s
 {
@@ -50,6 +55,6 @@ typedef struct variable_carrier_s
     unsigned variables_length;
 } variable_carrier_t;
 
-extern variable_link_t find_variable_in_scope(void * scopePtr,const char* name,unsigned * scope_depth_butter_ptr);
+extern variable_link_t * find_variable_in_scope(void * scopePtr,const char* name,unsigned * scope_depth_butter_ptr);
 
 #endif
