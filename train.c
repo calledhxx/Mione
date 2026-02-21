@@ -87,6 +87,7 @@ train_carrier_t object_to_train(object_carrier_t object_carrier)
                 if (LastObject.object_type == OBJECT_VALUE || LastObject.object_type == OBJECT_VARIABLE)
                     if (symbol.connect_condition_flag & SYMBOL_CONNECT_CONDITION_FLAG_AFTER_VV)
                     {
+
                     }
                     else
                     {
