@@ -27,5 +27,5 @@ add_executable(New_Mione main.c
         run.h
         run.c
         calculate.c
-        calculator.h
+        calculate.h
 )
