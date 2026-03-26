@@ -135,9 +135,10 @@ instruct_carrier_t cal_ast(object_carrier_t const carrier)
     {
         const object_carrier_t ThisCarrier = object_carrier_container.object_carriers[i];
 
+        information_ptr->after_count--;
+
         if (ThisCarrier.objects_length == 1)
         {
-            information_ptr->after_count--;
 
             switch (ThisCarrier.objects[0].object_type)
             {
@@ -167,7 +168,6 @@ instruct_carrier_t cal_ast(object_carrier_t const carrier)
         }else
         {
             pushInstructsIntoCarrier(&result,cal_ast(ThisCarrier));
-            information_ptr->after_count--;
         }
 
 
