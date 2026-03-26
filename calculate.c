@@ -49,6 +49,9 @@ instruct_carrier_t cal_ast(object_carrier_t const carrier)
 
             enum symbol_calculate_allow_position_flag_e final_flag = SYMBOL_CALCULATE_ALLOW_POSITION_FLAG_NONE;
 
+            if ((final_flag = ThisSymbol.calculate_allow_position_flag & SYMBOL_CALCULATE_ALLOW_POSITION_FLAG_SPECIAL))
+                goto capf_end;
+
             if ((final_flag = ThisSymbol.calculate_allow_position_flag & SYMBOL_CALCULATE_ALLOW_POSITION_FLAG_MIDDLE))
                 if (i - 1 >= 0 && i + 1 < carrier.objects_length)
                     goto capf_end;
@@ -78,17 +81,31 @@ instruct_carrier_t cal_ast(object_carrier_t const carrier)
             case SYMBOL_CALCULATE_ALLOW_POSITION_FLAG_MIDDLE:
                 {
                     information = ThisSymbol.instruct_information[0];
+
+                    if (information.instruct == INSTRUCT_NONE)
+                        exit(9);
+
                     break;
                 }
             case SYMBOL_CALCULATE_ALLOW_POSITION_FLAG_BEFORE:
                 {
                     information = ThisSymbol.instruct_information[1];
 
+                    if (information.instruct == INSTRUCT_NONE)
+                        exit(9);
+
                     break;
                 }
             case SYMBOL_CALCULATE_ALLOW_POSITION_FLAG_AFTER:
                 {
                     information = ThisSymbol.instruct_information[2];
+
+                    if (information.instruct == INSTRUCT_NONE)
+                        exit(9);
+
+                    break;
+                }
+            case SYMBOL_CALCULATE_ALLOW_POSITION_FLAG_SPECIAL:{
 
                     break;
                 }
@@ -147,19 +164,24 @@ instruct_carrier_t cal_ast(object_carrier_t const carrier)
                 }
             default: exit(11);
             }
-
-            if (!information_ptr->after_count)
-            {
-                pushInstructIntoCarrier(&result,(instruct_t){
-                        .instruct = information_ptr->instruct,
-                        .object = 0
-                    });
-
-                information_ptr++;
-            }
         }else
         {
             pushInstructsIntoCarrier(&result,cal_ast(ThisCarrier));
+            information_ptr->after_count--;
+        }
+
+
+        if (!information_ptr->after_count)
+        {
+            if (information_ptr->instruct != INSTRUCT_NONE)
+                pushInstructIntoCarrier(&result,(instruct_t){
+                    .instruct = information_ptr->instruct,
+                    .object = 0
+                });
+
+            information_ptr++;
+
+            information_ptr->after_count--;
         }
     }
 

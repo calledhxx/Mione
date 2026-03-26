@@ -19,6 +19,7 @@ enum symbol_calculate_allow_position_flag_e
     SYMBOL_CALCULATE_ALLOW_POSITION_FLAG_AFTER = 1<<0,
     SYMBOL_CALCULATE_ALLOW_POSITION_FLAG_MIDDLE = 1<<1,
     SYMBOL_CALCULATE_ALLOW_POSITION_FLAG_BEFORE = 1<<2,
+    SYMBOL_CALCULATE_ALLOW_POSITION_FLAG_SPECIAL = 1<<3,
 };
 typedef struct instruct_information_s
 {

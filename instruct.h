@@ -10,6 +10,8 @@ enum instruct_e
     INSTRUCT_ADD,
     INSTRUCT_SUB,
     INSTRUCT_NEGATIVE,
+    INSTRUCT_MUL,
+    INSTRUCT_DIV,
 };
 
 typedef struct instruct_s
