@@ -31,33 +31,7 @@ static instruct_carrier_t * set(train_t * const trainPtr)
                 {
                 case TOKEN_PROMPT_EQUAL:
                     {
-                        if (ThisCarriage.passengers.objects[0].object_type == OBJECT_VARIABLE)
-                        {
-                            ThisCarriage.passengers
-                            pushInstructIntoCarrier(
-                                    &instruct_carrier,
-                                    (instruct_t){
-                                        .instruct = INSTRUCT_LOAD_VARIABLE,
-                                        .object =
-                                    }
-                                    );
-
-                            pushInstructIntoCarrier(
-                                    &instruct_carrier,
-                                    (instruct_t){
-                                        .instruct = INSTRUCT_TO_VALUE,
-                                        .object = 0
-                                    }
-                                    );
-                        }else if (ThisCarriage.passengers.objects[0].object_type == OBJECT_VALUE){
-                            pushInstructIntoCarrier(
-                                    &instruct_carrier,
-                                    (instruct_t){
-                                        .instruct = INSTRUCT_LOAD_VALUE,
-                                        .object = (intptr_t)ThisCarriage.passengers.objects
-                                    }
-                                    );
-                        }else exit(1);
+                        calculate(ThisCarriage.passengers);
 
                         break;
                     }

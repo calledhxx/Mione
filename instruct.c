@@ -28,39 +28,6 @@ void pushInstructsIntoCarrier(instruct_carrier_t * const CarrierPtr,instruct_car
         );
 }
 
-instruct_carrier_t loadVV(const object_t * objPtr)
-{
-    instruct_carrier_t result = {0};
-    switch (objPtr->object_type)
-    {
-    case OBJECT_VARIABLE:
-        {
-            pushInstructIntoCarrier(&result,(instruct_t){
-                .instruct = INSTRUCT_LOAD_VARIABLE,
-                .object = (unsigned long long)objPtr
-            });
-
-            pushInstructIntoCarrier(&result,(instruct_t){
-                .instruct = INSTRUCT_TO_VALUE,
-                .object = 0
-            });
-            break;
-        }
-    case OBJECT_VALUE:
-        {
-            pushInstructIntoCarrier(&result,(instruct_t){
-                .instruct = INSTRUCT_LOAD_VALUE,
-                .object = (unsigned long long)objPtr
-            });
-            break;
-        }
-    default:
-        exit(2);
-    }
-
-    return result;
-}
-
 instruct_carrier_t train_to_instruct(train_carrier_t const train_carrier)
 {
     instruct_carrier_t instruct_carrier = {0};
@@ -75,7 +42,7 @@ instruct_carrier_t train_to_instruct(train_carrier_t const train_carrier)
             {
                 head_t const head = token_to_head(ThisTrain.carriage_carrier.carriages[0].conductor);
 
-                instruct_carrier_t const * const head_instruct_carrier =  head.function(&ThisTrain);
+                instruct_carrier_t const * const head_instruct_carrier = head.function(&ThisTrain);
 
                 pushInstructsIntoCarrier(&instruct_carrier,*head_instruct_carrier);
 

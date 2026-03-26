@@ -51,6 +51,12 @@ typedef struct object_carrier_s
     unsigned objects_length;
 } object_carrier_t;
 
+typedef struct object_carrier_container_s
+{
+    object_carrier_t * object_carriers;
+    unsigned object_carriers_length;
+} object_carrier_container_t;
+
 enum layout_handler_e
 {
     LAYOUT_HANDLER_NONE,

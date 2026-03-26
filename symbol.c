@@ -13,7 +13,21 @@ static keyword_t SymbolKeywordArray[] = {
                         SYMBOL_CONNECT_CONDITION_FLAG_MODESTY,
             .order = 2,
             .calculate_allow_position_flag =
-                SYMBOL_CALCULATE_ALLOW_POSITION_FLAG_MIDDLE
+                SYMBOL_CALCULATE_ALLOW_POSITION_FLAG_MIDDLE,
+            .instruct_information = (instruct_information_t[3]){
+                {
+                    .after_count = 2,
+                    .instruct = INSTRUCT_ADD
+                },
+                {
+                    .after_count = 2,
+                    .instruct = INSTRUCT_ADD
+                },
+                {
+                    .after_count = 2,
+                    .instruct = INSTRUCT_ADD
+                }
+            }
         },
     },
 {
@@ -27,7 +41,21 @@ static keyword_t SymbolKeywordArray[] = {
                         SYMBOL_CONNECT_CONDITION_FLAG_MODESTY,
         .order = 2,
         .calculate_allow_position_flag =
-            SYMBOL_CALCULATE_ALLOW_POSITION_FLAG_MIDDLE
+            SYMBOL_CALCULATE_ALLOW_POSITION_FLAG_MIDDLE,
+        .instruct_information = (instruct_information_t[3]){
+            {
+                .after_count = 2,
+                .instruct = INSTRUCT_ADD
+            },
+            {
+                .after_count = 2,
+                .instruct = INSTRUCT_ADD
+            },
+            {
+                .after_count = 2,
+                .instruct = INSTRUCT_ADD
+            }
+        }
         }
     },
     {0}
