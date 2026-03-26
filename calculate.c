@@ -1,7 +1,6 @@
 #include <stdlib.h>
 
 #include "main.h"
-#define _max(a,b) a>b?a:b
 
 static void push(const object_carrier_t carrier,object_carrier_container_t * container_ptr)
 {
