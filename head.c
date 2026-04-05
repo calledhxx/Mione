@@ -43,7 +43,7 @@ static instruct_carrier_t * set(train_t * const trainPtr)
                 break;
             }
         default:
-            exit(ThisCarriage.carriage_type);
+            exit(111);
         }
     }
 

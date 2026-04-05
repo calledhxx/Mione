@@ -93,5 +93,6 @@ typedef struct layout_carrier_s
 } layout_carrier_t;
 
 extern object_carrier_t word_to_object(word_carrier_t word_carrier);
+extern void print_object_carrier(object_carrier_t);
 
 #endif

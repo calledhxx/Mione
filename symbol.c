@@ -36,8 +36,8 @@ static keyword_t SymbolKeywordArray[] = {
     .instance = &(symbol_t){
         .connect_condition_flag =
             SYMBOL_CONNECT_CONDITION_FLAG_AFTER_VV |
-                SYMBOL_CONNECT_CONDITION_FLAG_BEFORE_VV |
-                    SYMBOL_CONNECT_CONDITION_FLAG_MODESTY,
+                    SYMBOL_CONNECT_CONDITION_FLAG_BEFORE_VV |
+                        SYMBOL_CONNECT_CONDITION_FLAG_MODESTY,
         .order = 1,
         .calculate_allow_position_flag =
             SYMBOL_CALCULATE_ALLOW_POSITION_FLAG_MIDDLE,
@@ -93,7 +93,7 @@ static keyword_t SymbolKeywordArray[] = {
                 SYMBOL_CONNECT_CONDITION_FLAG_BEFORE_VV |
                     SYMBOL_CONNECT_CONDITION_FLAG_AFTER_SYMBOL |
                         SYMBOL_CONNECT_CONDITION_FLAG_MODESTY,
-        .order = 2,
+        .order = 0,
         .calculate_allow_position_flag =
             SYMBOL_CALCULATE_ALLOW_POSITION_FLAG_SPECIAL,
         .instruct_information = (instruct_information_t[3]){
@@ -121,7 +121,7 @@ static keyword_t SymbolKeywordArray[] = {
                 SYMBOL_CONNECT_CONDITION_FLAG_BEFORE_VV |
                     SYMBOL_CONNECT_CONDITION_FLAG_BEFORE_SYMBOL |
                         SYMBOL_CONNECT_CONDITION_FLAG_MODESTY,
-        .order = 2,
+        .order = 0,
         .calculate_allow_position_flag =
             SYMBOL_CALCULATE_ALLOW_POSITION_FLAG_SPECIAL,
         .instruct_information = (instruct_information_t[3]){

@@ -52,6 +52,15 @@ static void pushMioneObjectIntoLayout(layout_t * LayoutPtr,const object_t Object
     LayoutPtr->object_carrier.objects[LayoutPtr->object_carrier.objects_length - 1] = Object;
 }
 
+void print_object_carrier(object_carrier_t const carrier)
+{
+    printf("OBJECT CARRIER, LEN: %d\n",carrier.objects_length);
+    for (int i = 0;i<carrier.objects_length;i++)
+    {
+        printf("    %d: %d %d %p\n",i,carrier.objects[i].object_type,carrier.objects[i].token,&carrier.objects[i].vv);
+    }
+}
+
 object_carrier_t word_to_object(
     const word_carrier_t word_carrier
     )
