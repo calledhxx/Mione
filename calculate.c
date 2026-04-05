@@ -1,5 +1,6 @@
 #include <stdlib.h>
 #include <limits.h>
+#include <string.h>
 
 #include "main.h"
 
@@ -18,6 +19,8 @@ static void push(const object_carrier_t carrier,object_carrier_container_t * con
 
 instruct_carrier_t cal_ast(object_carrier_t carrier)
 {
+    print_object_carrier(carrier);
+
     instruct_carrier_t result = {0};
 
     int highest_order = -INT_MAX;
@@ -25,17 +28,26 @@ instruct_carrier_t cal_ast(object_carrier_t carrier)
     char preprocess_stack[32] = {0};
     char * stack_top = preprocess_stack + 31;
 
-    if (
+    while (
         carrier.objects[0].token == TOKEN_SYMBOL_OPENING_PARENTHESIS
         &&
         carrier.objects[carrier.objects_length - 1].token == TOKEN_SYMBOL_CLOSING_PARENTHESIS
         )
     {
+        for (int i = 1;i<carrier.objects_length - 1; i++)
+            if (carrier.objects[i].token == TOKEN_SYMBOL_OPENING_PARENTHESIS)
+                goto simple;
+            else if(carrier.objects[i].token == TOKEN_SYMBOL_CLOSING_PARENTHESIS)
+                goto keep;
+
+        simple:
         carrier.objects++;
         carrier.objects_length -= 2;
+        keep:
     }
 
     for (unsigned i = 0; i < carrier.objects_length; i++)
+    {
         if (carrier.objects[i].object_type == OBJECT_SYMBOL)
         {
             symbol_t const ThisSymbol = token_to_symbol(carrier.objects[i].token);
@@ -58,6 +70,8 @@ instruct_carrier_t cal_ast(object_carrier_t carrier)
             }
 
         }
+    }
+
 
     if (preprocess_stack - stack_top + 31)
         exit(100);
@@ -70,26 +84,16 @@ instruct_carrier_t cal_ast(object_carrier_t carrier)
 
     instruct_information_carrier_t instruct_information_carrier = {0};
 
-
     for (int i = 0; i < carrier.objects_length; i++)
     {
-
         const object_t ThisObj = carrier.objects[i];
 
         if (ThisObj.object_type == OBJECT_SYMBOL)
         {
             symbol_t const ThisSymbol = token_to_symbol(ThisObj.token);
 
-
             if (carrier.objects[i].token == TOKEN_SYMBOL_OPENING_PARENTHESIS)
-            {
                 preprocess_depth++;
-            }
-
-            if (carrier.objects[i].token == TOKEN_SYMBOL_CLOSING_PARENTHESIS)
-            {
-                preprocess_depth--;
-            }
 
             if (highest_order == (preprocess_depth ? 0 : ThisSymbol.order))
             {
@@ -124,12 +128,12 @@ instruct_carrier_t cal_ast(object_carrier_t carrier)
 
                 instruct_information_carrier.instruct_information_length++;
                 instruct_information_carrier.instruct_information = realloc(
-                instruct_information_carrier.instruct_information,
+                    instruct_information_carrier.instruct_information,
                 sizeof (instruct_information_t) *  instruct_information_carrier.instruct_information_length
                     );
 
-
                 instruct_information_t information = (instruct_information_t){0};
+
 
                 switch (final_flag)
                 {
@@ -167,80 +171,102 @@ instruct_carrier_t cal_ast(object_carrier_t carrier)
                 default: exit(11);
                 }
 
-                instruct_information_carrier.instruct_information[instruct_information_carrier.instruct_information_length - 1]=
+                instruct_information_carrier.instruct_information[instruct_information_carrier.instruct_information_length - 1] =
                     information;
 
-                continue;
+            }else
+            {
+                if (!object_carrier.objects)
+                    object_carrier.objects = carrier.objects + i;
+
+                object_carrier.objects_length ++;
             }
+
+            if (carrier.objects[i].token == TOKEN_SYMBOL_CLOSING_PARENTHESIS)
+                preprocess_depth--;
+        }else
+        {
+            if (!object_carrier.objects)
+                object_carrier.objects = carrier.objects + i;
+
+            object_carrier.objects_length ++;
         }
 
-        if (!object_carrier.objects)
-            object_carrier.objects = carrier.objects + i;
 
-        object_carrier.objects_length ++;
     }
 
-
-
-    instruct_information_t * information_ptr = instruct_information_carrier.instruct_information;
 
     if (object_carrier.objects_length && object_carrier.objects)
-    {
         push(object_carrier,&object_carrier_container);
-    }
-
 
     object_carrier = (object_carrier_t){0};
 
+    for (int i = 0 ;i<object_carrier_container.object_carriers_length;i++)
+        print_object_carrier(object_carrier_container.object_carriers[i]);
+
+    instruct_information_t * information_ptr = instruct_information_carrier.instruct_information;
+
+
     for (unsigned int i = 0;i < object_carrier_container.object_carriers_length; i++)
-    {
-        const object_carrier_t ThisCarrier = object_carrier_container.object_carriers[i];
-
-        information_ptr->after_count--;
-
-        if (ThisCarrier.objects_length == 1)
         {
-            switch (ThisCarrier.objects[0].object_type)
+            const object_carrier_t ThisCarrier = object_carrier_container.object_carriers[i];
+
+            if (instruct_information_carrier.instruct_information && instruct_information_carrier.instruct_information_length)
             {
-            case OBJECT_VALUE:
-                {
-                    pushInstructIntoCarrier(&result,(instruct_t){
-                        .instruct = INSTRUCT_LOAD_VALUE,
-                        .object = (long long unsigned)ThisCarrier.objects
-                    });
-                    break;
-                }
-            case OBJECT_VARIABLE:
-                {
-                    pushInstructIntoCarrier(&result,(instruct_t){
-                        .instruct = INSTRUCT_LOAD_VARIABLE,
-                        .object = (long long unsigned)ThisCarrier.objects
-                    });
-
-                    pushInstructIntoCarrier(&result,(instruct_t){
-                        .instruct = INSTRUCT_TO_VALUE,
-                        .object = 0
-                    });
-                    break;
-                }
-            default: exit(11);
+                information_ptr->after_count--;
+                printf("decounter %d\n",information_ptr->instruct);
             }
-        }else
-            pushInstructsIntoCarrier(&result,cal_ast(ThisCarrier));
 
-        if (!information_ptr->after_count)
-        {
-            if (information_ptr->instruct != INSTRUCT_NONE)
-                pushInstructIntoCarrier(&result,(instruct_t){
-                    .instruct = information_ptr->instruct,
-                    .object = 0
-                });
+            if (ThisCarrier.objects_length == 1)
+            {
+                switch (ThisCarrier.objects[0].object_type)
+                {
+                case OBJECT_VALUE:
+                    {
+                        pushInstructIntoCarrier(&result,(instruct_t){
+                            .instruct = INSTRUCT_LOAD_VALUE,
+                            .object = (unsigned long long)memcpy(malloc(sizeof(object_t)),ThisCarrier.objects, sizeof(object_t))
+                        });
+                        break;
+                    }
+                case OBJECT_VARIABLE:
+                    {
+                        pushInstructIntoCarrier(&result,(instruct_t){
+                            .instruct = INSTRUCT_LOAD_VARIABLE,
+                            .object = (unsigned long long)memcpy(malloc(sizeof(object_t)),ThisCarrier.objects, sizeof(object_t))
+                        });
 
-            information_ptr++;
+                        pushInstructIntoCarrier(&result,(instruct_t){
+                            .instruct = INSTRUCT_TO_VALUE,
+                            .object = 0
+                        });
+                        break;
+                    }
+                default: exit(11);
+                }
+            }else
+                pushInstructsIntoCarrier(&result,cal_ast(ThisCarrier));
 
-            information_ptr->after_count--;
+            if (instruct_information_carrier.instruct_information && instruct_information_carrier.instruct_information_length)
+                if (!information_ptr->after_count)
+                {
+                    if (information_ptr->instruct != INSTRUCT_NONE)
+                        pushInstructIntoCarrier(&result,(instruct_t){
+                            .instruct = information_ptr->instruct,
+                            .object = 0
+                        });
+
+                    information_ptr++;
+
+                    information_ptr->after_count--;
+                }
         }
-    }
+
+    if (object_carrier_container.object_carriers && object_carrier_container.object_carriers_length)
+        free(object_carrier_container.object_carriers);
+
+    if (instruct_information_carrier.instruct_information && instruct_information_carrier.instruct_information_length)
+        free(instruct_information_carrier.instruct_information);
 
     return result;
 }
