@@ -43,7 +43,6 @@ instruct_carrier_t cal_ast(object_carrier_t carrier)
             if (carrier.objects[i].token == TOKEN_SYMBOL_OPENING_PARENTHESIS)
             {
                 *stack_top = TOKEN_SYMBOL_OPENING_PARENTHESIS;
-                printf("in\n");
                 stack_top--;
             }
 
@@ -52,20 +51,17 @@ instruct_carrier_t cal_ast(object_carrier_t carrier)
             if (carrier.objects[i].token == TOKEN_SYMBOL_CLOSING_PARENTHESIS)
             {
                 stack_top++;
-                printf("out\n");
 
                 if (*stack_top != TOKEN_SYMBOL_OPENING_PARENTHESIS)
                     exit(101);
                 *stack_top = 0;
             }
 
-            printf("%d %d\n",(preprocess_stack - stack_top + 31),(preprocess_stack - stack_top + 31) ? 0 : (int)ThisSymbol.order);
         }
 
     if (preprocess_stack - stack_top + 31)
         exit(100);
 
-    printf("highest: %d\n",highest_order);
 
     int preprocess_depth = 0;
     
@@ -77,7 +73,6 @@ instruct_carrier_t cal_ast(object_carrier_t carrier)
 
     for (int i = 0; i < carrier.objects_length; i++)
     {
-        printf("%d: %d %d %p\n",i,carrier.objects[i].object_type,carrier.objects[i].token,&carrier.objects[i].vv);
 
         const object_t ThisObj = carrier.objects[i];
 
@@ -85,7 +80,6 @@ instruct_carrier_t cal_ast(object_carrier_t carrier)
         {
             symbol_t const ThisSymbol = token_to_symbol(ThisObj.token);
 
-            printf(":       %d\n",(preprocess_depth ? 0 : ThisSymbol.order));
 
             if (carrier.objects[i].token == TOKEN_SYMBOL_OPENING_PARENTHESIS)
             {
@@ -134,7 +128,6 @@ instruct_carrier_t cal_ast(object_carrier_t carrier)
                 sizeof (instruct_information_t) *  instruct_information_carrier.instruct_information_length
                     );
 
-                printf("split\n");
 
                 instruct_information_t information = (instruct_information_t){0};
 
@@ -185,7 +178,6 @@ instruct_carrier_t cal_ast(object_carrier_t carrier)
             object_carrier.objects = carrier.objects + i;
 
         object_carrier.objects_length ++;
-        printf("add len %d\n",object_carrier.objects_length);
     }
 
 
@@ -194,12 +186,8 @@ instruct_carrier_t cal_ast(object_carrier_t carrier)
 
     if (object_carrier.objects_length && object_carrier.objects)
     {
-        printf("split\n");
         push(object_carrier,&object_carrier_container);
     }
-
-    for (int i =0;i<object_carrier_container.object_carriers_length;i++)
-        print_object_carrier(object_carrier_container.object_carriers[i]);
 
 
     object_carrier = (object_carrier_t){0};
@@ -256,11 +244,8 @@ instruct_carrier_t cal_ast(object_carrier_t carrier)
 
     return result;
 }
-instruct_carrier_t calculate(object_carrier_t object_carrier)
+instruct_carrier_t calculate(object_carrier_t const object_carrier)
 {
-    printf("hello?\n");
-    print_object_carrier(object_carrier);
-
     instruct_carrier_t const result = cal_ast(object_carrier);
 
     for (int i = 0;i < result.instructs_length; i++)

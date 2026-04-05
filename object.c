@@ -57,7 +57,7 @@ void print_object_carrier(object_carrier_t const carrier)
     printf("OBJECT CARRIER, LEN: %d\n",carrier.objects_length);
     for (int i = 0;i<carrier.objects_length;i++)
     {
-        printf("    %d: %d %d %p\n",i,carrier.objects[i].object_type,carrier.objects[i].token,&carrier.objects[i].vv);
+        printf("    %d: %d %d %llu\n",i,carrier.objects[i].object_type,carrier.objects[i].token,&carrier.objects[i].vv);
     }
 }
 
