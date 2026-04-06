@@ -25,6 +25,7 @@ typedef struct instruct_information_s
 {
     unsigned char after_count;
     unsigned int instruct;
+    char preposition;
 } instruct_information_t;
 
 typedef struct instruct_information_carrier_s

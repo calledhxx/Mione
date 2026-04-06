@@ -85,8 +85,6 @@ instruct_carrier_t cal_ast(object_carrier_t carrier)
     instruct_information_t information_stack[32] = {0};
     instruct_information_t * information_stack_top = information_stack + 31;
 
-
-
     for (int i = 0; i < carrier.objects_length; i++)
     {
         const object_t ThisObj = carrier.objects[i];
@@ -163,7 +161,8 @@ instruct_carrier_t cal_ast(object_carrier_t carrier)
                         highest_order = 1;
                         information = (instruct_information_t){
                             .instruct = INSTRUCT_CALL,
-                            .after_count = 2
+                            .after_count = 2,
+                            .preposition = 1
                         };
 
                         i --;
@@ -203,15 +202,13 @@ instruct_carrier_t cal_ast(object_carrier_t carrier)
     int const information_stack_length = (int)(information_stack - information_stack_top + 31);
     information_stack_top = information_stack + 31;
 
+
     for (unsigned int i = 0;i < object_carrier_container.object_carriers_length; i++)
         {
             const object_carrier_t ThisCarrier = object_carrier_container.object_carriers[i];
 
             if (information_stack_length)
-            {
                 information_stack_top->after_count--;
-            }
-
 
             instruct_carrier_t res = {0};
 
@@ -245,9 +242,23 @@ instruct_carrier_t cal_ast(object_carrier_t carrier)
             }else
             {
                 res = cal_ast(ThisCarrier);
+
+                if (information_stack_length)
+                    if (!information_stack_top->after_count)
+                        if (information_stack_top->instruct != INSTRUCT_NONE)
+                            if (information_stack_top->preposition)
+                            {
+                                pushInstructIntoCarrier(&result,(instruct_t){
+                                       .instruct = information_stack_top->instruct,
+                                       .object = res.instructs_length //如果不為0 表示至少前n項屬於該指令的控制範圍 僅有少部分instruct會採信 如 CALL
+                                   });
+                                pushInstructsIntoCarrier(&result, res);
+
+                                goto cl_end;
+                            }
+
                 pushInstructsIntoCarrier(&result, res);
             }
-
 
             if (information_stack_length)
             {
@@ -255,9 +266,9 @@ instruct_carrier_t cal_ast(object_carrier_t carrier)
                 {
                     if (information_stack_top->instruct != INSTRUCT_NONE)
                         pushInstructIntoCarrier(&result,(instruct_t){
-                            .instruct = information_stack_top->instruct,
-                            .object = res.instructs_length //如果不為0 表示至少前n項屬於該指令的控制範圍 僅有少部分instruct會採信 如 CALL
-                        });
+                                   .instruct = information_stack_top->instruct,
+                                   .object = res.instructs_length //如果不為0 表示至少前n項屬於該指令的控制範圍 僅有少部分instruct會採信 如 CALL
+                               });
 
 
                     information_stack_top--;
@@ -265,6 +276,7 @@ instruct_carrier_t cal_ast(object_carrier_t carrier)
                 }
             }
 
+            cl_end:;
         }
 
     if (object_carrier_container.object_carriers && object_carrier_container.object_carriers_length)
@@ -278,7 +290,14 @@ instruct_carrier_t calculate(object_carrier_t const object_carrier)
 
     for (int i = 0;i < result.instructs_length; i++)
     {
-        printf("%d %llu\n",result.instructs[i].instruct,result.instructs[i].object);
+        printf("ins: %d ",result.instructs[i].instruct);
+
+        if (result.instructs[i].instruct == INSTRUCT_LOAD_VALUE)
+        {
+            printf("number: %f\n",((object_t*)result.instructs[i].object)->vv.value.value.number);
+        }else
+            printf("obj: %llu\n",result.instructs[i].object);
+
     }
     return result;
 }
