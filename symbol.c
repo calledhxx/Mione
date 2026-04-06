@@ -92,7 +92,8 @@ static keyword_t SymbolKeywordArray[] = {
             SYMBOL_CONNECT_CONDITION_FLAG_AFTER_VV |
                 SYMBOL_CONNECT_CONDITION_FLAG_BEFORE_VV |
                     SYMBOL_CONNECT_CONDITION_FLAG_BEFORE_SYMBOL |
-                        SYMBOL_CONNECT_CONDITION_FLAG_MODESTY,
+                        SYMBOL_CONNECT_CONDITION_FLAG_AFTER_SYMBOL |
+                            SYMBOL_CONNECT_CONDITION_FLAG_MODESTY,
         .order = 0,
         .calculate_allow_position_flag =
             SYMBOL_CALCULATE_ALLOW_POSITION_FLAG_SPECIAL,
@@ -119,8 +120,9 @@ static keyword_t SymbolKeywordArray[] = {
         .connect_condition_flag =
             SYMBOL_CONNECT_CONDITION_FLAG_AFTER_VV |
                 SYMBOL_CONNECT_CONDITION_FLAG_BEFORE_VV |
-                    SYMBOL_CONNECT_CONDITION_FLAG_AFTER_SYMBOL |
-                        SYMBOL_CONNECT_CONDITION_FLAG_MODESTY,
+                    SYMBOL_CONNECT_CONDITION_FLAG_BEFORE_SYMBOL |
+                        SYMBOL_CONNECT_CONDITION_FLAG_AFTER_SYMBOL |
+                            SYMBOL_CONNECT_CONDITION_FLAG_MODESTY,
         .order = 0,
         .calculate_allow_position_flag =
             SYMBOL_CALCULATE_ALLOW_POSITION_FLAG_SPECIAL,

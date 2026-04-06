@@ -5,6 +5,8 @@ extern keyword_t * WeldKeyword;
 
 typedef struct weld_s
 {
+    char non;
+
 } weld_t;
 
 #endif

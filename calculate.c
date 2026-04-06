@@ -19,6 +19,7 @@ static void push(const object_carrier_t carrier,object_carrier_container_t * con
 
 instruct_carrier_t cal_ast(object_carrier_t carrier)
 {
+    print_object_carrier(carrier);
     instruct_carrier_t result = {0};
 
     int highest_order = -INT_MAX;
@@ -38,10 +39,10 @@ instruct_carrier_t cal_ast(object_carrier_t carrier)
             else if(carrier.objects[i].token == TOKEN_SYMBOL_CLOSING_PARENTHESIS)
                 goto keep;
 
-        simple:
+        simple:;
         carrier.objects++;
         carrier.objects_length -= 2;
-        keep:
+        keep:;
     }
 
     for (unsigned i = 0; i < carrier.objects_length; i++)
@@ -80,7 +81,10 @@ instruct_carrier_t cal_ast(object_carrier_t carrier)
     object_carrier_container_t object_carrier_container = {0};
     object_carrier_t object_carrier = {0};
 
-    instruct_information_carrier_t instruct_information_carrier = {0};
+    instruct_information_carrier_t instruct_information_carrier = {
+        .instruct_information = (instruct_information_t[32]){0},
+        .instruct_information_length = 0
+    };
 
     for (int i = 0; i < carrier.objects_length; i++)
     {
@@ -119,16 +123,11 @@ instruct_carrier_t cal_ast(object_carrier_t carrier)
                     if (i - 1 >= 0)
                         goto capf_end;
 
-
                 exit(32);
 
                 capf_end:
 
                 instruct_information_carrier.instruct_information_length++;
-                instruct_information_carrier.instruct_information = realloc(
-                    instruct_information_carrier.instruct_information,
-                sizeof (instruct_information_t) *  instruct_information_carrier.instruct_information_length
-                    );
 
                 instruct_information_t information = (instruct_information_t){0};
 
@@ -208,7 +207,6 @@ instruct_carrier_t cal_ast(object_carrier_t carrier)
 
     instruct_information_t * information_ptr = instruct_information_carrier.instruct_information;
 
-
     for (unsigned int i = 0;i < object_carrier_container.object_carriers_length; i++)
         {
             const object_carrier_t ThisCarrier = object_carrier_container.object_carriers[i];
@@ -263,16 +261,12 @@ instruct_carrier_t cal_ast(object_carrier_t carrier)
                         });
 
                     information_ptr++;
-
                     information_ptr->after_count--;
                 }
         }
 
     if (object_carrier_container.object_carriers && object_carrier_container.object_carriers_length)
         free(object_carrier_container.object_carriers);
-
-    if (instruct_information_carrier.instruct_information && instruct_information_carrier.instruct_information_length)
-        free(instruct_information_carrier.instruct_information);
 
     return result;
 }
