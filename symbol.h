@@ -21,11 +21,19 @@ enum symbol_calculate_allow_position_flag_e
     SYMBOL_CALCULATE_ALLOW_POSITION_FLAG_BEFORE = 1<<2,
     SYMBOL_CALCULATE_ALLOW_POSITION_FLAG_SPECIAL = 1<<3,
 };
+
+enum instruct_information_option_flag_e
+{
+    INSTRUCT_INFORMATION_OPTION_FLAG_NONE = 0,
+    INSTRUCT_INFORMATION_OPTION_FLAG_PREPOSITION = 1<<0,
+    INSTRUCT_INFORMATION_OPTION_FLAG_REQUIRED_LENGTH = 1<<1,
+};
+
 typedef struct instruct_information_s
 {
     unsigned char after_count;
     unsigned int instruct;
-    char preposition;
+    enum instruct_information_option_flag_e option;
 } instruct_information_t;
 
 typedef struct instruct_information_carrier_s

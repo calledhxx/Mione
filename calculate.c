@@ -163,7 +163,7 @@ instruct_carrier_t cal_ast(object_carrier_t carrier)
                         information = (instruct_information_t){
                             .instruct = INSTRUCT_CALL,
                             .after_count = 2,
-                            .preposition = 1
+                            .option = INSTRUCT_INFORMATION_OPTION_FLAG_PREPOSITION | INSTRUCT_INFORMATION_OPTION_FLAG_REQUIRED_LENGTH
                         };
 
                         i --;
@@ -202,7 +202,6 @@ instruct_carrier_t cal_ast(object_carrier_t carrier)
 
     int const information_stack_length = (int)(information_stack - information_stack_top + 31);
     information_stack_top = information_stack + 31;
-
 
     for (unsigned int i = 0;i < object_carrier_container.object_carriers_length; i++){
 
@@ -248,13 +247,15 @@ instruct_carrier_t cal_ast(object_carrier_t carrier)
             if (information_stack_length)
                 if (!information_stack_top->after_count)
                     if (information_stack_top->instruct != INSTRUCT_NONE)
-                        if (information_stack_top->preposition)
+                        if (information_stack_top->option & INSTRUCT_INFORMATION_OPTION_FLAG_PREPOSITION)
                         {
 
                             pushInstructIntoCarrier(&result,(instruct_t){
-                                   .instruct = information_stack_top->instruct,
-                                   .object = res.instructs_length //如果不為0 表示至少前n項屬於該指令的控制範圍 僅有少部分instruct會採信 如 CALL
-                               });
+                                .instruct = information_stack_top->instruct,
+                                .object =
+                                    (information_stack_top->option & INSTRUCT_INFORMATION_OPTION_FLAG_REQUIRED_LENGTH) ?
+                                    res.instructs_length : 0
+                            });
                             pushInstructsIntoCarrier(&result, res);
 
                             goto cl_end;
@@ -271,7 +272,9 @@ instruct_carrier_t cal_ast(object_carrier_t carrier)
                 if (information_stack_top->instruct != INSTRUCT_NONE)
                     pushInstructIntoCarrier(&result,(instruct_t){
                                .instruct = information_stack_top->instruct,
-                               .object = res.instructs_length //如果不為0 表示至少前n項屬於該指令的控制範圍 僅有少部分instruct會採信 如 CALL
+                               .object =
+                                   (information_stack_top->option & INSTRUCT_INFORMATION_OPTION_FLAG_REQUIRED_LENGTH) ?
+                                   res.instructs_length : 0
                            });
 
 
@@ -299,8 +302,9 @@ instruct_carrier_t calculate(object_carrier_t const object_carrier)
         if (result.instructs[i].instruct == INSTRUCT_LOAD_VALUE)
         {
             printf("number: %f\n",((object_t*)result.instructs[i].object)->vv.value.value.number);
-        }else
-            printf("obj: %llu\n",result.instructs[i].object);
+        }
+        else
+            printf("object: %llu\n",result.instructs[i].object);
 
     }
     return result;

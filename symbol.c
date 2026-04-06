@@ -19,14 +19,6 @@ static keyword_t SymbolKeywordArray[] = {
                     .after_count = 2,
                     .instruct = INSTRUCT_ADD
                 },
-                {
-                    .after_count = 0,
-                    .instruct = INSTRUCT_NONE
-                },
-                {
-                    .after_count = 0,
-                    .instruct = INSTRUCT_NONE
-                }
             }
         },
     },
@@ -46,14 +38,6 @@ static keyword_t SymbolKeywordArray[] = {
                         .after_count = 2,
                         .instruct = INSTRUCT_MUL
                     },
-                    {
-                        .after_count = 0,
-                        .instruct = INSTRUCT_NONE
-                    },
-                    {
-                        .after_count = 0,
-                        .instruct = INSTRUCT_NONE
-                    }
         }
     },
 },
@@ -73,14 +57,6 @@ static keyword_t SymbolKeywordArray[] = {
                 .after_count = 2,
                 .instruct = INSTRUCT_DIV
             },
-            {
-                .after_count = 0,
-                .instruct = INSTRUCT_NONE
-            },
-            {
-                .after_count = 0,
-                .instruct = INSTRUCT_NONE
-            }
         }
         }
     },
@@ -97,20 +73,7 @@ static keyword_t SymbolKeywordArray[] = {
         .order = 0,
         .calculate_allow_position_flag =
             SYMBOL_CALCULATE_ALLOW_POSITION_FLAG_SPECIAL,
-        .instruct_information = (instruct_information_t[3]){
-                {
-                    .after_count = 1,
-                    .instruct = INSTRUCT_NONE
-                },
-                {
-                    .after_count = 1,
-                    .instruct = INSTRUCT_NONE
-                },
-                {
-                    .after_count = 1,
-                    .instruct = INSTRUCT_NONE
-                }
-            }
+        .instruct_information = (instruct_information_t[3]){0}
         }
     },
 {
@@ -126,20 +89,7 @@ static keyword_t SymbolKeywordArray[] = {
         .order = 0,
         .calculate_allow_position_flag =
             SYMBOL_CALCULATE_ALLOW_POSITION_FLAG_SPECIAL,
-        .instruct_information = (instruct_information_t[3]){
-                    {
-                        .after_count = 1,
-                        .instruct = INSTRUCT_NONE
-                    },
-                    {
-                        .after_count = 1,
-                        .instruct = INSTRUCT_NONE
-                    },
-                    {
-                        .after_count = 1,
-                        .instruct = INSTRUCT_NONE
-                    }
-            }
+        .instruct_information = (instruct_information_t[3]){0}
         }
     },
     {0}
