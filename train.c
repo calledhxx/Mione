@@ -261,6 +261,7 @@ train_carrier_t object_to_train(object_carrier_t const object_carrier)
                         carriage_stack_top->carriage_type = CARRIAGE_HEAD;
                         carriage_stack_top->conductor = 0; //simple train
                     }
+                
                 pushPassengerIntoCarriage(carriage_stack_top,ThisObject);
 
                 break;

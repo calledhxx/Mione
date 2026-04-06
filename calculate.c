@@ -19,8 +19,6 @@ static void push(const object_carrier_t carrier,object_carrier_container_t * con
 
 instruct_carrier_t cal_ast(object_carrier_t carrier)
 {
-    print_object_carrier(carrier);
-
     instruct_carrier_t result = {0};
 
     int highest_order = -INT_MAX;
@@ -48,6 +46,7 @@ instruct_carrier_t cal_ast(object_carrier_t carrier)
 
     for (unsigned i = 0; i < carrier.objects_length; i++)
     {
+
         if (carrier.objects[i].object_type == OBJECT_SYMBOL)
         {
             symbol_t const ThisSymbol = token_to_symbol(carrier.objects[i].token);
@@ -62,6 +61,7 @@ instruct_carrier_t cal_ast(object_carrier_t carrier)
 
             if (carrier.objects[i].token == TOKEN_SYMBOL_CLOSING_PARENTHESIS)
             {
+
                 stack_top++;
 
                 if (*stack_top != TOKEN_SYMBOL_OPENING_PARENTHESIS)
@@ -72,10 +72,8 @@ instruct_carrier_t cal_ast(object_carrier_t carrier)
         }
     }
 
-
     if (preprocess_stack - stack_top + 31)
         exit(100);
-
 
     int preprocess_depth = 0;
     
@@ -165,6 +163,13 @@ instruct_carrier_t cal_ast(object_carrier_t carrier)
                         break;
                     }
                 case SYMBOL_CALCULATE_ALLOW_POSITION_FLAG_SPECIAL:{
+                        highest_order = 1;
+                        information = (instruct_information_t){
+                            .instruct = INSTRUCT_CALL,
+                            .after_count = 2
+                        };
+
+                        i --;
 
                         break;
                     }
@@ -201,9 +206,6 @@ instruct_carrier_t cal_ast(object_carrier_t carrier)
 
     object_carrier = (object_carrier_t){0};
 
-    for (int i = 0 ;i<object_carrier_container.object_carriers_length;i++)
-        print_object_carrier(object_carrier_container.object_carriers[i]);
-
     instruct_information_t * information_ptr = instruct_information_carrier.instruct_information;
 
 
@@ -214,8 +216,9 @@ instruct_carrier_t cal_ast(object_carrier_t carrier)
             if (instruct_information_carrier.instruct_information && instruct_information_carrier.instruct_information_length)
             {
                 information_ptr->after_count--;
-                printf("decounter %d\n",information_ptr->instruct);
             }
+
+            instruct_carrier_t res = {0};
 
             if (ThisCarrier.objects_length == 1)
             {
@@ -242,10 +245,13 @@ instruct_carrier_t cal_ast(object_carrier_t carrier)
                         });
                         break;
                     }
-                default: exit(11);
+                default: exit(15);
                 }
             }else
-                pushInstructsIntoCarrier(&result,cal_ast(ThisCarrier));
+            {
+                res = cal_ast(ThisCarrier);
+                pushInstructsIntoCarrier(&result, res);
+            }
 
             if (instruct_information_carrier.instruct_information && instruct_information_carrier.instruct_information_length)
                 if (!information_ptr->after_count)
@@ -253,7 +259,7 @@ instruct_carrier_t cal_ast(object_carrier_t carrier)
                     if (information_ptr->instruct != INSTRUCT_NONE)
                         pushInstructIntoCarrier(&result,(instruct_t){
                             .instruct = information_ptr->instruct,
-                            .object = 0
+                            .object = res.instructs_length //如果不為0 表示至少前n項屬於該指令的控制範圍 僅有少部分instruct會採信 如 CALL
                         });
 
                     information_ptr++;
