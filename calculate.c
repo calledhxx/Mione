@@ -20,7 +20,6 @@ static void push(const object_carrier_t carrier,object_carrier_container_t * con
 
 instruct_carrier_t cal_ast(object_carrier_t carrier)
 {
-
     instruct_carrier_t result = {0};
 
     int highest_order = -INT_MAX;
@@ -34,17 +33,19 @@ instruct_carrier_t cal_ast(object_carrier_t carrier)
         carrier.objects[carrier.objects_length - 1].token == TOKEN_SYMBOL_CLOSING_PARENTHESIS
         )
     {
+
         for (int i = 1;i<carrier.objects_length - 1; i++)
             if (carrier.objects[i].token == TOKEN_SYMBOL_OPENING_PARENTHESIS)
                 goto simple;
             else if(carrier.objects[i].token == TOKEN_SYMBOL_CLOSING_PARENTHESIS)
                 goto keep;
 
+
         simple:;
         carrier.objects++;
         carrier.objects_length -= 2;
-        keep:;
     }
+    keep:;
 
     for (unsigned i = 0; i < carrier.objects_length; i++)
     {
@@ -203,81 +204,84 @@ instruct_carrier_t cal_ast(object_carrier_t carrier)
     information_stack_top = information_stack + 31;
 
 
-    for (unsigned int i = 0;i < object_carrier_container.object_carriers_length; i++)
+    for (unsigned int i = 0;i < object_carrier_container.object_carriers_length; i++){
+
+        const object_carrier_t ThisCarrier = object_carrier_container.object_carriers[i];
+
+        if (information_stack_length)
+            information_stack_top->after_count--;
+
+        instruct_carrier_t res = {0};
+
+        if (ThisCarrier.objects_length == 1)
         {
-            const object_carrier_t ThisCarrier = object_carrier_container.object_carriers[i];
 
-            if (information_stack_length)
-                information_stack_top->after_count--;
-
-            instruct_carrier_t res = {0};
-
-            if (ThisCarrier.objects_length == 1)
+            switch (ThisCarrier.objects[0].object_type)
             {
-                switch (ThisCarrier.objects[0].object_type)
+            case OBJECT_VALUE:
                 {
-                case OBJECT_VALUE:
-                    {
-                        pushInstructIntoCarrier(&result,(instruct_t){
-                            .instruct = INSTRUCT_LOAD_VALUE,
-                            .object = (unsigned long long)memcpy(malloc(sizeof(object_t)),ThisCarrier.objects, sizeof(object_t))
-                        });
-                        break;
-                    }
-                case OBJECT_VARIABLE:
-                    {
-                        pushInstructIntoCarrier(&result,(instruct_t){
-                            .instruct = INSTRUCT_LOAD_VARIABLE,
-                            .object = (unsigned long long)memcpy(malloc(sizeof(object_t)),ThisCarrier.objects, sizeof(object_t))
-                        });
-
-                        pushInstructIntoCarrier(&result,(instruct_t){
-                            .instruct = INSTRUCT_TO_VALUE,
-                            .object = 0
-                        });
-                        break;
-                    }
-                default: exit(15);
+                    pushInstructIntoCarrier(&result,(instruct_t){
+                        .instruct = INSTRUCT_LOAD_VALUE,
+                        .object = (unsigned long long)memcpy(malloc(sizeof(object_t)),ThisCarrier.objects, sizeof(object_t))
+                    });
+                    break;
                 }
-            }else
-            {
-                res = cal_ast(ThisCarrier);
+            case OBJECT_VARIABLE:
+                {
+                    pushInstructIntoCarrier(&result,(instruct_t){
+                        .instruct = INSTRUCT_LOAD_VARIABLE,
+                        .object = (unsigned long long)memcpy(malloc(sizeof(object_t)),ThisCarrier.objects, sizeof(object_t))
+                    });
 
-                if (information_stack_length)
-                    if (!information_stack_top->after_count)
-                        if (information_stack_top->instruct != INSTRUCT_NONE)
-                            if (information_stack_top->preposition)
-                            {
-                                pushInstructIntoCarrier(&result,(instruct_t){
-                                       .instruct = information_stack_top->instruct,
-                                       .object = res.instructs_length //如果不為0 表示至少前n項屬於該指令的控制範圍 僅有少部分instruct會採信 如 CALL
-                                   });
-                                pushInstructsIntoCarrier(&result, res);
-
-                                goto cl_end;
-                            }
-
-                pushInstructsIntoCarrier(&result, res);
+                    pushInstructIntoCarrier(&result,(instruct_t){
+                        .instruct = INSTRUCT_TO_VALUE,
+                        .object = 0
+                    });
+                    break;
+                }
+            default: exit(15);
             }
+        }else
+        {
+            res = cal_ast(ThisCarrier);
 
             if (information_stack_length)
-            {
                 if (!information_stack_top->after_count)
-                {
                     if (information_stack_top->instruct != INSTRUCT_NONE)
-                        pushInstructIntoCarrier(&result,(instruct_t){
+                        if (information_stack_top->preposition)
+                        {
+
+                            pushInstructIntoCarrier(&result,(instruct_t){
                                    .instruct = information_stack_top->instruct,
                                    .object = res.instructs_length //如果不為0 表示至少前n項屬於該指令的控制範圍 僅有少部分instruct會採信 如 CALL
                                });
+                            pushInstructsIntoCarrier(&result, res);
 
+                            goto cl_end;
+                        }
 
-                    information_stack_top--;
-                    information_stack_top->after_count--;
-                }
-            }
-
-            cl_end:;
+            pushInstructsIntoCarrier(&result, res);
         }
+
+        if (information_stack_length)
+        {
+
+            if (!information_stack_top->after_count)
+            {
+                if (information_stack_top->instruct != INSTRUCT_NONE)
+                    pushInstructIntoCarrier(&result,(instruct_t){
+                               .instruct = information_stack_top->instruct,
+                               .object = res.instructs_length //如果不為0 表示至少前n項屬於該指令的控制範圍 僅有少部分instruct會採信 如 CALL
+                           });
+
+
+                information_stack_top--;
+                information_stack_top->after_count--;
+            }
+        }
+
+        cl_end:;
+    }
 
     if (object_carrier_container.object_carriers && object_carrier_container.object_carriers_length)
         free(object_carrier_container.object_carriers);
