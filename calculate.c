@@ -3,6 +3,7 @@
 #include <string.h>
 
 #include "main.h"
+#include <crtdbg.h>
 
 #define _max(a,b) ((a) > (b) ? (a) : (b))
 
@@ -19,13 +20,13 @@ static void push(const object_carrier_t carrier,object_carrier_container_t * con
 
 instruct_carrier_t cal_ast(object_carrier_t carrier)
 {
-    print_object_carrier(carrier);
+
     instruct_carrier_t result = {0};
 
     int highest_order = -INT_MAX;
 
     char preprocess_stack[32] = {0};
-    char * stack_top = preprocess_stack + 31;
+    char * preprocess_stack_top = preprocess_stack + 31;
 
     while (
         carrier.objects[0].token == TOKEN_SYMBOL_OPENING_PARENTHESIS
@@ -54,26 +55,26 @@ instruct_carrier_t cal_ast(object_carrier_t carrier)
 
             if (carrier.objects[i].token == TOKEN_SYMBOL_OPENING_PARENTHESIS)
             {
-                *stack_top = TOKEN_SYMBOL_OPENING_PARENTHESIS;
-                stack_top--;
+                *preprocess_stack_top = TOKEN_SYMBOL_OPENING_PARENTHESIS;
+                preprocess_stack_top--;
             }
 
-            highest_order = _max((preprocess_stack - stack_top + 31) ? 0 : (int)ThisSymbol.order,highest_order);
+            highest_order = _max((preprocess_stack - preprocess_stack_top + 31) ? 0 : (int)ThisSymbol.order,highest_order);
 
             if (carrier.objects[i].token == TOKEN_SYMBOL_CLOSING_PARENTHESIS)
             {
 
-                stack_top++;
+                preprocess_stack_top++;
 
-                if (*stack_top != TOKEN_SYMBOL_OPENING_PARENTHESIS)
+                if (*preprocess_stack_top != TOKEN_SYMBOL_OPENING_PARENTHESIS)
                     exit(101);
-                *stack_top = 0;
+                *preprocess_stack_top = 0;
             }
 
         }
     }
 
-    if (preprocess_stack - stack_top + 31)
+    if (preprocess_stack - preprocess_stack_top + 31)
         exit(100);
 
     int preprocess_depth = 0;
@@ -81,10 +82,10 @@ instruct_carrier_t cal_ast(object_carrier_t carrier)
     object_carrier_container_t object_carrier_container = {0};
     object_carrier_t object_carrier = {0};
 
-    instruct_information_carrier_t instruct_information_carrier = {
-        .instruct_information = (instruct_information_t[32]){0},
-        .instruct_information_length = 0
-    };
+    instruct_information_t information_stack[32] = {0};
+    instruct_information_t * information_stack_top = information_stack + 31;
+
+
 
     for (int i = 0; i < carrier.objects_length; i++)
     {
@@ -127,10 +128,7 @@ instruct_carrier_t cal_ast(object_carrier_t carrier)
 
                 capf_end:
 
-                instruct_information_carrier.instruct_information_length++;
-
                 instruct_information_t information = (instruct_information_t){0};
-
 
                 switch (final_flag)
                 {
@@ -175,9 +173,9 @@ instruct_carrier_t cal_ast(object_carrier_t carrier)
                 default: exit(11);
                 }
 
-                instruct_information_carrier.instruct_information[instruct_information_carrier.instruct_information_length - 1] =
-                    information;
+                *information_stack_top = information;
 
+                information_stack_top--;
             }else
             {
                 if (!object_carrier.objects)
@@ -195,26 +193,25 @@ instruct_carrier_t cal_ast(object_carrier_t carrier)
 
             object_carrier.objects_length ++;
         }
-
-
     }
-
 
     if (object_carrier.objects_length && object_carrier.objects)
         push(object_carrier,&object_carrier_container);
 
     object_carrier = (object_carrier_t){0};
 
-    instruct_information_t * information_ptr = instruct_information_carrier.instruct_information;
+    int const information_stack_length = (int)(information_stack - information_stack_top + 31);
+    information_stack_top = information_stack + 31;
 
     for (unsigned int i = 0;i < object_carrier_container.object_carriers_length; i++)
         {
             const object_carrier_t ThisCarrier = object_carrier_container.object_carriers[i];
 
-            if (instruct_information_carrier.instruct_information && instruct_information_carrier.instruct_information_length)
+            if (information_stack_length)
             {
-                information_ptr->after_count--;
+                information_stack_top->after_count--;
             }
+
 
             instruct_carrier_t res = {0};
 
@@ -251,18 +248,23 @@ instruct_carrier_t cal_ast(object_carrier_t carrier)
                 pushInstructsIntoCarrier(&result, res);
             }
 
-            if (instruct_information_carrier.instruct_information && instruct_information_carrier.instruct_information_length)
-                if (!information_ptr->after_count)
+
+            if (information_stack_length)
+            {
+                if (!information_stack_top->after_count)
                 {
-                    if (information_ptr->instruct != INSTRUCT_NONE)
+                    if (information_stack_top->instruct != INSTRUCT_NONE)
                         pushInstructIntoCarrier(&result,(instruct_t){
-                            .instruct = information_ptr->instruct,
+                            .instruct = information_stack_top->instruct,
                             .object = res.instructs_length //如果不為0 表示至少前n項屬於該指令的控制範圍 僅有少部分instruct會採信 如 CALL
                         });
 
-                    information_ptr++;
-                    information_ptr->after_count--;
+
+                    information_stack_top--;
+                    information_stack_top->after_count--;
                 }
+            }
+
         }
 
     if (object_carrier_container.object_carriers && object_carrier_container.object_carriers_length)

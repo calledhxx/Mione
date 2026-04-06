@@ -33,7 +33,6 @@ typedef struct instruct_information_carrier_s
     unsigned instruct_information_length;
 } instruct_information_carrier_t;
 
-
 typedef struct symbol_s
 {
     enum symbol_connect_condition_flag_e connect_condition_flag;
