@@ -19,7 +19,6 @@ static void push(const object_carrier_t carrier,object_carrier_container_t * con
 
 instruct_carrier_t cal_ast(object_carrier_t carrier,enum calculate_option_flag_e calculate_option_flag)
 {
-    print_object_carrier(carrier);
     instruct_carrier_t result = {0};
 
     int highest_order = -INT_MAX;
@@ -27,23 +26,26 @@ instruct_carrier_t cal_ast(object_carrier_t carrier,enum calculate_option_flag_e
     char preprocess_stack[32] = {0};
     char * preprocess_stack_top = preprocess_stack + 31;
 
-    if (calculate_option_flag & CALCULATE_OPTION_FLAG_FREE_BRACKET_ALLOWED)
-        while (
+    while (
             carrier.objects[0].token == TOKEN_SYMBOL_OPENING_BRACKET
             &&
             carrier.objects[carrier.objects_length - 1].token == TOKEN_SYMBOL_CLOSING_BRACKET
             )
-        {
-            for (int i = 1;i<carrier.objects_length - 1; i++)
-                if (carrier.objects[i].token == TOKEN_SYMBOL_OPENING_BRACKET)
-                    goto simple_bracket;
-                else if(carrier.objects[i].token == TOKEN_SYMBOL_CLOSING_BRACKET)
-                    goto keep;
+    {
+        if (!(calculate_option_flag & CALCULATE_OPTION_FLAG_FREE_BRACKET_ALLOWED))
+            exit(102);
 
-            simple_bracket:;
-            carrier.objects++;
-            carrier.objects_length -= 2;
-        }
+        for (int i = 1;i<carrier.objects_length - 1; i++)
+            if (carrier.objects[i].token == TOKEN_SYMBOL_OPENING_BRACKET)
+                goto simple_bracket;
+            else if(carrier.objects[i].token == TOKEN_SYMBOL_CLOSING_BRACKET)
+                goto keep;
+
+        simple_bracket:;
+        carrier.objects++;
+        carrier.objects_length -= 2;
+    }
+
 
     while (
         carrier.objects[0].token == TOKEN_SYMBOL_OPENING_PARENTHESIS
@@ -181,7 +183,7 @@ instruct_carrier_t cal_ast(object_carrier_t carrier,enum calculate_option_flag_e
                     information = (information_t){
                         .instruct = INSTRUCT_CALL,
                         .after_count = 2,
-                        .option = INSTRUCT_INFORMATION_OPTION_FLAG_PREPOSITION | INSTRUCT_INFORMATION_OPTION_FLAG_REQUIRED_LENGTH
+                        .option = INFORMATION_OPTION_FLAG_PREPOSITION | INFORMATION_OPTION_FLAG_REQUIRED_LENGTH
                     };
 
                     i--;
@@ -191,7 +193,7 @@ instruct_carrier_t cal_ast(object_carrier_t carrier,enum calculate_option_flag_e
                     information = (information_t){
                         .instruct = INSTRUCT_LOCATE,
                         .after_count = 2,
-                        .option = INSTRUCT_INFORMATION_OPTION_FLAG_PREPOSITION | INSTRUCT_INFORMATION_OPTION_FLAG_REQUIRED_LENGTH,
+                        .option = INFORMATION_OPTION_FLAG_PREPOSITION | INFORMATION_OPTION_FLAG_REQUIRED_LENGTH,
                         .calculate_option_flag = CALCULATE_OPTION_FLAG_FREE_BRACKET_ALLOWED
                     };
 
@@ -274,13 +276,13 @@ instruct_carrier_t cal_ast(object_carrier_t carrier,enum calculate_option_flag_e
             if (information_stack_length)
                 if (!information_stack_top->after_count)
                     if (information_stack_top->instruct != INSTRUCT_NONE)
-                        if (information_stack_top->option & INSTRUCT_INFORMATION_OPTION_FLAG_PREPOSITION)
+                        if (information_stack_top->option & INFORMATION_OPTION_FLAG_PREPOSITION)
                         {
 
                             pushInstructIntoCarrier(&result,(instruct_t){
                                 .instruct = information_stack_top->instruct,
                                 .object =
-                                    (information_stack_top->option & INSTRUCT_INFORMATION_OPTION_FLAG_REQUIRED_LENGTH) ?
+                                    (information_stack_top->option & INFORMATION_OPTION_FLAG_REQUIRED_LENGTH) ?
                                     res.instructs_length : 0
                             });
                             pushInstructsIntoCarrier(&result, res);
@@ -300,7 +302,7 @@ instruct_carrier_t cal_ast(object_carrier_t carrier,enum calculate_option_flag_e
                     pushInstructIntoCarrier(&result,(instruct_t){
                                .instruct = information_stack_top->instruct,
                                .object =
-                                   (information_stack_top->option & INSTRUCT_INFORMATION_OPTION_FLAG_REQUIRED_LENGTH) ?
+                                   (information_stack_top->option & INFORMATION_OPTION_FLAG_REQUIRED_LENGTH) ?
                                    res.instructs_length : 0
                            });
 

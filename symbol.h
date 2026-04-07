@@ -22,18 +22,18 @@ enum symbol_calculate_allow_position_flag_e
     SYMBOL_CALCULATE_ALLOW_POSITION_FLAG_SPECIAL = 1<<3,
 };
 
-enum instruct_information_option_flag_e
+enum information_option_flag_e
 {
-    INSTRUCT_INFORMATION_OPTION_FLAG_NONE = 0,
-    INSTRUCT_INFORMATION_OPTION_FLAG_PREPOSITION = 1<<0,
-    INSTRUCT_INFORMATION_OPTION_FLAG_REQUIRED_LENGTH = 1<<1,
+    INFORMATION_OPTION_FLAG_NONE = 0,
+    INFORMATION_OPTION_FLAG_PREPOSITION = 1<<0,
+    INFORMATION_OPTION_FLAG_REQUIRED_LENGTH = 1<<1,
 };
 
 typedef struct information_s
 {
     unsigned char after_count;
     unsigned int instruct;
-    enum instruct_information_option_flag_e option;
+    enum information_option_flag_e option;
     int calculate_option_flag;
     int order;
 } information_t;
