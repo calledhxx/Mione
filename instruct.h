@@ -13,6 +13,7 @@ enum instruct_e
     INSTRUCT_MUL,
     INSTRUCT_DIV,
     INSTRUCT_CALL,
+    INSTRUCT_LOCATE,
 };
 
 typedef struct instruct_s

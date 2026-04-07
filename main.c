@@ -34,7 +34,5 @@ int main(void)
 
     CreateLine(); //start using Allocate
 
-
-
     return 0;
 }

@@ -11,17 +11,43 @@ static keyword_t SymbolKeywordArray[] = {
                 SYMBOL_CONNECT_CONDITION_FLAG_AFTER_VV |
                     SYMBOL_CONNECT_CONDITION_FLAG_BEFORE_VV |
                         SYMBOL_CONNECT_CONDITION_FLAG_MODESTY,
-            .order = 2,
             .calculate_allow_position_flag =
                 SYMBOL_CALCULATE_ALLOW_POSITION_FLAG_MIDDLE,
-            .instruct_information = (instruct_information_t[3]){
+            .instruct_information = (information_t[3]){
                 {
                     .after_count = 2,
-                    .instruct = INSTRUCT_ADD
+                    .instruct = INSTRUCT_ADD,
+                    .order = 2
                 },
             }
         },
     },
+{
+    .name = "-",
+    .token = TOKEN_SYMBOL_MINUS,
+    .instance = &(symbol_t){
+        .connect_condition_flag =
+            SYMBOL_CONNECT_CONDITION_FLAG_AFTER_VV |
+                SYMBOL_CONNECT_CONDITION_FLAG_BEFORE_VV |
+                    SYMBOL_CONNECT_CONDITION_FLAG_AFTER_SYMBOL |
+                        SYMBOL_CONNECT_CONDITION_FLAG_MODESTY,
+        .calculate_allow_position_flag =
+            SYMBOL_CALCULATE_ALLOW_POSITION_FLAG_MIDDLE |
+                SYMBOL_CALCULATE_ALLOW_POSITION_FLAG_BEFORE,
+        .instruct_information = (information_t[3]){
+                    {
+                        .after_count = 2,
+                        .instruct = INSTRUCT_SUB,
+                        .order = 2
+                    },
+                {
+                        .after_count = 1,
+                        .instruct = INSTRUCT_NEGATIVE,
+                        .order = 0
+                    },
+                }
+    },
+},
 {
     .name = "*",
     .token = TOKEN_SYMBOL_MUL,
@@ -30,13 +56,13 @@ static keyword_t SymbolKeywordArray[] = {
             SYMBOL_CONNECT_CONDITION_FLAG_AFTER_VV |
                     SYMBOL_CONNECT_CONDITION_FLAG_BEFORE_VV |
                         SYMBOL_CONNECT_CONDITION_FLAG_MODESTY,
-        .order = 1,
         .calculate_allow_position_flag =
             SYMBOL_CALCULATE_ALLOW_POSITION_FLAG_MIDDLE,
-        .instruct_information = (instruct_information_t[3]){
+        .instruct_information = (information_t[3]){
                     {
                         .after_count = 2,
-                        .instruct = INSTRUCT_MUL
+                        .instruct = INSTRUCT_MUL,
+                        .order = 1
                     },
         }
     },
@@ -49,13 +75,13 @@ static keyword_t SymbolKeywordArray[] = {
             SYMBOL_CONNECT_CONDITION_FLAG_AFTER_VV |
                 SYMBOL_CONNECT_CONDITION_FLAG_BEFORE_VV |
                         SYMBOL_CONNECT_CONDITION_FLAG_MODESTY,
-        .order = 1,
         .calculate_allow_position_flag =
             SYMBOL_CALCULATE_ALLOW_POSITION_FLAG_MIDDLE,
-        .instruct_information = (instruct_information_t[3]){
+        .instruct_information = (information_t[3]){
             {
                 .after_count = 2,
-                .instruct = INSTRUCT_DIV
+                .instruct = INSTRUCT_DIV,
+                .order = 1
             },
         }
         }
@@ -70,10 +96,8 @@ static keyword_t SymbolKeywordArray[] = {
                     SYMBOL_CONNECT_CONDITION_FLAG_BEFORE_SYMBOL |
                         SYMBOL_CONNECT_CONDITION_FLAG_AFTER_SYMBOL |
                             SYMBOL_CONNECT_CONDITION_FLAG_MODESTY,
-        .order = 0,
         .calculate_allow_position_flag =
             SYMBOL_CALCULATE_ALLOW_POSITION_FLAG_SPECIAL,
-        .instruct_information = (instruct_information_t[3]){0}
         }
     },
 {
@@ -86,12 +110,37 @@ static keyword_t SymbolKeywordArray[] = {
                     SYMBOL_CONNECT_CONDITION_FLAG_BEFORE_SYMBOL |
                         SYMBOL_CONNECT_CONDITION_FLAG_AFTER_SYMBOL |
                             SYMBOL_CONNECT_CONDITION_FLAG_MODESTY,
-        .order = 0,
         .calculate_allow_position_flag =
             SYMBOL_CALCULATE_ALLOW_POSITION_FLAG_SPECIAL,
-        .instruct_information = (instruct_information_t[3]){0}
         }
-    },
+},{
+    .name = "[",
+    .token = TOKEN_SYMBOL_OPENING_BRACKET,
+    .instance = &(symbol_t){
+        .connect_condition_flag =
+            SYMBOL_CONNECT_CONDITION_FLAG_AFTER_VV |
+                SYMBOL_CONNECT_CONDITION_FLAG_BEFORE_VV |
+                    SYMBOL_CONNECT_CONDITION_FLAG_BEFORE_SYMBOL |
+                        SYMBOL_CONNECT_CONDITION_FLAG_AFTER_SYMBOL |
+                            SYMBOL_CONNECT_CONDITION_FLAG_MODESTY,
+        .calculate_allow_position_flag =
+            SYMBOL_CALCULATE_ALLOW_POSITION_FLAG_SPECIAL,
+    }
+},
+{
+    .name = "]",
+    .token = TOKEN_SYMBOL_CLOSING_BRACKET,
+    .instance = &(symbol_t){
+        .connect_condition_flag =
+            SYMBOL_CONNECT_CONDITION_FLAG_AFTER_VV |
+                SYMBOL_CONNECT_CONDITION_FLAG_BEFORE_VV |
+                    SYMBOL_CONNECT_CONDITION_FLAG_BEFORE_SYMBOL |
+                        SYMBOL_CONNECT_CONDITION_FLAG_AFTER_SYMBOL |
+                            SYMBOL_CONNECT_CONDITION_FLAG_MODESTY,
+        .calculate_allow_position_flag =
+            SYMBOL_CALCULATE_ALLOW_POSITION_FLAG_SPECIAL,
+    }
+},
     {0}
 };
 

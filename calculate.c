@@ -17,15 +17,33 @@ static void push(const object_carrier_t carrier,object_carrier_container_t * con
     container_ptr->object_carriers[container_ptr->object_carriers_length - 1] = carrier;
 }
 
-
-instruct_carrier_t cal_ast(object_carrier_t carrier)
+instruct_carrier_t cal_ast(object_carrier_t carrier,enum calculate_option_flag_e calculate_option_flag)
 {
+    print_object_carrier(carrier);
     instruct_carrier_t result = {0};
 
     int highest_order = -INT_MAX;
 
     char preprocess_stack[32] = {0};
     char * preprocess_stack_top = preprocess_stack + 31;
+
+    if (calculate_option_flag & CALCULATE_OPTION_FLAG_FREE_BRACKET_ALLOWED)
+        while (
+            carrier.objects[0].token == TOKEN_SYMBOL_OPENING_BRACKET
+            &&
+            carrier.objects[carrier.objects_length - 1].token == TOKEN_SYMBOL_CLOSING_BRACKET
+            )
+        {
+            for (int i = 1;i<carrier.objects_length - 1; i++)
+                if (carrier.objects[i].token == TOKEN_SYMBOL_OPENING_BRACKET)
+                    goto simple_bracket;
+                else if(carrier.objects[i].token == TOKEN_SYMBOL_CLOSING_BRACKET)
+                    goto keep;
+
+            simple_bracket:;
+            carrier.objects++;
+            carrier.objects_length -= 2;
+        }
 
     while (
         carrier.objects[0].token == TOKEN_SYMBOL_OPENING_PARENTHESIS
@@ -36,55 +54,102 @@ instruct_carrier_t cal_ast(object_carrier_t carrier)
 
         for (int i = 1;i<carrier.objects_length - 1; i++)
             if (carrier.objects[i].token == TOKEN_SYMBOL_OPENING_PARENTHESIS)
-                goto simple;
+                goto simple_parenthesis;
             else if(carrier.objects[i].token == TOKEN_SYMBOL_CLOSING_PARENTHESIS)
                 goto keep;
 
 
-        simple:;
+        simple_parenthesis:;
         carrier.objects++;
         carrier.objects_length -= 2;
     }
     keep:;
 
-    for (unsigned i = 0; i < carrier.objects_length; i++)
-    {
+    symbol_t symbol_stack[32] = {0};
+    symbol_t * symbol_stack_top = symbol_stack + 31;
 
+    for (int i = 0; i < carrier.objects_length; i++)
         if (carrier.objects[i].object_type == OBJECT_SYMBOL)
         {
-            symbol_t const ThisSymbol = token_to_symbol(carrier.objects[i].token);
+            symbol_t ThisSymbol = token_to_symbol(carrier.objects[i].token);
 
-            if (carrier.objects[i].token == TOKEN_SYMBOL_OPENING_PARENTHESIS)
+            if (
+                carrier.objects[i].token == TOKEN_SYMBOL_OPENING_PARENTHESIS
+                ||
+                carrier.objects[i].token == TOKEN_SYMBOL_OPENING_BRACKET
+                )
             {
-                *preprocess_stack_top = TOKEN_SYMBOL_OPENING_PARENTHESIS;
+                *preprocess_stack_top = carrier.objects[i].token;
                 preprocess_stack_top--;
             }
 
-            highest_order = _max((preprocess_stack - preprocess_stack_top + 31) ? 0 : (int)ThisSymbol.order,highest_order);
+            information_t information = (information_t){0};
+
+            {
+                if (ThisSymbol.calculate_allow_position_flag & SYMBOL_CALCULATE_ALLOW_POSITION_FLAG_SPECIAL)
+                    goto sccapf_end;
+
+                if (ThisSymbol.calculate_allow_position_flag & SYMBOL_CALCULATE_ALLOW_POSITION_FLAG_BEFORE)
+                    if (i + 1 < carrier.objects_length)
+                    {
+                        information = ThisSymbol.instruct_information[1];
+                        goto sccapf_end;
+                    }
+
+                if (ThisSymbol.calculate_allow_position_flag & SYMBOL_CALCULATE_ALLOW_POSITION_FLAG_AFTER)
+                    if (i - 1 >= 0)
+                    {
+                        information = ThisSymbol.instruct_information[2];
+                        goto sccapf_end;
+                    }
+
+                if (ThisSymbol.calculate_allow_position_flag & SYMBOL_CALCULATE_ALLOW_POSITION_FLAG_MIDDLE)
+                    if (i - 1 >= 0 && i + 1 < carrier.objects_length)
+                    {
+                        information = ThisSymbol.instruct_information[0];
+                        goto sccapf_end;
+                    }
+
+                exit(132);
+            }
+            sccapf_end:
+
+            int order = ThisSymbol.order = preprocess_stack - preprocess_stack_top + 31 ? 0 : information.order;
+            ThisSymbol.instruct_information[0] = information;
+
+            highest_order = _max(order,highest_order);
 
             if (carrier.objects[i].token == TOKEN_SYMBOL_CLOSING_PARENTHESIS)
             {
-
                 preprocess_stack_top++;
 
                 if (*preprocess_stack_top != TOKEN_SYMBOL_OPENING_PARENTHESIS)
                     exit(101);
                 *preprocess_stack_top = 0;
+            }else if (carrier.objects[i].token == TOKEN_SYMBOL_CLOSING_BRACKET)
+            {
+                preprocess_stack_top++;
+
+                if (*preprocess_stack_top != TOKEN_SYMBOL_OPENING_BRACKET)
+                    exit(102);
+                *preprocess_stack_top = 0;
             }
 
+            *symbol_stack_top-- = ThisSymbol;
         }
-    }
+
+    symbol_stack_top = symbol_stack + 31;
 
     if (preprocess_stack - preprocess_stack_top + 31)
         exit(100);
 
     int preprocess_depth = 0;
-    
+
     object_carrier_container_t object_carrier_container = {0};
     object_carrier_t object_carrier = {0};
 
-    instruct_information_t information_stack[32] = {0};
-    instruct_information_t * information_stack_top = information_stack + 31;
+    information_t information_stack[32] = {0};
+    information_t * information_stack_top = information_stack + 31;
 
     for (int i = 0; i < carrier.objects_length; i++)
     {
@@ -92,9 +157,13 @@ instruct_carrier_t cal_ast(object_carrier_t carrier)
 
         if (ThisObj.object_type == OBJECT_SYMBOL)
         {
-            symbol_t const ThisSymbol = token_to_symbol(ThisObj.token);
+            symbol_t const ThisSymbol = *symbol_stack_top--;
 
-            if (carrier.objects[i].token == TOKEN_SYMBOL_OPENING_PARENTHESIS)
+            if (
+                carrier.objects[i].token == TOKEN_SYMBOL_OPENING_PARENTHESIS
+                ||
+                carrier.objects[i].token == TOKEN_SYMBOL_OPENING_BRACKET
+                )
                 preprocess_depth++;
 
             if (highest_order == (preprocess_depth ? 0 : ThisSymbol.order))
@@ -104,78 +173,32 @@ instruct_carrier_t cal_ast(object_carrier_t carrier)
 
                 object_carrier = (object_carrier_t){0};
 
-                enum symbol_calculate_allow_position_flag_e final_flag = SYMBOL_CALCULATE_ALLOW_POSITION_FLAG_NONE;
+                information_t information = ThisSymbol.instruct_information[0];
 
-                if ((final_flag = ThisSymbol.calculate_allow_position_flag & SYMBOL_CALCULATE_ALLOW_POSITION_FLAG_SPECIAL))
+                if (ThisObj.token == TOKEN_SYMBOL_OPENING_PARENTHESIS)
                 {
-                    goto capf_end;
+                    highest_order = 1;
+                    information = (information_t){
+                        .instruct = INSTRUCT_CALL,
+                        .after_count = 2,
+                        .option = INSTRUCT_INFORMATION_OPTION_FLAG_PREPOSITION | INSTRUCT_INFORMATION_OPTION_FLAG_REQUIRED_LENGTH
+                    };
+
+                    i--;
+                }else if (ThisObj.token == TOKEN_SYMBOL_OPENING_BRACKET)
+                {
+                    highest_order = 1;
+                    information = (information_t){
+                        .instruct = INSTRUCT_LOCATE,
+                        .after_count = 2,
+                        .option = INSTRUCT_INFORMATION_OPTION_FLAG_PREPOSITION | INSTRUCT_INFORMATION_OPTION_FLAG_REQUIRED_LENGTH,
+                        .calculate_option_flag = CALCULATE_OPTION_FLAG_FREE_BRACKET_ALLOWED
+                    };
+
+                    i--;
                 }
 
-                if ((final_flag = ThisSymbol.calculate_allow_position_flag & SYMBOL_CALCULATE_ALLOW_POSITION_FLAG_MIDDLE))
-                    if (i - 1 >= 0 && i + 1 < carrier.objects_length)
-                        goto capf_end;
-
-                if ((final_flag = ThisSymbol.calculate_allow_position_flag & SYMBOL_CALCULATE_ALLOW_POSITION_FLAG_BEFORE))
-                    if (i + 1 < carrier.objects_length)
-                        goto capf_end;
-
-                if ((final_flag = ThisSymbol.calculate_allow_position_flag & SYMBOL_CALCULATE_ALLOW_POSITION_FLAG_AFTER))
-                    if (i - 1 >= 0)
-                        goto capf_end;
-
-                exit(32);
-
-                capf_end:
-
-                instruct_information_t information = (instruct_information_t){0};
-
-                switch (final_flag)
-                {
-                case SYMBOL_CALCULATE_ALLOW_POSITION_FLAG_MIDDLE:
-                    {
-                        information = ThisSymbol.instruct_information[0];
-
-                        if (information.instruct == INSTRUCT_NONE)
-                            exit(9);
-
-                        break;
-                    }
-                case SYMBOL_CALCULATE_ALLOW_POSITION_FLAG_BEFORE:
-                    {
-                        information = ThisSymbol.instruct_information[1];
-
-                        if (information.instruct == INSTRUCT_NONE)
-                            exit(9);
-
-                        break;
-                    }
-                case SYMBOL_CALCULATE_ALLOW_POSITION_FLAG_AFTER:
-                    {
-                        information = ThisSymbol.instruct_information[2];
-
-                        if (information.instruct == INSTRUCT_NONE)
-                            exit(9);
-
-                        break;
-                    }
-                case SYMBOL_CALCULATE_ALLOW_POSITION_FLAG_SPECIAL:{
-                        highest_order = 1;
-                        information = (instruct_information_t){
-                            .instruct = INSTRUCT_CALL,
-                            .after_count = 2,
-                            .option = INSTRUCT_INFORMATION_OPTION_FLAG_PREPOSITION | INSTRUCT_INFORMATION_OPTION_FLAG_REQUIRED_LENGTH
-                        };
-
-                        i --;
-
-                        break;
-                    }
-                default: exit(11);
-                }
-
-                *information_stack_top = information;
-
-                information_stack_top--;
+                *information_stack_top-- = information;
             }else
             {
                 if (!object_carrier.objects)
@@ -184,7 +207,11 @@ instruct_carrier_t cal_ast(object_carrier_t carrier)
                 object_carrier.objects_length ++;
             }
 
-            if (carrier.objects[i].token == TOKEN_SYMBOL_CLOSING_PARENTHESIS)
+            if (
+                carrier.objects[i].token == TOKEN_SYMBOL_CLOSING_PARENTHESIS
+                ||
+                carrier.objects[i].token == TOKEN_SYMBOL_CLOSING_BRACKET
+                )
                 preprocess_depth--;
         }else
         {
@@ -242,7 +269,7 @@ instruct_carrier_t cal_ast(object_carrier_t carrier)
             }
         }else
         {
-            res = cal_ast(ThisCarrier);
+            res = cal_ast(ThisCarrier,information_stack_top->calculate_option_flag);
 
             if (information_stack_length)
                 if (!information_stack_top->after_count)
@@ -278,8 +305,7 @@ instruct_carrier_t cal_ast(object_carrier_t carrier)
                            });
 
 
-                information_stack_top--;
-                information_stack_top->after_count--;
+                (--information_stack_top)->after_count--;
             }
         }
 
@@ -293,7 +319,7 @@ instruct_carrier_t cal_ast(object_carrier_t carrier)
 }
 instruct_carrier_t calculate(object_carrier_t const object_carrier)
 {
-    instruct_carrier_t const result = cal_ast(object_carrier);
+    instruct_carrier_t const result = cal_ast(object_carrier,CALCULATE_OPTION_FLAG_NONE);
 
     for (int i = 0;i < result.instructs_length; i++)
     {
