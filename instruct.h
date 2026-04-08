@@ -28,8 +28,9 @@ typedef struct instruct_carrier_s
     unsigned instructs_length;
 } instruct_carrier_t;
 
+extern void print_instruct_carrier(instruct_carrier_t const instruct_carrier);
 extern void pushInstructIntoCarrier(instruct_carrier_t * CarrierPtr,instruct_t instruct);
-void pushInstructsIntoCarrier(instruct_carrier_t * CarrierPtr,instruct_carrier_t instructs);
+extern void pushInstructsIntoCarrier(instruct_carrier_t * CarrierPtr,instruct_carrier_t instructs);
 extern instruct_carrier_t train_to_instruct(train_carrier_t  train_carrier);
 
 #endif //INSTRUCT_H

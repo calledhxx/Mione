@@ -13,8 +13,9 @@ enum calculate_option_flag_e
 {
     CALCULATE_OPTION_FLAG_NONE = 0,
     CALCULATE_OPTION_FLAG_FREE_BRACKET_ALLOWED = 1<<0,
+    CALCULATE_OPTION_FLAG_PROTECT_VARIABLE = 1<<1,
 };
 
-instruct_carrier_t calculate(object_carrier_t object_carrier);
+instruct_carrier_t calculate(object_carrier_t object_carrier,char  calculate_as_container);
 
 #endif

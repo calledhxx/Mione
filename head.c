@@ -2,9 +2,9 @@
 
 #include "main.h"
 
-static instruct_carrier_t * set(train_t * const trainPtr)
+static instruct_carrier_t * set(train_t const * const trainPtr)
 {
-    train_t train = *trainPtr;
+    train_t const train = *trainPtr;
 
     instruct_carrier_t instruct_carrier = {0};
 
@@ -16,12 +16,9 @@ static instruct_carrier_t * set(train_t * const trainPtr)
         {
         case CARRIAGE_HEAD:
             {
-                pushInstructIntoCarrier(
+                pushInstructsIntoCarrier(
                     &instruct_carrier,
-                    (instruct_t){
-                        .instruct = INSTRUCT_LOAD_VARIABLE,
-                        .object = (intptr_t)ThisCarriage.passengers.objects
-                    }
+                    calculate(ThisCarriage.passengers,1)
                     );
                 break;
             }
@@ -31,7 +28,10 @@ static instruct_carrier_t * set(train_t * const trainPtr)
                 {
                 case TOKEN_PROMPT_EQUAL:
                     {
-                        calculate(ThisCarriage.passengers);
+                        pushInstructsIntoCarrier(
+                            &instruct_carrier,
+                            calculate(ThisCarriage.passengers,0)
+                        );
 
                         break;
                     }

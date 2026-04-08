@@ -17,7 +17,11 @@ static void push(const object_carrier_t carrier,object_carrier_container_t * con
     container_ptr->object_carriers[container_ptr->object_carriers_length - 1] = carrier;
 }
 
-instruct_carrier_t cal_ast(object_carrier_t carrier,enum calculate_option_flag_e calculate_option_flag)
+instruct_carrier_t cal_ast(
+    object_carrier_t carrier,
+    enum calculate_option_flag_e calculate_option_flag_for_once,
+    enum calculate_option_flag_e calculate_option_flag_for_all
+    )
 {
     instruct_carrier_t result = {0};
 
@@ -32,7 +36,7 @@ instruct_carrier_t cal_ast(object_carrier_t carrier,enum calculate_option_flag_e
             carrier.objects[carrier.objects_length - 1].token == TOKEN_SYMBOL_CLOSING_BRACKET
             )
     {
-        if (!(calculate_option_flag & CALCULATE_OPTION_FLAG_FREE_BRACKET_ALLOWED))
+        if (!(calculate_option_flag_for_once & CALCULATE_OPTION_FLAG_FREE_BRACKET_ALLOWED))
             exit(102);
 
         for (int i = 1;i<carrier.objects_length - 1; i++)
@@ -261,17 +265,22 @@ instruct_carrier_t cal_ast(object_carrier_t carrier,enum calculate_option_flag_e
                         .object = (unsigned long long)memcpy(malloc(sizeof(object_t)),ThisCarrier.objects, sizeof(object_t))
                     });
 
-                    pushInstructIntoCarrier(&result,(instruct_t){
-                        .instruct = INSTRUCT_TO_VALUE,
-                        .object = 0
-                    });
+                    if (!(calculate_option_flag_for_all & CALCULATE_OPTION_FLAG_PROTECT_VARIABLE))
+                        pushInstructIntoCarrier(&result,(instruct_t){
+                            .instruct = INSTRUCT_TO_VALUE,
+                            .object = 0
+                        });
                     break;
                 }
             default: exit(15);
             }
         }else
         {
-            res = cal_ast(ThisCarrier,information_stack_top->calculate_option_flag);
+            res = cal_ast(
+                ThisCarrier,
+                information_stack_top->calculate_option_flag,
+                calculate_option_flag_for_all
+                );
 
             if (information_stack_length)
                 if (!information_stack_top->after_count)
@@ -319,21 +328,14 @@ instruct_carrier_t cal_ast(object_carrier_t carrier,enum calculate_option_flag_e
 
     return result;
 }
-instruct_carrier_t calculate(object_carrier_t const object_carrier)
+instruct_carrier_t calculate(object_carrier_t const object_carrier,char const calculate_as_container)
 {
-    instruct_carrier_t const result = cal_ast(object_carrier,CALCULATE_OPTION_FLAG_NONE);
+    instruct_carrier_t const result = cal_ast(
+        object_carrier,
+        CALCULATE_OPTION_FLAG_NONE,
+        calculate_as_container ? CALCULATE_OPTION_FLAG_PROTECT_VARIABLE : CALCULATE_OPTION_FLAG_NONE
+        );
 
-    for (int i = 0;i < result.instructs_length; i++)
-    {
-        printf("ins: %d ",result.instructs[i].instruct);
-
-        if (result.instructs[i].instruct == INSTRUCT_LOAD_VALUE)
-        {
-            printf("number: %f\n",((object_t*)result.instructs[i].object)->vv.value.value.number);
-        }
-        else
-            printf("object: %llu\n",result.instructs[i].object);
-
-    }
+    print_instruct_carrier(result);
     return result;
 }

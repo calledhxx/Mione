@@ -32,7 +32,9 @@ int main(void)
     }
     free(TrainCarrier.trains);
 
-    CreateLine(); //start using Allocate
+    CreateLine();
+
+    // run(InstructCarrier);
 
     return 0;
 }

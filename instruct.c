@@ -28,6 +28,21 @@ void pushInstructsIntoCarrier(instruct_carrier_t * const CarrierPtr,instruct_car
         );
 }
 
+void print_instruct_carrier(instruct_carrier_t const instruct_carrier)
+{
+    for (int i = 0;i < instruct_carrier.instructs_length; i++)
+    {
+        printf("ins: %d ",instruct_carrier.instructs[i].instruct);
+
+        if (instruct_carrier.instructs[i].instruct == INSTRUCT_LOAD_VALUE)
+        {
+            printf("number: %f\n",((object_t*)instruct_carrier.instructs[i].object)->vv.value.value.number);
+        }
+        else
+            printf("object: %llu\n",instruct_carrier.instructs[i].object);
+    }
+}
+
 instruct_carrier_t train_to_instruct(train_carrier_t const train_carrier)
 {
     instruct_carrier_t instruct_carrier = {0};
@@ -42,9 +57,14 @@ instruct_carrier_t train_to_instruct(train_carrier_t const train_carrier)
             {
                 head_t const head = token_to_head(ThisTrain.carriage_carrier.carriages[0].conductor);
 
-                instruct_carrier_t const * const head_instruct_carrier = head.function(&ThisTrain);
+                instruct_carrier_t const * const head_instruct_carrier_ptr = head.function((void*)&ThisTrain);
 
-                pushInstructsIntoCarrier(&instruct_carrier,*head_instruct_carrier);
+                pushInstructsIntoCarrier(&instruct_carrier,*head_instruct_carrier_ptr);
+
+
+                print_instruct_carrier(*head_instruct_carrier_ptr);
+
+                free((void*)head_instruct_carrier_ptr);
 
                 break;
             }
@@ -55,5 +75,4 @@ instruct_carrier_t train_to_instruct(train_carrier_t const train_carrier)
     }
 
     return instruct_carrier;
-
 }
