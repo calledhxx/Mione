@@ -1,1 +1,3 @@
-set x = 1231312 + 31231 + {}[]
+set x = function
+    set y = 100;
+end

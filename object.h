@@ -94,7 +94,8 @@ typedef struct layout_carrier_s
     unsigned layouts_length;
 } layout_carrier_t;
 
-extern object_carrier_t word_to_object(word_carrier_t word_carrier);
+extern object_carrier_t word_to_object(word_carrier_t word_carrier,scope_t* current_scope_ptr);
 extern void print_object_carrier(object_carrier_t);
+extern void print_scope(scope_t,int);
 
 #endif

@@ -1,8 +1,6 @@
 #include <stdio.h>
-
-#include "main.h"
-
 #include <stdlib.h>
+#include "main.h"
 
 int main(void)
 {
@@ -12,7 +10,9 @@ int main(void)
 
     fclose(f);
 
-    object_carrier_t const ObjectCarrier = word_to_object(WordCarrier);
+    scope_t current_scope = {0};
+    object_carrier_t const ObjectCarrier = word_to_object(WordCarrier,&current_scope);
+    print_scope(current_scope,0);
 
     for (unsigned i = 0; i < WordCarrier.words_length; i++)
         free(WordCarrier.words[i].word);

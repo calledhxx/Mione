@@ -2,19 +2,7 @@
 
 #include "main.h"
 
-#define STACK_SIZE 512
-
-static void push(long long unsigned * * stack_top_ptr,long long unsigned const object)
-{
-    **stack_top_ptr = object;
-    (*stack_top_ptr)--;
-}
-
-static long long unsigned pop(long long unsigned * * stack_top_ptr)
-{
-    (*stack_top_ptr)++;
-    return **stack_top_ptr;
-}
+#define STACK_SIZE 256
 
 void run(instruct_carrier_t const instruct_carrier)
 {
@@ -27,7 +15,7 @@ void run(instruct_carrier_t const instruct_carrier)
         {
         case INSTRUCT_LOAD_VARIABLE:
             {
-                push(&stack_top,instruct_carrier.instructs[i].object);
+                *stack_top-- = instruct_carrier.instructs[i].object;
                 break;
             }
         case INSTRUCT_LOAD_VALUE:
@@ -36,7 +24,7 @@ void run(instruct_carrier_t const instruct_carrier)
             }
         case INSTRUCT_TO_VALUE:
             {
-                long long unsigned const a = pop(&stack_top);
+                long long unsigned const a = *stack_top++;
 
 
                 break;

@@ -61,17 +61,39 @@ void print_object_carrier(object_carrier_t const carrier)
     }
 }
 
+void print_scope(scope_t const main_scope,int const depth)
+{
+    char space[32] = {0};
+    memset(space,' ',depth*4);
+
+    printf(space);
+    printf("VARIABLE LINKS:\n");
+    for (int i =0;i<main_scope.variable_link_ptr_carrier.variable_link_ptrs_length ;i++)
+    {
+        printf(space);
+        printf("%d: %d\n",i,main_scope.variable_link_ptr_carrier.variable_link_ptrs[i]->variable_link_type);
+    }
+
+    printf(space);
+    printf("CHILDREN:\n");
+    for (int i =0;i<main_scope.child_scope_carrier_ptr->scopes_length;i++)
+    {
+        printf(space);
+        printf("%d: CHILD:\n",i);
+        print_scope(main_scope.child_scope_carrier_ptr->scopes[i],depth+1);
+    }
+}
+
 object_carrier_t word_to_object(
-    const word_carrier_t word_carrier
+    const word_carrier_t word_carrier,
+    scope_t* current_scope_ptr
     )
 {
-    scope_t * current_scope_ptr = malloc(sizeof(scope_t));
     *current_scope_ptr = (scope_t){0};
     current_scope_ptr->child_scope_carrier_ptr = malloc(sizeof(scope_carrier_t));
     *current_scope_ptr->child_scope_carrier_ptr = (scope_carrier_t){0};
 
     layout_carrier_t layout_carrier = {0}; //沒有父級關西，所以不用俄羅斯娃娃法
-
 
     pushLayoutIntoLayoutCarrier(&layout_carrier,(layout_t){
         .layout_handler = LAYOUT_HANDLER_NONE,
