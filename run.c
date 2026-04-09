@@ -10,7 +10,7 @@ void run(instruct_carrier_t const instruct_carrier)
     unsigned long long  * stack_top = stack + STACK_SIZE - 1;
 
     long long unsigned
-        as = 0,
+        ea = 0,
         eb = 0,
         ec = 0,
         ed = 0;
