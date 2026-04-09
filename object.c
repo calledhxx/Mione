@@ -57,7 +57,9 @@ void print_object_carrier(object_carrier_t const carrier)
     printf("OBJECT CARRIER, LEN: %d\n",carrier.objects_length);
     for (int i = 0;i<carrier.objects_length;i++)
     {
-        printf("    %d: %d %d %llu\n",i,carrier.objects[i].object_type,carrier.objects[i].token,&carrier.objects[i].vv);
+        printf("    %d: %d %d\n",i,carrier.objects[i].object_type,carrier.objects[i].token);
+        if (carrier.objects[i].vv.variable_link_ptr)
+            printf("    %llu\n",carrier.objects[i].vv.variable_link_ptr);
     }
 }
 
@@ -520,7 +522,7 @@ object_carrier_t word_to_object(
                                 {
                                     //同域已有該變數
 
-                                    variable_link_ptr = 0;
+                                    variable_link_ptr = v_link_ptr;
 
                                     variable.is_dummy = 1;
                                     variable.variable.dummy_variable = (dummy_variable_t){
@@ -542,15 +544,18 @@ object_carrier_t word_to_object(
                             );
 
 
-                        if (variable_link_ptr)
+                        if (variable_link_ptr) // als true
                         {
                             printf(
                             "   VARIABLE LINK CREATED!\n"
                             "   VARIABLE LINK: %p\n"
                             "   VARIABLE LINK TYPE: %d\n"
                             "   VARIABLE LINK TO VARIABLE: %p\n"
-                            "   VARIABLE LINK TO VARIABLE LINK: %p\n"
-                            ,variable_link_ptr,variable_link_ptr->variable_link_type,variable_link_ptr->toward_variable_ptr,variable_link_ptr->toward_variable_link_ptr
+                            "   VARIABLE LINK TO VARIABLE LINK: %p\n",
+                            variable_link_ptr,
+                            variable_link_ptr->variable_link_type,
+                            variable_link_ptr->toward_variable_ptr,
+                            variable_link_ptr->toward_variable_link_ptr
                             );
 
                             current_scope_ptr->variable_link_ptr_carrier.variable_link_ptrs_length++;
@@ -563,9 +568,11 @@ object_carrier_t word_to_object(
                                 ] = variable_link_ptr;
                         }
 
+                        printf("ptr %llu\n",variable_link_ptr);
+
                         pushMioneObjectIntoLayout(&layout_carrier.layouts[layout_carrier.layouts_length - 1],(object_t){
                            .object_type = OBJECT_VARIABLE,
-                            .vv.variable = variable,
+                            .vv.variable_link_ptr = variable_link_ptr,
                        });
 
                         Paired = 1;

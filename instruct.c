@@ -36,7 +36,7 @@ void print_instruct_carrier(instruct_carrier_t const instruct_carrier)
 
         if (instruct_carrier.instructs[i].instruct == INSTRUCT_LOAD_VALUE)
         {
-            printf("number: %f\n",((object_t*)instruct_carrier.instructs[i].object)->vv.value.value.number);
+            printf("number: %f pos %llu\n",((object_t*)instruct_carrier.instructs[i].object)->vv.value.value.number,instruct_carrier.instructs[i].object);
         }
         else
             printf("object: %llu\n",instruct_carrier.instructs[i].object);
@@ -61,11 +61,16 @@ instruct_carrier_t train_to_instruct(train_carrier_t const train_carrier)
 
                 pushInstructsIntoCarrier(&instruct_carrier,*head_instruct_carrier_ptr);
 
-                // print_instruct_carrier(*head_instruct_carrier_ptr);
+                print_instruct_carrier(*head_instruct_carrier_ptr);
 
                 free((void*)head_instruct_carrier_ptr);
 
                 break;
+            }
+        case TRAIN_SIMPLE:
+            {
+                printf("simple train\n");
+                exit(3);
             }
 
         default:

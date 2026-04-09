@@ -44,7 +44,7 @@ typedef struct object_s
 
     union
     {
-        variable_t variable;
+        variable_link_t * variable_link_ptr;
         value_t value;
     } vv;
 } object_t;

@@ -4,7 +4,7 @@
 
 #include "main.h"
 
-variable_t * variable_chaser(variable_link_t variable_link)
+variable_t * variable_chaser(variable_link_t variable_link) //ret genuine_variable_t
 {
     while (1)
     {
@@ -18,11 +18,15 @@ variable_t * variable_chaser(variable_link_t variable_link)
                 if (variable_link.toward_variable_link_ptr)
                     variable_link = *variable_link.toward_variable_link_ptr;
                 else
+                {
+                    printf("not found tho\n");
                     return 0;
+                }
 
                 break;
             }
         default:
+            printf(" unexpectedly %d\n",variable_link.variable_link_type);
             return 0;
         }
     }

@@ -55,6 +55,7 @@ typedef struct variable_carrier_s
     unsigned variables_length;
 } variable_carrier_t;
 
+extern variable_t * variable_chaser(variable_link_t variable_link);
 extern variable_link_t * find_variable_in_scope(void * scopePtr,const char* name,unsigned * scope_depth_butter_ptr);
 
 #endif

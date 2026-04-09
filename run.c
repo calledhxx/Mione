@@ -6,8 +6,10 @@
 
 void run(instruct_carrier_t const instruct_carrier)
 {
-    long long unsigned stack[STACK_SIZE] = {0};
-    long long unsigned * stack_top = stack + STACK_SIZE - 1;
+    unsigned long long  stack[STACK_SIZE] = {0};
+    unsigned long long  * stack_top = stack + STACK_SIZE - 1;
+
+    printf("bs%llu st%llu\n",stack,stack_top);
 
     long long unsigned
         ea = 0,
@@ -23,12 +25,20 @@ void run(instruct_carrier_t const instruct_carrier)
         {
         case INSTRUCT_LOAD_VARIABLE:
             {
-                *stack_top-- = instruct_carrier.instructs[i].object;
+                printf("%d push variable %llu as %llu\n",i,object,stack_top);
+
+
+                *stack_top-- = object;
+
+                printf("verify %llu\n",((object_t*)(*(stack_top+1)))->object_type);
+
                 break;
             }
         case INSTRUCT_LOAD_VALUE:
             {
+                printf("%d push value %llu as %llu\n",i,object,stack_top);
 
+                *stack_top-- = object;
                 break;
             }
         case INSTRUCT_TO_VALUE:
@@ -71,17 +81,26 @@ void run(instruct_carrier_t const instruct_carrier)
                 if (!ea)
                     exit(25);
 
-                unsigned const len = (unsigned long long *)ea - stack_top + 1;
+                unsigned const len = (unsigned long long *)ea - stack_top;
 
                 if (len & 1)
-                    exit(137);
+                    exit(1);
 
-                for (int j = 0;j<len/2;j++)
+                for (int j = 0;j<len>>1;j++)
                 {
-                    unsigned long long const * container = (unsigned long long *)(ea + j);
-                    unsigned long long const * resource = (unsigned long long *)(ea + len/2 + j);
+                    unsigned long long const * container_ptr = (unsigned long long *)ea - j;
+                    unsigned long long const * resource_ptr = (unsigned long long *)ea - len/2 - j;
 
+                    printf("con %llu\n",container_ptr);
+                    printf("res %llu\n",resource_ptr);
 
+                    printf("objtype %d",((object_t*)(*container_ptr))->object_type);
+
+                    variable_t * const ge_var_ptr = variable_chaser(*((object_t*)(*container_ptr))->vv.variable_link_ptr);
+
+                    printf("pos %p\n",ge_var_ptr);
+
+                    ge_var_ptr->variable.genuine_variable.value = ((object_t*)(*resource_ptr))->vv.value;
                 }
                 break;
             }

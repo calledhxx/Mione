@@ -260,10 +260,14 @@ instruct_carrier_t cal_ast(
                 }
             case OBJECT_VARIABLE:
                 {
+                    unsigned long long ptr = (unsigned long long)memcpy(malloc(sizeof(object_t)),ThisCarrier.objects, sizeof(object_t));
+
                     pushInstructIntoCarrier(&result,(instruct_t){
                         .instruct = INSTRUCT_LOAD_VARIABLE,
-                        .object = (unsigned long long)memcpy(malloc(sizeof(object_t)),ThisCarrier.objects, sizeof(object_t))
+                        .object = ptr
                     });
+
+                    printf("var obj verify %llu %d\n",ptr,ThisCarrier.objects->object_type);
 
                     if (!(calculate_option_flag_for_all & CALCULATE_OPTION_FLAG_PROTECT_VARIABLE))
                         pushInstructIntoCarrier(&result,(instruct_t){
@@ -336,6 +340,6 @@ instruct_carrier_t calculate(object_carrier_t const object_carrier,char const ca
         calculate_as_container ? CALCULATE_OPTION_FLAG_PROTECT_VARIABLE : CALCULATE_OPTION_FLAG_NONE
         );
 
-    print_instruct_carrier(result);
+    // print_instruct_carrier(result);
     return result;
 }
