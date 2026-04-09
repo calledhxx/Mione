@@ -9,8 +9,6 @@ void run(instruct_carrier_t const instruct_carrier)
     unsigned long long  stack[STACK_SIZE] = {0};
     unsigned long long  * stack_top = stack + STACK_SIZE - 1;
 
-    printf("bs%llu st%llu\n",stack,stack_top);
-
     long long unsigned
         ea = 0,
         eb = 0,
@@ -25,19 +23,12 @@ void run(instruct_carrier_t const instruct_carrier)
         {
         case INSTRUCT_LOAD_VARIABLE:
             {
-                printf("%d push variable %llu as %llu\n",i,object,stack_top);
-
-
                 *stack_top-- = object;
-
-                printf("verify %llu\n",((object_t*)(*(stack_top+1)))->object_type);
 
                 break;
             }
         case INSTRUCT_LOAD_VALUE:
             {
-                printf("%d push value %llu as %llu\n",i,object,stack_top);
-
                 *stack_top-- = object;
                 break;
             }
@@ -91,16 +82,10 @@ void run(instruct_carrier_t const instruct_carrier)
                     unsigned long long const * container_ptr = (unsigned long long *)ea - j;
                     unsigned long long const * resource_ptr = (unsigned long long *)ea - len/2 - j;
 
-                    printf("con %llu\n",container_ptr);
-                    printf("res %llu\n",resource_ptr);
-
-                    printf("objtype %d",((object_t*)(*container_ptr))->object_type);
-
                     variable_t * const ge_var_ptr = variable_chaser(*((object_t*)(*container_ptr))->vv.variable_link_ptr);
 
-                    printf("pos %p\n",ge_var_ptr);
-
                     ge_var_ptr->variable.genuine_variable.value = ((object_t*)(*resource_ptr))->vv.value;
+                    printf("number:%f\n",ge_var_ptr->variable.genuine_variable.value.value.number);
                 }
                 break;
             }

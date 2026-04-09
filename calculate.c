@@ -267,8 +267,6 @@ instruct_carrier_t cal_ast(
                         .object = ptr
                     });
 
-                    printf("var obj verify %llu %d\n",ptr,ThisCarrier.objects->object_type);
-
                     if (!(calculate_option_flag_for_all & CALCULATE_OPTION_FLAG_PROTECT_VARIABLE))
                         pushInstructIntoCarrier(&result,(instruct_t){
                             .instruct = INSTRUCT_TO_VALUE,

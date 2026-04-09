@@ -568,8 +568,6 @@ object_carrier_t word_to_object(
                                 ] = variable_link_ptr;
                         }
 
-                        printf("ptr %llu\n",variable_link_ptr);
-
                         pushMioneObjectIntoLayout(&layout_carrier.layouts[layout_carrier.layouts_length - 1],(object_t){
                            .object_type = OBJECT_VARIABLE,
                             .vv.variable_link_ptr = variable_link_ptr,
