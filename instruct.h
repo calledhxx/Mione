@@ -14,6 +14,8 @@ enum instruct_e
     INSTRUCT_DIV,
     INSTRUCT_CALL,
     INSTRUCT_LOCATE,
+    INSTRUCT_WRITE_INTO_VARIABLE,
+    INSTRUCT_RECORD_STACK_TOP,
 };
 
 typedef struct instruct_s

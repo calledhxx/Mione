@@ -32,7 +32,7 @@ void print_instruct_carrier(instruct_carrier_t const instruct_carrier)
 {
     for (int i = 0;i < instruct_carrier.instructs_length; i++)
     {
-        printf("ins: %d ",instruct_carrier.instructs[i].instruct);
+        printf("%d ins: %d ",i,instruct_carrier.instructs[i].instruct);
 
         if (instruct_carrier.instructs[i].instruct == INSTRUCT_LOAD_VALUE)
         {
@@ -61,8 +61,7 @@ instruct_carrier_t train_to_instruct(train_carrier_t const train_carrier)
 
                 pushInstructsIntoCarrier(&instruct_carrier,*head_instruct_carrier_ptr);
 
-
-                print_instruct_carrier(*head_instruct_carrier_ptr);
+                // print_instruct_carrier(*head_instruct_carrier_ptr);
 
                 free((void*)head_instruct_carrier_ptr);
 

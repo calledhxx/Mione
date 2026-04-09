@@ -34,7 +34,7 @@ int main(void)
 
     CreateLine();
 
-    // run(InstructCarrier);
+    run(InstructCarrier);
 
     return 0;
 }

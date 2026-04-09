@@ -8,6 +8,14 @@ static instruct_carrier_t * set(train_t const * const trainPtr)
 
     instruct_carrier_t instruct_carrier = {0};
 
+    pushInstructIntoCarrier(
+                    &instruct_carrier,
+                    (instruct_t){
+                        .instruct = INSTRUCT_RECORD_STACK_TOP,
+                        .object = 1,
+                    }
+        );
+
     for (int i = 0; i < train.carriage_carrier.carriages_length; i++)
     {
         carriage_t const ThisCarriage = train.carriage_carrier.carriages[i];
@@ -46,6 +54,14 @@ static instruct_carrier_t * set(train_t const * const trainPtr)
             exit(111);
         }
     }
+
+    pushInstructIntoCarrier(
+                    &instruct_carrier,
+                    (instruct_t){
+                        .instruct = INSTRUCT_WRITE_INTO_VARIABLE,
+                        .object = 1,
+                    }
+        );
 
     instruct_carrier_t * res = malloc(sizeof(instruct_carrier_t));
     *res = instruct_carrier;
