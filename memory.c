@@ -6,7 +6,7 @@
 
 #include "memory.h"
 
-#define offsetByte(i) ((i ? (i%3 ? i%3 : 3) : 0) * 64 * (1<<(2*(int)((i ? i - 1 : 0)/3))))
+#define offsetByte(i) (((i) ? ((i)%3 ? (i)%3 : 3) : 0) * 64 * (1<<(2*(int)(((i) ? (i) - 1 : 0)/3))))
 
 line_t ** LinePointerList = 0;
 unsigned LinePointerListLength = 0;
@@ -56,12 +56,15 @@ void CreateLine(void)
     for (int i = 0; i < 22; i++)
     {
         block_t* const address = (block_t*)(LinePointerList[LinePointerListLength - 1]->units + offsetByte(i));
+
         address->size = 64 * (1<<(2*(int)floor((i ? i - 1 : 0)/3)));
         address->current = address;
         address->next =
             i == 21
-        ? NULL
-        : (block_t*)(LinePointerList[LinePointerListLength - 1]->units + offsetByte(i+1));
+            ? NULL
+            : (block_t*)(LinePointerList[LinePointerListLength - 1]->units + offsetByte(i+1));
+
+        printf("%d: %llu %d %llu\n",i,address->current,address->size,address->next);
     }
 }
 
@@ -87,24 +90,21 @@ void CountToGetBlockInfo(unsigned const distance,
     *UsedBlockLenPTR = (log_4 - 1 ? (log_4 - 1 )* 3 : 1) + *IndexInBlockGroupPTR;
 }
 
-int stackIndex = 0;
-
 unit_t* Allocate(unit_t * const originalPointer, size_t const size)
 {
-    printf("%d\n",++stackIndex);
     block_t * currentBlockPtr = LinePointerList[LinePointerListLength - 1]->leader_pointer;
     unit_t * result = 0;
 
     if (!currentBlockPtr)
         exit(3);
 
-    unsigned
-        UsedBlockLen = 0,
-        CurrentBlockSize = 0,
-        IndexInBlockGroup = 0;
-
     if (originalPointer)
     {
+        unsigned
+            UsedBlockLen = 0,
+            CurrentBlockSize = 0,
+            IndexInBlockGroup = 0;
+
         CountToGetBlockInfo(
             (intptr_t)originalPointer - (intptr_t)LinePointerList[LinePointerListLength - 1]->units,
             &UsedBlockLen,
@@ -112,11 +112,9 @@ unit_t* Allocate(unit_t * const originalPointer, size_t const size)
             &IndexInBlockGroup
             );
 
-
         if (CurrentBlockSize >= size)
         {
             result = originalPointer;
-            memcpy(result, originalPointer, CurrentBlockSize);
             goto ret;
         }
     }
@@ -126,12 +124,11 @@ unit_t* Allocate(unit_t * const originalPointer, size_t const size)
         if (currentBlockPtr->size >= size)
         {
             LinePointerList[LinePointerListLength - 1]->leader_pointer = currentBlockPtr->next;
-            result = (unit_t*)currentBlockPtr;
-            break;
+            result = (unit_t*)currentBlockPtr->current;
+            goto ret;
         }
         currentBlockPtr = currentBlockPtr->next;
     }
-
 
     ret:
     return result;
@@ -139,8 +136,6 @@ unit_t* Allocate(unit_t * const originalPointer, size_t const size)
 
 void Free(unit_t * const originalPointer)
 {
-    printf("%d\n",--stackIndex);
-
     block_t * currentBlockPtr = LinePointerList[LinePointerListLength - 1]->leader_pointer;
 
     if (!currentBlockPtr)
@@ -164,6 +159,7 @@ void Free(unit_t * const originalPointer)
 
     ((block_t*)originalPointer)->next = currentBlockPtr;
     ((block_t*)originalPointer)->size = CurrentBlockSize;
+
     LinePointerList[LinePointerListLength - 1]->leader_pointer =
         ((block_t*)originalPointer)->current =
             originalPointer;
