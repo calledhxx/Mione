@@ -63,7 +63,7 @@ static instruct_carrier_t * set(train_t const * const trainPtr)
                     }
         );
 
-    instruct_carrier_t * res = malloc(sizeof(instruct_carrier_t));
+    instruct_carrier_t * res = alc(0,sizeof(instruct_carrier_t));
     *res = instruct_carrier;
     return res;
 }

@@ -6,7 +6,7 @@
 void pushInstructIntoCarrier(instruct_carrier_t * const CarrierPtr,instruct_t const instruct)
 {
     CarrierPtr->instructs_length++;
-    CarrierPtr->instructs = realloc(
+    CarrierPtr->instructs = alc(
     CarrierPtr->instructs,
     CarrierPtr->instructs_length * sizeof(instruct_t)
         );
@@ -16,7 +16,7 @@ void pushInstructIntoCarrier(instruct_carrier_t * const CarrierPtr,instruct_t co
 void pushInstructsIntoCarrier(instruct_carrier_t * const CarrierPtr,instruct_carrier_t const instructs)
 {
     CarrierPtr->instructs_length += instructs.instructs_length;
-    CarrierPtr->instructs = realloc(
+    CarrierPtr->instructs = alc(
         CarrierPtr->instructs,
         sizeof(instruct_t) * CarrierPtr->instructs_length
         );
@@ -63,7 +63,7 @@ instruct_carrier_t train_to_instruct(train_carrier_t const train_carrier)
 
                 print_instruct_carrier(*head_instruct_carrier_ptr);
 
-                free((void*)head_instruct_carrier_ptr);
+                fre((void*)head_instruct_carrier_ptr);
 
                 break;
             }

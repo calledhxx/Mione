@@ -11,7 +11,7 @@ void pushTrainIntoTrainCarrier(train_carrier_t * const TrainCarrierPtr,const tra
 
     TrainCarrierPtr->trains_length++;
 
-    TrainCarrierPtr->trains = realloc(
+    TrainCarrierPtr->trains = alc(
         TrainCarrierPtr->trains,
         sizeof(train_t)*TrainCarrierPtr->trains_length
         );
@@ -24,7 +24,7 @@ void pushCarriageIntoTrain(train_t * const trainPtr,const carriage_t carriage)
         return;
 
     trainPtr->carriage_carrier.carriages_length++;
-    trainPtr->carriage_carrier.carriages = realloc(
+    trainPtr->carriage_carrier.carriages = alc(
         trainPtr->carriage_carrier.carriages,
         sizeof(carriage_t) * trainPtr->carriage_carrier.carriages_length
         );
@@ -38,7 +38,7 @@ void pushPassengerIntoCarriage(carriage_t * const carriagePtr,const object_t pas
         return;
 
     carriagePtr->passengers.objects_length++;
-    carriagePtr->passengers.objects = realloc(
+    carriagePtr->passengers.objects = alc(
         carriagePtr->passengers.objects,
         sizeof(object_t) * carriagePtr->passengers.objects_length
         );
@@ -85,7 +85,7 @@ train_carrier_t object_to_train(object_carrier_t const object_carrier)
                 {
                     pushPassengerIntoCarriage(carriage_stack_top,(object_t){
                                 .vv.value.value.train_carrier_ptr =
-                                    memcpy(malloc(sizeof(train_t)),train_stack_top,sizeof(train_t))
+                                    memcpy(alc(0,sizeof(train_t)),train_stack_top,sizeof(train_t))
                             });
 
                     *train_stack_top = (train_t){0};
@@ -127,7 +127,7 @@ train_carrier_t object_to_train(object_carrier_t const object_carrier)
                         {
                             pushPassengerIntoCarriage(carriage_stack_top,(object_t){
                                 .vv.value.value.train_carrier_ptr =
-                                    memcpy(malloc(sizeof(train_t)),train_stack_top,sizeof(train_t))
+                                    memcpy(alc(0,sizeof(train_t)),train_stack_top,sizeof(train_t))
                             });
 
                             *train_stack_top = (train_t){0};
@@ -157,7 +157,7 @@ train_carrier_t object_to_train(object_carrier_t const object_carrier)
                                 {
                                     pushPassengerIntoCarriage(carriage_stack_top,(object_t){
                                         .vv.value.value.train_carrier_ptr =
-                                            memcpy(malloc(sizeof(train_t)),train_stack_top,sizeof(train_t))
+                                            memcpy(alc(0,sizeof(train_t)),train_stack_top,sizeof(train_t))
                                     });
 
                                     *train_stack_top = (train_t){0};
@@ -181,7 +181,7 @@ train_carrier_t object_to_train(object_carrier_t const object_carrier)
                             {
                                 pushPassengerIntoCarriage(carriage_stack_top,(object_t){
                                     .vv.value.value.train_carrier_ptr =
-                                        memcpy(malloc(sizeof(train_t)),train_stack_top,sizeof(train_t))
+                                        memcpy(alc(0,sizeof(train_t)),train_stack_top,sizeof(train_t))
                                 });
 
                                 *train_stack_top = (train_t){0};
@@ -217,7 +217,7 @@ train_carrier_t object_to_train(object_carrier_t const object_carrier)
                         {
                             pushPassengerIntoCarriage(carriage_stack_top,(object_t){
                                 .vv.value.value.train_carrier_ptr =
-                                    memcpy(malloc(sizeof(train_t)),train_stack_top,sizeof(train_t))
+                                    memcpy(alc(0,sizeof(train_t)),train_stack_top,sizeof(train_t))
                             });
 
                             *train_stack_top = (train_t){0};
@@ -244,7 +244,7 @@ train_carrier_t object_to_train(object_carrier_t const object_carrier)
                     {
                         pushPassengerIntoCarriage(carriage_stack_top,(object_t){
                                 .vv.value.value.train_carrier_ptr =
-                                    memcpy(malloc(sizeof(train_t)),train_stack_top,sizeof(train_t))
+                                    memcpy(alc(0,sizeof(train_t)),train_stack_top,sizeof(train_t))
                             });
 
                         *train_stack_top = (train_t){0};
@@ -282,7 +282,7 @@ train_carrier_t object_to_train(object_carrier_t const object_carrier)
                 {
                     pushPassengerIntoCarriage(carriage_stack_top,(object_t){
                                 .vv.value.value.train_carrier_ptr =
-                                    memcpy(malloc(sizeof(train_t)),train_stack_top,sizeof(train_t))
+                                    memcpy(alc(0,sizeof(train_t)),train_stack_top,sizeof(train_t))
                             });
 
                     *train_stack_top = (train_t){0};

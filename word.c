@@ -165,7 +165,7 @@ word_carrier_t stream_to_word(FILE * F,const char END_FLAG)
                             }
 
                             CaseNameLen++;
-                            CaseName = realloc(
+                            CaseName = alc(
                                 CaseName,
                                 CaseNameLen*sizeof(char)
                                 );
@@ -174,7 +174,7 @@ word_carrier_t stream_to_word(FILE * F,const char END_FLAG)
 
 
                             CaseCarriers.words_length++;
-                            CaseCarriers.words = realloc(
+                            CaseCarriers.words = alc(
                                 CaseCarriers.words,
                                 CaseCarriers.words_length*sizeof(word_t)
                             );
@@ -216,7 +216,7 @@ word_carrier_t stream_to_word(FILE * F,const char END_FLAG)
                         }else
                         {
                             CaseNameLen++;
-                            CaseName = realloc(
+                            CaseName = alc(
                                 CaseName,
                                 CaseNameLen*sizeof(char)
                                 );
@@ -253,14 +253,14 @@ word_carrier_t stream_to_word(FILE * F,const char END_FLAG)
                             if (!(ThisChar == '0' || ThisChar == '1'))
                             {
                                 CaseNameLen++;
-                                CaseName = realloc(
+                                CaseName = alc(
                                     CaseName,
                                     CaseNameLen*sizeof(char)
                                     );
                                 CaseName[CaseNameLen-1] = 0;
 
                                 CaseCarriers.words_length++;
-                                CaseCarriers.words = realloc(
+                                CaseCarriers.words = alc(
                                     CaseCarriers.words,
                                     CaseCarriers.words_length*sizeof(word_t)
                                 );
@@ -281,7 +281,7 @@ word_carrier_t stream_to_word(FILE * F,const char END_FLAG)
 
 
                         CaseNameLen++;
-                        CaseName = realloc(
+                        CaseName = alc(
                             CaseName,
                             CaseNameLen*sizeof(char)
                             );
@@ -312,7 +312,7 @@ word_carrier_t stream_to_word(FILE * F,const char END_FLAG)
                         }
 
                         CaseNameLen++;
-                        CaseName = realloc(
+                        CaseName = alc(
                             CaseName,
                             CaseNameLen*sizeof(char)
                             );
@@ -335,7 +335,7 @@ word_carrier_t stream_to_word(FILE * F,const char END_FLAG)
                             CaseStartLine = ProcessingLine;
 
                             CaseNameLen+=2;
-                            CaseName = realloc(
+                            CaseName = alc(
                                 CaseName,
                                 CaseNameLen*sizeof(char)
                                 );
@@ -344,7 +344,7 @@ word_carrier_t stream_to_word(FILE * F,const char END_FLAG)
                             CaseName[1] = 0;
 
                             CaseCarriers.words_length++;
-                            CaseCarriers.words = realloc(
+                            CaseCarriers.words = alc(
                                 CaseCarriers.words,
                                 CaseCarriers.words_length*sizeof(word_t)
                             );
@@ -365,7 +365,7 @@ word_carrier_t stream_to_word(FILE * F,const char END_FLAG)
                 case CHAR_SEMICOLON:
                     {
                         CaseNameLen++;
-                        CaseName = realloc(
+                        CaseName = alc(
                             CaseName,
                             CaseNameLen*sizeof(char)
                             );
@@ -403,14 +403,14 @@ word_carrier_t stream_to_word(FILE * F,const char END_FLAG)
                             HandleType = 0;
 
                             CaseNameLen++;
-                            CaseName = realloc(
+                            CaseName = alc(
                                 CaseName,
                                 CaseNameLen*sizeof(char)
                                 );
                             CaseName[CaseNameLen-1] = 0;
 
                             CaseCarriers.words_length++;
-                            CaseCarriers.words = realloc(
+                            CaseCarriers.words = alc(
                                 CaseCarriers.words,
                                 CaseCarriers.words_length*sizeof(word_t)
                             );
@@ -443,7 +443,7 @@ word_carrier_t stream_to_word(FILE * F,const char END_FLAG)
                         }
 
                         CaseNameLen++;
-                        CaseName = realloc(
+                        CaseName = alc(
                             CaseName,
                             CaseNameLen*sizeof(char)
                             );
@@ -477,7 +477,7 @@ word_carrier_t stream_to_word(FILE * F,const char END_FLAG)
                     case CHAR_NORMAL:
                         {
                             SuperCharParentNameLen++;
-                            SuperCharParentName = realloc(
+                            SuperCharParentName = alc(
                                 SuperCharParentName,
                                 SuperCharParentNameLen*sizeof(char)
                                 );
@@ -501,7 +501,7 @@ word_carrier_t stream_to_word(FILE * F,const char END_FLAG)
                         }
                     }
 
-                    toCMPChar = realloc(
+                    toCMPChar = alc(
                         toCMPChar,
                         (SuperCharParentNameLen+1)*sizeof(char)
                         );
@@ -524,7 +524,7 @@ word_carrier_t stream_to_word(FILE * F,const char END_FLAG)
                         break;
                     }
 
-                    free(toCMPChar);
+                    fre(toCMPChar);
                 }
 
                 if (SuperCharCollect == 1){
@@ -534,7 +534,7 @@ word_carrier_t stream_to_word(FILE * F,const char END_FLAG)
                     case CHAR_NUMBER:
                         {
                             SuperCharChildNameLen++;
-                            SuperCharChildName = realloc(
+                            SuperCharChildName = alc(
                                 SuperCharChildName,
                                 SuperCharChildNameLen*sizeof(char)
                                 );
@@ -573,7 +573,7 @@ word_carrier_t stream_to_word(FILE * F,const char END_FLAG)
                                 }
 
                                 CaseNameLen++;
-                                CaseName = realloc(
+                                CaseName = alc(
                                     CaseName,
                                     CaseNameLen*sizeof(char)
                                     );
@@ -590,7 +590,7 @@ word_carrier_t stream_to_word(FILE * F,const char END_FLAG)
                                 }
 
                                 CaseNameLen++;
-                                CaseName = realloc(
+                                CaseName = alc(
                                     CaseName,
                                     CaseNameLen*sizeof(char)
                                     );
@@ -665,8 +665,8 @@ word_carrier_t stream_to_word(FILE * F,const char END_FLAG)
     }while (1);
 
 
-    free(SuperCharChildName);
-    free(SuperCharParentName);
+    fre(SuperCharChildName);
+    fre(SuperCharParentName);
 
     if (CommentChar == '*')
     {

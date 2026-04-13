@@ -24,7 +24,7 @@ static layout_t popLayoutFromLayoutCarrier(layout_carrier_t * LayoutCarrierPtr)
         exit(-121);
     const layout_t Layout = LayoutCarrierPtr->layouts[LayoutCarrierPtr->layouts_length - 1];
     LayoutCarrierPtr->layouts_length--;
-    LayoutCarrierPtr->layouts = realloc(
+    LayoutCarrierPtr->layouts = alc(
         LayoutCarrierPtr->layouts,
         sizeof(layout_t) * LayoutCarrierPtr->layouts_length
         );
@@ -35,7 +35,7 @@ static layout_t popLayoutFromLayoutCarrier(layout_carrier_t * LayoutCarrierPtr)
 static void pushLayoutIntoLayoutCarrier(layout_carrier_t * LayoutCarrierPtr,const layout_t NewLayout)
 {
     LayoutCarrierPtr->layouts_length++;
-    LayoutCarrierPtr->layouts = realloc(
+    LayoutCarrierPtr->layouts = alc(
         LayoutCarrierPtr->layouts,
         LayoutCarrierPtr->layouts_length * sizeof(layout_t)
         );
@@ -45,7 +45,7 @@ static void pushLayoutIntoLayoutCarrier(layout_carrier_t * LayoutCarrierPtr,cons
 static void pushMioneObjectIntoLayout(layout_t * LayoutPtr,const object_t Object)
 {
     LayoutPtr->object_carrier.objects_length++;
-    LayoutPtr->object_carrier.objects = realloc(
+    LayoutPtr->object_carrier.objects = alc(
         LayoutPtr->object_carrier.objects,
         LayoutPtr->object_carrier.objects_length * sizeof(object_t)
         );
@@ -92,7 +92,7 @@ object_carrier_t word_to_object(
     )
 {
     *current_scope_ptr = (scope_t){0};
-    current_scope_ptr->child_scope_carrier_ptr = malloc(sizeof(scope_carrier_t));
+    current_scope_ptr->child_scope_carrier_ptr = alc(0,sizeof(scope_carrier_t));
     *current_scope_ptr->child_scope_carrier_ptr = (scope_carrier_t){0};
 
     layout_carrier_t layout_carrier = {0}; //沒有父級關西，所以不用俄羅斯娃娃法
@@ -148,7 +148,7 @@ object_carrier_t word_to_object(
 
 
                                 current_scope_ptr->child_scope_carrier_ptr->scopes_length++;
-                                current_scope_ptr->child_scope_carrier_ptr->scopes = realloc(
+                                current_scope_ptr->child_scope_carrier_ptr->scopes = alc(
                                     current_scope_ptr->child_scope_carrier_ptr->scopes,
                                     sizeof(scope_t) * current_scope_ptr->child_scope_carrier_ptr->scopes_length
                                     );
@@ -156,7 +156,7 @@ object_carrier_t word_to_object(
                                      current_scope_ptr->child_scope_carrier_ptr->scopes_length - 1
                                     ] = (scope_t){
                                         .parent_scope_ptr = current_scope_ptr,
-                                        .child_scope_carrier_ptr = malloc(sizeof(scope_carrier_t)),
+                                        .child_scope_carrier_ptr = alc(0,sizeof(scope_carrier_t)),
                                         .variable_link_ptr_carrier = (variable_link_ptr_carrier_t){0}
                                     };
                                 *current_scope_ptr->child_scope_carrier_ptr->scopes[
@@ -185,7 +185,7 @@ object_carrier_t word_to_object(
                                     );
 
                                 current_scope_ptr->child_scope_carrier_ptr->scopes_length++;
-                                current_scope_ptr->child_scope_carrier_ptr->scopes = realloc(
+                                current_scope_ptr->child_scope_carrier_ptr->scopes = alc(
                                     current_scope_ptr->child_scope_carrier_ptr->scopes,
                                     sizeof(scope_t) * current_scope_ptr->child_scope_carrier_ptr->scopes_length
                                     );
@@ -193,7 +193,7 @@ object_carrier_t word_to_object(
                                      current_scope_ptr->child_scope_carrier_ptr->scopes_length - 1
                                     ] = (scope_t){
                                         .parent_scope_ptr = current_scope_ptr,
-                                        .child_scope_carrier_ptr = malloc(sizeof(scope_carrier_t)),
+                                        .child_scope_carrier_ptr = alc(0,sizeof(scope_carrier_t)),
                                         .variable_link_ptr_carrier = (variable_link_ptr_carrier_t){0}
                                     };
                                 *current_scope_ptr->child_scope_carrier_ptr->scopes[
@@ -226,7 +226,7 @@ object_carrier_t word_to_object(
                                     .object_type = OBJECT_VALUE,
                                     .vv.value = (value_t){
                                         .value_type = LastLayout.layout_handler == LAYOUT_HANDLER_FUNCTION ? VALUE_FUNCTION : VALUE_RANGE,
-                                        .value.train_carrier_ptr = memcpy(malloc(sizeof(train_carrier_t)),&train_carrier,sizeof(train_carrier_t))
+                                        .value.train_carrier_ptr = memcpy(alc(0,sizeof(train_carrier_t)),&train_carrier,sizeof(train_carrier_t))
                                     }
                                 });
 
@@ -339,7 +339,7 @@ object_carrier_t word_to_object(
                                     });
 
                                 current_scope_ptr->child_scope_carrier_ptr->scopes_length++;
-                                current_scope_ptr->child_scope_carrier_ptr->scopes = realloc(
+                                current_scope_ptr->child_scope_carrier_ptr->scopes = alc(
                                     current_scope_ptr->child_scope_carrier_ptr->scopes,
                                     sizeof(scope_t) * current_scope_ptr->child_scope_carrier_ptr->scopes_length
                                     );
@@ -347,7 +347,7 @@ object_carrier_t word_to_object(
                                      current_scope_ptr->child_scope_carrier_ptr->scopes_length - 1
                                     ] = (scope_t){
                                         .parent_scope_ptr = current_scope_ptr,
-                                        .child_scope_carrier_ptr = malloc(sizeof(scope_carrier_t)),
+                                        .child_scope_carrier_ptr = alc(0,sizeof(scope_carrier_t)),
                                         .variable_link_ptr_carrier = (variable_link_ptr_carrier_t){0}
                                     };
                                 *current_scope_ptr->child_scope_carrier_ptr->scopes[
@@ -379,7 +379,7 @@ object_carrier_t word_to_object(
                                     .object_type = OBJECT_VALUE,
                                     .vv.value = (value_t){
                                         .value_type = LastLayout.layout_handler == LAYOUT_HANDLER_TABLE,
-                                        .value.train_carrier_ptr = memcpy(malloc(sizeof(train_carrier_t)),&train_carrier,sizeof(train_carrier_t))
+                                        .value.train_carrier_ptr = memcpy(alc(0,sizeof(train_carrier_t)),&train_carrier,sizeof(train_carrier_t))
                                     }
                                 });
 
@@ -462,18 +462,18 @@ object_carrier_t word_to_object(
                         {
                             //新變數
 
-                            variable_link_ptr = malloc(sizeof(variable_link_t));
+                            variable_link_ptr = alc(0,sizeof(variable_link_t));
                             *variable_link_ptr =
                                 (variable_link_t){
                                     .variable_link_type = VARIABLE_LINK_LEADER,
-                                    .toward_variable_ptr = malloc(sizeof(variable_t)),
+                                    .toward_variable_ptr = alc(0,sizeof(variable_t)),
                                 };
 
                             variable.is_dummy = 0;
                             variable.variable.genuine_variable = (genuine_variable_t){
                                 .value = (value_t){0},
                                 .name = memcpy(
-                                    malloc(strlen(ThisWord.word)+1),
+                                    alc(0,strlen(ThisWord.word)+1),
                                     ThisWord.word,
                                     strlen(ThisWord.word)+1
                                     )
@@ -491,7 +491,7 @@ object_carrier_t word_to_object(
                                     {
                                         //同域沒有該變數
 
-                                        variable_link_ptr = malloc(sizeof(variable_link_t));
+                                        variable_link_ptr = alc(0,sizeof(variable_link_t));
                                         *variable_link_ptr = (variable_link_t){
                                             .variable_link_type = VARIABLE_LINK_COLEADER,
                                             .toward_variable_link_ptr = v_link_ptr,
@@ -505,7 +505,7 @@ object_carrier_t word_to_object(
                                     {
                                         //同域已有該變數，且一定為COLEADER
 
-                                        variable_link_ptr = malloc(sizeof(variable_link_t));
+                                        variable_link_ptr = alc(0,sizeof(variable_link_t));
                                         *variable_link_ptr = (variable_link_t){
                                             .variable_link_type = VARIABLE_LINK_FOLLOWER,
                                             .toward_variable_link_ptr = v_link_ptr,
@@ -559,7 +559,7 @@ object_carrier_t word_to_object(
                             );
 
                             current_scope_ptr->variable_link_ptr_carrier.variable_link_ptrs_length++;
-                            current_scope_ptr->variable_link_ptr_carrier.variable_link_ptrs = realloc(
+                            current_scope_ptr->variable_link_ptr_carrier.variable_link_ptrs = alc(
                                 current_scope_ptr->variable_link_ptr_carrier.variable_link_ptrs,
                             current_scope_ptr->variable_link_ptr_carrier.variable_link_ptrs_length * sizeof(variable_link_t*)
                                 );
@@ -592,7 +592,7 @@ object_carrier_t word_to_object(
                             .vv.value = (value_t){
                                 .value_type = VALUE_STRING,
                                 .value.string = memcpy(
-                                    malloc(strlen(ThisWord.word)+1),
+                                    alc(0,strlen(ThisWord.word)+1),
                                     ThisWord.word,
                                     strlen(ThisWord.word)+1
                                     )

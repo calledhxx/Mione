@@ -6,6 +6,8 @@ int main(void)
 {
     FILE * f = fopen("./index.mio","r");
 
+    CreateLine();
+
     word_carrier_t const WordCarrier = stream_to_word(f,EOF);
 
     fclose(f);
@@ -15,26 +17,24 @@ int main(void)
     print_scope(current_scope,0);
 
     for (unsigned i = 0; i < WordCarrier.words_length; i++)
-        free(WordCarrier.words[i].word);
-    free(WordCarrier.words);
+        fre(WordCarrier.words[i].word);
+    fre((unit_t*)WordCarrier.words);
 
     train_carrier_t const TrainCarrier = object_to_train(ObjectCarrier);
 
-    free(ObjectCarrier.objects);
+    fre((unit_t*)ObjectCarrier.objects);
 
     instruct_carrier_t const InstructCarrier = train_to_instruct(TrainCarrier);
 
     for (unsigned i = 0; i < TrainCarrier.trains_length; i++)
     {
         for (unsigned j = 0; j < TrainCarrier.trains[i].carriage_carrier.carriages_length; j++)
-            free(TrainCarrier.trains[i].carriage_carrier.carriages[j].passengers.objects);
-        free(TrainCarrier.trains[i].carriage_carrier.carriages);
+            fre((unit_t*)TrainCarrier.trains[i].carriage_carrier.carriages[j].passengers.objects);
+        fre((unit_t*)TrainCarrier.trains[i].carriage_carrier.carriages);
     }
-    free(TrainCarrier.trains);
+    fre((unit_t*)TrainCarrier.trains);
 
-    CreateLine();
-
-    run(InstructCarrier);
+    // run(InstructCarrier);
 
     return 0;
 }
