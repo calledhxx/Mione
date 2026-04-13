@@ -11,6 +11,9 @@
 line_t ** LinePointerList = 0;
 unsigned LinePointerListLength = 0;
 
+unit_t ** MegaAllocateList = 0;
+unsigned MegaAllocateListLength = 0;
+
 unsigned offsetLog2(unsigned x)
 {
     unsigned result = 0;
@@ -68,6 +71,24 @@ void CreateLine(void)
     }
 }
 
+line_t * GetLine(unit_t const * const unitPointer)
+{
+    if (!unitPointer)
+        return LinePointerList[LinePointerListLength - 1];
+
+    line_t * result = 0;
+
+    for (int i = 0;i < LinePointerListLength; i++)
+    {
+        line_t * line = LinePointerList[i];
+
+        if (!result || abs(result->units - unitPointer) > abs(line->units - unitPointer))
+            result = line;
+    }
+
+    return result;
+}
+
 void CountToGetBlockInfo(unsigned const distance,
                          unsigned * UsedBlockLenPTR,
                          unsigned * CurrentBlockSizePTR,
@@ -90,9 +111,51 @@ void CountToGetBlockInfo(unsigned const distance,
     *UsedBlockLenPTR = (log_4 - 1 ? (log_4 - 1 )* 3 : 1) + *IndexInBlockGroupPTR;
 }
 
+void fre(unit_t * const originalPointer)
+{
+    for (int i = 0; i < MegaAllocateListLength; i++)
+    {
+        if (MegaAllocateList[i] == originalPointer)
+        {
+            free(MegaAllocateList[i]);
+            MegaAllocateList[i] = 0;
+            return;
+        }
+    }
+
+    line_t * const line = GetLine(originalPointer);
+    block_t * currentBlockPtr = line->leader_pointer;
+
+    if (!currentBlockPtr)
+        exit(3);
+
+    if (!originalPointer)
+        return;
+
+    unsigned
+        UsedBlockLen = 0,
+        CurrentBlockSize = 0,
+        IndexInBlockGroup = 0;
+
+    CountToGetBlockInfo(
+            (intptr_t)originalPointer - (intptr_t)line->units,
+            &UsedBlockLen,
+            &CurrentBlockSize,
+            &IndexInBlockGroup
+            );
+
+    ((block_t*)originalPointer)->next = currentBlockPtr;
+    ((block_t*)originalPointer)->size = CurrentBlockSize;
+
+    line->leader_pointer =
+        ((block_t*)originalPointer)->current =
+            originalPointer;
+}
+
 unit_t* Allocate(unit_t * const originalPointer, size_t const size)
 {
-    block_t * currentBlockPtr = LinePointerList[LinePointerListLength - 1]->leader_pointer;
+    line_t * const line = GetLine(originalPointer);
+    block_t * currentBlockPtr = line->leader_pointer;
     unit_t * result = 0;
 
     if (!currentBlockPtr)
@@ -106,7 +169,7 @@ unit_t* Allocate(unit_t * const originalPointer, size_t const size)
             IndexInBlockGroup = 0;
 
         CountToGetBlockInfo(
-            (intptr_t)originalPointer - (intptr_t)LinePointerList[LinePointerListLength - 1]->units,
+            (intptr_t)originalPointer - (intptr_t)line->units,
             &UsedBlockLen,
             &CurrentBlockSize,
             &IndexInBlockGroup
@@ -123,48 +186,44 @@ unit_t* Allocate(unit_t * const originalPointer, size_t const size)
     {
         if (currentBlockPtr->size >= size)
         {
-            LinePointerList[LinePointerListLength - 1]->leader_pointer = currentBlockPtr->next;
             result = (unit_t*)currentBlockPtr->current;
+            line->leader_pointer = currentBlockPtr->next;
+            fre(originalPointer);
             goto ret;
         }
         currentBlockPtr = currentBlockPtr->next;
     }
 
+    result = (unit_t*)((intptr_t)result | POINTER_TAG_LINE_HAS_RUN_OUT);
+
     ret:
     return result;
 }
 
-void Free(unit_t * const originalPointer)
+unit_t* alc(unit_t * const originalPointer, size_t const size)
 {
-    block_t * currentBlockPtr = LinePointerList[LinePointerListLength - 1]->leader_pointer;
+    unit_t * result = 0;
 
-    if (!currentBlockPtr)
-        exit(3);
+    if (size > 262144)
+    {
+        MegaAllocateListLength++;
+        MegaAllocateList = realloc(MegaAllocateList,sizeof(unit_t*) * MegaAllocateListLength);
+        MegaAllocateList[MegaAllocateListLength - 1] = result = malloc(size);
+    }else
+    {
+        result = Allocate(originalPointer,size);
 
-    if (!originalPointer)
-        return;
+        if ((intptr_t)result & POINTER_TAG_LINE_HAS_RUN_OUT)
+        {
+            CreateLine();
+            result = Allocate(originalPointer,size);
 
-    unsigned
-        UsedBlockLen = 0,
-        CurrentBlockSize = 0,
-        IndexInBlockGroup = 0;
+            // if it still fails, then we are really out of memory
+        }
+    }
 
-    CountToGetBlockInfo(
-            (intptr_t)originalPointer - (intptr_t)LinePointerList[LinePointerListLength - 1]->units,
-            &UsedBlockLen,
-            &CurrentBlockSize,
-            &IndexInBlockGroup
-            );
+    result = (unit_t*)((intptr_t)result & ~0xFULL); //clean pointer tag
 
-
-    ((block_t*)originalPointer)->next = currentBlockPtr;
-    ((block_t*)originalPointer)->size = CurrentBlockSize;
-
-    LinePointerList[LinePointerListLength - 1]->leader_pointer =
-        ((block_t*)originalPointer)->current =
-            originalPointer;
+    return result;
 }
 
-    // CreateLine();
-    // Allocate(0,15);
-    // Free(a);

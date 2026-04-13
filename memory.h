@@ -18,8 +18,16 @@ typedef struct line_s
 
 } line_t;
 
+enum pointer_tag_e
+{
+    POINTER_TAG_NONE = 0,
+    POINTER_TAG_LINE_HAS_RUN_OUT = 1<<0,
+};
+
 extern void CreateLine(void);
 extern unit_t* Allocate(unit_t * const originalPointer, size_t const size);
-extern void Free(unit_t * const originalPointer);
+
+unit_t* alc(unit_t * const originalPointer, size_t const size);
+extern void fre(unit_t * const originalPointer);
 
 #endif
