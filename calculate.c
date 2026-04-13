@@ -10,7 +10,7 @@
 static void push(const object_carrier_t carrier,object_carrier_container_t * container_ptr)
 {
     container_ptr->object_carriers_length++;
-    container_ptr->object_carriers = realloc(
+    container_ptr->object_carriers = alc(
         container_ptr->object_carriers,
         container_ptr->object_carriers_length * sizeof(object_carrier_t)
         );
@@ -254,13 +254,13 @@ instruct_carrier_t cal_ast(
                 {
                     pushInstructIntoCarrier(&result,(instruct_t){
                         .instruct = INSTRUCT_LOAD_VALUE,
-                        .object = (unsigned long long)memcpy(malloc(sizeof(object_t)),ThisCarrier.objects, sizeof(object_t))
+                        .object = (unsigned long long)memcpy(alc(0,sizeof(object_t)),ThisCarrier.objects, sizeof(object_t))
                     });
                     break;
                 }
             case OBJECT_VARIABLE:
                 {
-                    unsigned long long ptr = (unsigned long long)memcpy(malloc(sizeof(object_t)),ThisCarrier.objects, sizeof(object_t));
+                    unsigned long long ptr = (unsigned long long)memcpy(alc(0,sizeof(object_t)),ThisCarrier.objects, sizeof(object_t));
 
                     pushInstructIntoCarrier(&result,(instruct_t){
                         .instruct = INSTRUCT_LOAD_VARIABLE,
