@@ -27,6 +27,19 @@ unsigned offsetLog2(unsigned x)
     return result;
 }
 
+void print_line(line_t const line)
+{
+    block_t * currentBlockPtr = line.leader_pointer;
+
+    for (int i = 0; i < 22; i++)
+    {
+        block_t* const address = (block_t*)(line.units + offsetByte(i));
+
+        printf("    %d: addr:%llu, slef:%llu %d %llu\n",i,address,address->current,address->size,address->next);
+
+    }
+}
+
 unit_t * AlignedMalloc(unsigned const alignTo,size_t const size,void ** originalPointerPTR)
 {
     unit_t* ptr = *originalPointerPTR = malloc(size + alignTo);
@@ -53,6 +66,7 @@ void CreateLine(void)
     if (LinePointerList[LinePointerListLength - 1] == NULL)
         exit(1);
 
+
     LinePointerList[LinePointerListLength - 1]->leader_pointer =
         (block_t *)LinePointerList[LinePointerListLength - 1]->units;
 
@@ -67,7 +81,7 @@ void CreateLine(void)
             ? NULL
             : (block_t*)(LinePointerList[LinePointerListLength - 1]->units + offsetByte(i+1));
 
-        printf("%d: %llu %d %llu\n",i,address->current,address->size,address->next);
+        // printf("%d: %llu %d %llu\n",i,address->current,address->size,address->next);
     }
 }
 
@@ -82,8 +96,10 @@ line_t * GetLine(unit_t const * const unitPointer)
     {
         line_t * line = LinePointerList[i];
 
-        if (!result || abs(result->units - unitPointer) > abs(line->units - unitPointer))
+        if (!result || (unitPointer - result->units > unitPointer - line->units && unitPointer - line->units >= 0))
+        {
             result = line;
+        }
     }
 
     return result;
@@ -109,6 +125,11 @@ void CountToGetBlockInfo(unsigned const distance,
     unsigned const log_4 = offsetLog2(*CurrentBlockSizePTR / 16) / 2;
     *IndexInBlockGroupPTR = distance/ *CurrentBlockSizePTR;
     *UsedBlockLenPTR = (log_4 - 1 ? (log_4 - 1 )* 3 : 1) + *IndexInBlockGroupPTR;
+
+    // printf("dis %u\n",distance);
+    // printf("used %u\n",*UsedBlockLenPTR);
+    // printf("block %u\n",*CurrentBlockSizePTR);
+    // printf("index %u\n",*IndexInBlockGroupPTR);
 }
 
 void fre(unit_t * const originalPointer)
@@ -126,9 +147,6 @@ void fre(unit_t * const originalPointer)
     line_t * const line = GetLine(originalPointer);
     block_t * currentBlockPtr = line->leader_pointer;
 
-    if (!currentBlockPtr)
-        exit(3);
-
     if (!originalPointer)
         return;
 
@@ -144,30 +162,45 @@ void fre(unit_t * const originalPointer)
             &IndexInBlockGroup
             );
 
-    ((block_t*)originalPointer)->next = currentBlockPtr;
     ((block_t*)originalPointer)->size = CurrentBlockSize;
 
-    line->leader_pointer =
+    if ((intptr_t)currentBlockPtr > (intptr_t)originalPointer)
+    {
+        ((block_t*)originalPointer)->next = currentBlockPtr;
         ((block_t*)originalPointer)->current =
-            originalPointer;
+            line->leader_pointer =
+                originalPointer;
+
+        // printf("leader -> %llu fre\n",line->leader_pointer);
+    }else
+    {
+        ((block_t*)originalPointer)->next = currentBlockPtr ? currentBlockPtr->next : 0;
+        ((block_t*)originalPointer)->current = originalPointer;
+    }
 }
 
 unit_t* Allocate(unit_t * const originalPointer, size_t const size)
 {
     line_t * const line = GetLine(originalPointer);
+
+    // print_line(*line);
+
     block_t * currentBlockPtr = line->leader_pointer;
     unit_t * result = 0;
 
     if (!currentBlockPtr)
-        exit(3);
-
-    if (originalPointer)
     {
-        unsigned
+        result = (unit_t*)((intptr_t)result | POINTER_TAG_LINE_LEADER_NOT_FOUND);
+        goto ret;
+    }
+
+    unsigned
             UsedBlockLen = 0,
             CurrentBlockSize = 0,
             IndexInBlockGroup = 0;
 
+    if (originalPointer)
+    {
         CountToGetBlockInfo(
             (intptr_t)originalPointer - (intptr_t)line->units,
             &UsedBlockLen,
@@ -180,6 +213,7 @@ unit_t* Allocate(unit_t * const originalPointer, size_t const size)
             result = originalPointer;
             goto ret;
         }
+
     }
 
     while (currentBlockPtr)
@@ -188,6 +222,15 @@ unit_t* Allocate(unit_t * const originalPointer, size_t const size)
         {
             result = (unit_t*)currentBlockPtr->current;
             line->leader_pointer = currentBlockPtr->next;
+            // printf("leader -> %llu allocate\n",line->leader_pointer);
+
+
+            if (currentBlockPtr->size < CurrentBlockSize)
+                exit(323);
+
+            if (originalPointer)
+                memcpy(result, originalPointer, CurrentBlockSize);
+
             fre(originalPointer);
             goto ret;
         }
@@ -211,6 +254,14 @@ unit_t* alc(unit_t * const originalPointer, size_t const size)
         MegaAllocateList[MegaAllocateListLength - 1] = result = malloc(size);
     }else
     {
+        for (int i = 0; i < MegaAllocateListLength; i++)
+        {
+            if (MegaAllocateList[i] == originalPointer)
+            {
+                return originalPointer;
+            }
+        }
+
         result = Allocate(originalPointer,size);
 
         if ((intptr_t)result & POINTER_TAG_LINE_HAS_RUN_OUT)
@@ -219,11 +270,37 @@ unit_t* alc(unit_t * const originalPointer, size_t const size)
             result = Allocate(originalPointer,size);
 
             // if it still fails, then we are really out of memory
+        }else if ((intptr_t)result & POINTER_TAG_LINE_LEADER_NOT_FOUND)
+        {
+            CreateLine();
+            result = Allocate(0,size);
+
+            if (originalPointer)
+            {
+                line_t * const line = GetLine(originalPointer);
+
+                unsigned
+                    UsedBlockLen = 0,
+                    CurrentBlockSize = 0,
+                    IndexInBlockGroup = 0;
+
+                CountToGetBlockInfo(
+                        (intptr_t)originalPointer - (intptr_t)line->units,
+                        &UsedBlockLen,
+                        &CurrentBlockSize,
+                        &IndexInBlockGroup
+                        );
+
+                memcpy(result,originalPointer,size > CurrentBlockSize ? CurrentBlockSize : size);
+            }
+
+            fre(originalPointer);
+
+            // if it still fails, then we are really out of memory
         }
     }
 
-    result = (unit_t*)((intptr_t)result & ~0xFULL); //clean pointer tag
+    result = (unit_t*)((intptr_t)result & ~0x4); //clean pointer tag
 
     return result;
 }
-

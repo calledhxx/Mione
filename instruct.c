@@ -22,7 +22,7 @@ void pushInstructsIntoCarrier(instruct_carrier_t * const CarrierPtr,instruct_car
         );
 
     memcpy(
-    CarrierPtr->instructs + CarrierPtr->instructs_length - instructs.instructs_length,
+    CarrierPtr->instructs + (CarrierPtr->instructs_length - instructs.instructs_length),
     instructs.instructs,
     sizeof(instruct_t) * instructs.instructs_length
         );
@@ -70,7 +70,7 @@ instruct_carrier_t train_to_instruct(train_carrier_t const train_carrier)
         case TRAIN_SIMPLE:
             {
                 printf("simple train\n");
-                exit(3);
+                exit(4);
             }
 
         default:

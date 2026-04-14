@@ -172,7 +172,6 @@ word_carrier_t stream_to_word(FILE * F,const char END_FLAG)
                             CaseName[CaseNameLen-1] = 0;
 
 
-
                             CaseCarriers.words_length++;
                             CaseCarriers.words = alc(
                                 CaseCarriers.words,

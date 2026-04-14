@@ -9,7 +9,7 @@ enum value_type_e
     VALUE_RANGE,
     VALUE_TABLE,
     VALUE_BOOL,
-    VALUE_NUMBER,
+    VALUE_NUMBER = 67,
     VALUE_WINDOWS_LIBRARY,
 };
 

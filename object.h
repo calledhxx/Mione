@@ -8,7 +8,7 @@ enum object_type_e
     OBJECT_PROMPT,
     OBJECT_SYMBOL,
     OBJECT_VARIABLE,
-    OBJECT_VALUE,
+    OBJECT_VALUE = 54,
     OBJECT_WELD,
 };
 

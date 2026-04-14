@@ -22,6 +22,7 @@ enum pointer_tag_e
 {
     POINTER_TAG_NONE = 0,
     POINTER_TAG_LINE_HAS_RUN_OUT = 1<<0,
+    POINTER_TAG_LINE_LEADER_NOT_FOUND = 1<<1,
 };
 
 extern void CreateLine(void);

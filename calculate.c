@@ -175,7 +175,10 @@ instruct_carrier_t cal_ast(
             if (highest_order == (preprocess_depth ? 0 : ThisSymbol.order))
             {
                 if (object_carrier.objects_length && object_carrier.objects)
-                    push(object_carrier,&object_carrier_container);
+                {
+                    push(object_carrier, &object_carrier_container);
+                }
+
 
                 object_carrier = (object_carrier_t){0};
 
@@ -326,7 +329,7 @@ instruct_carrier_t cal_ast(
     }
 
     if (object_carrier_container.object_carriers && object_carrier_container.object_carriers_length)
-        free(object_carrier_container.object_carriers);
+        fre((unit_t*)object_carrier_container.object_carriers);
 
     return result;
 }
