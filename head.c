@@ -12,7 +12,7 @@ static instruct_carrier_t * set(train_t const * const trainPtr)
                     &instruct_carrier,
                     (instruct_t){
                         .instruct = INSTRUCT_RECORD_STACK_TOP,
-                        .object = 1,
+                        .object = 0,
                     }
         );
 
@@ -36,11 +36,19 @@ static instruct_carrier_t * set(train_t const * const trainPtr)
                 {
                 case TOKEN_PROMPT_EQUAL:
                     {
+                        pushInstructIntoCarrier(
+                            &instruct_carrier,
+                            (instruct_t){
+                                .instruct = INSTRUCT_RECORD_STACK_TOP,
+                                .object = 1,
+                            });
+
+                        instruct_carrier_t const cala_instruct = calculate(ThisCarriage.passengers,0);
+
                         pushInstructsIntoCarrier(
                             &instruct_carrier,
-                            calculate(ThisCarriage.passengers,0)
-                        );
-
+                            cala_instruct
+                            );
                         break;
                     }
                 default:
@@ -58,8 +66,8 @@ static instruct_carrier_t * set(train_t const * const trainPtr)
     pushInstructIntoCarrier(
                     &instruct_carrier,
                     (instruct_t){
-                        .instruct = INSTRUCT_WRITE_INTO_VARIABLE,
-                        .object = 1,
+                        .instruct = INSTRUCT_WRITE_VARIABLE,
+                        .object = 0,
                     }
         );
 

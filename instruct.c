@@ -63,14 +63,21 @@ instruct_carrier_t train_to_instruct(train_carrier_t const train_carrier)
 
                 print_instruct_carrier(*head_instruct_carrier_ptr);
 
+                fre((void*)head_instruct_carrier_ptr->instructs);
                 fre((void*)head_instruct_carrier_ptr);
 
                 break;
             }
         case TRAIN_SIMPLE:
             {
-                printf("simple train\n");
-                exit(4);
+
+                pushInstructIntoCarrier(&instruct_carrier,(instruct_t){
+                    .instruct = INSTRUCT_PRINT_NUMBER,
+                    .object = (long long unsigned)memcpy(alc(0,sizeof(object_t)),ThisTrain.carriage_carrier.carriages[0].passengers.objects,sizeof(object_t))
+                });
+
+
+                break;
             }
 
         default:

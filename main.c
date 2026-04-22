@@ -34,7 +34,7 @@ int main(void)
     }
     fre((unit_t*)TrainCarrier.trains);
 
-    // run(InstructCarrier);
+    run(InstructCarrier);
 
     return 0;
 }
