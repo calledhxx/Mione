@@ -80,7 +80,30 @@
                         }
                     },sizeof(object_t));
 
-                    printf("a %f b %f\n",obj_a.vv.value.value.number,obj_b.vv.value.value.number);
+                    printf("a %f + b %f\n",obj_a.vv.value.value.number,obj_b.vv.value.value.number);
+
+                    break;
+                }
+            case INSTRUCT_MUL:
+                {
+                    unsigned long long b = *++stack_top;
+                    unsigned long long a = *++stack_top;
+
+                    object_t const obj_b = *((object_t*)b);
+                    object_t const obj_a = *((object_t*)a);
+
+                    if (obj_b.vv.value.value_type != VALUE_NUMBER || obj_a.vv.value.value_type != VALUE_NUMBER)
+                        exit(221);
+
+                    *stack_top-- = (long long unsigned)memcpy(alc(0,sizeof(object_t)),&(object_t){
+                        .object_type = OBJECT_VALUE,
+                        .vv.value = (value_t){
+                            .value_type = VALUE_NUMBER,
+                            .value.number = obj_a.vv.value.value.number * obj_b.vv.value.value.number
+                        }
+                    },sizeof(object_t));
+
+                    printf("a %f * b %f\n",obj_a.vv.value.value.number,obj_b.vv.value.value.number);
 
                     break;
                 }

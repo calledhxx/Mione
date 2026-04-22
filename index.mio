@@ -5,3 +5,11 @@ x
 set y = x + 100
 
 y
+
+set z = y * 2
+
+z
+
+set i = x + y * z
+
+i
