@@ -106,7 +106,6 @@ static keyword_t SymbolKeywordArray[] = {
     .instance = &(symbol_t){
         .connect_condition_flag =
             SYMBOL_CONNECT_CONDITION_FLAG_AFTER_VV |
-                SYMBOL_CONNECT_CONDITION_FLAG_BEFORE_VV |
                     SYMBOL_CONNECT_CONDITION_FLAG_BEFORE_SYMBOL |
                         SYMBOL_CONNECT_CONDITION_FLAG_AFTER_SYMBOL |
                             SYMBOL_CONNECT_CONDITION_FLAG_MODESTY,

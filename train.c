@@ -119,6 +119,29 @@ train_carrier_t object_to_train(object_carrier_t const object_carrier)
             {
                 symbol_t const symbol = token_to_symbol(ThisObject.token);
 
+                if (LastObject.object_type == OBJECT_NONE)
+                    if (train_stack_top - TRAIN_STACK_SIZE + 1 != (train_t*)train_stack)
+                    {
+                        pushPassengerIntoCarriage(carriage_stack_top,(object_t){
+                            .vv.value.value.train_carrier_ptr =
+                                memcpy(alc(0,sizeof(train_t)),train_stack_top,sizeof(train_t))
+                        });
+
+                        *train_stack_top = (train_t){0};
+                        *carriage_stack_top = (carriage_t){0};
+
+                        train_stack_top = train_stack_top + 1;
+                        carriage_stack_top = carriage_stack_top + 1;
+                    }else{
+                        endCarriage(train_stack_top, carriage_stack_top);
+                        endTrain(&train_carrier, train_stack_top);
+
+                        train_stack_top->train_type = TRAIN_SIMPLE;
+
+                        carriage_stack_top->carriage_type = CARRIAGE_HEAD;
+                        carriage_stack_top->conductor = 0; //simple train
+                    }
+
                 if (LastObject.object_type == OBJECT_VALUE || LastObject.object_type == OBJECT_VARIABLE)
                 {
                     if (!(symbol.connect_condition_flag & SYMBOL_CONNECT_CONDITION_FLAG_AFTER_VV))
@@ -239,7 +262,7 @@ train_carrier_t object_to_train(object_carrier_t const object_carrier)
                     }
                 }
                 else
-                if (LastObject.object_type == OBJECT_VALUE || LastObject.object_type == OBJECT_VARIABLE)
+                if (LastObject.object_type == OBJECT_VALUE || LastObject.object_type == OBJECT_VARIABLE || LastObject.object_type == OBJECT_NONE)
                     if (train_stack_top - TRAIN_STACK_SIZE + 1 != (train_t*)train_stack)
                     {
                         pushPassengerIntoCarriage(carriage_stack_top,(object_t){

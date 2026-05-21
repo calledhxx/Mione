@@ -72,8 +72,34 @@ void print_scope(scope_t const main_scope,int const depth)
     printf("VARIABLE LINKS:\n");
     for (int i =0;i<main_scope.variable_link_ptr_carrier.variable_link_ptrs_length ;i++)
     {
+        variable_t * var_ptr = variable_chaser(*main_scope.variable_link_ptr_carrier.variable_link_ptrs[i]);
         printf(space);
-        printf("%d: %d\n",i,main_scope.variable_link_ptr_carrier.variable_link_ptrs[i]->variable_link_type);
+        printf("%d: %s self:%p follow:%p ",i,var_ptr->variable.genuine_variable.name,main_scope.variable_link_ptr_carrier.variable_link_ptrs[i],main_scope.variable_link_ptr_carrier.variable_link_ptrs[i]->toward_variable_link_ptr);
+
+        switch (main_scope.variable_link_ptr_carrier.variable_link_ptrs[i]->variable_link_type)
+        {
+        case VARIABLE_LINK_LEADER:
+            {
+                printf("LEADER");
+                break;
+            }
+        case VARIABLE_LINK_COLEADER:
+            {
+                printf("COLEADER");
+                break;
+            }
+        case VARIABLE_LINK_FOLLOWER:
+            {
+                printf("FOLLOWER");
+                break;
+            }
+        default:
+            {
+                printf("unknown");
+                break;
+            }
+        }
+        printf("\n");
     }
 
     printf(space);

@@ -14,7 +14,10 @@ int main(void)
 
     scope_t current_scope = {0};
     object_carrier_t const ObjectCarrier = word_to_object(WordCarrier,&current_scope);
+    printf("st:\n");
     print_scope(current_scope,0);
+    printf("ed:\n");
+
 
     for (unsigned i = 0; i < WordCarrier.words_length; i++)
         fre(WordCarrier.words[i].word);
@@ -25,6 +28,8 @@ int main(void)
     fre((unit_t*)ObjectCarrier.objects);
 
     instruct_carrier_t const InstructCarrier = train_to_instruct(TrainCarrier);
+
+    printf("%d\n",TrainCarrier.trains_length);
 
     for (unsigned i = 0; i < TrainCarrier.trains_length; i++)
     {
