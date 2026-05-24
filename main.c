@@ -31,6 +31,8 @@ int main(void)
 
     printf("%d\n",TrainCarrier.trains_length);
 
+    return 0;
+
     for (unsigned i = 0; i < TrainCarrier.trains_length; i++)
     {
         for (unsigned j = 0; j < TrainCarrier.trains[i].carriage_carrier.carriages_length; j++)

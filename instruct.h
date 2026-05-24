@@ -19,6 +19,13 @@ enum instruct_e
     INSTRUCT_PRINT_NUMBER
 };
 
+enum calculate_layout_type_e
+{
+    CALCULATE_LAYOUT_TYPE_NONE,
+    CALCULATE_LAYOUT_TYPE_INTEND_TO_CALL,
+    CALCULATE_LAYOUT_TYPE_INTEND_TO_LOCATE,
+};
+
 typedef struct instruct_s
 {
     unsigned int instruct;
@@ -30,6 +37,13 @@ typedef struct instruct_carrier_s
     instruct_t* instructs;
     unsigned instructs_length;
 } instruct_carrier_t;
+
+typedef struct calculate_layout_s
+{
+    instruct_carrier_t instruct_carrier;
+    operator_carrier_t operator_carrier;
+    enum calculate_layout_type_e calculate_layout_type; ;
+} calculate_layout_t;
 
 extern void print_instruct_carrier(instruct_carrier_t const instruct_carrier);
 extern void pushInstructIntoCarrier(instruct_carrier_t * CarrierPtr,instruct_t instruct);

@@ -29,22 +29,27 @@ enum information_option_flag_e
     INFORMATION_OPTION_FLAG_REQUIRED_LENGTH = 1<<1,
 };
 
-typedef struct information_s
+typedef struct operator_s
 {
-    unsigned char after_count;
     unsigned int instruct;
-    enum information_option_flag_e option;
-    int calculate_option_flag;
     int order;
-} information_t;
+} operator_t;
+
+typedef struct operator_carrier_s
+{
+    operator_t * operators;
+    unsigned operators_length;
+} operator_carrier_t;
 
 typedef struct symbol_s
 {
     enum symbol_connect_condition_flag_e connect_condition_flag;
     enum symbol_calculate_allow_position_flag_e calculate_allow_position_flag;
-    information_t instruct_information[3];
 
-    int order;
+    struct
+    {
+        operator_t AFTER, MIDDLE, BEFORE;
+    } operators;
 } symbol_t;
 
 extern symbol_t token_to_symbol(const int token);

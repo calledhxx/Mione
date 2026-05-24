@@ -13,12 +13,11 @@ static keyword_t SymbolKeywordArray[] = {
                         SYMBOL_CONNECT_CONDITION_FLAG_MODESTY,
             .calculate_allow_position_flag =
                 SYMBOL_CALCULATE_ALLOW_POSITION_FLAG_MIDDLE,
-            .instruct_information = (information_t[3]){
-                {
-                    .after_count = 2,
+            .operators = {
+                .MIDDLE = (operator_t){
                     .instruct = INSTRUCT_ADD,
-                    .order = 2
-                },
+                    .order =  2
+                }
             }
         },
     },
@@ -34,18 +33,16 @@ static keyword_t SymbolKeywordArray[] = {
         .calculate_allow_position_flag =
             SYMBOL_CALCULATE_ALLOW_POSITION_FLAG_MIDDLE |
                 SYMBOL_CALCULATE_ALLOW_POSITION_FLAG_BEFORE,
-        .instruct_information = (information_t[3]){
-                    {
-                        .after_count = 2,
-                        .instruct = INSTRUCT_SUB,
-                        .order = 2
-                    },
-                {
-                        .after_count = 1,
-                        .instruct = INSTRUCT_NEGATIVE,
-                        .order = 0
-                    },
-                }
+        .operators = {
+            .MIDDLE = (operator_t){
+                .instruct = INSTRUCT_SUB,
+                .order =  2
+            },
+            .BEFORE = (operator_t){
+                .instruct = INSTRUCT_NEGATIVE,
+                .order =  2
+            }
+        }
     },
 },
 {
@@ -58,12 +55,11 @@ static keyword_t SymbolKeywordArray[] = {
                         SYMBOL_CONNECT_CONDITION_FLAG_MODESTY,
         .calculate_allow_position_flag =
             SYMBOL_CALCULATE_ALLOW_POSITION_FLAG_MIDDLE,
-        .instruct_information = (information_t[3]){
-                    {
-                        .after_count = 2,
-                        .instruct = INSTRUCT_MUL,
-                        .order = 1
-                    },
+        .operators = {
+            .MIDDLE = (operator_t){
+                .instruct = INSTRUCT_MUL,
+                .order =  3
+            }
         }
     },
 },
@@ -77,12 +73,11 @@ static keyword_t SymbolKeywordArray[] = {
                         SYMBOL_CONNECT_CONDITION_FLAG_MODESTY,
         .calculate_allow_position_flag =
             SYMBOL_CALCULATE_ALLOW_POSITION_FLAG_MIDDLE,
-        .instruct_information = (information_t[3]){
-            {
-                .after_count = 2,
+        .operators = {
+            .MIDDLE = (operator_t){
                 .instruct = INSTRUCT_DIV,
-                .order = 1
-            },
+                .order =  2
+            }
         }
         }
     },
