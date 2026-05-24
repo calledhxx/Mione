@@ -7,7 +7,7 @@
 
 #define _max(a,b) ((a) > (b) ? (a) : (b))
 
-instruct_carrier_t cal_ast(
+instruct_carrier_t cal(
     object_carrier_t carrier
     )
 {
@@ -187,7 +187,7 @@ instruct_carrier_t cal_ast(
 }
 instruct_carrier_t calculate(object_carrier_t const object_carrier,char const calculate_as_container)
 {
-    instruct_carrier_t const result = cal_ast(
+    instruct_carrier_t const result = cal(
         object_carrier);
 
     printf("result:\n");
