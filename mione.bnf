@@ -1,0 +1,59 @@
+// 括號不表示運算的順序，而文法分組
+
+<head> ::= "set" | "if" | "while" | "return"
+<prompt> ::= "=" | "then" | "else" | "do"
+
+<symbol> ::= <symbol_after> | <symbol_before> | <symbol_both>
+<symbol_after> ::= "sizeof" | ")"
+<symbol_before> ::= "-" | "."
+<symbol_both> ::= "-" | "+" | "*" | "/" | "==" | "!=" | "<" | ">" | "<=" | ">=" | "." | "," | "("
+
+<word_normal> ::= 'a' | 'A'
+         | 'b' | 'B'
+         | 'c' | 'C'
+         | 'd' | 'D'
+         | 'e' | 'E'
+         | 'f' | 'F'
+         | 'g' | 'G'
+         | 'h' | 'H'
+         | 'i' | 'I'
+         | 'j' | 'J'
+         | 'k' | 'K'
+         | 'l' | 'L'
+         | 'm' | 'M'
+         | 'n' | 'N'
+         | 'o' | 'O'
+         | 'p' | 'P'
+         | 'q' | 'Q'
+         | 'r' | 'R'
+         | 's' | 'S'
+         | 't' | 'T'
+         | 'u' | 'U'
+         | 'v' | 'V'
+         | 'w' | 'W'
+         | 'x' | 'X'
+         | 'y' | 'Y'
+         | 'z' | 'Z'
+         | '_'
+<word_number> ::= '0' | '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9'
+<word_body> ::= (<word_normal> | <word_number>) (<word_body> | epsilon)
+<word> ::= <word_normal> (<word_body> | epsilon)
+
+<variable> ::= <word>
+
+<value> ::= <value_string> | <value_number> | <value_function> | <value_rnage> | <value_table>
+
+<value_string> ::= ('"' | "'") (<word_body> | epsilon) ('"' | "'")
+<value_number> ::= <word_number> (<value_number> | epsilon)
+
+<value_function> ::= "function" <train_list> "end"
+<value_rnage> ::= "range" <train_list> "end"
+<value_table> ::= "{" <train_list> "}"
+
+<expression> ::= ((<symbol_before>) | epsilon) (<value> | <variable>) ((<symbol_both> <expression>) | (<symbol_after>) | epsilon)
+
+<carriage_head> ::= (<head> (epsilon | <expression>)) | <expression>
+<carriage_body> ::= (<prompt> (epsilon | <expression>)) | <expression>
+<train_tail> ::= <carriage_body> (<train_tail> | epsilon)
+<train> ::= <carriage_head> <train_tail>
+<train_list> ::= <train> (<train_list> | epsilon)
