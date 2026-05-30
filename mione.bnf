@@ -1,4 +1,5 @@
 // 括號不表示運算的順序，而文法分組
+// 此BNF僅提供Mione的語法結構，並不包含正確解析的結構。如 `set = 100` 在此成立，可是在解析時會報出 set expression missing 的錯誤。
 
 <head> ::= "set" | "if" | "while" | "return"
 <prompt> ::= "=" | "then" | "else" | "do"
@@ -42,6 +43,7 @@
 <variable> ::= <word>
 
 <value> ::= <value_string> | <value_number> | <value_function> | <value_rnage> | <value_table>
+<weld> ::= "subject"
 
 <value_string> ::= ('"' | "'") (<word_body> | epsilon) ('"' | "'")
 <value_number> ::= <word_number> (<value_number> | epsilon)
@@ -51,9 +53,10 @@
 <value_table> ::= "{" <train_list> "}"
 
 <expression> ::= ((<symbol_before>) | epsilon) (<value> | <variable>) ((<symbol_both> <expression>) | (<symbol_after>) | epsilon)
+<expp> ::= <expression> | <weld> <train> (';' | epsilon)
 
-<carriage_head> ::= (<head> (epsilon | <expression>)) | <expression>
-<carriage_body> ::= (<prompt> (epsilon | <expression>)) | <expression>
+<carriage_head> ::= (<head> (epsilon | <expp>)) | <expp>
+<carriage_body> ::= (<prompt> (epsilon | <expp>)) | <expp>
 <train_tail> ::= <carriage_body> (<train_tail> | epsilon)
 <train> ::= <carriage_head> <train_tail>
 <train_list> ::= <train> (<train_list> | epsilon)
