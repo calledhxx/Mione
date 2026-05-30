@@ -45,7 +45,7 @@
 <value> ::= <value_string> | <value_number> | <value_function> | <value_rnage> | <value_table>
 <weld> ::= "subject"
 
-<value_string> ::= ('"' | "'") (<word_body> | epsilon) ('"' | "'")
+<value_string> ::= ('"' (<word_body> | epsilon) '"') | ("'" (<word_body> | epsilon) "'")
 <value_number> ::= <word_number> (<value_number> | epsilon)
 
 <value_function> ::= "function" <train_list> "end"
