@@ -52,11 +52,10 @@
 <value_rnage> ::= "range" <train_list> "end"
 <value_table> ::= "{" <train_list> "}"
 
-<expression> ::= ((<symbol_before>) | epsilon) (<value> | <variable>) ((<symbol_both> <expression>) | (<symbol_after>) | epsilon)
-<expp> ::= <expression> | <weld> <train> (';' | epsilon)
+<expression> ::= ((<symbol_before>) | epsilon) (<value> | <variable> | <weld> <train> (';' | epsilon)) ((<symbol_both> <expression>) | (<symbol_after>) | epsilon)
 
-<carriage_head> ::= (<head> (epsilon | <expp>)) | <expp>
-<carriage_body> ::= (<prompt> (epsilon | <expp>)) | <expp>
+<carriage_head> ::= (<head> (epsilon | <expression>)) | <expression>
+<carriage_body> ::= (<prompt> (epsilon | <expression>)) | <expression>
 <train_tail> ::= <carriage_body> (<train_tail> | epsilon)
 <train> ::= <carriage_head> <train_tail>
 <train_list> ::= <train> (<train_list> | epsilon)
