@@ -1,14 +1,4 @@
-// 括號不表示運算的順序，而文法分組
-// 此BNF僅提供Mione的語法結構，並不包含正確解析的結構。如 `set = 100` 在此成立，可是在解析時會報出 set expression missing 的錯誤。
-
-<head> ::= "set" | "if" | "while" | "return"
-<prompt> ::= "=" | "then" | "else" | "do"
-
-<symbol> ::= <symbol_after> | <symbol_before> | <symbol_both>
-<symbol_after> ::= "sizeof" | ")"
-<symbol_before> ::= "-" | "."
-<symbol_both> ::= "-" | "+" | "*" | "/" | "==" | "!=" | "<" | ">" | "<=" | ">=" | "." | "," | "("
-
+//word define
 <word_normal> ::= 'a' | 'A'
          | 'b' | 'B'
          | 'c' | 'C'
@@ -40,22 +30,42 @@
 <word_body> ::= (<word_normal> | <word_number>) (<word_body> | epsilon)
 <word> ::= <word_normal> (<word_body> | epsilon)
 
-<variable> ::= <word>
+//6 types of object
+<head> ::= "set" | "if" | "while" | "return"
+<prompt> ::= "=" | "then" | "else" | "do"
 
-<value> ::= <value_string> | <value_number> | <value_function> | <value_rnage> | <value_table>
-<weld> ::= "subject"
+<symbol_after> ::= "sizeof" | ")"
+<symbol_before> ::= "-" | "."
+<symbol_both> ::= "-" | "+" | "*" | "/" | "==" | "!=" | "<" | ">" | "<=" | ">=" | "." | "," | "("
+<symbol> ::= <symbol_after> | <symbol_before> | <symbol_both>
+
+<variable> ::= <word>
 
 <value_string> ::= ('"' (<word_body> | epsilon) '"') | ("'" (<word_body> | epsilon) "'")
 <value_number> ::= <word_number> (<value_number> | epsilon)
+<value_function> ::= "function" <trains> "end"
+<value_range> ::= "range" <trains> "end"
+<value_table> ::= "{" <trains> "}"
+<value> ::= <value_string> | <value_number> | <value_function> | <value_range> | <value_table>
 
-<value_function> ::= "function" <train_list> "end"
-<value_rnage> ::= "range" <train_list> "end"
-<value_table> ::= "{" <train_list> "}"
+<weld> ::= "subject"
 
-<expression> ::= ((<symbol_before>) | epsilon) (<value> | <variable> | <weld> <train> (';' | epsilon)) ((<symbol_both> <expression>) | (<symbol_after>) | epsilon)
+//expression define
+<expression_resource> ::= ((<symbol_before>) | epsilon) (<value> | <variable> | <weld> <train> (';' | epsilon)) ((<symbol_both> <expression_resource>) | (<symbol_after>) | epsilon)
+<expression_container> ::= ((<symbol_before>) | epsilon) (<variable> | <weld> <train> (';' | epsilon)) ((<symbol_both> <expression_container>) | (<symbol_after>) | epsilon)
+<expression> ::= <expression_resource> | <expression_container>
 
+//carriage define
 <carriage_head> ::= (<head> (epsilon | <expression>)) | <expression>
 <carriage_body> ::= (<prompt> (epsilon | <expression>)) | <expression>
-<train_tail> ::= <carriage_body> (<train_tail> | epsilon)
-<train> ::= <carriage_head> <train_tail>
-<train_list> ::= <train> (<train_list> | epsilon)
+<carriage_bodies> ::= <carriage_body> (<carriage_bodies> | epsilon)
+
+//train define
+<train> ::= <carriage_head> <carriage_bodies>
+<trains> ::= <train> (<trains> | epsilon)
+
+//certain trains
+<set_train> ::= "set" <expression_container> ( "=" <expression_resource> | epsilon )
+
+<elif_link> ::= "elif" <expression_resource> "then"
+<if_train> ::= "if" <expression_resource> "then" <value_range> ( "else" <value_range> | espilon )
